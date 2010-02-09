@@ -1,0 +1,7 @@
+Libtaylor 0.5
+by Ulf Ekstrom <uekstrom@gmail.com> 2009.
+
+This library is released under the LGPL license,
+but since the library is implemented as templates
+you most likely cannot distribute it together with
+your closed source program.

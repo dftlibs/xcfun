@@ -1,0 +1,62 @@
+** Arbitrary order Exchange-Correlation functional library **
+
+Copyright Ulf Ekstrom <uekstrom@gmail.com> and Radovan Bast 2009. 
+
+The main interface is in include/xc_fun.h
+(or fortran/xc_fun_module.F90 for Fortran bindings).
+
+
+Copying:
+
+The library is licensed under the LGPL 3 license, see COPYING.LESSER
+for more information. 
+
+
+Configuration: 
+
+Check that XC_MAX_ORDER is defined to the highest order derivatives
+you need (and not higher) in include/xc_fun.h and that it matches
+XC_MAX_ORDER in fortran/xc_fun_module.F90.
+Using a too large value for XC_MAX_ORDER makes compilation slow
+and the generated code huge.
+
+
+Building a debug/development version:
+
+Edit Makefile to set CXX (C++ compiler) and flags and run
+make lib/libxc_fun.a
+which will create the library file lib/libxc_fun.a.
+
+
+Building an optimized version:
+
+Edit Makefile and add -DNDEBUG to the compiler flags. Add optimization
+compiler options. Make sure your compiler performs inlining (-O3 with
+gcc). After compilation run `strip' on lib/libxc_fun.a to reduce its
+size by 75% or so.
+
+NOTE: Due to the way C++ deals with templates all the functionals are
+defined in src/functional/xxx_fun.h files. These are included and
+instantiated from xc_fun.cpp, which is the only object file generated
+by the library.
+
+
+References and accuracy:
+
+VWN5, PBE and PW92 have been verified against
+
+http://www.cse.scitech.ac.uk/ccg/dft/data_pt_c_pbe.html
+
+The parameters used are those in this database, which
+may be different from the ones in the original articles. 
+In particular some parameters have higher accuracy.
+When comparing to other implementation it is important
+to have the same parameters, including any approximation
+in constants such as pi. 
+
+When running in high precision (more than double), note
+that some constants are given in double precision so the
+results will be affected by that. This is mainly M_PI and
+exponents to pow(), for example 1.0/3.0.
+
+Untested functionals are marked with _untested in src/xc_fun.cpp.

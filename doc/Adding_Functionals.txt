@@ -1,0 +1,50 @@
+Here's how to add new functions to xc_fun. Let's assume
+the functional is called "myfunctional".
+
+1) Create a new .h file in src/functionals, myfunctional_fun.h
+
+2) Implemented your functional as a function accepting density
+   variables and returning the exchange correlation energy. The
+   type of the input and return parameters should be a template
+   typename. Example
+
+   template<typename T>
+   T myfunctional(const T &rhoa, const T &rhob)
+   {
+      //Return some function of rhoa and rhob
+      returb pow(rhoa + rhob,4.0/3.0);
+   }
+
+   The arguments to your function should be some of the variables
+   included in struct densvars in src/xc_fun.cpp. Use the variables
+   that are most convenient for you.
+
+3) Add an 
+   #include "myfunctional_fun.h"
+   to src/xc_fun.cpp
+
+4) Add your functional to the enum xc_funparams in include/xc_fun.h,
+   XC_MYFUNCTIONAL,
+   Make sure that XC_PARAMS_LEN is still last in the list.
+
+4.1) Also update fortran/xc_fun_module.F90 to include your functional.
+
+5) Add the name of your functional to the list of strings
+   functional_names[], in src/xc_fun.h. This is the name
+   used when specifying a complicated functional as a sum
+   of many components. Note: the strings must be in the same
+   order as in point 4).
+
+6) Edit the function sum_functionals in src/xc_fun.h, so that
+   your functional is added in the same way as the others.
+   Here you have to make sure your are sending the correct
+   density variables to your function (the same as you used in 
+   step 2).
+
+
+Now you can try
+
+make funeval
+
+and see if the funeval program evaluates your functional
+correctly.
