@@ -1,11 +1,10 @@
 //  Thomas-Fermi kinetic energy functional
 
 template<class num>
-static num thomasfermi_kinetic(const num &rhoa,
-			       const num &rhob)
+static num thomasfermi_kinetic(const densvars<num> &d)
 {
     using xc_constants::CF;
 
-    return CF*pow(rhoa+rhob, 5.0/3.0);
+    return CF*pow(d.n, 5.0/3.0);
 }
 

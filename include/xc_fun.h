@@ -11,7 +11,7 @@
 
 // Highest order of derivatives. Note that the generated code
 // becomes huge if this is too large
-#define XC_MAX_ORDER 6
+#define XC_MAX_ORDER 2
 
 /*
   The following variables are used in the code:
@@ -29,36 +29,45 @@
   Y = \nabla R \cdot \nabla S
 */
 
+// Which variables to use, each mode has its own bit.
 enum xc_mode
   {
-    XC_A = 0, // Fully spin polarized LDA
-    XC_R, // Unpolarized LDA
-    XC_AB, // LDA with alpha/beta densities
-    XC_RS, // LDA with total density/polarization density
-    XC_AF, // Fully spin polarized GGA
-    XC_RZ, // Unpolarized GGA
-    XC_ABFGH, // Generic GGA alpha,beta variables 
-    XC_RSZXY, // Generic GGA R,S variables
-    XC_R_ZI_ZJ_ZK, // R and the individual gradient elements
+    XC_ALDA    = 1, // Fully spin polarized LDA
+    XC_RLDA    = 2, // Unpolarized LDA
+    XC_ABLDA   = 4, // LDA with alpha/beta densities
+    XC_RSLDA   = 8, // LDA with total density/polarization density
+    XC_AGGA    =16, // Fully spin polarized GGA
+    XC_RGGA    =32, // Unpolarized GGA
+    XC_ABGGA   =64, // Generic GGA alpha,beta variables 
+    XC_RSGGA   =128, // Generic GGA R,S variables
+    XC_ABMGGA  =256, // Alpha/beta meta gga
+    XC_RSMGGA  =512,
   };
 
-enum xc_funparams
+#define XC_ALL_LDA (XC_ALDA | XC_RLDA | XC_ABLDA | XC_RSLDA)
+#define XC_ALL_GGA (XC_AGGA | XC_RGGA | XC_ABGGA | XC_RSGGA)
+#define XC_MODES_LEN 9
+
+enum xc_functionals
   {
     XC_VWN5_CORRELATION = 0,
     XC_SLATER_EXCHANGE,
     XC_LYP_CORRELATION,
-    XC_PW91_EXCHANGE,
+    XC_BECKE_EXCHANGE, //Not including the Slater part.
     XC_PBE_CORRELATION,
-    XC_OLD_PBE_CORRELATION,
-    XC_BECKE_EXCHANGE,
-    XC_OLD_PBE_EXCHANGE,
-    XC_OLD_RPBE_EXCHANGE,
     XC_PBE_EXCHANGE,
-    XC_REVPBE_EXCHANGE_UNTESTED,
     XC_PW92_CORRELATION,
+#ifdef WITH_LDA_SR
+    XC_SRLDA_ERF_EXCHANGE,
+    XC_SRLDA_ERF_CORRELATION,
+#endif
+    /*	  XC_PW91_EXCHANGE, */
+    /*
+    
+    XC_REVPBE_EXCHANGE_UNTESTED,
     KIN_TF_UNTESTED,       // (orbital-free) kinetic energy functionals next
-    KIN_PW91_UNTESTED,
-    XC_PARAMS_LEN // This has to be last!
+    KIN_PW91_UNTESTED,*/
+    XC_FUNLIST_LEN // This has to be last!
   };
 
 int xc_parse_functional(const char *functional_name);
@@ -66,7 +75,7 @@ int xc_parse_functional(const char *functional_name);
 // Set the functional as defined by the parameters in the
 // params array. 
 void xc_set_functional(enum xc_mode mode, 
-		       const double params[XC_PARAMS_LEN]);
+		       const double params[XC_FUNLIST_LEN]);
 
 //Return the total number of terms calculated by xc_eval
 int xc_len(enum xc_mode mode, int order); 
@@ -84,9 +93,6 @@ void xc_eval_single(float *result, int order, const float densvars[]);
 //Return the index (into result) for a given derivative, i.e.
 //{0,2,1,0} gives the d^3/dS^2dZ term index.
 int xc_index(enum xc_mode mode, const int derivative[]);
-
-// Return a string describing the functional and its implementation.
-const char *xc_fun_reference(enum xc_funparams functions);
 
 #ifdef WITH_QD
 #include <qd/qd_real.h>

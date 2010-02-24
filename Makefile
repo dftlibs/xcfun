@@ -12,35 +12,38 @@
 
 # C++ compiler and flags
 CXX ?= g++
-CXXFLAGS ?= -g -Wall -O3 -DNDEBUG
+CXXFLAGS ?= -g -Wall -O -DNDEBUG -DWITH_LDA_SR #-DWITH_QD
 CXXFLAGS+=-Iinclude -Isrc/taylor -Isrc/functionals -Llib -fno-rtti -fno-exceptions
-LIBS=-lxc_fun
+LIBS= #-lqd
 
 # F90 compiler and flags, used for example code
 FC=gfortran
-FFLAGS=-Wall -Llib -Jfortran
+FFLAGS=-Wall -Llib -Jfortran # -DWITH_QD
+
+testit: src/xc_fun.o
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS)
 
 lib/libxc_fun.a: src/xc_fun.o
 	ar r $@ $<
 
-src/xc_fun.o: $(wildcard src/functionals/*.h) src/taylor/taylor.h
+src/xc_fun.o: $(wildcard src/functionals/*.h) include/xc_fun.h src/taylor/taylor.h
 
 stripped: lib/libxc_fun.a
 	strip --strip-unneeded $<
 
 benchmark: test/benchmark.cpp lib/libxc_fun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun
 
 funtest: test/funtest.cpp lib/libxc_fun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun
 
 funeval: test/funeval.cpp lib/libxc_fun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun
 
 fortran/example.o: fortran/xc_fun_module.o
 
 fortran_example: fortran/example.o fortran/xc_fun_module.o lib/libxc_fun.a
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(FC) $(FFLAGS) -o $@ $^ $(LIBS) -lstdc++
 
 clean:
 	rm -f `find . -name '*.o' -o -name '*~' -o -name '*.a'` fortran_example benchmark testxc

@@ -162,9 +162,10 @@ struct term_sub
 template <int Nvar, int t1, int t2>
 struct term_prod
 {
-  enum { prod = polylen<Nvar,term_deg<Nvar,t1>::deg+term_deg<Nvar,t2>::deg-1>::len +
+  enum { prod = polylen<Nvar,term_deg<Nvar,t1>::deg
+	 + term_deg<Nvar,t2>::deg-1>::len +
 	 term_prod<Nvar-1,t1-polylen<Nvar,term_deg<Nvar,t1>::deg-1>::len,
-	                  t2-polylen<Nvar,term_deg<Nvar,t2>::deg-1>::len>::prod
+	 t2 - polylen<Nvar,term_deg<Nvar,t2>::deg-1>::len>::prod
   };
 };
 
@@ -247,22 +248,23 @@ struct deriv_fac<1,0>
   enum { fac = 1 };
 };
 
-
-template<class numtype, int Nvar, int term>
+template<class numtype, int Nvar, int first_term, int last_term>
 struct deriv_fac_multiplier
 {
   static void mul_fac(numtype c[])
   {
-    deriv_fac_multiplier<numtype,Nvar,term-1>::mul_fac(c);
-    c[term] *= deriv_fac<Nvar,term>::fac;
+    deriv_fac_multiplier<numtype,Nvar,first_term,(first_term+last_term)/2>::mul_fac(c);
+    deriv_fac_multiplier<numtype,Nvar,(first_term+last_term)/2+1,last_term>::mul_fac(c);
   }
 };
 
-template<class numtype, int Nvar>
-struct deriv_fac_multiplier<numtype,Nvar,0>
+template<class numtype, int Nvar, int term>
+  struct deriv_fac_multiplier<numtype,Nvar,term,term>
 {
-  static void mul_fac(numtype c[]) {}
+  static void mul_fac(numtype c[]) {c[term] *= deriv_fac<Nvar,term>::fac;}
 };
+
+
 
 
 // Recursive template classes for multiplication.
@@ -272,7 +274,7 @@ struct polynomial_multiplier
 {
   // _add_ the product between p1 and p2 to dst.
   static void mul(numtype POLYMUL_RESTRICT dst[], const numtype p1[], const numtype p2[])
-  { 
+  {
     polynomial_multiplier<numtype,Nvar,Ndeg1,Ndeg2-1>::mul(dst,p1,p2);
     polynomial_multiplier<numtype,Nvar,Ndeg1,Ndeg2>
       ::mul_monomial(dst,p1,p2+binomial<Nvar+Ndeg2-1,Ndeg2-1>::value);
@@ -336,7 +338,7 @@ template<class numtype, int Ndeg1, int Ndeg2>
   {
     for (int i=0;i<=Ndeg1;i++)
       for (int j=0;j<=Ndeg2;j++)
-	dst[i+j] += p1[i]*p2[j];
+      dst[i+j] += p1[i]*p2[j];
   }
   static void mul_monomial(numtype POLYMUL_RESTRICT dst[], const numtype p1[], const numtype m2[])
   {
@@ -1435,9 +1437,16 @@ class polynomial
       }
   }
   template<int var>
-  void diff(polynomial<numtype, Nvar, Ndeg-1> &dp)
+  void diff(polynomial<numtype, Nvar, Ndeg-1> &dp) const
   {
     polymul_internal::differentiator<numtype,Nvar,Ndeg,var>::diff(dp.c,c);
+  }
+  template<int var>
+  void diff(polynomial<numtype, Nvar, Ndeg> &dp) const
+  {
+    polymul_internal::differentiator<numtype,Nvar,Ndeg,var>::diff(dp.c,c);
+    for (int i=polynomial<numtype,Nvar,Ndeg-1>::size;i<size;i++)
+      dp.c[i] = 0;
   }
   numtype c[size];
 };
@@ -1517,7 +1526,7 @@ template<class numtype, int Nvar, int Ndeg>
 void polydfac(polynomial<numtype, Nvar, Ndeg> &p)
 {
   polymul_internal
-    ::deriv_fac_multiplier<numtype,Nvar,
+    ::deriv_fac_multiplier<numtype,Nvar,0,
        polymul_internal::polylen<Nvar,Ndeg>::len-1>::mul_fac(p.c);   
 }
 
@@ -1559,7 +1568,6 @@ inline void taylorcompose(polynomial<numtype, Nvar,Ndeg> &dst,
       taylormul(dst,p);
     }
   dst[0] += c[0];
-  //  cout << "Now dst[0] is: " << dst[0] << endl;
 }
 
 #endif

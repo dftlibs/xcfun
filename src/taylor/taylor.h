@@ -153,7 +153,12 @@ public:
   void operator/=(const S& scale)
     {
       for (int i=0;i<size;i++)
-	c[i] *= scale;
+	c[i] /= scale;
+    }
+  void operator/=(const taylor<T,Nvar,Ndeg>& t)
+    {
+      taylor<T,Nvar,Ndeg> tinv = 1/t;
+      *this*=tinv;
     }
   void operator*=(int scale)
     {

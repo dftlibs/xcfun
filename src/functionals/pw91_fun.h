@@ -27,32 +27,26 @@ namespace PW91xk_internal
    // PW91 exchange functional
 
    template<class num>
-   static num pw91_exchange(const num &rhoa,
-                            const num &rhob,
-                            const num &grada,
-                            const num &gradb)
+   static num pw91_exchange(const densvars<num> &d)
    {
      const static double param_AB[6] = 
        { 0.19645, 7.7956, 0.2743, 0.1508, 100.0, 0.004};
 
-     return (  prefactor(rhoa,grada)*pw91xk_enhancement(param_AB,rhoa,grada)
-             + prefactor(rhob,gradb)*pw91xk_enhancement(param_AB,rhob,gradb) );
+     return (  prefactor(d.a,d.gaa)*pw91xk_enhancement(param_AB,d.a,d.gaa)
+             + prefactor(d.b,d.gbb)*pw91xk_enhancement(param_AB,d.b,d.gbb) );
    }
 
    // PW91 kinetic energy functional
    // reduces to TF kinetic energy functional for zero gradient
 
    template<class num>
-   static num pw91_kinetic(const num &rhoa,
-                           const num &rhob,
-                           const num &grada,
-                           const num &gradb)
+   static num pw91_kinetic(const densvars<num> &d)
    {
      const static double param_AB[6] = 
        { 0.093907, 76.320, 0.26608, 0.0809615, 100.0, 0.57767e-4};
 
-     return (  pw91k_prefactor(rhoa)*pw91xk_enhancement(param_AB,rhoa,grada)
-             + pw91k_prefactor(rhob)*pw91xk_enhancement(param_AB,rhob,gradb) );
+     return (  pw91k_prefactor(d.a)*pw91xk_enhancement(param_AB,d.a,d.gaa)
+             + pw91k_prefactor(d.b)*pw91xk_enhancement(param_AB,d.b,d.gbb) );
    }
 }
 

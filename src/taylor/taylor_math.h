@@ -282,6 +282,30 @@ void gauss_taylor(taylor<T,1,Ndeg>& t, const T &a)
     g[2*i] = -g[2*(i-1)]/i;
   t*=g;
 }
+#ifdef WITH_QD
+// QD does not provide an error function, so here is a slow and
+// not so smart Taylor expansion.
+static inline qd_real erf(const qd_real &x)
+{
+  qd_real sum = 0;
+  qd_real x2 = x*x, term = x;
+  int k = 0;
+  if (fabs(x) > 12) // erf(12) = 1 - 1e-64
+    return 1;
+  sum += term;
+  if (fabs(x) > 1e-64)
+    {
+      double magn = erf(to_double(x)); // order of magnitude of answer.
+      while (fabs(term/magn) > 1e-64)
+	{
+	  k++;
+	  term *= qd_real(-(2*k-1)*x2)/(k*(2*k+1));
+	  sum += term;
+	}
+    }
+  return sum*2/sqrt(qd_real::_pi);
+}
+#endif
 
 // Use that d/dx erf(x) = 2/sqrt(pi)*exp(-x^2),
 // Taylor expand in x^2 and integrate.
