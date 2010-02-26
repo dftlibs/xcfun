@@ -19,8 +19,6 @@ namespace PBEx_internal
       num st = S(rho,grad);
       num t1 = 1 + mu*st*st/R;
    
-      // TODO: veryfy 1/t1 does not overflow/underflow
-
       return 1 + R - R/t1; 
    }
 
@@ -103,7 +101,13 @@ template<>
 struct functional<XC_PBE_CORRELATION>
 {
   static const char *get_name(void) { return "pbec"; }
-  static const char *get_reference(void) { return "blah blah"; }
+  static const char *get_reference(void) 
+  { 
+    return "PBE correlation functional.\n"
+      "J.P. Perdew, K. Burke, and M. Ernzerhof, Generalized\n"
+      "gradient approximation made simple, "
+      "Phys. Rev. Lett. 77 (1996) 3865-3868";
+  }
   enum { supported_modes = XC_ALL_GGA };
   enum { max_order = XC_MAX_ORDER };
   template<class num>
@@ -136,7 +140,13 @@ template<>
 struct functional<XC_PBE_EXCHANGE>
 {
   static const char *get_name(void) { return "pbex"; }
-  static const char *get_reference(void) { return "blah blah"; }
+  static const char *get_reference(void) 
+  { 
+    return "PBE exchange functional.\n"
+      "J.P. Perdew, K. Burke, and M. Ernzerhof, Generalized\n"
+      "gradient approximation made simple, "
+      "Phys. Rev. Lett. 77 (1996) 3865-3868";    
+  }
   enum { supported_modes = XC_ALL_GGA };
   enum { max_order = XC_MAX_ORDER };
   template<class num>

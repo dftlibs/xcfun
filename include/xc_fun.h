@@ -6,6 +6,8 @@
    by ulfek 2009 
 */
 
+#define XC_FUN_VERSION "1.0"
+
 // Note that these parameters have be in sync with those in
 // xc_fun_module.f90 (Fortran version)
 
@@ -46,6 +48,7 @@ enum xc_mode
 
 #define XC_ALL_LDA (XC_ALDA | XC_RLDA | XC_ABLDA | XC_RSLDA)
 #define XC_ALL_GGA (XC_AGGA | XC_RGGA | XC_ABGGA | XC_RSGGA)
+#define XC_ALL_MGGA (XC_ABMGGA | XC_RSMGGA)
 #define XC_MODES_LEN 9
 
 enum xc_functionals
@@ -57,10 +60,8 @@ enum xc_functionals
     XC_PBE_CORRELATION,
     XC_PBE_EXCHANGE,
     XC_PW92_CORRELATION,
-#ifdef WITH_LDA_SR
     XC_SRLDA_ERF_EXCHANGE,
     XC_SRLDA_ERF_CORRELATION,
-#endif
     /*	  XC_PW91_EXCHANGE, */
     /*
     
@@ -87,9 +88,7 @@ int xc_len(enum xc_mode mode, int order);
 // lexicographical ordering. This function also has a fortran 
 // version.
 void xc_eval(double result[], int order, const double densvars[]);
-#ifdef WITH_SINGLE
-void xc_eval_single(float *result, int order, const float densvars[]);
-#endif
+
 //Return the index (into result) for a given derivative, i.e.
 //{0,2,1,0} gives the d^3/dS^2dZ term index.
 int xc_index(enum xc_mode mode, const int derivative[]);

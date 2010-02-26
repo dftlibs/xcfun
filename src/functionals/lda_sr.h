@@ -1,7 +1,7 @@
-#ifdef WITH_LDA_SR
+
 /*
   This code was adapted by Ulf Ekstrom from a Fortran program provided
-  by Gori-Giorgi.
+  by Paola Gori-Giorgi.
  */
 
 namespace ldaerf 
@@ -173,7 +173,7 @@ struct functional<XC_SRLDA_ERF_CORRELATION>
   }
   static int test(void) 
   { 
-    // Values provided by Paola Gori-Giori
+    // Values provided by Paola Gori-Giorgi
     static const double test_mu = 0.4;
     static const double d[5] = {1.1, 1.0};
     static const double ref[21] = 
@@ -240,4 +240,4 @@ struct functional<XC_SRLDA_ERF_EXCHANGE>
     return res;
   }
 };
-#endif
+

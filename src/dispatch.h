@@ -1,4 +1,15 @@
 
+
+
+// _adds_ the functional results weighted with weight.
+typedef void (*wrapped_functional)(void *result, const void *dv, const void *weight);
+
+// Dispatch table for all supported functional types and orders
+static wrapped_functional
+double_tab[XC_FUNLIST_LEN][XC_MODES_LEN][XC_MAX_ORDER+1] = {{{0}}};
+static const char *fun_name_tab[XC_FUNLIST_LEN] = {0}; 
+
+
 // This is a triple loop, over all functionals, modes
 // and degrees. It tries carefully not to mention
 // functional::energy with parameters that are not
@@ -62,8 +73,22 @@ struct table<XC_FUNLIST_LEN,0,0>
   static void setup(void) {}
 };
 
-void setup_tables(void)
+void make_sure_tables_are_set_up(void)
 {
-  table<0,functional<0>::supported_modes,
-    functional<0>::max_order>::setup();
+  static int is_setup = 0;
+  if (!is_setup)
+    {
+      table<0,functional<0>::supported_modes,
+	functional<0>::max_order>::setup();
+      is_setup = 1;
+    }
+}
+
+void xc_set_functional(enum xc_mode mode, 
+		       const double params[XC_PARAMS_LEN])
+{
+  make_sure_tables_are_set_up();
+  current_mode = mode;
+  for (int i=0;i<XC_PARAMS_LEN;i++)
+    xc_params[i] = params[i];
 }

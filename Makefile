@@ -12,7 +12,7 @@
 
 # C++ compiler and flags
 CXX ?= g++
-CXXFLAGS ?= -g -Wall -O -DNDEBUG -DWITH_LDA_SR #-DWITH_QD
+CXXFLAGS ?= -g -Wall -O #-DWITH_QD
 CXXFLAGS+=-Iinclude -Isrc/taylor -Isrc/functionals -Llib -fno-rtti -fno-exceptions
 LIBS= #-lqd
 
@@ -20,22 +20,19 @@ LIBS= #-lqd
 FC=gfortran
 FFLAGS=-Wall -Llib -Jfortran # -DWITH_QD
 
-testit: src/xc_fun.o
+xcfun_test: src/xc_fun.o
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS)
 
+lib: lib/libxc_fun.a
+
 lib/libxc_fun.a: src/xc_fun.o
-	ar r $@ $<
+	$(CXX) $(CXXFLAGS) -c src/xc_fun.cpp -o src/xc_fun_lib.o $(LIBS) -DXCFUN_LIB	
+	ar r $@ src/xc_fun_lib.o
 
 src/xc_fun.o: $(wildcard src/functionals/*.h) include/xc_fun.h src/taylor/taylor.h
 
 stripped: lib/libxc_fun.a
 	strip --strip-unneeded $<
-
-benchmark: test/benchmark.cpp lib/libxc_fun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun
-
-funtest: test/funtest.cpp lib/libxc_fun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun
 
 funeval: test/funeval.cpp lib/libxc_fun.a
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LIBS) -lxc_fun

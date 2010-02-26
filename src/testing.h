@@ -26,30 +26,18 @@ int standard_abgga_test(const double density[5],
   taylor<double,5,2> res = functional<fun_id>::energy(d);
   res.deriv_facs();
   int nerr = 0;
+
+  for (int i=0;i<res.size;i++)
+    if (fabs(res[i] - reference[i]) > fabs(reference[i]*ref_rel_err))
+      nerr++;
+
+#ifndef NO_STDCXX
   cout << scientific;
   cout.precision(16);
-  for (int i=0;i<res.size;i++)
-    {
-      if (fabs(res[i] - reference[i]) > fabs(reference[i]*ref_rel_err))
-	{
-	nerr++;
-	/*
-	cout << "err " << res[i] << " " << reference[i] << " " <<
-	  fabs(res[i] - reference[i]) << " " << 
-	  fabs(reference[i]*ref_rel_err) << endl;
-	*/
-	}
-    }
   if (nerr > 0)
     {
       cout << "Error detected in functional " <<
 	functional<fun_id>::get_name() << endl;
-      /*
-      cout << "Density:" << endl;
-      cout << " r_s = " << d.r_s << endl;
-      cout << " zeta = " << d.zeta << endl;
-      
-      */
       cout << "Abs.Error \tComputed              Reference" << endl;
       for (int i=0;i<res.size;i++)
 	{
@@ -63,5 +51,6 @@ int standard_abgga_test(const double density[5],
 	    cout << endl;
 	}
     }
+#endif
   return nerr;
 }

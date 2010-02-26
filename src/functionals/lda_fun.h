@@ -71,7 +71,13 @@ template<>
 struct functional<XC_VWN5_CORRELATION>
 {
   static const char *get_name(void) { return "vwn5c"; }
-  static const char *get_reference(void) { return "blah blah"; }
+  static const char *get_reference(void) 
+  { 
+    return "VWN5 LSDA Correlation functional\n"
+      "S.H. Vosko, L. Wilk, and M. Nusair: Accurate spin-dependent\n"
+      "electron liquid correlation energies for local spin density\n"
+      "calculations: a critical analysis, Can. J. Phys. 58 (1980) 1200-1211.";
+  }
   enum { supported_modes = XC_ALL_LDA | XC_ALL_GGA };
   enum { max_order = XC_MAX_ORDER };
   template<class num>
@@ -103,7 +109,13 @@ template<>
 struct functional<XC_SLATER_EXCHANGE>
 {
   static const char *get_name(void) { return "slaterx"; }
-  static const char *get_reference(void) { return "BLAH BLAH"; }
+  static const char *get_reference(void) 
+  { 
+    return "LDA Exchange functional\n"
+      "P.A.M. Dirac, Proceedings of the Cambridge Philosophical "
+      "Society, 26 (1930) 376.\n"
+      "F. Bloch, Zeitschrift für Physik, 57 (1929) 545";
+  }
   enum { supported_modes = XC_ALL_LDA | XC_ALL_GGA };
   enum { max_order = XC_MAX_ORDER };
   template<class num>

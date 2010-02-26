@@ -3,11 +3,6 @@
 
 namespace pw92_internal
 {
-
-  const char *pw92_reference = 
-    "Electron-gas correlation energy\n"
-    "J.P.Perdew,Y. Wang; Phys. Rew. B; 40, 13244, (1992)\n";
-
   template<class num>
   static num e(const num &r, const double t[7])
   {
@@ -71,7 +66,12 @@ template<>
 struct functional<XC_PW92_CORRELATION>
 {
   static const char *get_name(void) { return "pw92c"; }
-  static const char *get_reference(void) { return "blah blah"; }
+  static const char *get_reference(void) 
+  {
+    return "PW92 correlation functional\n"
+      "Electron-gas correlation energy\n"
+      "J.P.Perdew,Y. Wang; Phys. Rew. B; 40, 13244, (1992)";
+; }
   enum { supported_modes = XC_ALL_GGA };
   enum { max_order = XC_MAX_ORDER };
   template<class num>
