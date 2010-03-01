@@ -84,6 +84,14 @@ void make_sure_tables_are_set_up(void)
     }
 }
 
+struct functional_term
+{
+  int fun_id;
+  double weight;
+  functional_term *pnext;
+}
+
+
 void xc_set_functional(enum xc_mode mode, 
 		       const double params[XC_PARAMS_LEN])
 {

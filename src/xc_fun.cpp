@@ -105,11 +105,6 @@ int xc_len(enum xc_mode mode, int order)
   return taylor_len(fun_nvars(mode),order);
 }
 
-extern "C"
-int xc_len_fortran_(int *mode, int *order)
-{
-  return xc_len((enum xc_mode)*mode,*order);
-}
 
 int xc_index(enum xc_mode mode, const int exponents[])
 {
@@ -128,55 +123,30 @@ int xc_index(enum xc_mode mode, const int exponents[])
   return idx;
 }
 
+//#include "fortran_interface.h"
 #endif
 
-#if 0
-//Did we already set up tables?
-static int is_setup = 0;
-//Which primary variables will we use?
-static enum xc_mode current_mode = XC_A;
-
-static void setup(void);
-
-// Use strcmp to not depend on c++ standard library
-int xc_parse_functional(const char *functional_name)
+template<int fun_id>
+static int xc_parse_helper(const char *functional_name)
 {
-  for (int i=0;i<XC_PARAMS_LEN;i++)
-    if (strcmp(functional_name,functional_names[i]) == 0)
-      return i;
+  if (strcmp(functional_name,functional<fun_id>::get_name()) == 0)
+    return fun_id;
+  else
+    return xc_parse_helper<fun_id+1>(functional_name);
+}
+
+template<>
+int xc_parse_helper<XC_FUNLIST_LEN>(const char *functional_name)
+{
   return -1;
 }
 
-void xc_set_functional(enum xc_mode mode, 
-		       const double params[XC_PARAMS_LEN])
+// Try to get the id number of the functional with
+// functional_name. Return -1 if no functional was found.
+int xc_fun_id_by_name(const char *functional_name)
 {
-  if (!is_setup)
-    setup();
-  current_mode = mode;
-  for (int i=0;i<XC_PARAMS_LEN;i++)
-    xc_params[i] = params[i];
+  return xc_parse_helper<0>(functional_name);
 }
-
-extern "C"
-void xc_set_functional_fortran_(const int *mode, const double *params, int *len)
-{
-  assert(*len == XC_PARAMS_LEN && "C++/Fortran headers out of sync");
-  xc_set_functional((enum xc_mode)(*mode),params);
-}
-
-#ifndef NO_STDCXX
-extern "C"
-void fortran_report_xc_functional_()
-{
-  // this is useful for debugging mpi
-  // it will report the set functional mix
-  // which may not be set on a mpi worker
-  for (int i = 0; i < XC_PARAMS_LEN; i++)
-    cout << "functional portion:" << i << " weight:" << xc_params[i] << endl;
-}
-#endif
-
-
 
 static int fun_nvars(enum xc_mode mode)
 {
@@ -198,6 +168,24 @@ static int fun_nvars(enum xc_mode mode)
       return -1;
     }
 }			    
+
+#if 0
+//Did we already set up tables?
+static int is_setup = 0;
+//Which primary variables will we use?
+static enum xc_mode current_mode = XC_A;
+
+
+void xc_set_functional(enum xc_mode mode, 
+		       const double params[XC_PARAMS_LEN])
+{
+  if (!is_setup)
+    setup();
+  current_mode = mode;
+  for (int i=0;i<XC_PARAMS_LEN;i++)
+    xc_params[i] = params[i];
+}
+
 
 template<class num, int N>
 static void fun_helper(num *result, const num d[])
@@ -286,36 +274,10 @@ void xc_eval_qd(qd_real *result, int order, const qd_real densvars[])
 }
 #endif
 
-extern "C"
-void xc_eval_fortran_(double *result, int *order, const double *densvars)
-{
-  xc_eval(result,*order,densvars);
-}
-
-#ifdef WITH_QD
-extern "C"
-void xc_eval_fortran_qd_(double *result, int *order, const double *densvars)
-{
-  qd_real qd_result[xc_len(current_mode,*order)];
-  qd_real qd_densvars[fun_nvars(current_mode)];
-  for (int i=0;i<fun_nvars(current_mode);i++)
-    qd_densvars[i] = densvars[i];
-  xc_eval_qd(qd_result,*order,qd_densvars);
-  for (int i=0;i<xc_len(current_mode,*order);i++)
-    result[i] = to_double(qd_result[i]);
-}
-#endif
-
 
 
 #endif
 
-// Fortran version
-extern "C"
-int xc_index_fortran_(const int *mode, const int exponents[])
-{
-  return 1+xc_index((enum xc_mode)*mode,exponents);
-}
 
 
 
@@ -324,6 +286,8 @@ int xc_index_fortran_(const int *mode, const int exponents[])
 template<int functional_id>
 void test_functional(void)
 {
+  assert(xc_fun_id_by_name(functional<functional_id>::get_name()) == 
+	 functional_id);
   cout << "   " << functional<functional_id>::get_name() << " ";
   int res = functional<functional_id>::test();
   if (res == 0)
