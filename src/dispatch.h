@@ -21,7 +21,8 @@ struct table
   template<class scalar>
   static void wrapped_call(void *result, const void *dv, const void *weight)
   {
-    typedef taylor<scalar,xc_mode_info<lowest_set_bit<mode_mask>::bit>::Nvar,Ndeg> ttype;
+    typedef taylor<scalar,xc_mode_info<lowest_set_bit<mode_mask>::bit>
+      ::Nvar,Ndeg> ttype;
     const densvars<ttype> *d = reinterpret_cast<const densvars<ttype> *>(dv); 
     ttype *res = reinterpret_cast<ttype *>(result);
     *res += *reinterpret_cast<const scalar *>(weight)*functional<fun_id>::energy(*d);
@@ -89,14 +90,51 @@ struct functional_term
   int fun_id;
   double weight;
   functional_term *pnext;
+};
+
+static functional_term *current_fun = 0;
+static functional_term *swapped_fun = 0;
+
+void xc_clear_functional(void)
+{
+  functional_term *p = current_fun;
+  while (p)
+    {
+      functional_term *pn = p->pnext;
+      delete p;
+      p = pn;
+    }
+  current_fun = 0;
 }
 
-
-void xc_set_functional(enum xc_mode mode, 
-		       const double params[XC_PARAMS_LEN])
+void xc_swap_functional(void)
 {
-  make_sure_tables_are_set_up();
-  current_mode = mode;
-  for (int i=0;i<XC_PARAMS_LEN;i++)
-    xc_params[i] = params[i];
+  functional_term *p = current_fun;
+  current_fun = swapped_fun;
+  swapped_fun = p;
+}
+
+void xc_add_functional_term(int fun_id, double weight)
+{
+  functional_term *p = new functional_term;
+  p->fun_id = fun_id;
+  p->weight = weight;
+  p->pnext = current_fun;
+  current_fun = p;
+}
+
+void xc_set_parameter(int parameter, double value);
+
+void xc_eval(int mode, int order, double *res, const double *density)
+{
+  for (int i=0;i<xc_len(mode,order);i++)
+    res[i] = 0;
+  functional_term *p = current_functional;
+  // TODO: Setup densvars
+  while(p)
+    {
+      assert(double_tab[p->fun_id][mode][order]);
+      double_tab[p->fun_id][mode][order](res,dv,&p->weight);
+      p = p->pnext;
+    }
 }

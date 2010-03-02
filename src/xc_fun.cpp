@@ -170,21 +170,6 @@ static int fun_nvars(enum xc_mode mode)
 }			    
 
 #if 0
-//Did we already set up tables?
-static int is_setup = 0;
-//Which primary variables will we use?
-static enum xc_mode current_mode = XC_A;
-
-
-void xc_set_functional(enum xc_mode mode, 
-		       const double params[XC_PARAMS_LEN])
-{
-  if (!is_setup)
-    setup();
-  current_mode = mode;
-  for (int i=0;i<XC_PARAMS_LEN;i++)
-    xc_params[i] = params[i];
-}
 
 
 template<class num, int N>
