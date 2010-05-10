@@ -1,5 +1,8 @@
 #ifndef PW9xx_H
 #define PW9xx_H
+#include "functional.h"
+#include "constants.h"
+
 
 // common functions for exchange (and kinetic energy) functionals
 //
@@ -8,30 +11,6 @@
 
 namespace pw91_like_x_internal
 {
-
-  const char *pw91x_reference = 
-    "Perdew-Wang 1991 GGA Exchange Functional\n"
-      "J. P. Perdew, J. A. Chevary, S. H. Vosko, "
-      "K. A. Jackson, M. R. Pederson, and C. Fiolhais, "
-      "Phys. Rev. B 46, 6671 (1992)\n"; 
-
-  const char *pw91k_reference = 
-    "PW91 GGA Kinetic Energy Functional\n"
-      "A. Lembarki, H. Chermette, "
-      "Phys. Rev. A 50, 5328 (1994)\n"; 
-
-  const char *pbex_reference = 
-    "PBE Exchange Functional\n"
-      "J. P. Perdew, K. Burke, and M. Ernzerhof, "
-      "Phys. Rev. Lett 77, 3865 (1996)\n"; 
-
-
-  const char *pberevx_reference = 
-    "Revised PBE Exchange Functional\n"
-      "Y. Zhang and W., "
-      "Phys. Rev. Lett 80, 890 (1998)\n";
-
-
 // formulas for the auxiliary quantities below can be found, for
 // instance, at 
 //
@@ -54,7 +33,7 @@ namespace pw91_like_x_internal
 // for the different functionals
 
   template<class num>
-  static num prefactor(const num &rho, const num &grad)
+  static num prefactor(const num &rho)
   {
 // aspg: the 2^.333 factor here i can't see in the molpro formula, will have to 
 // double-check this - but as it is it matches the results for the database
@@ -78,6 +57,25 @@ namespace pw91_like_x_internal
     return CF*pow(2.0,2.0/3.0)*pow(rho,5.0/3.0);
   }
 
+
+   // enhancement factor F(S), common to PW91x and PW91k 
+  template<class num>
+  static num pw91xk_enhancement(const parameter param_AB[6],
+				const num &rho,
+				const num &grad)
+  {
+    using pw91_like_x_internal::S;
+    
+    num st = S(rho,grad);
+    
+    num t1 = 1 + param_AB[0]*st*asinh(param_AB[1]*st); 
+    num t2 = st*st*(param_AB[2] - param_AB[3]*exp(-param_AB[4]*st*st)); 
+    
+    num numerator   = t1 + t2; 
+    num denominator = t1 + param_AB[5]*pow(st,4);
+    
+    return numerator/denominator;
+  }
 }
 
 #endif

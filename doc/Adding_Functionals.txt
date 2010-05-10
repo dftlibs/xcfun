@@ -1,50 +1,61 @@
-Here's how to add new functions to xc_fun. Let's assume
+Here's how to add new functions to XCFun. Let's assume
 the functional is called "myfunctional".
 
-1) Create a new .h file in src/functionals, myfunctional_fun.h
+1) Create a new .cpp file in src/functionals, myfunctional.cpp
+   Put #include "functional.h" at the top.
 
-2) Implemented your functional as a function accepting density
-   variables and returning the exchange correlation energy. The
-   type of the input and return parameters should be a template
-   typename. Example
+2) Implement your functional as a function accepting a densvars
+   object and returning the exchange correlation energy. The type 
+   of the input and return parameters should be a template typename. 
+   Example (Slater exchange):
 
-   template<typename T>
-   T myfunctional(const T &rhoa, const T &rhob)
-   {
-      //Return some function of rhoa and rhob
-      returb pow(rhoa + rhob,4.0/3.0);
+   template<class num>
+   static num slater(const densvars<num> &d) 
+   { 
+     return -3.0/4.0*pow(6/M_PI, 1.0/3.0)*
+       (pow(d.a,4.0/3.0) + pow(d.b,4.0/3.0));
    }
 
-   The arguments to your function should be some of the variables
-   included in struct densvars in src/xc_fun.cpp. Use the variables
-   that are most convenient for you.
+   Look in functional.h for the quantities present in densvars. Use the
+   variables that are most convenient for you. Look at existing
+   functionals for more examples.
 
-3) Add an 
-   #include "myfunctional_fun.h"
-   to src/xc_fun.cpp
+3) Create a function called SETUP_FUNCTIONAL (this is a macro and will
+   be expanded to something appropriate). In this function you set up
+   your functional and describe it to the user.  You should also
+   provide test input and output for the functional.  There can be
+   only one SETUP_FUNCTIONAL function in each cpp file, so you must
+   create one file for each functional.  If several functionals share
+   some functions or data you can make a header file and put the
+   shared items there. This is done, for example, with the PW92
+   correlation energy, which is used in many other functionals. You
+   also need to give a short and a long description of the functional,
+   as well as its type (LDA, GGA etc).
+   Example (Slater):
 
-4) Add your functional to the enum xc_funparams in include/xc_fun.h,
-   XC_MYFUNCTIONAL,
-   Make sure that XC_PARAMS_LEN is still last in the list.
+   SETUP_FUNCTIONAL(functional &f)
+   {
+     f.describe("slaterx",XC_LDA,
+                "Slater LDA exchange",
+                "LDA Exchange functional\n"
+                "P.A.M. Dirac, Proceedings of the Cambridge Philosophical "
+                "Society, 26 (1930) 376.\n"
+                "F. Bloch, Zeitschrift für Physik, 57 (1929) 545.\n\n"
+                "Implemented by Ulf Ekstrom\n"
+                "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
 
-4.1) Also update fortran/xc_fun_module.F90 to include your functional.
+     SET_LDA_ENERGY_FUNCTION(f,slater::energy);
+     static const double d[] = 
+       {0.39E+02, 0.38E+02};
+     static const double ref[] =
+       {-0.241948147838E+03, // energy
+        -0.420747936684E+01, // gradient
+        -0.417120618800E+01,
+        -0.359613621097E-01, // hessian
+        0,
+        -0.365895279649E-01 };
+     f.add_test(XC_VARS_AB,2,d,ref,1e-11);
+   }
 
-5) Add the name of your functional to the list of strings
-   functional_names[], in src/xc_fun.h. This is the name
-   used when specifying a complicated functional as a sum
-   of many components. Note: the strings must be in the same
-   order as in point 4).
-
-6) Edit the function sum_functionals in src/xc_fun.h, so that
-   your functional is added in the same way as the others.
-   Here you have to make sure your are sending the correct
-   density variables to your function (the same as you used in 
-   step 2).
-
-
-Now you can try
-
-make funeval
-
-and see if the funeval program evaluates your functional
-correctly.
+4) Run `make', and the new .cpp file should be compiled automatically.
+   Your functional will now be available to the library.

@@ -4,10 +4,80 @@ program xc_example
 ! for example densities
 
 ! this example contains all f90 interface toutines
-! that are needed to "talk to" the xc_fun library
+! that are needed to "talk to" the xcfun library
 
-  use xc_fun
+  use xcfun
+  integer funid,n,stat,ilen,olen,order
+  character*1000 descr
+  double precision, allocatable :: dens(:),funout(:)
 
+  call xcfun_splash(descr)
+  print *, descr(1:len_trim(descr))
+
+! Create a new functional, we need this for interacting
+! with the library.
+  funid = xc_new_functional()
+
+! Discover all settings
+  print *,'All settings (functionals and parameters):'
+  n = 0
+  call xc_setting_name(funid,n,descr)
+  do while(len_trim(descr).gt.0)
+     print *,descr(1:len_trim(descr))
+     n = n + 1
+     call xc_setting_name(funid,n,descr)
+  enddo
+
+! Set up BLYP
+  print *,'Setting up BLYP'
+!radovan: this works
+! call xc_set_setting(funid,'beckex',1.0d0,stat)
+! call xc_set_setting(funid,'lypc',1.0d0,stat)
+!now trying:
+  call xc_set_setting(funid, 'slaterx',    1.0d0, stat)
+  call xc_set_setting(funid, 'beckexcorr', 1.0d0, stat)
+  call xc_set_setting(funid, 'lypc',       1.0d0, stat)
+
+! Print currently set parameters
+! Discover all settings
+  print *,'Now defined (weights):'
+  n = 0
+  call xc_setting_name(funid,n,descr)
+  do while(len_trim(descr).gt.0)
+     if (xc_is_set(funid,descr)) then
+        print *,descr(1:len_trim(descr)),xc_get_setting(funid,descr)
+     endif
+     n = n + 1
+     call xc_setting_name(funid,n,descr)
+  enddo
+! Set alpha/beta density variable mode
+  call xc_set_mode(funid,XC_VARS_AB)
+! Type of functional
+  print *,'Functional type:',xc_get_type(funid),' (0 LDA, 1 GGA, 2 MGGA)'
+! Let's get derivatives to third order
+  order = 3
+  print *,'Order:',order
+! Ask for the length of the input
+  ilen = xc_input_length(funid)
+  olen = xc_output_length(funid,order)
+  print *,'Length of input:',ilen
+  print *,'Length of Output:',olen
+! Allocate data for evaluation
+  allocate(dens(ilen))
+  allocate(funout(olen))
+! Set some random input
+  do n=1,ilen
+     dens(n) = n
+  enddo
+! Compute the functional and its derivatives up to order
+  call xc_eval(funid,funout,order,dens)
+! Print output
+  print *,'Output:'
+  do n=1,olen
+     print *,n,funout(n)
+  enddo
+
+#if 0
   real(8)              :: fun(XC_PARAMS_LEN)
   real(8), allocatable :: derv(:)
   integer              :: max_order
@@ -64,5 +134,5 @@ program xc_example
   print *, '(d/dn_a)^2 e         = ', derv(xc_index(XC_ABFGH, (/2, 0, 0, 0, 0/)))
 
   deallocate(derv)
-
+#endif
 end program

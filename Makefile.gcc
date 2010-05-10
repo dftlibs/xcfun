@@ -1,0 +1,10 @@
+# Compile time options:
+# -DNDEBUG Turn off run time checks in production calculations to gain speed
+# To compile without -lstdc++ needed use (g++) -fno-rtti -fno-exceptions 
+# -fno-threadsafe-statics. Note the last option.
+
+# C++ compiler and flags
+CXX=g++
+CXXFLAGS=-g -Wall -DNDEBUG -O3 -fPIC -fno-rtti -fno-exceptions -fno-threadsafe-statics
+
+include Makefile.common

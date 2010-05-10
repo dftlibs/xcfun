@@ -1,0 +1,22 @@
+#This file probably requires GNU Make, but should be easily
+#convertible to regular Make format.
+
+CXXFLAGS+=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals -Llib
+
+BASE_OBJ:=src/xcfun.o src/functional.o src/settings.o \
+          src/evaluators.o src/fortran.o
+FUN_OBJ:=$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
+
+lib: lib/libxcfun.so
+
+lib/libxcfun.so: $(BASE_OBJ) $(FUN_OBJ)
+	$(CXX) $(CXXFLAGS) -fPIC -shared -o lib/libxcfun.so $(LIBS) $^	
+
+funeval: test/funeval.cpp lib/libxcfun.so
+	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun -Wl,-rpath=lib
+
+testall: test/testall.cpp lib/libxcfun.so
+	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun -Wl,-rpath=lib
+
+clean:
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.so

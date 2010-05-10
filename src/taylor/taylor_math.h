@@ -249,7 +249,7 @@ void atan_taylor(taylor<T,1,Ndeg>& t, const T &a)
     x[1] = 2*a;
   if (Ndeg > 1)
     x[2] = 1;
-  x.compose(t,invt);
+  x.compose0(t,invt);
   //Integrate each term and set the constant
   t.integrate();
   t[0] = atan(a);

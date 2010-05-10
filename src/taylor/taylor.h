@@ -4,29 +4,36 @@
 #include <cmath>
 #include "polymul.h"
 
-#ifdef TAYLOR_LOGGING
-static int taylor_logging = 0;
-#endif
+inline int taylorlen(int nvar, int ndeg)
+{
+  int len = 1;
+  for (int k=1;k<=nvar;k++)
+    {
+      len *= ndeg + k;
+      len /= k;
+    }
+  return len;
+}
 
 template<class T, int Nvar, int Ndeg>
-class taylor : public polynomial<T, Nvar, Ndeg>
+class taylor : public polymul::polynomial<T, Nvar, Ndeg>
 {
 public:
   typedef taylor<T,Nvar,Ndeg> type;
-  using polynomial<T, Nvar, Ndeg>::size;
-  using polynomial<T, Nvar, Ndeg>::c;
+  using polymul::polynomial<T, Nvar, Ndeg>::size;
+  using polymul::polynomial<T, Nvar, Ndeg>::c;
 
   taylor(void) {}
   // This does not work when T is a int. One ugly solution is to
   // specialize taylor for int T's, but perhaps not so useful?
   template<typename S>
-  taylor(const S &c0) : polynomial<T, Nvar,Ndeg>(T(c0)) {} 
+  taylor(const S &c0) : polymul::polynomial<T, Nvar,Ndeg>(T(c0)) {} 
   //  taylor(double c0) : polynomial<T, Nvar,Ndeg>(T(c0)) {} 
   //  taylor(const T &c0) : polynomial<T, Nvar,Ndeg>(c0) {} 
   // Set the constant term to c0 and the first order term of
   // variable var to var_value.
   template<typename S>
-  taylor(const S &c0, int var) : polynomial<T, Nvar,Ndeg>(T(c0)) 
+  taylor(const S &c0, int var) : polymul::polynomial<T, Nvar,Ndeg>(T(c0)) 
   {
     assert(var>=0);
     assert(var<Nvar);
@@ -34,7 +41,7 @@ public:
       c[var+1] = 1;
   }
   template<typename S, typename U>
-  taylor(const S &c0, int var, const U &var_value) : polynomial<T, Nvar,Ndeg>(T(c0)) 
+  taylor(const S &c0, int var, const U &var_value) : polymul::polynomial<T, Nvar,Ndeg>(T(c0)) 
   {
     assert(var>=0);
     assert(var<Nvar);
@@ -44,7 +51,7 @@ public:
   template<typename S>
   taylor<T,Nvar,Ndeg> &operator=(const S& c0)
   {
-    polynomial<T,Nvar,Ndeg>::operator=(T(c0));
+    polymul::polynomial<T,Nvar,Ndeg>::operator=(T(c0));
     return *this;
   }
   template<int N>
@@ -72,7 +79,7 @@ public:
   // derivatives, i.e. x^2y^3 is multiplied by 2!3!
   void deriv_facs(void)
   {
-    polydfac(*this);
+    polymul::polydfac(*this);
   }
   void integrate(void)
   {
@@ -88,7 +95,7 @@ public:
     int k = 1;
     for (int i=1;i<=Ndeg;i++)
       {
-	for (;k<polylen(Nvar,i);k++)
+	for (;k<taylorlen(Nvar,i);k++)
 	  c[k] *= an;
 	an *= alpha;
       }
@@ -105,81 +112,98 @@ public:
   template<int NdegOut>
   void shift(taylor<T,1,NdegOut> &out, const T dx[Nvar]) const
   {
-      assert(Nvar == 1);
-      assert(NdegOut <= Ndeg);
-      T dxpow[Ndeg+1];
-      out = 0;
-      dxpow[0] = 1;
-      for (int i=1;i<=Ndeg;i++)
-	  dxpow[i] = dx[0]*dxpow[i-1];
-      for (int i=0;i<=NdegOut;i++)
-	  for (int j=i;j<=Ndeg;j++)
-	      out[i] += polylen(j-i,i)*dxpow[j-i]*(*this)[j];
+    assert(Nvar == 1);
+    assert(NdegOut <= Ndeg);
+    T dxpow[Ndeg+1];
+    out = 0;
+    dxpow[0] = 1;
+    for (int i=1;i<=Ndeg;i++)
+      dxpow[i] = dx[0]*dxpow[i-1];
+    for (int i=0;i<=NdegOut;i++)
+      for (int j=i;j<=Ndeg;j++)
+	out[i] += taylorlen(j-i,i)*dxpow[j-i]*(*this)[j];
   }
   taylor<T, Nvar,Ndeg> operator-(void) const
-    {
-      taylor<T, Nvar,Ndeg> res = *this;
-      for (int i=0;i<res.size;i++)
-	res[i] *= -1;
-      return res;
-    }
+  {
+    taylor<T, Nvar,Ndeg> res = *this;
+    for (int i=0;i<res.size;i++)
+      res[i] *= -1;
+    return res;
+  }
   void operator-=(const taylor<T, Nvar,Ndeg>& t)
-    {
-      for (int i=0;i<size;i++)
-	c[i] -= t.c[i];
-    }
+  {
+    for (int i=0;i<size;i++)
+      c[i] -= t.c[i];
+  }
   void operator+=(const taylor<T, Nvar,Ndeg>& t)
-    {
-      for (int i=0;i<size;i++)
-	c[i] += t.c[i];
-    }
+  {
+    for (int i=0;i<size;i++)
+      c[i] += t.c[i];
+  }
   template<class S>
   void operator-=(const S& x)
-    {
-      c[0] -= x;
-    }
+  {
+    c[0] -= x;
+  }
   template<class S>
   void operator+=(const S& x)
-    {
-      c[0] += x;
-    }
+  {
+    c[0] += x;
+  }
   template<class S>
   void operator*=(const S& scale)
-    {
-      for (int i=0;i<size;i++)
-	c[i] *= scale;
-    }
+  {
+    for (int i=0;i<size;i++)
+      c[i] *= scale;
+  }
   template<class S>
   void operator/=(const S& scale)
-    {
-      for (int i=0;i<size;i++)
-	c[i] /= scale;
-    }
+  {
+    for (int i=0;i<size;i++)
+      c[i] /= scale;
+  }
   void operator/=(const taylor<T,Nvar,Ndeg>& t)
-    {
-      taylor<T,Nvar,Ndeg> tinv = 1/t;
-      *this*=tinv;
-    }
+  {
+    taylor<T,Nvar,Ndeg> tinv = 1/t;
+    *this*=tinv;
+  }
   void operator*=(int scale)
-    {
-      for (int i=0;i<size;i++)
-	c[i] *= scale;
-    }
+  {
+    for (int i=0;i<size;i++)
+      c[i] *= scale;
+  }
   template<int Ndeg2>
   void operator*=(const taylor<T, Nvar,Ndeg2>& t)
-    {
-      taylormul(*this,t);
-    }
+  {
+    polymul::taylormul(*this,t);
+  }
   /* Put sum_i coeff[i]*(this - this[0])^i in res,
      used when evaluating analytical functions of this */
   template<int Nres>
   void compose(taylor<T, Nvar,Nres>& res, const taylor<T,1,Nres> &coeff) const
-    {
-      assert(Nres >= Ndeg);
-      taylor<T, Nvar,Ndeg> tmp = *this;
-      tmp[0] = 0;
-      taylorcompose0(res,tmp,coeff.c);
-    }
+  {
+    assert(Nres >= Ndeg);
+    taylor<T, Nvar,Ndeg> tmp = *this;
+    tmp[0] = 0;
+    polymul::taylorcompose0(res,tmp,coeff.c);
+  }
+  // Like compose, but this->c[0] _must_ be equal to 0. Slightly faster.
+  template<int Nres>
+  void compose0(taylor<T, Nvar,Nres>& res, const taylor<T,1,Nres> &coeff) const
+  {
+    assert(Nres >= Ndeg);
+    polymul::taylorcompose0(res,*this,coeff.c);
+  }
+  template<int Nres>
+  taylor<T, Nvar,Nres> compose(const taylor<T,1,Nres> &coeff) const
+  {
+    assert(Nres >= Ndeg);
+    taylor<T, Nvar,Nres> res;
+    taylor<T, Nvar,Ndeg> tmp = *this;
+    tmp[0] = 0;
+    polymul::taylorcompose0(res,tmp,coeff.c);
+    return res;
+  }
   T dot(const taylor<T, Nvar, Ndeg> &t) const
   {
     T sum = 0;
@@ -341,7 +365,7 @@ taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t1,
 
 #include "taylor_math.h"
 
-#ifndef NO_STDCXX
+#ifdef TAYLOR_CXXIO
 
 #include <iostream>
 

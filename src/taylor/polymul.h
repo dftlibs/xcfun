@@ -26,6 +26,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef POLYMUL_H
 #define POLYMUL_H
+
 #include <cassert>
 
 /*
@@ -1215,6 +1216,9 @@ struct composer<numtype,Nvar,0,Ndegp>
 
 } // End of namespace polymul_internal
 
+namespace polymul
+{
+
 // Length of a nvar,neg polynomial
 // = binomial(nvar+ndeg,ndeg), but this one
 // can be evaluated at run time.
@@ -1570,6 +1574,8 @@ inline void taylorcompose(polynomial<numtype, Nvar,Ndeg> &dst,
   dst[0] += c[0];
 }
 
+
+} // End namespace polymul
 #endif
 
 
