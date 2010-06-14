@@ -39,5 +39,43 @@ void setup_lb94(functional &f)
 	     "Note that the LB94 energy is not well defined, here its"
 	     "simply the SVWN5 energy, also used for order >= 2.\n"
 	     "Implemented by Ulf Ekstrom.\n");
-  SET_GGA_ENERGY_FUNCTION(f,lb94);
+
+  SET_GGA_ENERGY_FUNCTION(f, lb94);
+
+  static const double d[5] =
+    {
+     0.39e+02,
+     0.38e+02,
+     0.81e+06,
+     0.82e+06,
+     0.82e+06
+    };
+
+  static const double ref[21] =
+    {
+//     radovan: reference data obtained from *.c implementation in DIRAC
+      -2.504589269450e+02, // 00000
+      -4.326578426659e+00, // 10000
+      -4.292112232065e+00, // 01000
+       0.000000000000e+00, // 00100
+       0.000000000000e+00, // 00010
+       0.000000000000e+00, // 00001
+      -3.520452674168e-02, // 20000
+      -1.028611984896e-03, // 11000
+       0.000000000000e+00, // 10100
+       0.000000000000e+00, // 10010
+       0.000000000000e+00, // 10001
+      -3.578939264344e-02, // 02000
+       0.000000000000e+00, // 01100
+       0.000000000000e+00, // 01010
+       0.000000000000e+00, // 01001
+       0.000000000000e+00,
+       0.000000000000e+00,
+       0.000000000000e+00,
+       0.000000000000e+00,
+       0.000000000000e+00,
+       0.000000000000e+00
+    };
+
+  f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);
 }

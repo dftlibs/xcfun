@@ -32,7 +32,8 @@ static num energy (const densvars<num> &d)
    num zet_a = zet(d.a, d.taua);
    num zet_b = zet(d.b, d.taub);
 
-   num Ec_ab = ueg_c_anti(d)   * m06_c_anti(param_c_anti,param_d_anti,chi_a,chi_b,zet_a,zet_b);
+   num Ec_ab = ueg_c_anti(d) * m06_c_anti(param_c_anti,param_d_anti,chi_a,zet_a, 
+                                                                    chi_b,zet_b);
    num Ec_aa = ueg_c_para(d.a) * m06_c_para(param_c_para,param_d_para,chi_a,zet_a);
    num Ec_bb = ueg_c_para(d.b) * m06_c_para(param_c_para,param_d_para,chi_b,zet_b);
 

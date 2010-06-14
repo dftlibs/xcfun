@@ -9,6 +9,39 @@ module xcfun
   integer, parameter ::  XC_LDA  = 0
   integer, parameter ::  XC_GGA  = 1
   integer, parameter ::  XC_MGGA = 2
+! Indices into the output array of derivatives. Fortran numbering.
+  integer, parameter :: XC_D0 = 1
+  integer, parameter :: XC_D1 = 2
+  integer, parameter :: XC_D2 = 3
+
+  integer, parameter :: XC_D00 = 1
+  integer, parameter :: XC_D10 = 2
+  integer, parameter :: XC_D01 = 3
+  integer, parameter :: XC_D20 = 4
+  integer, parameter :: XC_D11 = 5
+  integer, parameter :: XC_D02 = 6
+
+  integer, parameter :: XC_D00000 = 1
+  integer, parameter :: XC_D10000 = 2
+  integer, parameter :: XC_D01000 = 3
+  integer, parameter :: XC_D00100 = 4
+  integer, parameter :: XC_D00010 = 5
+  integer, parameter :: XC_D00001 = 6
+  integer, parameter :: XC_D20000 = 7
+  integer, parameter :: XC_D11000 = 8
+  integer, parameter :: XC_D10100 = 9
+  integer, parameter :: XC_D10010 = 10
+  integer, parameter :: XC_D10001 = 11
+  integer, parameter :: XC_D02000 = 12
+  integer, parameter :: XC_D01100 = 13
+  integer, parameter :: XC_D01010 = 14
+  integer, parameter :: XC_D01001 = 15
+  integer, parameter :: XC_D00200 = 16
+  integer, parameter :: XC_D00110 = 17
+  integer, parameter :: XC_D00101 = 18
+  integer, parameter :: XC_D00020 = 19
+  integer, parameter :: XC_D00011 = 20
+  integer, parameter :: XC_D00002 = 21
 contains
   ! We pass strings as null terminated integer arrays to C, this
   ! should be portable if C and Fortran uses the same character set.

@@ -3,7 +3,7 @@
 
 #include "pw92eps.h"
 #include "pw9xx.h"
-
+#include <stdio.h>
 
 // common functions for MO5 and M06 family of (hybrid) meta-gga functionals
 
@@ -172,7 +172,6 @@ namespace m0xy_metagga_xc_internal
 
     const num zet_ab  = zet_a + zet_b;
     const num chi_ab2 = chi_a*chi_a + chi_b*chi_b;
-
     return g(param_c,gamma_c_anti*chi_ab2) + h(param_d,alpha_c_antiparallel,chi_ab2,zet_ab);
   }
 

@@ -6,6 +6,7 @@
 # C++ compiler and flags
 CXX=icpc
 # Turn of messages that hide real errors
-CXXFLAGS= -Wall -g -fPIC -O2  -fno-rtti -fno-exceptions -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177
+CXXFLAGS= -Wall -g -O2  -fno-rtti -fno-exceptions -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177
+CXXFLAGS_SHARED= -Wall -g -fPIC -O2  -fno-rtti -fno-exceptions -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177
 
 include Makefile.common

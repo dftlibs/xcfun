@@ -29,14 +29,14 @@ program xc_example
   enddo
 
 ! Set up BLYP
-  print *,'Setting up BLYP'
+  print *,'Setting up LDAERF'
 !radovan: this works
 ! call xc_set_setting(funid,'beckex',1.0d0,stat)
 ! call xc_set_setting(funid,'lypc',1.0d0,stat)
 !now trying:
-  call xc_set_setting(funid, 'slaterx',    1.0d0, stat)
-  call xc_set_setting(funid, 'beckexcorr', 1.0d0, stat)
-  call xc_set_setting(funid, 'lypc',       1.0d0, stat)
+  call xc_set_setting(funid, 'ldaerfx',    1.0d0, stat)
+  call xc_set_setting(funid, 'ldaerfc',    1.0d0, stat)
+!  call xc_set_setting(funid, 'lypc',       1.0d0, stat)
 
 ! Print currently set parameters
 ! Discover all settings
@@ -55,7 +55,7 @@ program xc_example
 ! Type of functional
   print *,'Functional type:',xc_get_type(funid),' (0 LDA, 1 GGA, 2 MGGA)'
 ! Let's get derivatives to third order
-  order = 3
+  order = 2
   print *,'Order:',order
 ! Ask for the length of the input
   ilen = xc_input_length(funid)

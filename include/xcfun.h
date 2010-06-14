@@ -73,4 +73,39 @@ class xc_functional
   xc_functional_data *d;
 };
 
+// Derivative indices into xc_eval output
+
+#define XC_D0 0
+#define XC_D1 1
+#define XC_D2 2
+
+#define XC_D00 0
+#define XC_D10 1
+#define XC_D01 2
+#define XC_D20 3
+#define XC_D11 4
+#define XC_D02 5
+
+#define XC_D00000 0
+#define XC_D10000 1
+#define XC_D01000 2
+#define XC_D00100 3
+#define XC_D00010 4
+#define XC_D00001 5
+#define XC_D20000 6
+#define XC_D11000 7
+#define XC_D10100 8
+#define XC_D10010 9
+#define XC_D10001 10
+#define XC_D02000 11
+#define XC_D01100 12
+#define XC_D01010 13
+#define XC_D01001 14
+#define XC_D00200 15
+#define XC_D00110 16
+#define XC_D00101 17
+#define XC_D00020 18
+#define XC_D00011 19
+#define XC_D00002 20
+
 #endif

@@ -115,7 +115,44 @@ void setup_beckexcorr(functional &f)
 	     "Implemented by Ulf Ekstrom\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
 
-  SET_GGA_ENERGY_FUNCTION(f,energy_corr);
+  SET_GGA_ENERGY_FUNCTION(f, energy_corr);
+
+  static const double d[5] =
+    {
+     0.39e+02,
+     0.38e+02,
+     0.81e+06,
+     0.82e+06,
+     0.82e+06
+    };
+
+  static const double ref[21] =
+    {
+//     radovan: reference data obtained from *.c implementation in DIRAC
+      -3.603918211981e+01, // 00000
+       3.479609002901e-01, // 10000
+       3.581112448092e-01, // 01000
+      -1.724344780183e-05, // 00100
+      -1.737123383621e-05, // 00010
+       0.000000000000e+00, // 00001
+      -8.181318630937e-03, // 20000
+       0.000000000000e+00, // 11000
+       2.014159228564e-07, // 10100
+       0.000000000000e+00, // 10010
+       0.000000000000e+00, // 10001
+      -8.135046261131e-03, // 02000
+       0.000000000000e+00, // 01100
+       1.959613595393e-07, // 01010
+       0.000000000000e+00, // 01001
+       0.0000000000070074, // radovan: i got this using xcfun
+       0.0000000000000000,
+       0.0000000000000000,
+       0.0000000000071868, // radovan: i got this using xcfun
+       0.0000000000000000,
+       0.0000000000000000
+    };
+
+  f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);
 }
 
 void setup_beckexsr(functional &f)
