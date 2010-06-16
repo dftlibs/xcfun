@@ -62,6 +62,11 @@ extern "C" {
   // Index into result[] for derivative with given index (length as input_length() )
   int xc_derivative_index(xc_functional fun, const int derivative[]);
 
+  // List of all settings
+#ifndef XCFUN_INTERNAL
+#include "xcfun_autogen.h"
+#endif
+
   /* Discover and manipulate settings */
   int xc_nr_settings(xc_functional fun);
   const char *xc_name_setting(xc_functional fun, int setting_nr);
@@ -72,6 +77,7 @@ extern "C" {
   int xc_setting_is_set(xc_functional fun, int setting_nr);
   int xc_setting_is_functional(xc_functional fun, int setting_nr);
   double xc_setting_value(xc_functional fun, int setting_nr);
+
 
 #ifdef __cplusplus
 } // End of extern "C"

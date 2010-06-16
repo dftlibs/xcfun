@@ -37,7 +37,7 @@ public:
       }
     return *this;
   }
-  void destruct(void)
+  void destroy(void)
   {
     free(items);
   }

@@ -1,7 +1,11 @@
-/* A c++ program that can be linked without libstdc++ */
+/* A c++ program that can be linked without libstdc++.
+Requires compilation with -fno-rtti -fno-exceptions
+with gcc and intel, similar options with other compilers?
+ */
 
 #include <cstdio> //Seems to be ok, requires libc
 #include <cstdlib>
+#include "struct_array.h"
 
 class C
 {
@@ -30,6 +34,13 @@ static C cstatic(5); //This is also ok with g++/gcc
 int main(void)
 {
   C cstack(12);
+  array<int> a;
+  a.construct();
+  a.push_back(12);
+  printf("from array: %i\n",a[0]);
+  a[0] = 18;
+  printf("from array: %i\n",a[0]);
+  a.destruct();
   /* Requires libstdc++
   C *cp = new C(17);
   delete cp;

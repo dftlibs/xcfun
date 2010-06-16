@@ -6,8 +6,8 @@
 #include "xcfun.h"
 #include "config.h"
 #include "array.h"
-#include "settings.h"
 #include "specmath.h"
+#include "parameters.h"
 
 // MGGA's have 7 variables (GGA+tau)
 #define XC_MAX_NVAR 7
@@ -20,10 +20,10 @@ typedef double parameter;
 
 // Functions for _user definable parameters_, for example the range
 // separation parameter mu.
-setting xc_param_lookup(const xc_functional::xc_functional_data *params, 
-			const char *name);
-double xc_param_get(const xc_functional::xc_functional_data *params, 
-		    const setting &s);
+//setting xc_param_lookup(const xc_functional_data *params, 
+//			const char *name);
+//double xc_param_get(const xc_functional::xc_functional_data *params, 
+//		    const setting &s);
 
 
 // Variables for expressing functionals, these are redundant because
@@ -31,16 +31,12 @@ double xc_param_get(const xc_functional::xc_functional_data *params,
 template<class T>
 struct densvars
 {
-  densvars(const xc_functional::xc_functional_data *p) : params(p) {}
+  densvars(const xc_functional_data *p) : params(p) {}
   //For getting user defined parameters
-  const xc_functional::xc_functional_data *params; 
-  setting lookup(const char *name) const
+  const xc_functional_data *params; 
+  double get(enum xc_parameters p) const
   {
-    return xc_param_lookup(params,name);
-  }
-  double get(const setting &s) const
-  {
-    return xc_param_get(params,s);
+    //FIXME return params->parameters[p];
   }
   
   T a, b, gaa, gab, gbb;

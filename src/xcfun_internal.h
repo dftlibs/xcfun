@@ -1,11 +1,10 @@
 #ifndef XCFUN_INTERNAL_H
 #define XCFUN_INTERNAL_H
-
+#define XCFUN_INTERNAL
 #include "xcfun.h"
 #include "functional.h"
 #include "array.h"
 #include "config.h"
-#include "settings.h"
 
 struct xc_functional_data
 {
@@ -33,17 +32,15 @@ public:
   int type; // LDA, GGA etc
   int max_order; // Maximum derivative order with current settings
 
-  user_settings *settings;
+  double parameters[XC_NR_PARAMS];
   array<functional *> active_functionals;
-  array<double> weights;
 };
 
 void xc_die(const char *message, int code);
 int xc_input_length(int mode, int type);
 int xc_output_length(int mode, int type, int order);
 
-settings_database &xc_get_settings();
-typedef void (*evaluator)(const xc_functional::xc_functional_data &fun, double *, const double *);
+typedef void (*evaluator)(const xc_functional_data &fun, double *, const double *);
 evaluator xc_evaluator_lookup(int mode, int type, int order);
 
 void xcint_setup_functionals();

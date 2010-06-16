@@ -1,5 +1,8 @@
 #include "functional.h"
 
+/* See also list_of_parameters.h for list of functional
+   parameters. */
+
 #define SETUP(F) void F(functional &); xc_run_functional_setup(F);
 
 void xcint_setup_functionals()

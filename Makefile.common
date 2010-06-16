@@ -15,6 +15,9 @@ lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ)
 #lib/libxcfun.so: $(BASE_OBJ) $(FUN_OBJ)
 #	$(CXX) $(CXXFLAGS) -fPIC -shared -o lib/libxcfun.so $(LIBS) $^	
 
+geninterface: src/geninterface.cpp src/parameters.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
 funeval: test/funeval.cpp lib/libxcfun.a
 	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun
 

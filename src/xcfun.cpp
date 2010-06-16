@@ -80,11 +80,15 @@ xc_functional_data::initialize(void)
   max_order = -1;
   // Just default settings to start with
   settings = xc_get_settings().new_user_settings();
+  active_functionals.construct();
+  weights.construct();
 }
 
 xc_functional_data::destroy(void)
 {
   delete settings;
+  active_functionals.destroy();
+  weights.destroy();
 }
 
 void xc_functional_data::regularize_density(double *density)
