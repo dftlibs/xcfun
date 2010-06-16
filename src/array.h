@@ -4,26 +4,28 @@
 // Stupid array class because we don't want to rely on libstdc++
 
 #include <cassert>
+#include <cstdlib>
 
 template<typename T>
 class array
 {
 public:
-  array(void)
+  array(void) {}
+  void construct(void)
   {
     nr_items = 0;
     max_items = 2;
-    items = new T[max_items];
+    items = (T *)malloc(max_items*sizeof(T));
   }
-  array(const array &a)
+  void construct(const array &a)
   {
     nr_items = a.nr_items;
     max_items = a.max_items;
-    items = new T[max_items];
+    items = (T *)malloc(max_items*sizeof(T));
     for (int i=0;i<nr_items;i++)
       items[i] = a[i];
   }
-  array<T> &operator=(const array &a)
+  void assign_from(const array &a)
   {
     if (this != &a)
       {
@@ -35,9 +37,9 @@ public:
       }
     return *this;
   }
-  ~array(void)
+  void destruct(void)
   {
-    delete[] items;
+    free(items);
   }
   int size(void) const
   {
@@ -69,10 +71,10 @@ public:
   }
   void clear(void)
   {
-    delete[] items;
+    free(items);
     nr_items = 0;
     max_items = 2;
-    items = new T[max_items];
+    items = (T *)malloc(max_items*sizeof(T));
   }
   void extend(int len, const T &fill)
   {
@@ -88,10 +90,10 @@ protected:
     if (capacity > max_items)
       {
 	max_items = capacity;
-	T *new_items = new T[max_items];
+	T *new_items = (T *)malloc(max_items*sizeof(T));
 	for (int i=0;i<nr_items;i++)
 	  new_items[i] = items[i];
-	delete[] items;
+	free(items);
 	items = new_items;
       }
   }
