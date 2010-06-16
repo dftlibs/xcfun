@@ -23,11 +23,13 @@ void xc_die(const char *message, int code)
   exit(-1);
 }
 
+extern "C"
 double xcfun_version(void)
 {
   return 0.9;
 }
 
+extern "C"
 const char *xcfun_splash(void)
 {
   return "XCFun DFT library, Copyright 2009-2010 Ulf Ekstrom\n"
@@ -37,7 +39,7 @@ const char *xcfun_splash(void)
     "FITNESS FOR A PARTICULAR PURPOSE. For details see the documentation.\n";
 }
 
-int xc_input_length(int mode, int type)
+int xc_input_length(xc_functional fun, int mode, int type)
 {
   static int tab[XC_NR_MODES][XC_NR_TYPES] = 
     {{1,2,3},{1,2,3},{2,5,7},{2,5,7}};
@@ -70,7 +72,7 @@ double xc_param_get(const xc_functional::xc_functional_data *params,
 }
 
 
-xc_functional::xc_functional_data::xc_functional_data(void)
+xc_functional_data::initialize(void)
 {
   xcint_assure_setup();
   mode = XC_VARS_AB; //Use alpha/beta as default
@@ -80,21 +82,21 @@ xc_functional::xc_functional_data::xc_functional_data(void)
   settings = xc_get_settings().new_user_settings();
 }
 
-xc_functional::xc_functional_data::~xc_functional_data(void)
+xc_functional_data::destroy(void)
 {
   delete settings;
 }
 
-void xc_functional::xc_functional_data::regularize_density(double *density)
+void xc_functional_data::regularize_density(double *density)
 {
   //TODO: Actually do something here.
 }
 
-int xc_functional::xc_functional_data::get_type(void) const
+int xc_functional_data::get_type(void) const
 {
   return type;
 }
-void xc_functional::xc_functional_data::set_mode(int mode)
+void xc_functional_data::set_mode(int mode)
 {
   if (!(mode>=0 and mode < XC_NR_MODES))
     xc_die("Invalid mode to xc_functional::set_mode()",mode);
@@ -102,30 +104,30 @@ void xc_functional::xc_functional_data::set_mode(int mode)
   find_max_order();
 }
 
-void xc_functional::xc_functional_data::find_max_order(void)
+void xc_functional_data::find_max_order(void)
 {
   max_order = -1;
   while (max_order < XC_MAX_ORDER and xc_evaluator_lookup(mode,type,max_order+1))
     max_order++;
 }
 
-int xc_functional::xc_functional_data::get_max_order(void) const
+int xc_functional_data::get_max_order(void) const
 {
   return max_order;
 }
 
 
-int xc_functional::xc_functional_data::input_length(void) const
+int xc_functional_data::input_length(void) const
 {
   return xc_input_length(mode,type);
 }
 
-int xc_functional::xc_functional_data::output_length(int order) const
+int xc_functional_data::output_length(int order) const
 {
   return taylorlen(input_length(),order);
 }
 
-int xc_functional::xc_functional_data::
+int xc_functional_data::
 derivative_index(const int exponents[]) const
 {
   int nvar = input_length();
@@ -145,66 +147,74 @@ derivative_index(const int exponents[]) const
 
 
 // API starts here
-
-xc_functional::xc_functional(void)
+extern "C"
+xc_functional xc_new_functional(void)
 {
-  d = new xc_functional_data();
+  xc_functional_data *p = malloc(sizeof*p);
+  p->initialize();
+  return p;
 }
 
-xc_functional::~xc_functional(void)
+extern "C"
+void xc_free_functional(xc_functional fun)
 {
-  delete d;
+  fun->destroy();
+  free(fun);
 }
 
-void xc_functional::regularize_density(double *density)
+void xc_regularize_density(xc_functional fun,double *density)
 {
-  d->regularize_density(density);
+  fun->regularize_density(density);
 }
 
-void xc_functional::eval(double *result, int order, const double *density)
+void xc_eval(xc_functional fun, int order, int nr_points,
+	     const double *density, double *result)
 {
-  evaluator ev = xc_evaluator_lookup(d->mode,d->type,order);
+  evaluator ev = xc_evaluator_lookup(fun->mode,fun->type,order);
   if (!ev)
     {
       fprintf(stderr,"XCFun error in eval()\n");
-      fprintf(stderr,"mode: %i\n",d->mode);
-      fprintf(stderr,"type: %i\n",d->type);
+      fprintf(stderr,"mode: %i\n",fun->mode);
+      fprintf(stderr,"type: %i\n",fun->type);
       xc_die("eval(): Functional not available for order",order);
     }
-  ev(*d,result,density);
+  int inlen = xc_input_length(fun);
+  int outlen = xc_output_length(fun,order);
+  for (int i=0;i<nr_points;i++)
+    ev(*fun,result+i*outlen,density+i*inlen);
 }
 
-int xc_functional::get_type(void) const
+int xc_get_type(xc_functional fun)
 {
-  return d->get_type();
+  return fun->get_type();
 }
 
-int xc_functional::get_max_order(void) const
+int xc_max_order(xc_functional fun)
 {
-  return d->get_max_order();
+  return fun->get_max_order();
 }
 
-int xc_functional::input_length(void) const
+int xc_input_length(xc_functional fun)
 {
-  return d->input_length();
+  return fun->input_length();
 }
 
-int xc_functional::output_length(int order) const
+int xc_output_length(xc_functional fun, int order)
 {
-  return d->output_length(order);
+  return fun->output_length(order);
 }
 
-int xc_functional::derivative_index(const int derivative[]) const
+int xc_derivative_index(xc_functional fun, const int derivative[])
 {
-  return d->derivative_index(derivative);
+  return fun->derivative_index(derivative);
 }
 
-void xc_functional::set_mode(int mode)
+void xc_set_mode(xc_functional fun, int mode)
 {
-  d->set_mode(mode);
+  fun->set_mode(mode);
 }
 
-int xc_functional::set_setting(const char *name, double value)
+int xc_set_setting(xc_functional fun, int setting_nr, double value)
 {
   if (is_functional(name))
     {
@@ -226,12 +236,12 @@ int xc_functional::set_setting(const char *name, double value)
   return d->settings->set(name,value);
 }
 
-double xc_functional::get_setting(const char *name) const
+double get_setting(const char *name) const
 {
   return d->settings->get(name);
 }
 
-bool xc_functional::is_functional(const char *name) const
+bool is_functional(const char *name) const
 {
   array<functional *> &a = xc_get_functional_array();
   for (int i=0;i<a.size();i++)
@@ -240,12 +250,12 @@ bool xc_functional::is_functional(const char *name) const
   return false;
 }
 
-bool xc_functional::is_set(const char *name) const
+bool is_set(const char *name) const
 {
   return d->settings->is_set(name);
 }
 
-const char *xc_functional::setting_name(int n) const
+const char *setting_name(int n) const
 {
   if ( n<0 or n >= d->settings->nr_settings() )
     return 0;
@@ -253,7 +263,7 @@ const char *xc_functional::setting_name(int n) const
     return d->settings->setting_name(n);
 }
 
-const char *xc_functional::setting_short_description(const char *name) const
+const char *setting_short_description(const char *name) const
 {
   int i = d->settings->index_of(name);
   if (i >= 0)
@@ -262,7 +272,7 @@ const char *xc_functional::setting_short_description(const char *name) const
     return 0;
 }
 
-const char *xc_functional::setting_long_description(const char *name) const
+const char *setting_long_description(const char *name) const
 {
   int i = d->settings->index_of(name);
   if (i >= 0)

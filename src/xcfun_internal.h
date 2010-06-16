@@ -7,11 +7,11 @@
 #include "config.h"
 #include "settings.h"
 
-class xc_functional::xc_functional_data
+struct xc_functional_data
 {
 public:
-  xc_functional_data(void);
-  ~xc_functional_data(void);
+  void initialize(void);
+  void destroy(void);
 
   void set_mode(int mode);
 

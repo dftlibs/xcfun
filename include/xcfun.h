@@ -17,15 +17,18 @@
 //#define XC_M2GGA    3 // Local density, gradient, laplacian and kinetic energy density
 #define XC_NR_TYPES 3
 
-double xcfun_version(void);
-const char *xcfun_splash(void);
-int xcfun_test(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-class xc_functional
-{
- public:
-  xc_functional(void);
-  ~xc_functional(void);
+  double xcfun_version(void);
+  const char *xcfun_splash(void);
+  int xcfun_test(void);
+  
+  typedef struct xc_functional_data * xc_functional;
+
+  xc_functional xc_new_functional(void);
+  xc_functional xc_free_functional(void);
 
   // If density would result in infinite derivatives,
   // make a tiny modification to density in order to 
@@ -34,44 +37,45 @@ class xc_functional
   // derivatives that are not too large, and finite but very
   // large derivatives in the case where the unregularized
   // density would give infinities.
-  void regularize_density(double *density);
+  void xc_regularize_density(xc_functional fun, double *density);
 
   // Evaluate the functional at density
-  void eval(double *result, int order, const double *density);
+  void xc_eval(xc_functional fun, int order, int nr_points, 
+	       const double *density, double *result);
 
   // Which variables to use/differentiatiate wrt to
-  void set_mode(int mode);
+  void xc_set_mode(xc_functional fun, int mode);
 
   // The type of the currently defined functional (LDA, GGA etc)
-  int get_type(void) const;
+  int xc_get_type(xc_functional fun);
 
   // The highest order supported by the currently defined functional.
   // This depends on compile time parameters, it's in principle unlimited.
-  int get_max_order(void) const;
+  int xc_max_order(xc_functional fun);
 
   // Length of the density[] argument to eval()
-  int input_length(void) const;
+  int xc_input_length(xc_functional fun);
 
   // Length of the result[] argument to eval()
-  int output_length(int order) const;
+  int xc_output_length(xc_functional fun, int order);
 
   // Index into result[] for derivative with given index (length as input_length() )
-  int derivative_index(const int derivative[]) const;
+  int xc_derivative_index(xc_functional fun, const int derivative[]);
 
-  // Return the name of setting n, or NULL if there is no such setting.
-  // Settings are numbered consecutively from 0
-  const char *setting_name(int n) const;
-  // Set name = value, return 0 if name is a valid setting
-  int set_setting(const char *name, double value);
-  double get_setting(const char *name) const;
-  bool is_set(const char *name) const;
-  bool is_functional(const char *name) const;
-  const char *setting_short_description(const char *name) const;
-  const char *setting_long_description(const char *name) const;
-  class xc_functional_data;
- protected:
-  xc_functional_data *d;
-};
+  /* Discover and manipulate settings */
+  int xc_nr_settings(xc_functional fun);
+  const char *xc_name_setting(xc_functional fun, int setting_nr);
+  int xc_find_setting(xc_functional fun, const char *name);
+  const char *xc_describe_setting_short(xc_functional fun, int setting_nr);
+  const char *xc_describe_setting_long(xc_functional fun, int setting_nr);
+  
+  int xc_setting_is_set(xc_functional fun, int setting_nr);
+  int xc_setting_is_functional(xc_functional fun, int setting_nr);
+  double xc_setting_value(xc_functional fun, int setting_nr);
+
+#ifdef __cplusplus
+} // End of extern "C"
+#endif
 
 // Derivative indices into xc_eval output
 

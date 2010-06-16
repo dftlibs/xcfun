@@ -16,10 +16,13 @@ lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ)
 #	$(CXX) $(CXXFLAGS) -fPIC -shared -o lib/libxcfun.so $(LIBS) $^	
 
 funeval: test/funeval.cpp lib/libxcfun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun -Wl,-rpath=lib
+	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun
 
 testall: test/testall.cpp lib/libxcfun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun -Wl,-rpath=lib
+	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun
+
+linktest: test/linktest.c lib/libxcfun.a
+	$(CC) $(CXXFLAGS) $< -o $@ -lxcfun 
 
 clean:
 	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a}
