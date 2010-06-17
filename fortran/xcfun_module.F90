@@ -14,12 +14,17 @@ module xcfun
   integer, parameter :: XC_D1 = 2
   integer, parameter :: XC_D2 = 3
 
-  integer, parameter :: XC_D00 = 1
-  integer, parameter :: XC_D10 = 2
-  integer, parameter :: XC_D01 = 3
-  integer, parameter :: XC_D20 = 4
-  integer, parameter :: XC_D11 = 5
-  integer, parameter :: XC_D02 = 6
+! lda derivatives, all odd spin density orders give zero at closed-shell reference
+  integer, parameter :: XC_D00 =  1
+  integer, parameter :: XC_D10 =  2
+  integer, parameter :: XC_D01 =  3 !zero at closed-shell reference
+  integer, parameter :: XC_D20 =  4
+  integer, parameter :: XC_D11 =  5 !zero at closed-shell reference
+  integer, parameter :: XC_D02 =  6
+  integer, parameter :: XC_D30 =  7
+  integer, parameter :: XC_D21 =  8 !zero at closed-shell reference
+  integer, parameter :: XC_D12 =  9
+  integer, parameter :: XC_D03 = 10 !zero at closed-shell reference
 
   integer, parameter :: XC_D00000 = 1
   integer, parameter :: XC_D10000 = 2
@@ -42,6 +47,20 @@ module xcfun
   integer, parameter :: XC_D00020 = 19
   integer, parameter :: XC_D00011 = 20
   integer, parameter :: XC_D00002 = 21
+
+!radovan: here are the pointers to 3rd gga derivatives
+!         be careful, only those that are nonzero at closed-shell reference are here
+  integer, parameter :: XC_D30000 = 22
+  integer, parameter :: XC_D20100 = 24
+  integer, parameter :: XC_D12000 = 27
+  integer, parameter :: XC_D11001 = 30
+  integer, parameter :: XC_D10200 = 31
+  integer, parameter :: XC_D10002 = 36
+  integer, parameter :: XC_D02100 = 38
+  integer, parameter :: XC_D01101 = 43
+  integer, parameter :: XC_D00300 = 47
+  integer, parameter :: XC_D00102 = 52
+
 contains
   ! We pass strings as null terminated integer arrays to C, this
   ! should be portable if C and Fortran uses the same character set.
