@@ -136,13 +136,11 @@ int xcisfu_(int *fun, int *n)
 extern "C"
 void xcsets_(int *fun, int *n, double *value)
 {
-  xc_set(fortran_functionals[*fun],*n,*value);
+  xc_set_param(fortran_functionals[*fun],*n,*value);
 }
 
 extern "C"
 double xcgets_(int *fun, int *n)
 {
-  return xc_get(fortran_functionals[*fun],*n);
+  return xc_get_param(fortran_functionals[*fun],*n);
 }
-
-

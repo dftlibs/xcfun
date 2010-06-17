@@ -233,7 +233,7 @@ static int run_tests(functional *fun)
   xc_set_mode(xf,fun->test_mode);
   xc_set_param(xf,fun->m_name,1.0);
   int n = xc_output_length(xf, fun->test_order);
-  double *out = new double[n];
+  double out[n];
   double *reference = fun->test_output;
   xc_eval(xf,fun->test_order,1,fun->test_input,out);
 

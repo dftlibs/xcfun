@@ -1,6 +1,4 @@
 #include "functional.h"
-#include <iostream>
-using namespace std;
 
 template<class num>
 static num becke_alpha(const num &na, const num &gaa)
