@@ -27,7 +27,7 @@ static num new_energy(const densvars<num> &d)
 
 void setup_lypc(functional &f)
 {
-  f.describe("lypc",XC_GGA,
+  f.describe(XC_LYPC,XC_GGA,
 	     "LYP correlation",
 	     "LYP correlation\n"
 	     "C. Lee, W. Yang, and R.G. Parr, Development of the \n"

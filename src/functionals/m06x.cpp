@@ -34,7 +34,7 @@ static num energy (const densvars<num> &d)
 
 void setup_m06x(functional &f)
 {
-  f.describe("m06x",XC_MGGA,
+  f.describe(XC_M06X, XC_MGGA,
 	     "M06 exchange",
              "M06 Meta-Hybrid Exchange Functional\n"
              "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"

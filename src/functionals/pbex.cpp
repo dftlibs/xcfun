@@ -12,7 +12,7 @@ static num energy(const densvars<num> &d)
 
 void setup_pbex(functional &f)
 {
-  f.describe("pbex",XC_GGA,
+  f.describe(XC_PBEX, XC_GGA,
 	     "PBE Exchange Functional",
 	     "PBE Exchange Functional\n"
 	     "J. P. Perdew, K. Burke, and M. Ernzerhof, "

@@ -13,7 +13,7 @@ static num energy(const densvars<num> &d)
 
 void setup_tfk(functional &f)
 {
-  f.describe("tfk",XC_LDA,
+  f.describe(XC_TFK, XC_LDA,
 	     "Thomas-Fermi Kinetic Energy Functional",
 	     "Thomas-Fermi Kinetic Energy Functional\n"
 	     "\n"

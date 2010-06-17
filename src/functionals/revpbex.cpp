@@ -11,7 +11,7 @@ static num energy(const densvars<num> &d)
 
 void setup_revpbex(functional &f)
 {
-  f.describe("revpbex",XC_GGA,
+  f.describe(XC_REVPBEX, XC_GGA,
 	     "Revised PBE Exchange Functional",
 	     "Revised PBE Exchange Functional\n"
 	     "Y. Zhang and W., Phys. Rev. Lett 80, 890 (1998)\n"

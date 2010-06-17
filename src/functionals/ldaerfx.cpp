@@ -37,13 +37,13 @@ static num esrx_ldaerfspin(const num &na, parameter mu)
 template<class num>
 static num energy(const densvars<num> &d)
 {
-  parameter mu = 0.4; //FIXME
+  double mu = d.get(XC_RANGESEP_MU);
   return 0.5*(esrx_ldaerfspin(d.a,mu) + esrx_ldaerfspin(d.b,mu)); 
 }
 
 void setup_ldaerfx(functional &f)
 {
-  f.describe("ldaerfx",XC_LDA,	     
+  f.describe(XC_LDAERFX, XC_LDA,	     
 	     "Short-range spin-dependent LDA exchange functional",
 	     "Short-range spin-dependent LDA exchange functional\n"
 	     "obtained by spin-scaling Ex[na,nb] = 1/2 (Ex[na]+Ex[nb])\n"

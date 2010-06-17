@@ -32,7 +32,7 @@ static taylor<T,Nvar,Ndeg> lb94(const densvars<taylor<T,Nvar,Ndeg> > &d)
 
 void setup_lb94(functional &f)
 {
-  f.describe("lb94",XC_GGA,
+  f.describe(XC_LB94,XC_GGA,
 	     "LB94 Exchange-correlation functional",
 	     "Exchange-correlation potential with correct asymtotic behavior\n"
 	     "R. van Leeuwen and E. J. Baerends PRA 49, 2421 (1994)\n"

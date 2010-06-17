@@ -14,7 +14,7 @@ static num energy(const densvars<num> &d)
 
 void setup_pw91x(functional &f)
 {
-  f.describe("pw91x",XC_GGA,
+  f.describe(XC_PW91K, XC_GGA,
 	     "Perdew-Wang 1991 GGA Exchange Functional",
 	     "Perdew-Wang 1991 GGA Exchange Functional\n"
 	     "J. P. Perdew, J. A. Chevary, S. H. Vosko, "

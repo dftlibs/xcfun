@@ -13,7 +13,7 @@ static num new_energy(const densvars<num> &d)
 
 void setup_ktx(functional &f)
 {
-  f.describe("ktx", XC_GGA,
+  f.describe(XC_KTX, XC_GGA,
 	     "KT exchange GGA correction",
 	     "KT exchange GGA correction\n"
              "reference:\n"

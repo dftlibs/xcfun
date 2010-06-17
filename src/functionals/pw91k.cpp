@@ -17,7 +17,7 @@ static num energy(const densvars<num> &d)
 
 void setup_pw91k(functional &f)
 {
-  f.describe("pw91k",XC_LDA,
+  f.describe(XC_PW91K, XC_LDA,
 	     "PW91 GGA Kinetic Energy Functional",
 	     "PW91 GGA Kinetic Energy Functional\n"
 	     "A. Lembarki, H. Chermette, Phys. Rev. A 50, 5328 (1994)\n"

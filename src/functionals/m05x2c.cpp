@@ -35,7 +35,7 @@ static num energy (const densvars<num> &d)
 
 void setup_m05x2c(functional &f)
 {
-  f.describe("m05x2c",XC_MGGA,
+  f.describe(XC_M05X2C, XC_MGGA,
 	     "M05-2X Correlation",
              "M05-2X Meta-Hybrid Correlation Functional\n"
              "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"

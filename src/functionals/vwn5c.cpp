@@ -3,7 +3,7 @@
 
 void setup_vwn5(functional &f)
 {
-  f.describe("vwn5c",XC_LDA,
+  f.describe(XC_VWN5C, XC_LDA,
 	     "VWN5 LDA Correlation functional",
 	     "VWN5 LDA Correlation functional\n"
 	     "S.H. Vosko, L. Wilk, and M. Nusair: Accurate spin-dependent\n"

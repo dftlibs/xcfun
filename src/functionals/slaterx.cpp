@@ -3,7 +3,7 @@
 
 void setup_slaterx(functional &f)
 {
-  f.describe("slaterx",XC_LDA,
+  f.describe(XC_SLATERX, XC_LDA,
 	     "Slater LDA exchange",
 	     "LDA Exchange functional\n"
 	     "P.A.M. Dirac, Proceedings of the Cambridge Philosophical "

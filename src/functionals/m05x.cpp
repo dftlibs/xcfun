@@ -20,7 +20,7 @@ static num energy (const densvars<num> &d)
 
 void setup_m05x(functional &f)
 {
-  f.describe("m05x",XC_MGGA,
+  f.describe(XC_M05X, XC_MGGA,
 	     "M05 exchange",
              "M05 Meta-Hybrid Exchange Functional\n"
              "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"

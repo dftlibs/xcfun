@@ -9,7 +9,7 @@ static num energy(const densvars<num> &d)
 
 void setup_pw92c(functional &f)
 {
-  f.describe("pw92c",XC_LDA,
+  f.describe(XC_PW92C, XC_LDA,
 	     "PW92 LDA correlation",
 	     "Electron-gas correlation energy\n"
 	     "J.P.Perdew,Y. Wang; Phys. Rew. B; 40, 13244, (1992)\n"
