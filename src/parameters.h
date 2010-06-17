@@ -1,6 +1,13 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+/*
+  All run-time settings (functional weights and parameters)
+  are given their own name in the enum xc_parameters.
+  We can also associate descriptions and functional objects
+  to these parameters.
+ */
+
 enum xc_parameters
   {
 #define PARAM(name) name
@@ -15,5 +22,9 @@ const char *xc_param_get_long_description(enum xc_parameters param);
 void xcint_param_set_short_description(enum xc_parameters param, const char *text);
 // Long description should end with a final newline, and may have many lines.
 void xcint_param_set_long_description(enum xc_parameters param, const char *text);
+
+class functional;
+void xcint_param_set_functional(enum xc_parameters param, functional *f);
+functional *xcint_param_get_functional(enum xc_parameters param);
 
 #endif

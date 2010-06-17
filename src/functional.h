@@ -31,12 +31,14 @@ typedef double parameter;
 template<class T>
 struct densvars
 {
-  densvars(const xc_functional_data *p) : params(p) {}
+  densvars(const parameter *p) : params(p) {}
   //For getting user defined parameters
-  const xc_functional_data *params; 
+  const parameter *params;
   double get(enum xc_parameters p) const
   {
-    //FIXME return params->parameters[p];
+    assert(p>=0);
+    assert(p<XC_NR_PARAMS);
+    return params[p];
   }
   
   T a, b, gaa, gab, gbb;
@@ -52,12 +54,12 @@ struct densvars
 class functional
 {
 public:
-  functional();
-  ~functional();
-  void describe(const char *name, int type, const char *oneliner,
+  void construct();
+  void destroy();
+  void describe(enum xc_parameters weight_param, int type, const char *oneliner,
 		const char *reference);
-  void parameter(const char *name, const char *description,
-		 double default_value);
+  void describe_parameter(enum xc_parameters param, const char *description,
+			  double default_value);
   void add_test(int mode, int order,
 		const double *test_in,
 		const double *test_out,
@@ -85,9 +87,7 @@ public:
     return f(dv);
   }
   //protected:
-  const char *m_name;
-  const char *m_oneliner;
-  const char *m_description;
+  enum xc_parameters m_name;
 
   int m_type;
   void *ftab[XC_MAX_NVAR+1][XC_MAX_ORDER+1];

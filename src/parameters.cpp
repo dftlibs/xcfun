@@ -22,6 +22,9 @@ static const char *param_symbols[XC_NR_PARAMS+1] =
 static const char *param_short[XC_NR_PARAMS] = {0};
 static const char *param_long[XC_NR_PARAMS] = {0};
 static double param_default[XC_NR_PARAMS] = {0};
+/* Not all of the elements will be actual functionals,
+   these should be kept as null pointers. */
+static functional *param_functionals[XC_NR_PARAMS] = {0};
 
 const char *xc_param_get_symbol(enum xc_parameters param)
 {
@@ -69,4 +72,19 @@ void xcint_param_set_default(enum xc_parameters param, double value)
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   param_default[param] = value;
+}
+
+// Short description is a string without newlines!
+void xcint_param_set_functional(enum xc_parameters param, functional *f)
+{
+  if (param < 0 or param >= XC_NR_PARAMS)
+      xc_die("Invalid parameter nr (version mismatch?)",param);
+  param_functionals[param] = f;
+}
+// Long description should end with a final newline, and may have many lines.
+functional *xcint_param_get_functional(enum xc_parameters param)
+{
+  if (param < 0 or param >= XC_NR_PARAMS)
+      xc_die("Invalid parameter nr (version mismatch?)",param);
+  return param_functionals[param];
 }

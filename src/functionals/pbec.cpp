@@ -39,7 +39,7 @@ static num energy(const densvars<num> &d)
 
 void setup_pbec(functional &f)
 {
-  f.describe("pbec",XC_GGA,
+  f.describe(XC_PBEC, XC_GGA,
 	     "PBE correlation functional",
 	     "PBE correlation functional.\n"
 	     "J.P. Perdew, K. Burke, and M. Ernzerhof, Generalized\n"
