@@ -15,16 +15,21 @@ enum xc_parameters
 #undef PARAM
   };
 
-const char *xc_param_get_symbol(enum xc_parameters param);
-const char *xc_param_get_short_description(enum xc_parameters param);
-const char *xc_param_get_long_description(enum xc_parameters param);
+extern "C"
+const char *xc_name(int param);
+extern "C"
+const char *xc_short_description(int param);
+extern "C"
+const char *xc_long_description(int param);
 // Short description is a string without newlines!
-void xcint_param_set_short_description(enum xc_parameters param, const char *text);
+void xcint_set_short_description(int param, const char *text);
 // Long description should end with a final newline, and may have many lines.
-void xcint_param_set_long_description(enum xc_parameters param, const char *text);
+void xcint_set_long_description(int param, const char *text);
 
 class functional;
-void xcint_param_set_functional(enum xc_parameters param, functional *f);
-functional *xcint_param_get_functional(enum xc_parameters param);
+void xcint_set_functional(int param, functional *f);
+functional *xcint_functional(int param);
+
+double xcint_default(int param);
 
 #endif

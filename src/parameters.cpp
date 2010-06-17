@@ -1,8 +1,9 @@
 #include <cassert>
 #include "parameters.h"
+#include "xcfun_internal.h"
 #include <cstdio>
 #include <cstdlib>
-
+#if 0
 // TODO: Remove this and use the commone one
 static void xc_die(const char *message, int code)
 {
@@ -11,6 +12,7 @@ static void xc_die(const char *message, int code)
   fprintf(stderr,"\n");
   exit(-1);
 }
+#endif
 
 static const char *param_symbols[XC_NR_PARAMS+1] =
   {
@@ -26,26 +28,29 @@ static double param_default[XC_NR_PARAMS] = {0};
    these should be kept as null pointers. */
 static functional *param_functionals[XC_NR_PARAMS] = {0};
 
-const char *xc_param_get_symbol(enum xc_parameters param)
+extern "C"
+const char *xc_name(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);    
   return param_symbols[param];
 }
-const char *xc_param_get_short_description(enum xc_parameters param)
+extern "C"
+const char *xc_short_description(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   return param_short[param];
 }
-const char *xc_param_get_long_description(enum xc_parameters param)
+extern "C"
+const char *xc_long_description(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   return param_long[param];
 }
 
-double xc_param_get_default(enum xc_parameters param)
+double xcint_default(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
@@ -53,21 +58,21 @@ double xc_param_get_default(enum xc_parameters param)
 }
 
 // Short description is a string without newlines!
-void xcint_param_set_short_description(enum xc_parameters param, const char *text)
+void xcint_set_short_description(int param, const char *text)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   param_short[param] = text;
 }
 // Long description should end with a final newline, and may have many lines.
-void xcint_param_set_long_description(enum xc_parameters param, const char *text)
+void xcint_set_long_description(int param, const char *text)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   param_long[param] = text;
 }
 
-void xcint_param_set_default(enum xc_parameters param, double value)
+void xcint_set_default(int param, double value)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
@@ -75,14 +80,14 @@ void xcint_param_set_default(enum xc_parameters param, double value)
 }
 
 // Short description is a string without newlines!
-void xcint_param_set_functional(enum xc_parameters param, functional *f)
+void xcint_set_functional(int param, functional *f)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);
   param_functionals[param] = f;
 }
 // Long description should end with a final newline, and may have many lines.
-functional *xcint_param_get_functional(enum xc_parameters param)
+functional *xcint_functional(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xc_die("Invalid parameter nr (version mismatch?)",param);

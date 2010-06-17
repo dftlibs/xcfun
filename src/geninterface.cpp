@@ -22,7 +22,7 @@ int main()
   fprintf(of,"  integer, parameter :: XC_NR_PARAMS = %i\n",XC_NR_PARAMS);
   for (int i=0;i<XC_NR_PARAMS;i++)
     fprintf(of,"  integer, parameter :: %s = %i\n",
-	    xc_param_get_symbol((xc_parameters)i),i+1);
+	    xc_param_get_symbol((xc_parameters)i),i);
   fprintf(of,"end module\n");
   fclose(of);
   return 0;

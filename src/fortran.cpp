@@ -1,6 +1,8 @@
 #include "xcfun_internal.h"
 
-static array<xc_functional *> fortran_functionals;
+#define MAX_FORTRAN_FUNCTIONALS 5
+
+static xc_functional fortran_functionals[MAX_FORTRAN_FUNCTIONALS] = {0};
 
 extern "C"
 double xcfuve_(void)
@@ -8,14 +10,19 @@ double xcfuve_(void)
   return xcfun_version();
 }
 
-
-
-
 extern "C"
 int xcnewf_(void)
 {
-  fortran_functionals.push_back(new xc_functional);
-  return fortran_functionals.size()-1;
+  for (int i=0;i<MAX_FORTRAN_FUNCTIONALS;i++)
+    {
+      if (fortran_functionals[i] == 0)
+	{
+	  fortran_functionals[i] = xc_new_functional();
+	  return i;
+	}
+    }
+  xc_die("Too many XC functionals, check src/fortran.cpp.",MAX_FORTRAN_FUNCTIONALS);
+  return -1;
 }
 
 extern "C"
@@ -77,6 +84,7 @@ static void str2ints(int ints[], int len, const char *s)
     ints[i] = 0;
 }
 
+#if 0
 static char *ints2str(int ints[])
 {
   int len = 0;
@@ -87,6 +95,7 @@ static char *ints2str(int ints[])
     s[i] = ints[i];
   return s;
 }
+#endif
 
 extern "C"
 void xcspla_(int *text, int *len)
@@ -97,7 +106,7 @@ void xcspla_(int *text, int *len)
 extern "C"
 void xcsnam_(int *fun, int *dst, int *dstlen, int *n)
 {
-  const char *s = fortran_functionals[*fun]->setting_name(*n);
+  const char *s = xc_name(*n);
   if (s)
     str2ints(dst,*dstlen,s);
   else
@@ -105,58 +114,35 @@ void xcsnam_(int *fun, int *dst, int *dstlen, int *n)
 }
 
 extern "C"
-void xcssho_(int *fun, int *dst, int *dstlen, int *name)
+void xcssho_(int *fun, int *dst, int *dstlen, int *n)
 {
-  char *n = ints2str(name);
-  const char *s = fortran_functionals[*fun]->setting_short_description(n);
+  const char *s = xc_short_description(*n);
   str2ints(dst,*dstlen,s);
-  delete[] n;
 }
 
 extern "C"
-void xcslon_(int *fun, int *dst, int *dstlen, int *name)
+void xcslon_(int *fun, int *dst, int *dstlen, int *n)
 {
-  char *n = ints2str(name);
-  const char *s = fortran_functionals[*fun]->setting_long_description(n);
+  const char *s = xc_long_description(*n);
   str2ints(dst,*dstlen,s);
-  delete[] n;
 }
 
 extern "C"
-int xcisfu_(int *fun, int *name)
+int xcisfu_(int *fun, int *n)
 {
-  char *n = ints2str(name);
-  int res = fortran_functionals[*fun]->is_functional(n);
-  delete[] n;
-  return res;
+  return xc_is_functional(*n);
 }
 
 extern "C"
-int xcsets_(int *fun, int *name, double *value)
+void xcsets_(int *fun, int *n, double *value)
 {
-  char *n = ints2str(name);
-  int res = 
-    fortran_functionals[*fun]->set_setting(n,*value);
-  delete[] n;
-  return res;
+  xc_set(fortran_functionals[*fun],*n,*value);
 }
 
 extern "C"
-double xcgets_(int *fun, int *name)
+double xcgets_(int *fun, int *n)
 {
-  char *n = ints2str(name);
-  double d = fortran_functionals[*fun]->get_setting(n);
-  delete[] n;
-  return d;
-}
-
-extern "C"
-int xcisse_(int *fun, int *name)
-{
-  char *n = ints2str(name);
-  int res = fortran_functionals[*fun]->is_set(n);
-  delete[] n;
-  return res;
+  return xc_get(fortran_functionals[*fun],*n);
 }
 
 

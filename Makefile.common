@@ -3,7 +3,7 @@
 
 CXXFLAGS+=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals -Llib
 
-BASE_OBJ:=src/xcfun.o src/functional.o src/settings.o \
+BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
           src/evaluators.o src/fortran.o
 FUN_OBJ:=$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
 

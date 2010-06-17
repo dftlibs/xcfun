@@ -3,14 +3,15 @@
 #define XCFUN_INTERNAL
 #include "xcfun.h"
 #include "functional.h"
-#include "array.h"
+//#include "array.h"
 #include "config.h"
+#include "parameters.h"
 
 struct xc_functional_data
 {
 public:
-  void initialize(void);
-  void destroy(void);
+  void initialize();
+  void destroy();
 
   void set_mode(int mode);
 
@@ -33,7 +34,7 @@ public:
   int max_order; // Maximum derivative order with current settings
 
   double parameters[XC_NR_PARAMS];
-  array<functional *> active_functionals;
+  //array<functional *> active_functionals;
 };
 
 void xc_die(const char *message, int code);

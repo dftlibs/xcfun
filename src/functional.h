@@ -3,9 +3,9 @@
 
 // Everything required to implement a functional
 #include "taylor.h"
+#define XCFUN_INTERNAL
 #include "xcfun.h"
 #include "config.h"
-#include "array.h"
 #include "specmath.h"
 #include "parameters.h"
 
@@ -17,7 +17,6 @@
 
 typedef double parameter;
 
-
 // Functions for _user definable parameters_, for example the range
 // separation parameter mu.
 //setting xc_param_lookup(const xc_functional_data *params, 
@@ -25,20 +24,19 @@ typedef double parameter;
 //double xc_param_get(const xc_functional::xc_functional_data *params, 
 //		    const setting &s);
 
-
 // Variables for expressing functionals, these are redundant because
 // different functionals have different needs.
 template<class T>
 struct densvars
 {
-  densvars(const parameter *p) : params(p) {}
+  densvars(const double *p) : params(p) {}
   //For getting user defined parameters
-  const parameter *params;
-  double get(enum xc_parameters p) const
+  const double *params;
+  double get(int param) const
   {
-    assert(p>=0);
-    assert(p<XC_NR_PARAMS);
-    return params[p];
+    assert(param>=0);
+    assert(param<XC_NR_PARAMS);
+    return params[param];
   }
   
   T a, b, gaa, gab, gbb;
@@ -99,7 +97,6 @@ public:
   double test_threshold;
 };
 
-array<functional *> &xc_get_functional_array(void);
 functional *xc_get_functional_by_name(const char *name);
 
 // Create a functional object and run f to fill it with data

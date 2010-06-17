@@ -26,7 +26,7 @@ void xc_die(const char *message, int code)
 extern "C"
 double xcfun_version(void)
 {
-  return 0.9;
+  return 0.98;
 }
 
 extern "C"
@@ -53,42 +53,22 @@ int xc_output_length(int mode, int type, int order)
   return taylorlen(xc_input_length(mode,type),order);
 }
 
-settings_database &xc_get_settings()
-{
-  static settings_database b;
-  return b;
-}
 
-setting xc_param_lookup(const xc_functional::xc_functional_data *params, 
-			const char *name)
-{
-  return params->settings->lookup(name);
-}
-
-double xc_param_get(const xc_functional::xc_functional_data *params,
-		    const setting &s)
-{
-  return params->settings->get(s);
-}
-
-
-xc_functional_data::initialize(void)
+void xc_functional_data::initialize()
 {
   xcint_assure_setup();
   mode = XC_VARS_AB; //Use alpha/beta as default
   type = XC_LDA; // LDA is smallest type, so assume this initially
   max_order = -1;
   // Just default settings to start with
-  settings = xc_get_settings().new_user_settings();
-  active_functionals.construct();
-  weights.construct();
+  for (int i=0;i<XC_NR_PARAMS;i++)
+    parameters[i] = xcint_default(i);
+  //active_functionals.construct();
 }
 
-xc_functional_data::destroy(void)
+void xc_functional_data::destroy()
 {
-  delete settings;
-  active_functionals.destroy();
-  weights.destroy();
+  // active_functionals.destroy();
 }
 
 void xc_functional_data::regularize_density(double *density)
@@ -154,7 +134,7 @@ derivative_index(const int exponents[]) const
 extern "C"
 xc_functional xc_new_functional(void)
 {
-  xc_functional_data *p = malloc(sizeof*p);
+  xc_functional_data *p = (xc_functional_data *)malloc(sizeof*p);
   p->initialize();
   return p;
 }
@@ -166,7 +146,7 @@ void xc_free_functional(xc_functional fun)
   free(fun);
 }
 
-void xc_regularize_density(xc_functional fun,double *density)
+void xc_regularize_density(xc_functional fun, double *density)
 {
   fun->regularize_density(density);
 }
@@ -218,84 +198,39 @@ void xc_set_mode(xc_functional fun, int mode)
   fun->set_mode(mode);
 }
 
-int xc_set_setting(xc_functional fun, int setting_nr, double value)
+void xc_set(xc_functional fun, int param, double value)
 {
-  if (is_functional(name))
-    {
-      functional *fun = xc_get_functional_by_name(name);
-      assert(fun);
-      if (d->type < fun->m_type)
-	d->type = fun->m_type;
-      int i = d->active_functionals.find(fun);
-      if (i>=0)
-	{
-	  d->weights[i] = value;
-	}
-      else
-	{
-	  d->active_functionals.push_back(fun);
-	  d->weights.push_back(value);
-	}
-    }
-  return d->settings->set(name,value);
+  if (param < 0 or param >= XC_NR_PARAMS)
+      xc_die("Invalid parameter in xc_set()",param);
+  fun->parameters[param] = value;
 }
 
-double get_setting(const char *name) const
+double xc_get(xc_functional fun, int param)
 {
-  return d->settings->get(name);
+  if (param < 0 or param >= XC_NR_PARAMS)
+      xc_die("Invalid parameter in xc_set()",param);
+  return fun->parameters[param];
 }
 
-bool is_functional(const char *name) const
+extern "C"
+int xc_is_functional(int param)
 {
-  array<functional *> &a = xc_get_functional_array();
-  for (int i=0;i<a.size();i++)
-    if (strcmp(name,a[i]->m_name) == 0)
-      return true;
-  return false;
+  return xcint_functional(param) != 0;
 }
 
-bool is_set(const char *name) const
-{
-  return d->settings->is_set(name);
-}
-
-const char *setting_name(int n) const
-{
-  if ( n<0 or n >= d->settings->nr_settings() )
-    return 0;
-  else
-    return d->settings->setting_name(n);
-}
-
-const char *setting_short_description(const char *name) const
-{
-  int i = d->settings->index_of(name);
-  if (i >= 0)
-    return d->settings->setting_short_description(i);
-  else
-    return 0;
-}
-
-const char *setting_long_description(const char *name) const
-{
-  int i = d->settings->index_of(name);
-  if (i >= 0)
-    return d->settings->setting_long_description(i);
-  else
-    return 0;
-}
 
 static int run_tests(functional *fun)
 {
   if (fun->test_mode == -1)
     return -1;
-  int n = xc_output_length(fun->test_mode,fun->m_type,fun->test_order);
+  xc_functional xf = xc_new_functional();
+  xc_set_mode(xf,fun->test_mode);
+  xc_set(xf,fun->m_name,1.0);
+  int n = xc_output_length(xf, fun->test_order);
   double *out = new double[n];
   double *reference = fun->test_output;
-  xc_functional xf;
-  xf.set_mode(fun->test_mode);
-  xf.set_setting(fun->m_name,1.0); //Weight 1.0
-  xf.eval(out,fun->test_order,fun->test_input);
+  xc_eval(xf,fun->test_order,1,fun->test_input,out);
+
   int nerr = 0;
   for (int i=0;i<n;i++)
     if (fabs(out[i] - fun->test_output[i]) > 
@@ -305,7 +240,7 @@ static int run_tests(functional *fun)
   if (nerr > 0)
     {
       fprintf(stderr,"Error detected in functional %s with tolerance %g:\n",
-	      fun->m_name,fun->test_threshold);
+	      xc_name(fun->m_name),fun->test_threshold);
       fprintf(stderr,"Abs.Error \tComputed              Reference\n");
       for (int i=0;i<n;i++)
 	{
@@ -317,18 +252,22 @@ static int run_tests(functional *fun)
 	  fprintf(stderr,"\n");
 	}
     }
+  xc_free_functional(xf);
   return nerr;
 }
 
 int xcfun_test(void)
 {
   int nr_failed = 0;
-  array<functional *> &a = xc_get_functional_array();
-  for (int i=0;i<a.size();i++)
+  for (int i=0;i<XC_NR_PARAMS;i++)
     {
-      int res = run_tests(a[i]);
-      if (res != 0 and res != -1)
-	nr_failed++;
+      functional *f = xcint_functional(i);
+      if (f)
+	{
+	  int res = run_tests(f);
+	  if (res != 0 and res != -1)
+	    nr_failed++;
+	}
     }
   return nr_failed;
 }

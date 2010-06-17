@@ -28,7 +28,7 @@ extern "C" {
   typedef struct xc_functional_data * xc_functional;
 
   xc_functional xc_new_functional(void);
-  xc_functional xc_free_functional(void);
+  void xc_free_functional(xc_functional fun);
 
   // If density would result in infinite derivatives,
   // make a tiny modification to density in order to 
@@ -62,22 +62,25 @@ extern "C" {
   // Index into result[] for derivative with given index (length as input_length() )
   int xc_derivative_index(xc_functional fun, const int derivative[]);
 
-  // List of all settings
+  // List of all settings, there are XC_NR_PARAMS settings in total.
 #ifndef XCFUN_INTERNAL
 #include "xcfun_autogen.h"
 #endif
 
   /* Discover and manipulate settings */
-  int xc_nr_settings(xc_functional fun);
-  const char *xc_name_setting(xc_functional fun, int setting_nr);
-  int xc_find_setting(xc_functional fun, const char *name);
-  const char *xc_describe_setting_short(xc_functional fun, int setting_nr);
-  const char *xc_describe_setting_long(xc_functional fun, int setting_nr);
-  
-  int xc_setting_is_set(xc_functional fun, int setting_nr);
-  int xc_setting_is_functional(xc_functional fun, int setting_nr);
-  double xc_setting_value(xc_functional fun, int setting_nr);
 
+  // Return the internal name of setting param
+  const char *xc_name(int param);
+  // Describe in one line what the setting does
+  const char *xc_short_description(int param);
+  // Long description of the setting, ends with a \n
+  const char *xc_long_description(int param);
+  // Is this setting a functional?
+  int xc_is_functional(int param);
+  // Set the setting
+  void xc_set(xc_functional fun, int param, double value);
+  // Get the current value of the setting.
+  double xc_get(xc_functional fun, int param);
 
 #ifdef __cplusplus
 } // End of extern "C"
