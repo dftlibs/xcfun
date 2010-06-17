@@ -21,7 +21,7 @@ int xcnewf_(void)
 	  return i;
 	}
     }
-  xc_die("Too many XC functionals, check src/fortran.cpp.",MAX_FORTRAN_FUNCTIONALS);
+  xcint_die("Too many XC functionals, check src/fortran.cpp.",MAX_FORTRAN_FUNCTIONALS);
   return -1;
 }
 

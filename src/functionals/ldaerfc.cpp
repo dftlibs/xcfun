@@ -100,9 +100,9 @@ static num ecorrlr(const densvars<num> &d, parameter mu, const num &ec)
 template<class num>
 static num energy(const densvars<num> &d)
 {
-  double mu = d.get(XC_RANGESEP_MU);
+  double mu = d.get_param(XC_RANGESEP_MU);
   num eps = pw92eps::eps(d);
-  return d.n*(eps - ecorrlr(d,d.get(mu),eps));
+  return d.n*(eps - ecorrlr(d,mu,eps));
 }
 
 void setup_ldaerfc(functional &f)
@@ -113,7 +113,7 @@ void setup_ldaerfc(functional &f)
 	     "Paziani, Moroni, Gori-Giorgi and Bachelet, PRB 73, 155111 (2006)"
 	     "Adapted from Gori-Giorgi and MOLPRO by Ulf Ekstrom\n"
 	     "Test case from Gori-Giorgi (personal communication)\n"
-	     "Range separation parameter is 'ldaerf:mu'\n");
+	     "Range separation parameter is XC_RANGESEP_MU\n");
   SET_LDA_ENERGY_FUNCTION(f,energy);
 
   static const double d[] = {1.1, 1.0};

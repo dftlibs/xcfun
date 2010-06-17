@@ -2,7 +2,17 @@
    with the current settings of XCFun. */
 
 #include <cstdio>
+#include <cstdlib>
 #include "xcfun_internal.h"
+
+void xcint_die(const char *message, int code)
+{
+  fprintf(stderr,"XCFun fatal error %i: ",code);
+  fprintf(stderr,"%s",message);
+  fprintf(stderr,"\n");
+  exit(-1);
+}
+
 
 int main()
 {
@@ -10,7 +20,7 @@ int main()
   FILE *of = fopen("include/xcfun_autogen.h","w");
   fprintf(of,"enum xcfun_parameters {\n");
   for (int i=0;i<XC_NR_PARAMS;i++)
-    fprintf(of,"%s,\n",xc_param_get_symbol((xc_parameters)i));
+    fprintf(of,"%s,\n",xc_name(i));
   fprintf(of,"XC_NR_PARAMS\n};\n");
   fclose(of);
   
@@ -22,7 +32,7 @@ int main()
   fprintf(of,"  integer, parameter :: XC_NR_PARAMS = %i\n",XC_NR_PARAMS);
   for (int i=0;i<XC_NR_PARAMS;i++)
     fprintf(of,"  integer, parameter :: %s = %i\n",
-	    xc_param_get_symbol((xc_parameters)i),i);
+	    xc_name(i),i);
   fprintf(of,"end module\n");
   fclose(of);
   return 0;

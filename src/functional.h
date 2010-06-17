@@ -17,13 +17,6 @@
 
 typedef double parameter;
 
-// Functions for _user definable parameters_, for example the range
-// separation parameter mu.
-//setting xc_param_lookup(const xc_functional_data *params, 
-//			const char *name);
-//double xc_param_get(const xc_functional::xc_functional_data *params, 
-//		    const setting &s);
-
 // Variables for expressing functionals, these are redundant because
 // different functionals have different needs.
 template<class T>
@@ -32,7 +25,7 @@ struct densvars
   densvars(const double *p) : params(p) {}
   //For getting user defined parameters
   const double *params;
-  double get(int param) const
+  double get_param(int param) const
   {
     assert(param>=0);
     assert(param<XC_NR_PARAMS);

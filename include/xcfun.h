@@ -78,9 +78,9 @@ extern "C" {
   // Is this setting a functional?
   int xc_is_functional(int param);
   // Set the setting
-  void xc_set(xc_functional fun, int param, double value);
+  void xc_set_param(xc_functional fun, int param, double value);
   // Get the current value of the setting.
-  double xc_get(xc_functional fun, int param);
+  double xc_get_param(xc_functional fun, int param);
 
 #ifdef __cplusplus
 } // End of extern "C"

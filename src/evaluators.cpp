@@ -1,7 +1,6 @@
 #include "xcfun_internal.h"
 #include <cstdlib>
-
-
+#include <cstdio>
 
 static struct evaluator_table
 {
@@ -14,16 +13,6 @@ static struct evaluator_table
   }
   evaluator tab[XC_NR_MODES][XC_NR_TYPES][XC_MAX_ORDER+1];
 } *eval_tab = 0;
-
-static evaluator_table *get_evaltab(void)
-{
-  if (!eval_tab)
-    {
-      eval_tab = (evaluator_table *)malloc(sizeof(evaluator_table));
-      eval_tab->construct();
-    }
-  return eval_tab;
-}
 
 template<class T, class scalar>
 void sum_functionals(const double *weights,
@@ -217,10 +206,10 @@ static void eval_mgga_rs(const xc_functional_data &fun,
 template<int Ndeg>
 static void eval_setup_lda(void)
 {
-  get_evaltab()->tab[XC_VARS_A][XC_LDA][Ndeg] = eval_lda_a<double,Ndeg>;
-  get_evaltab()->tab[XC_VARS_AB][XC_LDA][Ndeg] = eval_lda_ab<double,Ndeg>;
-  get_evaltab()->tab[XC_VARS_R][XC_LDA][Ndeg] = eval_lda_r<double,Ndeg>;
-  get_evaltab()->tab[XC_VARS_RS][XC_LDA][Ndeg] = eval_lda_rs<double,Ndeg>;
+  eval_tab->tab[XC_VARS_A][XC_LDA][Ndeg] = eval_lda_a<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_LDA][Ndeg] = eval_lda_ab<double,Ndeg>;
+  eval_tab->tab[XC_VARS_R][XC_LDA][Ndeg] = eval_lda_r<double,Ndeg>;
+  eval_tab->tab[XC_VARS_RS][XC_LDA][Ndeg] = eval_lda_rs<double,Ndeg>;
   eval_setup_lda<Ndeg-1>();
 }
 template<> void eval_setup_lda<-1>(void) {}
@@ -228,8 +217,8 @@ template<> void eval_setup_lda<-1>(void) {}
 template<int Ndeg>
 static void eval_setup_gga(void)
 {
-  get_evaltab()->tab[XC_VARS_AB][XC_GGA][Ndeg] = eval_gga_ab<double,Ndeg>;
-  get_evaltab()->tab[XC_VARS_RS][XC_GGA][Ndeg] = eval_gga_rs<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_GGA][Ndeg] = eval_gga_ab<double,Ndeg>;
+  eval_tab->tab[XC_VARS_RS][XC_GGA][Ndeg] = eval_gga_rs<double,Ndeg>;
   eval_setup_gga<Ndeg-1>();
 }
 template<> void eval_setup_gga<-1>(void) {}
@@ -237,21 +226,21 @@ template<> void eval_setup_gga<-1>(void) {}
 template<int Ndeg>
 static void eval_setup_mgga(void)
 {
-  get_evaltab()->tab[XC_VARS_AB][XC_MGGA][Ndeg] = eval_mgga_ab<double,Ndeg>;
-  get_evaltab()->tab[XC_VARS_RS][XC_MGGA][Ndeg] = eval_mgga_rs<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_MGGA][Ndeg] = eval_mgga_ab<double,Ndeg>;
+  eval_tab->tab[XC_VARS_RS][XC_MGGA][Ndeg] = eval_mgga_rs<double,Ndeg>;
   eval_setup_mgga<Ndeg-1>();
 }
 template<> void eval_setup_mgga<-1>(void) {}
 
 evaluator xc_evaluator_lookup(int mode, int type, int order)
 {
-  if (eval_tab == 0)
+  if (!eval_tab)
     {
+      eval_tab = (evaluator_table *)malloc(sizeof(evaluator_table));
+      eval_tab->construct();
       eval_setup_lda<XC_LDA_MAX_ORDER>();
       eval_setup_gga<XC_GGA_MAX_ORDER>();
       eval_setup_mgga<XC_MGGA_MAX_ORDER>();
-      eval_tab = (evaluator_table *)malloc(sizeof(evaluator_table));
-      eval_tab->construct();
     }
   assert(mode>=0 and mode < XC_NR_MODES);
   assert(type>=0 and type < XC_NR_TYPES);

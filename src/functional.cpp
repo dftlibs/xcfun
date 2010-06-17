@@ -37,6 +37,7 @@ void functional::describe_parameter(enum xc_parameters param, const char *descri
 			   double default_value)
 {
   xcint_set_short_description(param, description);
+  xcint_set_default(param,default_value);
 }
 
 void functional::add_test(int mode, int order,
@@ -48,12 +49,12 @@ void functional::add_test(int mode, int order,
   test_mode = mode;
   test_order = order;
 
-  test_input = (double *)malloc(xc_input_length(mode,m_type)*sizeof*test_input);
-  for (int i=0;i<xc_input_length(mode,m_type);i++)
+  test_input = (double *)malloc(xcint_input_length(mode,m_type)*sizeof*test_input);
+  for (int i=0;i<xcint_input_length(mode,m_type);i++)
     test_input[i] = test_in[i];
 
-  test_output = (double *)malloc(xc_output_length(mode,m_type,order)*sizeof*test_output);
-  for (int i=0;i<xc_output_length(mode,m_type,order);i++)
+  test_output = (double *)malloc(xcint_output_length(mode,m_type,order)*sizeof*test_output);
+  for (int i=0;i<xcint_output_length(mode,m_type,order);i++)
     test_output[i] = test_out[i];
 
   test_threshold = threshold;

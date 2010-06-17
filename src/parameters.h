@@ -31,5 +31,6 @@ void xcint_set_functional(int param, functional *f);
 functional *xcint_functional(int param);
 
 double xcint_default(int param);
+void xcint_set_default(int param, double value);
 
 #endif

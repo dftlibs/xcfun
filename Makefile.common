@@ -9,23 +9,28 @@ FUN_OBJ:=$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
 
 lib: lib/libxcfun.a
 
-lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ)
+lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ) include/xcfun_autogen.h fortran/xcfun_autogen.F90
 	ar -r $@ $^
 
-#lib/libxcfun.so: $(BASE_OBJ) $(FUN_OBJ)
-#	$(CXX) $(CXXFLAGS) -fPIC -shared -o lib/libxcfun.so $(LIBS) $^	
+src/parameters.o: src/parameters.cpp src/parameters.h src/functionals/list_of_parameters.h
 
 geninterface: src/geninterface.cpp src/parameters.cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+include/xcfun_autogen.h: geninterface src/functionals/list_of_parameters.h
+	./geninterface
+
+fortran/xcfun_autogen.F90: geninterface src/functionals/list_of_parameters.h
+	./geninterface
+
 funeval: test/funeval.cpp lib/libxcfun.a
 	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun
 
-testall: test/testall.cpp lib/libxcfun.a
-	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun
+testall: test/testall.c lib/libxcfun.a
+	$(CXX) $(CXXFLAGS) $< -o $@ -lxcfun -lefence
 
 linktest: test/linktest.c lib/libxcfun.a
 	$(CC) $(CXXFLAGS) $< -o $@ -lxcfun 
 
 clean:
-	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a}
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a} include/xcfun_autogen.h fortran/xcfun_autogen.F90

@@ -60,7 +60,7 @@ static num energy_corr(const densvars<num> &d)
 template<class num>
 static num energy_sr(const densvars<num> &d)
 {
-  parameter mu = d.get(XC_RANGESEP_MU);
+  parameter mu = d.get_param(XC_RANGESEP_MU);
   return becke_sr(mu,d.a,d.gaa) + becke_sr(mu,d.b,d.gbb);
 }
 
@@ -107,7 +107,7 @@ void setup_beckex(functional &f)
 
 void setup_beckexcorr(functional &f)
 {
-  f.describe(XC_BECKECORRX,XC_GGA,
+  f.describe(XC_BECKECORRX, XC_GGA,
 	     "Becke 88 exchange correction",
 	     "Becke 88 exchange not including Slater part\n"
 	     "A.D. Becke, Density-functional exchange-energy approximation\n"
@@ -144,10 +144,10 @@ void setup_beckexcorr(functional &f)
        0.000000000000e+00, // 01100
        1.959613595393e-07, // 01010
        0.000000000000e+00, // 01001
-       0.0000000000070074, // radovan: i got this using xcfun
+       7.0074271964711398e-12, // radovan: i got this using xcfun
        0.0000000000000000,
        0.0000000000000000,
-       0.0000000000071868, // radovan: i got this using xcfun
+       7.1867896886212297e-12, // radovan: i got this using xcfun
        0.0000000000000000,
        0.0000000000000000
     };
@@ -157,11 +157,12 @@ void setup_beckexcorr(functional &f)
 
 void setup_beckexsr(functional &f)
 {
-  f.describe(XC_BECKESRX,XC_GGA,
+  f.describe(XC_BECKESRX, XC_GGA,
 	     "Short range Becke 88 exchange",
 	     "Implemented by Ulf Ekstrom\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
-  f.describe_parameter(XC_RANGESEP_MU,"Error function range separation parameter (atomic units)",0.4);
+  f.describe_parameter(XC_RANGESEP_MU,
+		       "Error function range separation parameter (1/a0)",0.4);
 
   SET_GGA_ENERGY_FUNCTION(f,energy_sr);
 

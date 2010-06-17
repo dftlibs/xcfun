@@ -37,7 +37,7 @@ static num esrx_ldaerfspin(const num &na, parameter mu)
 template<class num>
 static num energy(const densvars<num> &d)
 {
-  double mu = d.get(XC_RANGESEP_MU);
+  double mu = d.get_param(XC_RANGESEP_MU);
   return 0.5*(esrx_ldaerfspin(d.a,mu) + esrx_ldaerfspin(d.b,mu)); 
 }
 
@@ -50,7 +50,7 @@ void setup_ldaerfx(functional &f)
 	     "where Ex[n] is from Toulouse, Savin, Flad, IJQC 100, 1047 (2004)"
 	     "Adapted from Gori-Giorgi and MOLPRO by Ulf Ekstrom\n"
 	     "Test case from Gori-Giorgi (personal communication)\n"
-	     "Range separation parameter is 'ldaerf:mu'\n");
+	     "Range separation parameter is XC_RANGESEP_MU\n");
   SET_LDA_ENERGY_FUNCTION(f,energy);
   static const double d[] = {1.1, 1.0};
   static const double ref[] = 

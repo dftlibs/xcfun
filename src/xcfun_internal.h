@@ -37,9 +37,9 @@ public:
   //array<functional *> active_functionals;
 };
 
-void xc_die(const char *message, int code);
-int xc_input_length(int mode, int type);
-int xc_output_length(int mode, int type, int order);
+void xcint_die(const char *message, int code);
+int xcint_input_length(int mode, int type);
+int xcint_output_length(int mode, int type, int order);
 
 typedef void (*evaluator)(const xc_functional_data &fun, double *, const double *);
 evaluator xc_evaluator_lookup(int mode, int type, int order);
