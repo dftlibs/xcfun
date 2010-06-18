@@ -11,10 +11,18 @@ int main(void)
 {
   printf("%s",xcfun_splash());
   int i = 0;
-  printf("Available functionals and settings:\n");
+  printf("\nAvailable functionals and settings:\n");
   for (i=0;i<XC_NR_PARAMS;i++)
     {
-      printf("%s\n",xc_name(i));
+      const char *s;
+      printf("%s \t",xc_name(i));
+      if ((s = xc_short_description(i)))
+	printf("%s",s);
+      else
+	printf("[No description]");
+      if (!xc_is_functional(i))
+	printf(" [parameter or disabled functionals]");
+      printf("\n");
     }
   printf("Running tests..\n");
   if (xcfun_test() == 0)

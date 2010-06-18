@@ -46,4 +46,6 @@ evaluator xc_evaluator_lookup(int mode, int type, int order);
 
 void xcint_setup_functionals();
 
+void xcint_assure_setup();
+
 #endif

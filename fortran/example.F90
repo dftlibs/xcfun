@@ -11,6 +11,7 @@ program xc_example
   character*1000 descr
   double precision, allocatable :: dens(:),funout(:)
 
+! Print some info and copyright about the library.
   call xcfun_splash(descr)
   print *, descr(1:len_trim(descr))
 

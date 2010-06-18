@@ -17,14 +17,14 @@ module xcfun
 ! lda derivatives, all odd spin density orders give zero at closed-shell reference
   integer, parameter :: XC_D00 =  1
   integer, parameter :: XC_D10 =  2
-  integer, parameter :: XC_D01 =  3 !zero at closed-shell reference
+  integer, parameter :: XC_D01 =  3 !zero at closed-shell reference with XC_VARS_RS 
   integer, parameter :: XC_D20 =  4
-  integer, parameter :: XC_D11 =  5 !zero at closed-shell reference
+  integer, parameter :: XC_D11 =  5 !zero at closed-shell reference with XC_VARS_RS 
   integer, parameter :: XC_D02 =  6
   integer, parameter :: XC_D30 =  7
-  integer, parameter :: XC_D21 =  8 !zero at closed-shell reference
+  integer, parameter :: XC_D21 =  8 !zero at closed-shell reference with XC_VARS_RS 
   integer, parameter :: XC_D12 =  9
-  integer, parameter :: XC_D03 = 10 !zero at closed-shell reference
+  integer, parameter :: XC_D03 = 10 !zero at closed-shell reference with XC_VARS_RS 
 
   integer, parameter :: XC_D00000 = 1
   integer, parameter :: XC_D10000 = 2
@@ -49,7 +49,8 @@ module xcfun
   integer, parameter :: XC_D00002 = 21
 
 !radovan: here are the pointers to 3rd gga derivatives
-!         be careful, only those that are nonzero at closed-shell reference are here
+!         be careful, only those that are nonzero at closed-shell reference 
+!         with XC_VARS_RS are here
   integer, parameter :: XC_D30000 = 22
   integer, parameter :: XC_D20100 = 24
   integer, parameter :: XC_D12000 = 27
@@ -110,79 +111,47 @@ contains
     xc_new_functional = xcnewf()
   end function xc_new_functional
 
-  subroutine xc_set_setting(funid, setting, val, stat)
-    integer, intent(in) :: funid
-    integer, intent(out) :: stat
+  subroutine xc_set_param(funid, param, val)
+    integer, intent(in) :: funid, param
     double precision, intent(in) :: val
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1),xcsets
-    call str2ints(setting,ibuf)
-    stat = xcsets(funid,ibuf,val)
+    call xcsets(funid,param,val)
   end subroutine xc_set_setting
   
-  function xc_get_setting(funid,setting)
-    integer, intent(in) :: funid
-    double precision :: xc_get_setting
-    double precision xcgets
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1)
-    call str2ints(setting,ibuf)
-    xc_get_setting = xcgets(funid,ibuf)
+  function xc_get_param(funid, param)
+    integer, intent(in) :: funid, param
+    double precision xcgets, xc_get_param
+    xc_get_param = xcgets(funid,param)
   end function xc_get_setting
 
-  function xc_is_set(funid,setting)
-    integer, intent(in) :: funid
-    logical :: xc_is_set
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1)
-    integer xcisse,res
-    call str2ints(setting,ibuf)
-    res = xcisse(funid,ibuf)
-    if (res.eq.0) then
-       xc_is_set = .false.
-    else
-       xc_is_set = .true.
-    endif
-  end function
-
-  function xc_is_functional(funid,setting)
+  function xc_is_functional(param)
     logical :: xc_is_functional
-    integer, intent(in) :: funid
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1)
+    integer, intent(in) :: param
     integer xcisfu,res
-    call str2ints(setting,ibuf)
-    res = xcisfu(funid,ibuf)
+    res = xcisfu(param)
     if (res.eq.0) then
-       xc_is_functional = .true.
-    else
        xc_is_functional = .false.
+    else
+       xc_is_functional = .true.
     endif
   end function
 
-  subroutine xc_short_description(funid,setting,description)
-    integer, intent(in) :: funid
+  subroutine xc_long_description(param,description)
+    integer, intent(in) :: param
     character, intent(out) :: description*(*)
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1)
     integer :: idescr(len(description)+1)
     integer :: le
-    call str2ints(setting,ibuf)
     le = len(description)+1
-    call xcssho(funid,idescr,le,ibuf)
+    call xcssho(idescr,le,param)
     call ints2str(idescr,description)
   end subroutine
 
-  subroutine xc_long_description(funid,setting,description)
-    integer, intent(in) :: funid
+  subroutine xc_long_description(param,description)
+    integer, intent(in) :: param
     character, intent(out) :: description*(*)
-    character, intent(in) :: setting*(*)
-    integer :: ibuf(len(setting)+1)
     integer :: idescr(len(description)+1)
     integer :: le
-    call str2ints(setting,ibuf)
     le = len(description)+1
-    call xcslon(funid,idescr,le,ibuf)
+    call xcslon(idescr,le,param)
     call ints2str(idescr,description)
   end subroutine
 

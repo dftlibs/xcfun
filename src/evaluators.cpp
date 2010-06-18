@@ -15,7 +15,7 @@ static struct evaluator_table
 } *eval_tab = 0;
 
 template<class T, class scalar>
-void sum_functionals(const double *weights,
+static void sum_functionals(const double *weights,
 		     //		     const array<functional *> &funs,
 		     scalar *res,
 		     const densvars<T> &dv)

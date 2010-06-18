@@ -17,7 +17,9 @@ lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ) include/xcfun_autogen.h fortran/xcfun_aut
 
 src/parameters.o: src/parameters.cpp src/parameters.h src/functionals/list_of_parameters.h
 
-geninterface: src/geninterface.cpp src/parameters.cpp
+src/fortran.o: src/fortran.c include/xcfun_autogen.h
+
+geninterface: src/geninterface.cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 include/xcfun_autogen.h: geninterface src/functionals/list_of_parameters.h
@@ -30,7 +32,7 @@ funeval: test/funeval.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm
 
 testall: test/testall.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $< -o $@ -lxcfun -m
+	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm
 
 clean:
 	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a} include/xcfun_autogen.h fortran/xcfun_autogen.F90

@@ -40,6 +40,7 @@ const char *xc_short_description(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
+  xcint_assure_setup();
   return param_short[param];
 }
 extern "C"
@@ -47,6 +48,7 @@ const char *xc_long_description(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
+  xcint_assure_setup();
   return param_long[param];
 }
 
@@ -54,6 +56,7 @@ double xcint_default(int param)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
+  xcint_assure_setup();
   return param_default[param];
 }
 
@@ -62,7 +65,7 @@ double xcint_default(int param)
 void xcint_set_short_description(int param, const char *text)
 {
   if (param < 0 or param >= XC_NR_PARAMS)
-      xcint_die("Invalid parameter nr (version mismatch?)",param);
+    xcint_die("Invalid parameter nr (version mismatch?)",param);
   param_short[param] = text;
 }
 // Long description should end with a final newline, and may have many lines.

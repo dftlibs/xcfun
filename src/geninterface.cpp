@@ -3,16 +3,19 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include "xcfun_internal.h"
 
-void xcint_die(const char *message, int code)
-{
-  fprintf(stderr,"XCFun fatal error %i: ",code);
-  fprintf(stderr,"%s",message);
-  fprintf(stderr,"\n");
-  exit(-1);
-}
-
+enum xc_parameters
+  {
+#define PARAM(name) name
+#include "list_of_parameters.h"
+#undef PARAM
+  };
+static const char *param_symbols[XC_NR_PARAMS+1] =
+  {
+#define PARAM(name) #name
+#include "list_of_parameters.h"
+#undef PARAM
+  };
 
 int main()
 {
@@ -20,7 +23,7 @@ int main()
   FILE *of = fopen("include/xcfun_autogen.h","w");
   fprintf(of,"enum xcfun_parameters {\n");
   for (int i=0;i<XC_NR_PARAMS;i++)
-    fprintf(of,"%s,\n",xc_name(i));
+    fprintf(of,"%s,\n",param_symbols[i]);
   fprintf(of,"XC_NR_PARAMS\n};\n");
   fclose(of);
   
@@ -32,7 +35,7 @@ int main()
   fprintf(of,"  integer, parameter :: XC_NR_PARAMS = %i\n",XC_NR_PARAMS);
   for (int i=0;i<XC_NR_PARAMS;i++)
     fprintf(of,"  integer, parameter :: %s = %i\n",
-	    xc_name(i),i);
+	    param_symbols[i],i);
   fprintf(of,"end module\n");
   fclose(of);
   return 0;

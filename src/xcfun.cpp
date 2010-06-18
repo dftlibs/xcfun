@@ -6,12 +6,12 @@
 
 static bool xcfun_is_setup = false;
 
-static void xcint_assure_setup()
+void xcint_assure_setup()
 {
   if (!xcfun_is_setup)
     {
-      xcint_setup_functionals();
       xcfun_is_setup = true;
+      xcint_setup_functionals();
     }
 }
 
@@ -32,11 +32,14 @@ double xcfun_version(void)
 extern "C"
 const char *xcfun_splash(void)
 {
-  return "XCFun DFT library, Copyright 2009-2010 Ulf Ekstrom\n"
-    "and contributors. See http://admol.org/xcfun for more information.\n"
-    "This is free software; see the source code for copying conditions.\n"
-    "There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n"
-    "FITNESS FOR A PARTICULAR PURPOSE. For details see the documentation.\n";
+  return 
+    "XCFun DFT library, Copyright 2009-2010 Ulf Ekstrom and contributors.\n"
+    "See http://admol.org/xcfun for more information. This is free soft-\n"
+    "ware; see the source code for copying conditions. There is ABSOLUTELY\n"
+    "NO WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n"
+    "PURPOSE. For details see the documentation. Scientific users of this \n"
+    "library should cite U. Ekstrom, L. Visscher, R. Bast, A. J. Thorvald-\n"
+    "sen and K, Ruud. J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
 }
 
 int xcint_input_length(int mode, int type)

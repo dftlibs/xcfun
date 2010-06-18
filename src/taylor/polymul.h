@@ -1459,7 +1459,7 @@ class polynomial
 // User interface
 
 template<class numtype, int Nvar, int Ndeg1, int Ndeg2>
-inline void polymul(polynomial<numtype, Nvar,Ndeg1+Ndeg2> & POLYMUL_RESTRICT dst,
+static inline void polymul(polynomial<numtype, Nvar,Ndeg1+Ndeg2> & POLYMUL_RESTRICT dst,
 	       const polynomial<numtype, Nvar,Ndeg1> &p1,
 	       const polynomial<numtype, Nvar,Ndeg2> &p2)
 {
@@ -1469,7 +1469,7 @@ inline void polymul(polynomial<numtype, Nvar,Ndeg1+Ndeg2> & POLYMUL_RESTRICT dst
 
 
 template<class numtype, int Nvar, int Ndeg>
-inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT dst,
+static inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT dst,
 		 const polynomial<numtype, Nvar,Ndeg> &p1,
 		 const polynomial<numtype, Nvar,Ndeg> &p2)
 {
@@ -1478,7 +1478,7 @@ inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT dst,
 }
 
 template<class numtype, int Nvar, int Ndeg, int Ndeg2>
-inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT p1,
+static inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT p1,
 		      const polynomial<numtype, Nvar,Ndeg2> &p2)
 {
   polymul_internal
@@ -1489,7 +1489,7 @@ inline void taylormul(polynomial<numtype, Nvar,Ndeg> & POLYMUL_RESTRICT p1,
 // _Add_ the product of p and the single polynomial term rterm with coefficient c
 // to dst. 
 template<class numtype, int Nvar, int Ndeg, int rterm>
-inline void polymul_term(polynomial<numtype, Nvar,Ndeg+polymul_internal::term_deg<Nvar,rterm>::deg> 
+static inline void polymul_term(polynomial<numtype, Nvar,Ndeg+polymul_internal::term_deg<Nvar,rterm>::deg> 
 			   & POLYMUL_RESTRICT dst,
 			   const polynomial<numtype, Nvar,Ndeg> &p,
 			   const numtype &c)
@@ -1500,7 +1500,7 @@ inline void polymul_term(polynomial<numtype, Nvar,Ndeg+polymul_internal::term_de
 }
 
 template<class numtype, int Nvar, int Ndeg>
-inline void polyterms(polynomial<numtype, Nvar,Ndeg> &p,
+static inline void polyterms(polynomial<numtype, Nvar,Ndeg> &p,
 	       const numtype x[])
 {
   polymul_internal::polynomial_evaluator<numtype,numtype,Nvar,Ndeg>
@@ -1511,7 +1511,7 @@ inline void polyterms(polynomial<numtype, Nvar,Ndeg> &p,
 // dot(P*p2,p3) = dot(P,p1) (P*p2 is polynomial multiplication,
 // dot means summing the product of all coefficients).
 template<class numtype, int Nvar, int Ndeg1, int Ndeg2>
-inline void polycontract(polynomial<numtype, Nvar,Ndeg1> & POLYMUL_RESTRICT p1,
+static inline void polycontract(polynomial<numtype, Nvar,Ndeg1> & POLYMUL_RESTRICT p1,
 			 const polynomial<numtype, Nvar,Ndeg2> &p2,
 			 const polynomial<numtype, Nvar,Ndeg1+Ndeg2> &p3)
 {
@@ -1527,7 +1527,7 @@ inline void polycontract(polynomial<numtype, Nvar,Ndeg1> & POLYMUL_RESTRICT p1,
 // NOTE: The factors are generated as enums, limiting
 // the numeric range to rather small values.
 template<class numtype, int Nvar, int Ndeg>
-void polydfac(polynomial<numtype, Nvar, Ndeg> &p)
+static void polydfac(polynomial<numtype, Nvar, Ndeg> &p)
 {
   polymul_internal
     ::deriv_fac_multiplier<numtype,Nvar,0,
@@ -1539,7 +1539,7 @@ void polydfac(polynomial<numtype, Nvar, Ndeg> &p)
 // x_i = sum_j T_ji y_j. T_ji is of the format T_00, T_10,
 // T_20 .. 
 template<class numtype, int Nvar_src, int Nvar_dst, int Ndeg>
-void polytrans(polynomial<numtype, Nvar_dst,Ndeg> &dst,
+static void polytrans(polynomial<numtype, Nvar_dst,Ndeg> &dst,
 	       const polynomial<numtype, Nvar_src, Ndeg> &src,
 	       const numtype T[Nvar_src*Nvar_dst])
 {
@@ -1551,7 +1551,7 @@ void polytrans(polynomial<numtype, Nvar_dst,Ndeg> &dst,
 
 // dst = sum_n=0..Ndeg c[n]p^n, result is truncated at degree Ndeg.
 template<class numtype, int Nvar, int Ndeg, int Ndegp>
-inline void taylorcompose0(polynomial<numtype, Nvar,Ndeg> &dst,
+static inline void taylorcompose0(polynomial<numtype, Nvar,Ndeg> &dst,
 			  const polynomial<numtype, Nvar,Ndegp> &p,
 			  const numtype c[Ndeg+1])
 {
@@ -1560,7 +1560,7 @@ inline void taylorcompose0(polynomial<numtype, Nvar,Ndeg> &dst,
 }
 
 template<class numtype, int Nvar, int Ndeg, int Ndegp>
-inline void taylorcompose(polynomial<numtype, Nvar,Ndeg> &dst,
+static inline void taylorcompose(polynomial<numtype, Nvar,Ndeg> &dst,
 			  const polynomial<numtype, Nvar,Ndegp> &p,
 			  const numtype c[Ndeg+1])
 {

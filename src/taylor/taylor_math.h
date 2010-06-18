@@ -8,7 +8,7 @@
 
 //Taylor series of 1/(a+x)
 template<class T,int N>
-void inv_taylor(taylor<T,1,N>& t, const T &a)
+static void inv_taylor(taylor<T,1,N>& t, const T &a)
 {
   assert(a != 0 && "1/(a+x) not analytic at a = 0");
   t[0] = 1/a;
@@ -22,7 +22,7 @@ void inv_taylor(taylor<T,1,N>& t, const T &a)
 // t1 = 1/a[0]*(2-a/a[0])
 // tn+1 = -tn*(a*tn-2)
 template<class T,int Nvar, int Ndeg>
-void taylor_reciprocal(taylor<T,Nvar,Ndeg>& t, const taylor<T,Nvar,Ndeg> &a)
+static void taylor_reciprocal(taylor<T,Nvar,Ndeg>& t, const taylor<T,Nvar,Ndeg> &a)
 {
   assert(a != 0 && "1/(a+x) not analytic at a = 0");
   t[0] = 1/a[0];
@@ -45,7 +45,7 @@ void taylor_reciprocal(taylor<T,Nvar,Ndeg>& t, const taylor<T,Nvar,Ndeg> &a)
 }
 
 template<class T,int Nvar, int Ndeg, class S>
-taylor<T,Nvar, Ndeg> operator/(const S &x, const taylor<T,Nvar,Ndeg>& t)
+static taylor<T,Nvar, Ndeg> operator/(const S &x, const taylor<T,Nvar,Ndeg>& t)
 {
 #ifdef TAYLOR_LOGGING
   if (taylor_logging)
@@ -60,7 +60,7 @@ taylor<T,Nvar, Ndeg> operator/(const S &x, const taylor<T,Nvar,Ndeg>& t)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const T &x)
+static taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const T &x)
 {
 #ifdef TAYLOR_LOGGING
   if (taylor_logging)
@@ -72,7 +72,7 @@ taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const T &x)
 }
 
 template<class T,int Nvar, int Ndeg, class S>
-taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const S &x)
+static taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const S &x)
 {
 #ifdef TAYLOR_LOGGING
   if (taylor_logging)
@@ -84,7 +84,7 @@ taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>& t, const S &x)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>&t1, const taylor<T,Nvar,Ndeg>& t2)
+static taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>&t1, const taylor<T,Nvar,Ndeg>& t2)
 {
   taylor<T,1,Ndeg> tmp;
   inv_taylor(tmp,t2[0]);
@@ -96,7 +96,7 @@ taylor<T,Nvar, Ndeg> operator/(const taylor<T,Nvar,Ndeg>&t1, const taylor<T,Nvar
 
 // Evaluate the taylor series of exp(x0+x)=exp(x0)*exp(x)
 template<class T,int Ndeg>
-void exp_taylor(taylor<T,1,Ndeg> &t, const T &x0)
+static void exp_taylor(taylor<T,1,Ndeg> &t, const T &x0)
 {
   T ifac = 1;
   t[0] = exp(x0);
@@ -108,7 +108,7 @@ void exp_taylor(taylor<T,1,Ndeg> &t, const T &x0)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> exp(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> exp(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   exp_taylor(tmp,t[0]);
@@ -120,7 +120,7 @@ taylor<T,Nvar,Ndeg> exp(const taylor<T,Nvar,Ndeg> &t)
 
 // Log series log(a+x) = log(1+x/a) + log(a)
 template<class T,int N>
-void log_taylor_old(taylor<T,1,N> &t, const T &x0)
+static void log_taylor_old(taylor<T,1,N> &t, const T &x0)
 {
   //  assert(x0 != T(0) && "log(x) not analytic at x = 0");
   t[0] = log(x0);
@@ -135,7 +135,7 @@ void log_taylor_old(taylor<T,1,N> &t, const T &x0)
 
 // Log series log(a+x) = log(1+x/a) + log(a)
 template<class T,int N>
-void log_taylor(taylor<T,1,N> &t, const T &x0)
+static void log_taylor(taylor<T,1,N> &t, const T &x0)
 {
   assert(x0 > 0 && "log(x) not real analytic at x <= 0");
   t[0] = log(x0);
@@ -149,7 +149,7 @@ void log_taylor(taylor<T,1,N> &t, const T &x0)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> log(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> log(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   log_taylor(tmp,t[0]);
@@ -161,7 +161,7 @@ taylor<T,Nvar,Ndeg> log(const taylor<T,Nvar,Ndeg> &t)
 
 /* Use that (x0+x)^a=x0^a*(1+x/x0)^a */
 template<class S,class T,int N>
-void pow_taylor(taylor<T,1,N>& t, const T &x0, const S &a)
+static void pow_taylor(taylor<T,1,N>& t, const T &x0, const S &a)
 {
   assert(x0 > 0 && "pow(x,a) not real analytic at x <= 0");
   t[0] = pow(x0,a);
@@ -173,7 +173,7 @@ void pow_taylor(taylor<T,1,N>& t, const T &x0, const S &a)
 // We need this version with double a argument to prevent truncation
 // to int.
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const double &a)
+static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const double &a)
 {
   taylor<T,1,Ndeg> tmp;
   pow_taylor(tmp,t[0],a);
@@ -185,7 +185,7 @@ taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const double &a)
 
 #if 0
 template<class T,int Nvar, int Ndeg, class S>
-taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const S &a)
+static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const S &a)
 {
   taylor<T,1,Ndeg> tmp;
   pow_taylor(tmp,t[0],T(a));
@@ -202,7 +202,7 @@ taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const S &a)
 // when the exponent is also a taylor expansion use
 // t^a = exp(a*log(t))
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, 
+static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, 
 			const taylor<T,Nvar,Ndeg> &a)
 {
   return exp(a*log(t));
@@ -210,7 +210,7 @@ taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t,
 #endif
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> sqrt(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> sqrt(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   pow_taylor(tmp,t[0],0.5);
@@ -225,7 +225,7 @@ taylor<T,Nvar,Ndeg> sqrt(const taylor<T,Nvar,Ndeg> &t)
 // when the exponent is an integer, but does not force
 // conversion to integer.
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, int n)
+static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, int n)
 {
   if (n < 1)
     return pow(t,double(n));
@@ -238,7 +238,7 @@ taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, int n)
 // Use that d/dx atan(x) = 1/(1 + x^2),
 // Taylor expand in x^2 and integrate.
 template<class T,int Ndeg>
-void atan_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void atan_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
   // Calculate taylor expansion of 1/(1+a^2+x)
   taylor<T,1,Ndeg> invt,x;
@@ -256,7 +256,7 @@ void atan_taylor(taylor<T,1,Ndeg>& t, const T &a)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> atan(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> atan(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   atan_taylor(tmp,t[0]);
@@ -272,7 +272,7 @@ taylor<T,Nvar,Ndeg> atan(const taylor<T,Nvar,Ndeg> &t)
    exp(-a^2-2a*x)*exp(-x^2)
  */
 template<class T,int Ndeg>
-void gauss_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void gauss_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
   exp_taylor(t,-a*a);
   t.stretch(-2*a);
@@ -310,7 +310,7 @@ static inline qd_real erf(const qd_real &x)
 // Use that d/dx erf(x) = 2/sqrt(pi)*exp(-x^2),
 // Taylor expand in x^2 and integrate.
 template<class T,int Ndeg>
-void erf_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void erf_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
   gauss_taylor(t,a);
   t*=2/sqrt(M_PI);
@@ -320,7 +320,7 @@ void erf_taylor(taylor<T,1,Ndeg>& t, const T &a)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> erf(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> erf(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   erf_taylor(tmp,t[0]);
@@ -332,7 +332,7 @@ taylor<T,Nvar,Ndeg> erf(const taylor<T,Nvar,Ndeg> &t)
 
 
 template<class T,int Ndeg>
-void sin_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void sin_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
     if (Ndeg > 0)
     {
@@ -354,7 +354,7 @@ void sin_taylor(taylor<T,1,Ndeg>& t, const T &a)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> sin(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> sin(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   sin_taylor(tmp,t[0]);
@@ -366,7 +366,7 @@ taylor<T,Nvar,Ndeg> sin(const taylor<T,Nvar,Ndeg> &t)
 
 
 template<class T,int Ndeg>
-void cos_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void cos_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
     if (Ndeg > 0)
     {
@@ -389,7 +389,7 @@ void cos_taylor(taylor<T,1,Ndeg>& t, const T &a)
 
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> cos(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> cos(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   cos_taylor(tmp,t[0]);
@@ -403,7 +403,7 @@ taylor<T,Nvar,Ndeg> cos(const taylor<T,Nvar,Ndeg> &t)
 // hyperbolic arcsin function. d/dx asinh(x) = 1/sqrt(1+x^2)
 // 1 + (a+x)^2 = 1+a^2 + 2ax + x^2
 template<class T,int Ndeg>
-void asinh_taylor(taylor<T,1,Ndeg>& t, const T &a)
+static void asinh_taylor(taylor<T,1,Ndeg>& t, const T &a)
 {
   taylor<T,1,Ndeg> tmp(1+a*a);
   if (Ndeg>0)
@@ -416,7 +416,7 @@ void asinh_taylor(taylor<T,1,Ndeg>& t, const T &a)
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> asinh(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> asinh(const taylor<T,Nvar,Ndeg> &t)
 {
   taylor<T,1,Ndeg> tmp;
   asinh_taylor(tmp,t[0]);
@@ -428,7 +428,7 @@ taylor<T,Nvar,Ndeg> asinh(const taylor<T,Nvar,Ndeg> &t)
 
 
 template<class T,int Ndeg>
-void sinc_taylor_at0(taylor<T,1,Ndeg>& t)
+static void sinc_taylor_at0(taylor<T,1,Ndeg>& t)
 {
     t[0] = 1;
     T fac = 1;
@@ -445,7 +445,7 @@ void sinc_taylor_at0(taylor<T,1,Ndeg>& t)
 
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> sinc(const taylor<T,Nvar,Ndeg> &t)
+static taylor<T,Nvar,Ndeg> sinc(const taylor<T,Nvar,Ndeg> &t)
 {
     if (fabs(t[0]) < 1e-3)
     {
@@ -464,9 +464,8 @@ taylor<T,Nvar,Ndeg> sinc(const taylor<T,Nvar,Ndeg> &t)
     }
 }
 
-
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> min(const taylor<T,Nvar,Ndeg> &a,
+static taylor<T,Nvar,Ndeg> min(const taylor<T,Nvar,Ndeg> &a,
 			const taylor<T,Nvar,Ndeg> &b)
 {
   if (a <= b)
@@ -476,7 +475,7 @@ taylor<T,Nvar,Ndeg> min(const taylor<T,Nvar,Ndeg> &a,
 }
 
 template<class T,int Nvar, int Ndeg>
-taylor<T,Nvar,Ndeg> max(const taylor<T,Nvar,Ndeg> &a,
+static taylor<T,Nvar,Ndeg> max(const taylor<T,Nvar,Ndeg> &a,
 			const taylor<T,Nvar,Ndeg> &b)
 {
   if (a > b)
