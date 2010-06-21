@@ -1,0 +1,196 @@
+<html lang="en">
+<head>
+<title>XCFun DFT Library</title>
+</head>
+<body>
+<div style="width:50em">
+<h1>XCFun</h1>
+<p>
+XCFun is a library of DFT exchange-correlation (XC) functionals. It is
+based on automatic differentiation and can therefore generate
+arbitrary order derivatives of these functionals. For more information
+see the website <a href="http://admol.org/xcfun">admol.org/xcfun</a>.
+</p>
+
+
+<h2>Installation and linking</h2> Compile the library using one of the
+included makefiles (for example <tt>Makefile.gcc</tt>). This will
+generate a library file <tt>lib/libxcfun.a</tt> which can be
+statically linked to your application. Include files listing all
+available functionals will be generated during the compilation of
+XCFun. These files are <tt>include/xcfun_autogen.h</tt> (for the C
+interface), and <tt>fortran/xcfun_autogen.F90</tt> for the Fortran
+module. C or C++ programs that uses XCFun should include the <tt>xcfun.h</tt> header file, while Fortran programs should use the <tt>xcfun</tt> module defined in <tt>fortran/xcfun_module.F90</tt>.
+
+<h2>Usage</h2> 
+
+<p>To use the library you should first create
+one <tt>xc_functional</tt> object for each functional and each thread
+you want to use. Each functional object can only be used by one thread
+at a time. After creating these objects
+using <tt>xc_new_functional()</tt> you should set them up by defining
+the variables to differentiate with respect to, as well as the
+parameters of the functional you want to use. After having done so you
+can use <tt>xc_eval()</tt> to evaluate the exchange correlation energy
+and its derivatives.</p>
+
+<p>Example C program that evaluates BLYP to order 2 using alpha/beta variables:</p>
+<p>
+<kbd>
+#include "xcfun.h"<br/>
+<br/>
+int main(int argc, char *argv[])<br/>
+{<br/>
+&nbsp; int derivative_order = 2;<br/>
+&nbsp; int nr_points = 1;<br/>
+&nbsp; double density[5] = {1,2,3,5,4}; /* na nb ga.ga gb.gb ga.gb */<br/>
+&nbsp; double output[21]; /* We have 21 output numbers for derivatives up to order 2 */<br/>
+&nbsp; xc_functional fun = xc_new_functional();<br/>
+&nbsp; xc_set_mode(fun, XC_VARS_AB);<br/>
+&nbsp; xc_set_param(fun, XC_LYPC, 1.0);<br/>
+&nbsp; xc_set_param(fun, XC_BECKEX, 1.0);<br/>
+&nbsp; xc_eval(fun, derivative_order, nr_points, density, output);<br/>
+}
+</kbd></p>
+<p>
+Please see the complete API documentation below
+</p>
+
+
+<h2>API</h2>
+
+The library is written in C++, but can also be directly used in a C
+project or Fortran project. The C interface is described
+in <tt>include/xcfun.h</tt>, while the Fortran interface is described
+in the module file <tt>fortran/xcfun_module.F90</tt>. This
+documentation tries to describe both the C and Fortran API at the same
+time, even though small differences may exist between the two
+interfaces.
+
+<h3>Setup and Testing</h3>
+
+<h3><tt>const char *xcfun_splash()</tt></h3> Return a multi-line
+string describing the library. Please print this string so that your
+users find the right citation for the library. The Fortran version
+is <tt>xcfun_splash(text)</tt>, and the message is put in the string
+text.
+
+<h3><tt>xcfun_version()</tt></h3>
+Return a double precision version number of the library.
+
+<h3><tt>xcfun_test()</tt></h3> Run all internal tests and return the
+number of failed tests. 
+
+
+<h3>Creating and destroying functional objects</h3>
+
+<h3><tt>xc_new_functional()</tt></h3> Create a new functional
+object. The C version returns an object of
+type <tt>xc_functional</tt>. The Fortran version returns an
+integer. The creation of this object may be rather slow; create an
+object once for each calculation, not once for each grid point.
+
+<h3><tt>xc_free_functional(functional)</tt></h3>
+Release the memory associated with functional (previously allocated by <tt>xc_new_functional()</tt>). 
+
+<h3>Defining a functional</h3>
+<h3><tt>xc_set_mode(functional, mode)</tt></h3> Set <tt>functional</tt> to operate in <tt>mode</tt>, one of 
+<ul>
+<li> <tt>XC_VARS_A</tt> Full spin polarization using only alpha quantities.
+<li> <tt>XC_VARS_R</tt> Completely unpolarized mode using only total density quantities.
+<li> <tt>XC_VARS_AB</tt> Using alpha and beta variables.
+<li> <tt>XC_VARS_RS</tt> Using total density/spin polarization variables.
+</ul>
+The mode and the type of functional (LDA, GGA, metaGGA) determines the
+number of variables used by the functional.
+<h3><tt>xc_set_param(functional, param, value)</tt></h3> 
+<p>Set the
+parameter <tt>param</tt> in <tt>functional</tt> to some double
+precision <tt>value</tt>. <tt>Param</tt> is one of the named constants
+listed in <tt>include/xcfun_autogen.h</tt>
+(or <tt>fortran/xcfun_autogen.F90</tt>). The parameters can be the
+weight of different functionals, or some other parameter in the
+functional definition. Example of parameters are <tt>XC_VWN5C</tt>,
+the amount of VWN5 LDA correlation, and <tt>XC_RANGESEP_MU</tt>, the
+range separation constant &mu; used in range separated hybrid
+functionals.
+</p>
+<p> The functional weights default to 0, while other parameters default to some sensible value. The current value of a parameter can be checked with the double precision function</p>
+<h3><tt>xc_get_param(functional, param)</tt></h3> which returns the
+current value of <tt>param</tt>. Note that different functionals may
+have different parameter values set.
+
+<h3><tt>xc_name(param)</tt></h3> <p>Returns the name
+of <tt>param</tt>. This name is the same as the symbolic constant used
+in the programming interface, so the first three characters
+(<tt>XC_</tt>) can be stripped off before printing the string to the
+user. The Fortran version is <tt>xc_name(param, name)</tt>.</p>
+
+<h3><tt>xc_short_description(param)</tt></h3> Return a single line
+(without newline) describing <tt>param</tt>. This may be a null string
+if the parameter was not described in the library. The Fortran version
+puts the description in the second argument to this subroutine.
+
+<h3><tt>xc_long_description(param)</tt></h3> Return a multi-line
+string (if present) ending with a newline. This string describes the
+functional or parameter in more detail, and should include references
+for citation and further information. The Fortran version
+puts the description in the second argument to this subroutine.
+
+<h3>Evaluating a functional</h3>
+Given a functional that has been set up using the functions above
+we may evaluate this functional up to the highest order defined in
+<tt>src/config.h</tt>. Increasing the maximum order increases the
+compile time and size of the library, so it is important to keep this
+limit rather low. The current limits of the library may be queried with
+the function
+<h3><tt>xc_max_order(functional)</tt></h3>
+which returns the highest derivative order supported by the previously defined <tt>functional</tt>.
+
+<h3><tt>xc_get_type(functional)</tt></h3>
+Returns one of the integers
+<ul>
+  <li> <tt>XC_LDA</tt> </li>
+  <li> <tt>XC_GGA</tt> </li>
+  <li> <tt>XC_MGGA</tt> </li>
+</ul> depending on the parameters set in the functional.
+
+<h3><tt>xc_input_length(functional)</tt></h3>
+Returns the length of the input array (i.e. the number of density variables. This depends on the type of functional and on the evaluation mode. Typical values are 2 (LDA with incomplete spin polarization) or 5 (GGA with incomplete spin polarization). 
+
+<h3><tt>xc_output_length(functional, order)</tt></h3> Return the
+number of output coefficients computed by <tt>xc_eval()</tt> if
+functional is evaluate up to <tt>order</tt>. Note that all derivatives
+up to <tt>order</tt> are calculated, not only those of the particular
+order.
+
+<h3><tt>xc_regularize_density(functional, density)</tt></h3> Modify
+density in-place so that <tt>functional</tt> can be evaluated without
+infinities or floating point errors. This mainly involves making sure
+that the density is physical and nonzero. In cases where the
+derivatives should be infinite they will instead be very large, but
+otherwise the effect on the output should be minimal.
+
+<h3><tt>xc_eval(functional, order, nr_points, density,
+result)</tt></h3> Evaluate the previously defined <tt>functional</tt>
+at <tt>nr_points</tt> different points, with derivatives up
+to <tt>order</tt>. The input array <tt>density</tt> contains <tt>nr_points</tt>*N
+consecutive density values, where N is the value returned by 
+<tt>xc_input_length()</tt>. Similarly for the output array <tt>result</tt>. The input
+and output arrays have the values for each point packed together. The output values
+are stored in graded lexicographical order. For an LDA functional with alpha/beta variables we would therefore have the order E E<sub>a</sub> E<sub>b</sub> E<sub>aa</sub> E<sub>ab</sub> E<sub>bb</sub> E<sub>aaa</sub> E<sub>aab</sub> E<sub>abb</sub> E<sub>bbb</sub> ...
+
+<h3><tt>xc_derivative_index(functional, derivative)</tt></h3> Given an
+integer array of "exponents" this function returns the index into the
+output array of xc_eval where the corresponding derivative is
+located. Note that this position depends on the functional type and
+mode. Alternatively you can, for low orders, use the predefined constants
+of the form <tt>XC_D01000</tt> (which corresponds to the first derivative
+with respect to the second variable, <i>for setups with five variables</i>). To use these
+predefined constants you must therefore know the type of your functional
+beforehand. For LDA in a two variable mode the corresponding constant would be 
+<tt>XC_D01</tt>, but this is a <i>different</i> index from <tt>XC_D01000</tt>.
+
+</div>
+</body>
+</html>
