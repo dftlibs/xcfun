@@ -39,7 +39,7 @@ const char *xcfun_splash(void)
     "NO WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n"
     "PURPOSE. For details see the documentation. Scientific users of this \n"
     "library should cite U. Ekstrom, L. Visscher, R. Bast, A. J. Thorvald-\n"
-    "sen and K, Ruud. J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
+    "sen and K. Ruud; J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
 }
 
 int xcint_input_length(int mode, int type)
@@ -149,6 +149,7 @@ void xc_free_functional(xc_functional fun)
   free(fun);
 }
 
+extern "C"
 void xc_regularize_density(xc_functional fun, double *density)
 {
   fun->regularize_density(density);

@@ -7,7 +7,7 @@ program xc_example
 ! that are needed to "talk to" the xcfun library
 
   use xcfun
-  integer funid,n,stat,ilen,olen,order
+  integer funid,n,ilen,olen,order,npoints
   character*1000 descr
   double precision, allocatable :: dens(:),funout(:)
 
@@ -19,37 +19,19 @@ program xc_example
 ! with the library.
   funid = xc_new_functional()
 
-! Discover all settings
-  print *,'All settings (functionals and parameters):'
-  n = 0
-  call xc_setting_name(funid,n,descr)
-  do while(len_trim(descr).gt.0)
-     print *,descr(1:len_trim(descr))
-     n = n + 1
-     call xc_setting_name(funid,n,descr)
-  enddo
-
 ! Set up BLYP
-  print *,'Setting up LDAERF'
-!radovan: this works
-! call xc_set_setting(funid,'beckex',1.0d0,stat)
-! call xc_set_setting(funid,'lypc',1.0d0,stat)
-!now trying:
-  call xc_set_setting(funid, 'ldaerfx',    1.0d0, stat)
-  call xc_set_setting(funid, 'ldaerfc',    1.0d0, stat)
-!  call xc_set_setting(funid, 'lypc',       1.0d0, stat)
+  print *,'Setting up BLYP'
+  call xc_set_param(funid, XC_LYPC, 1.0d0)
+  call xc_set_param(funid, XC_BECKEX, 1.0d0)
 
 ! Print currently set parameters
 ! Discover all settings
-  print *,'Now defined (weights):'
-  n = 0
-  call xc_setting_name(funid,n,descr)
-  do while(len_trim(descr).gt.0)
-     if (xc_is_set(funid,descr)) then
-        print *,descr(1:len_trim(descr)),xc_get_setting(funid,descr)
+  print *,'Now defined (nonzero weights and parameters, including defaults):'
+  do n=0,XC_NR_PARAMS-1
+     call xc_param_name(n,descr)
+     if (xc_get_param(funid,n).ne.0.0D0) then
+        print *, descr(4:len_trim(descr)),xc_get_param(funid,n)
      endif
-     n = n + 1
-     call xc_setting_name(funid,n,descr)
   enddo
 ! Set alpha/beta density variable mode
   call xc_set_mode(funid,XC_VARS_AB)
@@ -70,8 +52,9 @@ program xc_example
   do n=1,ilen
      dens(n) = n
   enddo
+  npoints = 1 ! We have only one point in this example
 ! Compute the functional and its derivatives up to order
-  call xc_eval(funid,funout,order,dens)
+  call xc_eval(funid,order,npoints,dens, funout)
 ! Print output
   print *,'Output:'
   do n=1,olen

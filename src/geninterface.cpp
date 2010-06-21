@@ -30,7 +30,7 @@ int main()
   /* Fortran interface */
   of = fopen("fortran/xcfun_autogen.F90","w");
   fprintf(of,
-	  "module xcfun\n"
+	  "module xcfun_autogen\n"
 	  "  implicit none\n");
   fprintf(of,"  integer, parameter :: XC_NR_PARAMS = %i\n",XC_NR_PARAMS);
   for (int i=0;i<XC_NR_PARAMS;i++)

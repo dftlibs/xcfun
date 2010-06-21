@@ -1,5 +1,6 @@
 
 module xcfun
+  use xcfun_autogen
   implicit none
 ! These parameters should mirror those in xcfun.h
   integer, parameter ::  XC_VARS_A  = 0
@@ -115,13 +116,13 @@ contains
     integer, intent(in) :: funid, param
     double precision, intent(in) :: val
     call xcsets(funid,param,val)
-  end subroutine xc_set_setting
+  end subroutine xc_set_param
   
   function xc_get_param(funid, param)
     integer, intent(in) :: funid, param
     double precision xcgets, xc_get_param
     xc_get_param = xcgets(funid,param)
-  end function xc_get_setting
+  end function xc_get_param
 
   function xc_is_functional(param)
     logical :: xc_is_functional
@@ -135,7 +136,7 @@ contains
     endif
   end function
 
-  subroutine xc_long_description(param,description)
+  subroutine xc_short_description(param,description)
     integer, intent(in) :: param
     character, intent(out) :: description*(*)
     integer :: idescr(len(description)+1)
@@ -166,12 +167,11 @@ contains
     xc_get_type = xcgett(funid)
   end function xc_get_type
 
-  subroutine xc_eval(funid, res, order, densvars)
-    integer, intent(in) :: funid
-    integer order
+  subroutine xc_eval(funid, order, npoints, densvars, res)
+    integer, intent(in) :: funid, npoints, order
     double precision, intent(out) :: res(*)
     double precision, intent(in) :: densvars(*)
-    call xceval(funid,res,order,densvars)
+    call xceval(funid,order,npoints,densvars,res)
   end subroutine xc_eval
 
   function xc_index(funid, exponents)
@@ -198,13 +198,13 @@ contains
     xc_output_length = xcoule(funid,order)
   end function xc_output_length
 
-  subroutine xc_setting_name(funid, setting_nr, name)
-    integer, intent(in) :: funid, setting_nr
+  subroutine xc_param_name(setting_nr, name)
+    integer, intent(in) :: setting_nr
     character, intent(out) :: name*(*)
     integer :: ibuf(len(name)+1)
     integer :: le
     le = len(name)+1
-    call xcsnam(funid,ibuf,le,setting_nr)
+    call xcsnam(ibuf,le,setting_nr)
     call ints2str(ibuf,name)
-  end subroutine xc_setting_name
+  end subroutine xc_param_name
 end module
