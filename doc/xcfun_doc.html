@@ -113,7 +113,7 @@ weight of different functionals, or some other parameter in the
 functional definition. Example of parameters are <tt>XC_VWN5C</tt>,
 the amount of VWN5 LDA correlation, and <tt>XC_RANGESEP_MU</tt>, the
 range separation constant &mu; used in range separated hybrid
-functionals.
+functionals. You can iterate over all parameters by using the <tt>XC_NR_PARAMS</tt> constant. C parameters start at 0 and Fortran parameters start at 1.
 </p>
 <p> The functional weights default to 0, while other parameters default to some sensible value. The current value of a parameter can be checked with the double precision function</p>
 <h3><tt>xc_get_param(functional, param)</tt></h3> which returns the

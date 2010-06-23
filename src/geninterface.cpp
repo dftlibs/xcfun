@@ -35,7 +35,7 @@ int main()
   fprintf(of,"  integer, parameter :: XC_NR_PARAMS = %i\n",XC_NR_PARAMS);
   for (int i=0;i<XC_NR_PARAMS;i++)
     fprintf(of,"  integer, parameter :: %s = %i\n",
-	    param_symbols[i],i);
+	    param_symbols[i],i+1);
   fprintf(of,"end module\n");
   fclose(of);
   return 0;

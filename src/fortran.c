@@ -115,8 +115,7 @@ void FSYM(xcspla)(int *text, int *len)
 void FSYM(xcsnam)(int *dst, int *dstlen, int *n)
 {
   const char *s;
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  s= xc_name(*n);
+  s= xc_name(*n-1*);
   if (s)
     str2ints(dst,*dstlen,s);
   else
@@ -126,35 +125,30 @@ void FSYM(xcsnam)(int *dst, int *dstlen, int *n)
 void FSYM(xcssho)(int *dst, int *dstlen, int *n)
 {
   const char *s;
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  s = xc_short_description(*n);
+  s = xc_short_description(*n-1);
   str2ints(dst,*dstlen,s);
 }
 
 void FSYM(xcslon)(int *dst, int *dstlen, int *n)
 {
   const char *s;   
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  s = xc_long_description(*n);
+  s = xc_long_description(*n-1);
   str2ints(dst,*dstlen,s);
 }
 
 int FSYM(xcisfu)(int *n)
 {
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  return xc_is_functional(*n);
+  return xc_is_functional(*n-1);
 }
 
 void FSYM(xcsets)(int *fun, int *n, double *value)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  xc_set_param(fortran_functionals[*fun],*n,*value);
+  xc_set_param(fortran_functionals[*fun],*n-1,*value);
 }
 
 double FSYM(xcgets)(int *fun, int *n)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  assert(*n >= 0 && *n < XC_NR_PARAMS);
-  return xc_get_param(fortran_functionals[*fun],*n);
+  return xc_get_param(fortran_functionals[*fun],*n-1);
 }
