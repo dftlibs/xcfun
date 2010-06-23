@@ -115,7 +115,7 @@ void FSYM(xcspla)(int *text, int *len)
 void FSYM(xcsnam)(int *dst, int *dstlen, int *n)
 {
   const char *s;
-  s= xc_name(*n-1*);
+  s= xc_name(*n-1);
   if (s)
     str2ints(dst,*dstlen,s);
   else
