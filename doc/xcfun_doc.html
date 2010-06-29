@@ -57,6 +57,43 @@ Please see the complete API documentation below
 </p>
 
 
+<h2>Input, output and units</h2> The library uses atomic units for all
+input and output variables. 
+
+<p>The XC energy and derivatives can be
+evaluated using spin-up (&alpha;) and spin-down (&beta;)
+quantities. In the most general case these are
+<ul>
+  <li> <i> n<sub>&alpha;</sub> </i> The spin-up density.
+  <li> <i> n<sub>&beta;</sub> </i> The spin-down density.
+  <li> <i> &sigma;<sub>&alpha;&alpha;</sub> </i> The square magnitude of the spin-up density gradient.
+  <li> <i> &sigma;<sub>&alpha;&beta;</sub> </i> The dot product between the spin-up and spin-down gradient vectors.
+  <li> <i> &sigma;<sub>&beta;&beta;</sub> </i> The square magnitude of the spin-down density gradient.
+  <li> <i> &tau;<sub>&alpha;</sub> </i> The spin-up Kohn-Sham kinetic energy density.
+  <li> <i> &tau;<sub>&beta;</sub> </i> The spin-down Kohn-Sham kinetic energy density.
+</ul>    
+Alternatively you can use total density (<i>n = n<sub>&alpha;</sub> + n<sub>&beta;</sub></i>) and spin density (<i>s = n<sub>&alpha;</sub> - n<sub>&beta;</sub></i>) variables. These also have corresponding gradient and kinetic energy components. See <tt>xc_set_mode()</tt> below for more information.</p>
+
+<p>
+  The output is given in graded lexicographical order. For example a spin-polarized second order GGA functional will give 21 output elements, starting with the XC energy density. Symbolically we may write this as a list starting with the energy 
+  <i>E, </i>
+followed by five gradient elements 
+<i>
+E<sub>&alpha;</sub> E<sub>&beta;</sub>
+E<sub>&sigma;<sub>&alpha;&alpha;</sub></sub>
+E<sub>&sigma;<sub>&alpha;&beta;</sub></sub>
+E<sub>&sigma;<sub>&beta;&beta;</sub></sub>
+</i> and 15 second derivatives
+E<sub>&alpha;&alpha;</sub>
+E<sub>&alpha;&beta;</sub>
+E<sub>&alpha;&sigma;<sub>&alpha;&alpha;</sub></sub>
+...
+E<sub>&beta;&beta;</sub>
+E<sub>&beta;&sigma;<sub>&alpha;&alpha;</sub></sub>
+...
+E<sub>&sigma;<sub>&beta;&beta;</sub>&sigma;<sub>&beta;&beta;</sub></sub>. See the function <tt>xc_derivative_index()</tt> for information about addressing these elements.
+</p>
+
 <h2>API</h2>
 
 The library is written in C++, but can also be directly used in a C
@@ -96,10 +133,14 @@ Release the memory associated with functional (previously allocated by <tt>xc_ne
 <h3>Defining a functional</h3>
 <h3><tt>xc_set_mode(functional, mode)</tt></h3> Set <tt>functional</tt> to operate in <tt>mode</tt>, one of 
 <ul>
-<li> <tt>XC_VARS_A</tt> Full spin polarization using only alpha quantities.
-<li> <tt>XC_VARS_R</tt> Completely unpolarized mode using only total density quantities.
-<li> <tt>XC_VARS_AB</tt> Using alpha and beta variables.
-<li> <tt>XC_VARS_RS</tt> Using total density/spin polarization variables.
+
+<li> <tt>XC_VARS_A</tt> Full spin polarization using only alpha
+quantities, in the
+order <i>n<sub>&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&tau;<sub>&alpha;</sub></i>
+
+<li> <tt>XC_VARS_R</tt> Completely unpolarized mode using only total density quantities. <i>n</i>, <i>&sigma;<sub>nn</sub></i>, <i>&tau;<sub>n</sub></i>
+<li> <tt>XC_VARS_AB</tt> Using alpha and beta variables: <i>n<sub>&alpha;</sub></i>, <i>n<sub>&beta;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&beta;</sub></i>, <i>&sigma;<sub>&beta;&beta;</sub></i>, <i>&tau;<sub>&alpha;</sub></i>, <i>&tau;<sub>&beta;</sub></i>
+<li> <tt>XC_VARS_RS</tt> Using total density/spin polarization variables: <i>n</i>, <i>s</i>, <i>&sigma;<sub>nn</sub></i>, <i>&sigma;<sub>ns</sub></i>, <i>&sigma;<sub>ss</sub></i>, <i>&tau;<sub>n</sub></i>, <i>&tau;<sub>s</sub></i>
 </ul>
 The mode and the type of functional (LDA, GGA, metaGGA) determines the
 number of variables used by the functional.
