@@ -107,8 +107,8 @@ static void eval_gga_ab(const xc_functional_data &fun,
   dv.s = dv.a-dv.b;
     
   dv.gaa = ttype(d[2],2);
-  dv.gbb = ttype(d[3],3);
-  dv.gab = ttype(d[4],4);
+  dv.gab = ttype(d[3],4);
+  dv.gbb = ttype(d[4],3);
   
   dv.gnn  = dv.gaa + 2*dv.gab + dv.gbb; 
   dv.gss  = dv.gaa - 2*dv.gab + dv.gbb;
@@ -131,8 +131,8 @@ static void eval_gga_rs(const xc_functional_data &fun,
   dv.b = (dv.n - dv.s)/2;
     
   dv.gnn = ttype(d[2],2);
-  dv.gss = ttype(d[3],3);
-  dv.gns = ttype(d[4],4);
+  dv.gns = ttype(d[3],4);
+  dv.gss = ttype(d[4],3);
   
   dv.gaa  = (dv.gss+2*dv.gns+dv.gnn)/4;
   dv.gbb  = (dv.gss-2*dv.gns+dv.gnn)/4;
@@ -157,8 +157,8 @@ static void eval_mgga_ab(const xc_functional_data &fun,
   dv.s = dv.a-dv.b;
     
   dv.gaa = ttype(d[2],2);
-  dv.gbb = ttype(d[3],3);
-  dv.gab = ttype(d[4],4);
+  dv.gab = ttype(d[3],4);
+  dv.gbb = ttype(d[4],3);
   
   dv.gnn  = dv.gaa + 2*dv.gab + dv.gbb; 
   dv.gss  = dv.gaa - 2*dv.gab + dv.gbb;
@@ -185,8 +185,9 @@ static void eval_mgga_rs(const xc_functional_data &fun,
   dv.b = (dv.n - dv.s)/2;
     
   dv.gnn = ttype(d[2],2);
-  dv.gss = ttype(d[3],3);
-  dv.gns = ttype(d[4],4);
+  dv.gns = ttype(d[3],4);
+  dv.gss = ttype(d[4],3);
+
   
   dv.gaa  = (dv.gss+2*dv.gns+dv.gnn)/4;
   dv.gbb  = (dv.gss-2*dv.gns+dv.gnn)/4;

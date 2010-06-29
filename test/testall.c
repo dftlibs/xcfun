@@ -21,7 +21,7 @@ int main(void)
       else
 	printf("[No description]");
       if (!xc_is_functional(i))
-	printf(" [parameter or disabled functionals]");
+	printf(" [parameter or disabled functional]");
       printf("\n");
     }
   printf("Running tests..\n");

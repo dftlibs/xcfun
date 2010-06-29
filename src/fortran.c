@@ -30,9 +30,13 @@ int FSYM(xcnewf)(void)
 	  return i;
 	}
     }
-  fprintf(stderr,"Too many XC functionals (%i), check src/fortran.cpp.",MAX_FORTRAN_FUNCTIONALS);
-  exit(EXIT_FAILURE);
   return -1;
+}
+
+void FSYM(xcfree)(int *fun)
+{
+  assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
+  xc_free_functional(fortran_functionals[*fun]);
 }
 
 void FSYM(xcregu)(int *fun, double *density)

@@ -112,6 +112,11 @@ contains
     xc_new_functional = xcnewf()
   end function xc_new_functional
 
+  subroutine xc_free_functional(funid)
+    integer funid
+    call xcfree(funid)
+  end function xc_new_functional
+
   subroutine xc_set_param(funid, param, val)
     integer, intent(in) :: funid, param
     double precision, intent(in) :: val
