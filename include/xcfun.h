@@ -7,7 +7,7 @@
 #define XC_VARS_A   0 // 100% spin polarized, i.e. only alpha variables
 #define XC_VARS_R   1 // No spin polarization, total density variables
 #define XC_VARS_AB  2 // Alpha/beta variables
-#define XC_VARS_RS  3 // Total density/spin density variables
+#define XC_VARS_NS  3 // Total density/spin density variables
 #define XC_NR_MODES 4
 
 // Type of functional

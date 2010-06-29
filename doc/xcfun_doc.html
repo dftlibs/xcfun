@@ -60,8 +60,8 @@ Please see the complete API documentation below
 <h2>Input, output and units</h2> The library uses atomic units for all
 input and output variables. 
 
-<p>The XC energy and derivatives can be
-evaluated using spin-up (&alpha;) and spin-down (&beta;)
+<p>The XC energy density and derivatives can be
+evaluated using local spin-up (&alpha;) and spin-down (&beta;)
 quantities. In the most general case these are
 <ul>
   <li> <i> n<sub>&alpha;</sub> </i> The spin-up electron number density.
@@ -140,7 +140,7 @@ order <i>n<sub>&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&t
 
 <li> <tt>XC_VARS_R</tt> Completely unpolarized mode using only total density quantities. <i>n</i>, <i>&sigma;<sub>nn</sub></i>, <i>&tau;<sub>n</sub></i>
 <li> <tt>XC_VARS_AB</tt> Using alpha and beta variables: <i>n<sub>&alpha;</sub></i>, <i>n<sub>&beta;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&beta;</sub></i>, <i>&sigma;<sub>&beta;&beta;</sub></i>, <i>&tau;<sub>&alpha;</sub></i>, <i>&tau;<sub>&beta;</sub></i>
-<li> <tt>XC_VARS_RS</tt> Using total density/spin polarization variables: <i>n</i>, <i>s</i>, <i>&sigma;<sub>nn</sub></i>, <i>&sigma;<sub>ns</sub></i>, <i>&sigma;<sub>ss</sub></i>, <i>&tau;<sub>n</sub></i>, <i>&tau;<sub>s</sub></i>
+<li> <tt>XC_VARS_NS</tt> Using total density/spin polarization variables: <i>n</i>, <i>s</i>, <i>&sigma;<sub>nn</sub></i>, <i>&sigma;<sub>ns</sub></i>, <i>&sigma;<sub>ss</sub></i>, <i>&tau;<sub>n</sub></i>, <i>&tau;<sub>s</sub></i>
 </ul>
 The mode and the type of functional (LDA, GGA, metaGGA) determines the
 number of variables used by the functional.
