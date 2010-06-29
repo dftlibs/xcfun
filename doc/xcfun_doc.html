@@ -64,18 +64,18 @@ input and output variables.
 evaluated using spin-up (&alpha;) and spin-down (&beta;)
 quantities. In the most general case these are
 <ul>
-  <li> <i> n<sub>&alpha;</sub> </i> The spin-up density.
+  <li> <i> n<sub>&alpha;</sub> </i> The spin-up electron number density.
   <li> <i> n<sub>&beta;</sub> </i> The spin-down density.
-  <li> <i> &sigma;<sub>&alpha;&alpha;</sub> </i> The square magnitude of the spin-up density gradient.
-  <li> <i> &sigma;<sub>&alpha;&beta;</sub> </i> The dot product between the spin-up and spin-down gradient vectors.
-  <li> <i> &sigma;<sub>&beta;&beta;</sub> </i> The square magnitude of the spin-down density gradient.
+  <li> <i> &sigma;<sub>&alpha;&alpha;</sub> = &nabla;n<sub>&alpha;</sub>&middot;&nabla;n<sub>&alpha;</sub> </i> The square magnitude of the spin-up density gradient.
+  <li> <i> &sigma;<sub>&alpha;&beta;</sub>= &nabla;n<sub>&alpha;</sub>&middot;&nabla;n<sub>&beta;</sub> </i> The dot product between the spin-up and spin-down gradient vectors.
+  <li> <i> &sigma;<sub>&beta;&beta;</sub>= &nabla;n<sub>&beta;</sub>&middot;&nabla;n<sub>&beta;</sub> </i> The square magnitude of the spin-down density gradient.
   <li> <i> &tau;<sub>&alpha;</sub> </i> The spin-up Kohn-Sham kinetic energy density.
   <li> <i> &tau;<sub>&beta;</sub> </i> The spin-down Kohn-Sham kinetic energy density.
 </ul>    
 Alternatively you can use total density (<i>n = n<sub>&alpha;</sub> + n<sub>&beta;</sub></i>) and spin density (<i>s = n<sub>&alpha;</sub> - n<sub>&beta;</sub></i>) variables. These also have corresponding gradient and kinetic energy components. See <tt>xc_set_mode()</tt> below for more information.</p>
 
 <p>
-  The output is given in graded lexicographical order. For example a spin-polarized second order GGA functional will give 21 output elements, starting with the XC energy density. Symbolically we may write this as a list starting with the energy 
+  The output is given in graded reverse lexicographical order. For example a spin-polarized second order GGA functional will give 21 output elements, starting with the XC energy density. Symbolically we may write this as a list starting with the energy 
   <i>E, </i>
 followed by five gradient elements 
 <i>
