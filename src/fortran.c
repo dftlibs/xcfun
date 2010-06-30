@@ -37,6 +37,7 @@ void FSYM(xcfree)(int *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_free_functional(fortran_functionals[*fun]);
+  fortran_functionals[*fun] = 0;
 }
 
 void FSYM(xcregu)(int *fun, double *density)

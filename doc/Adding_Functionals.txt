@@ -1,3 +1,5 @@
+NB: This text is out of date and not accurate!
+
 Here's how to add new functions to XCFun. Let's assume
 the functional is called "myfunctional".
 
