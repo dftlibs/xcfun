@@ -115,7 +115,7 @@ contains
   subroutine xc_free_functional(funid)
     integer funid
     call xcfree(funid)
-  end function xc_new_functional
+  end function xc_free_functional
 
   subroutine xc_set_param(funid, param, val)
     integer, intent(in) :: funid, param
