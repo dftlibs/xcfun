@@ -65,7 +65,9 @@ int functional::validate()
   //TODO: Check that the oneliner has no \n
   if (test_mode == -1)
     {
+#ifndef NDEBUG
       fprintf(stderr,"XCFUN WARNING: Functional %s has no test\n",xc_name(m_name));
+#endif
       return -1;
     }
   for (int i=0;i<=XC_MAX_NVAR;i++)
