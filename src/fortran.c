@@ -45,10 +45,12 @@ void FSYM(xcregu)(int *fun, double *density)
   xc_regularize_density(fortran_functionals[*fun],density);
 }
 
-void FSYM(xceval)(int *fun,  int *order, int *nr_points, double *density, double *result)
+void FSYM(xceval)(int *fun,  int *order, int *nr_points, double *density, 
+		  int *dpitch, double *result, int *rpitch)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  xc_eval(fortran_functionals[*fun], *order, *nr_points, density, result);
+  xc_eval(fortran_functionals[*fun], *order, *nr_points, density, *dpitch,
+	  result, *rpitch);
 }
 
 void FSYM(xcsmod)(int *fun, int *mode)

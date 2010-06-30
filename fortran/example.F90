@@ -27,7 +27,7 @@ program xc_example
 ! Print currently set parameters
 ! Discover all settings
   print *,'Now defined (nonzero weights and parameters, including defaults):'
-  do n=0,XC_NR_PARAMS-1
+  do n=1,XC_NR_PARAMS
      call xc_param_name(n,descr)
      if (xc_get_param(funid,n).ne.0.0D0) then
         print *, descr(4:len_trim(descr)),xc_get_param(funid,n)
@@ -54,69 +54,12 @@ program xc_example
   enddo
   npoints = 1 ! We have only one point in this example
 ! Compute the functional and its derivatives up to order
-  call xc_eval(funid,order,npoints,dens, funout)
+! We use ilen and olen as the leading dimension (pitch) values,
+! although with a single point these are not important.
+  call xc_eval(funid,order,npoints,dens, ilen, funout, olen)
 ! Print output
   print *,'Output:'
   do n=1,olen
      print *,n,funout(n)
   enddo
-
-#if 0
-  real(8)              :: fun(XC_PARAMS_LEN)
-  real(8), allocatable :: derv(:)
-  integer              :: max_order
-  real(8)              :: n_a, n_b
-
-  max_order = 2
-
-! unset functional
-  fun = 0.0d0
-
-! set functional to pbe = pbex + pbec
-  fun(XC_PBE_EXCHANGE)    = 1.0d0
-  fun(XC_PBE_CORRELATION) = 1.0d0
-
-! use ABFGH variable set
-  call xc_set_functional(XC_ABFGH, fun)
-
-! there are bin(2+5, 2) = 21 derivatives (including 0th) up to order 2
-! allocate derv array to hold them
-  allocate(derv(xc_len(XC_ABFGH, 2)))
-
-!                         n_a
-!                         |      n_b
-!                         |      |      \nabla n_a \cdot \nabla n_b
-!                         |      |      |      \nabla n_b \cdot \nabla n_b
-!                         |      |      |      |      \nabla n_a \cdot \nabla n_b
-!                         |      |      |      |      |
-  call xc_eval(derv, 2, (/1.7d0, 1.7d0, 1.7d0, 1.7d0, 1.7d0/))
-
-  print *, 'calculated', size(derv), 'PBE derivatives, for example:'
-  print *, 'XC energy density: e = ', derv(1)
-  print *, '(d/dn_a)^2 e         = ', derv(xc_index(XC_ABFGH, (/2, 0, 0, 0, 0/)))
-  print *, 'd/dn_a d/dn_b e      = ', derv(xc_index(XC_ABFGH, (/1, 1, 0, 0, 0/)))
-
-  n_a = 0.11273116096929683d0
-  n_b = n_a
-
-! reset functional to Slater
-  fun = 0.0d0
-  fun(XC_SLATER_EXCHANGE) = 1.0d0
-  call xc_set_functional(XC_ABFGH, fun)
-  call xc_eval(derv, 2, (/n_a, n_b, 0.0d0, 0.0d0, 0.0d0/))
-
-  print *, 'some Slater derivatives:'
-  print *, '(d/dn_a)^2 e         = ', derv(xc_index(XC_ABFGH, (/2, 0, 0, 0, 0/)))
-
-! reset functional to VWN5
-  fun = 0.0d0
-  fun(XC_VWN5_CORRELATION) = 1.0d0
-  call xc_set_functional(XC_ABFGH, fun)
-  call xc_eval(derv, 2, (/n_a, n_b, 0.0d0, 0.0d0, 0.0d0/))
-
-  print *, 'some VWN5 derivatives:'
-  print *, '(d/dn_a)^2 e         = ', derv(xc_index(XC_ABFGH, (/2, 0, 0, 0, 0/)))
-
-  deallocate(derv)
-#endif
 end program

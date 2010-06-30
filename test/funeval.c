@@ -64,7 +64,8 @@ int main(int argc, char *argv[])
 	    fprintf(stderr,"Error reading density value, quitting.\n");
 	    return EXIT_FAILURE;
 	  }
-      xc_eval(fun,TEST_ORDER,1,inp,out);
+      // Only one point, so pitch is unimportant
+      xc_eval(fun,TEST_ORDER,1,inp,0,out,0); 
       for (i=0;i<xc_output_length(fun,TEST_ORDER);i++)
 	printf("%f\n",out[i]);
     }

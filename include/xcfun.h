@@ -40,8 +40,11 @@ extern "C" {
   void xc_regularize_density(xc_functional fun, double *density);
 
   // Evaluate the functional at density
-  void xc_eval(xc_functional fun, int order, int nr_points, 
-	       const double *density, double *result);
+  void xc_eval(xc_functional fun, int order, int nr_points,
+	       const double *density,
+	       int density_pitch,
+	       double *result,
+	       int result_pitch);
 
   // Which variables to use/differentiatiate wrt to
   void xc_set_mode(xc_functional fun, int mode);

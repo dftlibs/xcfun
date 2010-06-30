@@ -115,7 +115,7 @@ contains
   subroutine xc_free_functional(funid)
     integer funid
     call xcfree(funid)
-  end function xc_free_functional
+  end subroutine xc_free_functional
 
   subroutine xc_set_param(funid, param, val)
     integer, intent(in) :: funid, param
@@ -172,11 +172,11 @@ contains
     xc_get_type = xcgett(funid)
   end function xc_get_type
 
-  subroutine xc_eval(funid, order, npoints, densvars, res)
-    integer, intent(in) :: funid, npoints, order
+  subroutine xc_eval(funid, order, npoints, densvars, denspitch, res, respitch)
+    integer, intent(in) :: funid, npoints, order,denspitch,respitch
     double precision, intent(out) :: res(*)
     double precision, intent(in) :: densvars(*)
-    call xceval(funid,order,npoints,densvars,res)
+    call xceval(funid,order,npoints,densvars,denspitch,res,respitch)
   end subroutine xc_eval
 
   function xc_index(funid, exponents)
