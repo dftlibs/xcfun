@@ -7,9 +7,9 @@ program xc_example
 ! that are needed to "talk to" the xcfun library
 
   use xcfun
-  integer funid,n,ilen,olen,order,npoints
+  integer funid,n,order,ilen,olen
   character*1000 descr
-  double precision, allocatable :: dens(:),funout(:)
+  double precision, allocatable :: dens(:,:),funout(:,:)
 
 ! Print some info and copyright about the library.
   call xcfun_splash(descr)
@@ -45,21 +45,20 @@ program xc_example
   olen = xc_output_length(funid,order)
   print *,'Length of input:',ilen
   print *,'Length of Output:',olen
-! Allocate data for evaluation
-  allocate(dens(ilen))
-  allocate(funout(olen))
+! Allocate data for evaluation, one point only.
+  allocate(dens(ilen,1))
+  allocate(funout(olen,1))
 ! Set some random input
   do n=1,ilen
-     dens(n) = n
+     dens(n,1) = n
   enddo
-  npoints = 1 ! We have only one point in this example
 ! Compute the functional and its derivatives up to order
 ! We use ilen and olen as the leading dimension (pitch) values,
 ! although with a single point these are not important.
-  call xc_eval(funid,order,npoints,dens, ilen, funout, olen)
+  call xc_eval(funid, order, dens, funout)
 ! Print output
   print *,'Output:'
   do n=1,olen
-     print *,n,funout(n)
+     print *,n,funout(n,1)
   enddo
 end program

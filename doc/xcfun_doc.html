@@ -10,7 +10,9 @@ XCFun is a library of DFT exchange-correlation (XC) functionals. It is
 based on automatic differentiation and can therefore generate
 arbitrary order derivatives of these functionals. For more information
 see the website <a href="http://admol.org/xcfun">admol.org/xcfun</a>.
-</p>
+This documentation refers to the development version of the XCFun library,
+make sure that you are up to date.
+</p> 
 
 
 <h2>Installation and linking</h2> Compile the library using one of the
@@ -69,7 +71,7 @@ quantities. In the most general case these are
   <li> <i> &sigma;<sub>&alpha;&alpha;</sub> = &nabla;n<sub>&alpha;</sub>&middot;&nabla;n<sub>&alpha;</sub> </i> The square magnitude of the spin-up density gradient.
   <li> <i> &sigma;<sub>&alpha;&beta;</sub> = &nabla;n<sub>&alpha;</sub>&middot;&nabla;n<sub>&beta;</sub> </i> The dot product between the spin-up and spin-down gradient vectors.
   <li> <i> &sigma;<sub>&beta;&beta;</sub> = &nabla;n<sub>&beta;</sub>&middot;&nabla;n<sub>&beta;</sub> </i> The square magnitude of the spin-down density gradient.
-  <li> <i> &tau;<sub>&alpha;</sub> </i> The spin-up Kohn-Sham kinetic energy density.
+  <li> <i> &tau;<sub>&alpha;</sub> = 1/2 &Sigma;<sub>i</sub> |&nabla;&psi;<sub>i&alpha;</sub>|<sup>2</sup></i> The spin-up Kohn-Sham kinetic energy density.
   <li> <i> &tau;<sub>&beta;</sub> </i> The spin-down Kohn-Sham kinetic energy density.
 </ul>    
 Alternatively you can use total density (<i>n = n<sub>&alpha;</sub> + n<sub>&beta;</sub></i>) and spin density (<i>s = n<sub>&alpha;</sub> - n<sub>&beta;</sub></i>) variables. These also have corresponding gradient and kinetic energy components. See <tt>xc_set_mode()</tt> below for more information.</p>
@@ -212,14 +214,30 @@ that the density is physical and nonzero. In cases where the
 derivatives should be infinite they will instead be very large, but
 otherwise the effect on the output should be minimal.
 
-<h3><tt>xc_eval(functional, order, nr_points, density,
-result)</tt></h3> Evaluate the previously defined <tt>functional</tt>
+<h3>C <tt>xc_eval(functional, order, nr_points, density, density_pitch,
+result, result_pitch)</tt></h3> 
+<h3>Fortran <tt>xc_eval(functional, order, densities, results)</tt></h3>
+<p>
+Evaluate the previously defined <tt>functional</tt>
 at <tt>nr_points</tt> different points, with derivatives up
-to <tt>order</tt>. The input array <tt>density</tt> contains <tt>nr_points</tt>*N
-consecutive density values, where N is the value returned by 
+to <tt>order</tt>. The input array <tt>density</tt> contains <tt>nr_points*N</tt>
+density values, where <tt>N</tt> is the value returned by 
 <tt>xc_input_length()</tt>. Similarly for the output array <tt>result</tt>. The input
 and output arrays have the values for each point packed together. The output values
 are stored in graded lexicographical order. For an LDA functional with alpha/beta variables we would therefore have the order E E<sub>a</sub> E<sub>b</sub> E<sub>aa</sub> E<sub>ab</sub> E<sub>bb</sub> E<sub>aaa</sub> E<sub>aab</sub> E<sub>abb</sub> E<sub>bbb</sub> ...
+</p>
+
+<p>
+  The C version accepts two 'pitch' arguments, which is the distance in memory between the first elements of each point in the input and output arrays.
+</p>
+
+<p>
+The Fortran version uses the number of rows in the <tt>densities</tt>
+array as the number of points, the output array <tt>results</tt>
+should have at least this number of rows. Note that the input numbers
+for each point must be consecutive in memory (<i>stride</i> must be one).
+</p>
+
 
 <h3><tt>xc_derivative_index(functional, derivative)</tt></h3> Given an
 integer array of "exponents" this function returns the index into the

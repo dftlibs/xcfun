@@ -172,11 +172,14 @@ contains
     xc_get_type = xcgett(funid)
   end function xc_get_type
 
-  subroutine xc_eval(funid, order, npoints, densvars, denspitch, res, respitch)
-    integer, intent(in) :: funid, npoints, order,denspitch,respitch
-    double precision, intent(out) :: res(*)
-    double precision, intent(in) :: densvars(*)
-    call xceval(funid,order,npoints,densvars,denspitch,res,respitch)
+  subroutine xc_eval(funid, order, densities, results)
+    integer, intent(in) :: funid, order
+    integer :: npoints
+    double precision, intent(out) :: densities(:,:)
+    double precision, intent(in) :: results(:,:)
+    npoints = size(densities,2)
+    call xceval(funid,order,npoints,densities(1,1),densities(1,2),&
+         results(1,1),results(1,2))
   end subroutine xc_eval
 
   function xc_index(funid, exponents)
