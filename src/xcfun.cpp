@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include "xcfun_internal.h"
 
 static bool xcfun_is_setup = false;
@@ -76,7 +77,46 @@ void xc_functional_data::destroy()
 
 void xc_functional_data::regularize_density(double *density)
 {
-  //TODO: Actually do something here.
+  /*
+    Good density when 
+    na, nb > thres
+    gaa,gbb > thres^2
+    |gab|^2 < |gaa||gbb|
+    ta > thres
+    tb > thres
+    
+    ns variables:
+    n > thres
+    |s| < n - thres
+    tn > thres
+    |ts| < tn - thres
+   */
+  static const double thres = 1e-14, thres2 = thres*thres;
+  
+  if (mode==XC_VARS_AB)
+    {
+      if (density[0] < thres)
+	density[0] = thres;
+      if (density[1] < thres)
+	density[1] = thres;
+      if (type>=XC_GGA)
+	{
+	  if (density[2] < thres2)
+	    density[2] = thres2;
+	  if (density[4] < thres2)
+	    density[4] = thres2;
+	  if (density[3]*density[3] > density[2]*density[4])
+	    density[3] = copysign(sqrt(density[2]*density[4]),density[3]);
+	  if (type>=XC_MGGA)
+	    {
+	      
+	    }
+	}
+    }
+  else
+    {
+      xcint_die("FIXME in regularize_density",mode);
+    }
 }
 
 int xc_functional_data::get_type(void) const
