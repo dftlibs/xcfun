@@ -9,11 +9,11 @@
 template<class num>
 static num Qrpa(const num &x)
 {
-  static const parameter Acoul = 2.0*(log(2.0)-1.0)/(M_PI*M_PI);
-  static const parameter a2    = 5.84605;
-  static const parameter c2    = 3.91744;
-  static const parameter d2    = 3.44851;
-  static const parameter b2    = d2 - 3.0/(2*M_PI*Acoul)
+  const parameter Acoul = 2.0*(log(2.0)-1.0)/(M_PI*M_PI);
+  const parameter a2    = 5.84605;
+  const parameter c2    = 3.91744;
+  const parameter d2    = 3.44851;
+  const parameter b2    = d2 - 3.0/(2*M_PI*Acoul)
     *pow(4.0/(9.0*M_PI),1.0/3.0);
   return Acoul*log( (1+x*(a2+x*(b2+c2*x)))/(1+x*(a2+d2*x)) );
 }
@@ -21,9 +21,9 @@ static num Qrpa(const num &x)
 template<class num>
 static num dpol(const num &rs)
 {
-  static const parameter cf  = pow(9.0*M_PI/4.0,1.0/3.0);
-  static const parameter p2p = 0.04;
-  static const parameter p3p = 0.4319;
+  const parameter cf  = pow(9.0*M_PI/4.0,1.0/3.0);
+  const parameter p2p = 0.04;
+  const parameter p3p = 0.4319;
   num rs2 = rs*rs;
   return pow(2.0,5.0/3.0)/5.0*pow(cf,2)/rs2*
     (1.0 + (p3p - 0.454555)*rs)/(1.0 + p3p*rs + p2p*rs2);
@@ -47,17 +47,17 @@ static num g0f(const num &x)
 template<class num>
 static num ecorrlr(const densvars<num> &d, parameter mu, const num &ec)
 {
-  static const parameter alpha = pow(4.0/9.0/M_PI,1.0/3.0);
-  static const parameter cf=1/alpha; //TODO: The normal CF?
+  const parameter alpha = pow(4.0/9.0/M_PI,1.0/3.0);
+  const parameter cf=1/alpha; //TODO: The normal CF?
   num phi=(pow(1.0+d.zeta,2.0/3.0)+pow(1.0-d.zeta,2.0/3.0))/2.0;
   // cc parameters from the fit
-  static const parameter adib = 0.784949;
-  static const parameter q1a = -0.388;
-  static const parameter q2a = 0.676;
-  static const parameter q3a = 0.547;
-  static const parameter t1a = -4.95;
-  static const parameter t2a = 1.0;
-  static const parameter t3a = 0.31;
+  const parameter adib = 0.784949;
+  const parameter q1a = -0.388;
+  const parameter q2a = 0.676;
+  const parameter q3a = 0.547;
+  const parameter t1a = -4.95;
+  const parameter t2a = 1.0;
+  const parameter t3a = 0.31;
   
   num b0 = adib*d.r_s;
   num rs2 = d.r_s*d.r_s;
@@ -101,7 +101,7 @@ template<class num>
 static num energy(const densvars<num> &d)
 {
   double mu = d.get_param(XC_RANGESEP_MU);
-  num eps = pw92eps::eps(d);
+  num eps = pw92eps::pw92eps(d);
   return d.n*(eps - ecorrlr(d,mu,eps));
 }
 
@@ -112,12 +112,23 @@ void setup_ldaerfc(functional &f)
 	     "Short-range spin-dependent LDA correlation functional from\n"
 	     "Paziani, Moroni, Gori-Giorgi and Bachelet, PRB 73, 155111 (2006)"
 	     "Adapted from Gori-Giorgi and MOLPRO by Ulf Ekstrom\n"
-	     "Test case from Gori-Giorgi (personal communication)\n"
+	     "Test case from Gori-Giorgi (personal communication),\n"
+	     "up to 10^-7, then xcfun decimals due to more accurate pw92c.\n"
 	     "Range separation parameter is XC_RANGESEP_MU\n");
   SET_LDA_ENERGY_FUNCTION(f,energy);
 
-  static const double d[] = {1.1, 1.0};
-  static const double ref[] = 
+  const double d[] = {1.1, 1.0};
+  const double ref[] = 
+    {
+      -1.4579390272267870e-01,
+      -7.7624817385549980e-02,
+      -8.2132052511772885e-02,
+      +1.5795011054215363e-02,
+      -2.7440928179985190e-02,
+      +1.9539616096309973e-02,
+    };
+  /* Original numbers from Paola, with inaccurate pw92c 
+  const double ref[] = 
     {
       -0.1457945300494694,
       -0.07762517247521351,
@@ -126,6 +137,7 @@ void setup_ldaerfc(functional &f)
       -0.02744102459091926,
       0.019539653410626807
     };
+  */
   f.add_test(XC_VARS_AB,2,d,ref,1e-7);
 }
 

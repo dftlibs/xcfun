@@ -109,8 +109,8 @@ public:
   // series is no longer exact around the new "zero" point. For this
   // reason NdegOut may be choosen to be smaller than Ndeg.
   // TODO: implement for more variables, and without runtime polylen.
-  template<int NdegOut>
-  void shift(taylor<T,1,NdegOut> &out, const T dx[Nvar]) const
+  template<int NdegOut, class Tout>
+  void shift(taylor<Tout,1,NdegOut> &out, const Tout dx[Nvar]) const
   {
     assert(Nvar == 1);
     assert(NdegOut <= Ndeg);
@@ -337,16 +337,32 @@ static taylor<T, Nvar, Ndeg> operator+(const taylor<T, Nvar,Ndeg>& t1, const tay
   return tmp;
 }
 
-template<class T, int Nvar, int Ndeg, class S>
-static taylor<T, Nvar, Ndeg> operator-(const S& x, const taylor<T, Nvar,Ndeg>& t)
+template<class T, int Nvar, int Ndeg>
+static taylor<T, Nvar, Ndeg> operator-(const T& x, const taylor<T, Nvar,Ndeg>& t)
 {
   taylor<T, Nvar,Ndeg> tmp = -t;
   tmp[0] += x;
   return tmp;
 }
 
-template<class T, int Nvar, int Ndeg, class S>
-static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, const S &x)
+template<class T, int Nvar, int Ndeg>
+static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, const T &x)
+{
+  taylor<T, Nvar,Ndeg> tmp = t;
+  tmp[0] -= x;
+  return tmp;
+}
+
+template<class T, int Nvar, int Ndeg>
+static taylor<T, Nvar, Ndeg> operator-(int x, const taylor<T, Nvar,Ndeg>& t)
+{
+  taylor<T, Nvar,Ndeg> tmp = -t;
+  tmp[0] += x;
+  return tmp;
+}
+
+template<class T, int Nvar, int Ndeg>
+static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, int x)
 {
   taylor<T, Nvar,Ndeg> tmp = t;
   tmp[0] -= x;

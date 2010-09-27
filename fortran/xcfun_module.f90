@@ -4,9 +4,9 @@ module xcfun
   implicit none
 ! These parameters should mirror those in xcfun.h
   integer, parameter ::  XC_VARS_A  = 0
-  integer, parameter ::  XC_VARS_R  = 1
+  integer, parameter ::  XC_VARS_N  = 1
   integer, parameter ::  XC_VARS_AB = 2
-  integer, parameter ::  XC_VARS_RS = 3
+  integer, parameter ::  XC_VARS_NS = 3
   integer, parameter ::  XC_LDA  = 0
   integer, parameter ::  XC_GGA  = 1
   integer, parameter ::  XC_MGGA = 2
@@ -15,53 +15,77 @@ module xcfun
   integer, parameter :: XC_D1 = 2
   integer, parameter :: XC_D2 = 3
 
-! lda derivatives, all odd spin density orders give zero at closed-shell reference
+! all lda derivatives up to order 4
   integer, parameter :: XC_D00 =  1
   integer, parameter :: XC_D10 =  2
-  integer, parameter :: XC_D01 =  3 !zero at closed-shell reference with XC_VARS_RS 
+  integer, parameter :: XC_D01 =  3
   integer, parameter :: XC_D20 =  4
-  integer, parameter :: XC_D11 =  5 !zero at closed-shell reference with XC_VARS_RS 
+  integer, parameter :: XC_D11 =  5
   integer, parameter :: XC_D02 =  6
   integer, parameter :: XC_D30 =  7
-  integer, parameter :: XC_D21 =  8 !zero at closed-shell reference with XC_VARS_RS 
+  integer, parameter :: XC_D21 =  8
   integer, parameter :: XC_D12 =  9
-  integer, parameter :: XC_D03 = 10 !zero at closed-shell reference with XC_VARS_RS 
+  integer, parameter :: XC_D03 = 10
+  integer, parameter :: XC_D40 = 11
+  integer, parameter :: XC_D31 = 12
+  integer, parameter :: XC_D22 = 13
+  integer, parameter :: XC_D13 = 14
+  integer, parameter :: XC_D04 = 15
 
+! gga up to order 3
+! only derivatives that are nonzero at closed-shell reference
+! with XC_VARS_NS are here
   integer, parameter :: XC_D00000 = 1
   integer, parameter :: XC_D10000 = 2
-  integer, parameter :: XC_D01000 = 3
   integer, parameter :: XC_D00100 = 4
-  integer, parameter :: XC_D00010 = 5
   integer, parameter :: XC_D00001 = 6
   integer, parameter :: XC_D20000 = 7
-  integer, parameter :: XC_D11000 = 8
   integer, parameter :: XC_D10100 = 9
-  integer, parameter :: XC_D10010 = 10
   integer, parameter :: XC_D10001 = 11
   integer, parameter :: XC_D02000 = 12
-  integer, parameter :: XC_D01100 = 13
   integer, parameter :: XC_D01010 = 14
-  integer, parameter :: XC_D01001 = 15
   integer, parameter :: XC_D00200 = 16
-  integer, parameter :: XC_D00110 = 17
   integer, parameter :: XC_D00101 = 18
   integer, parameter :: XC_D00020 = 19
-  integer, parameter :: XC_D00011 = 20
-  integer, parameter :: XC_D00002 = 21
-
-!radovan: here are the pointers to 3rd gga derivatives
-!         be careful, only those that are nonzero at closed-shell reference 
-!         with XC_VARS_RS are here
   integer, parameter :: XC_D30000 = 22
   integer, parameter :: XC_D20100 = 24
   integer, parameter :: XC_D12000 = 27
-  integer, parameter :: XC_D11001 = 30
+  integer, parameter :: XC_D11010 = 29
   integer, parameter :: XC_D10200 = 31
-  integer, parameter :: XC_D10002 = 36
+  integer, parameter :: XC_D10020 = 34
   integer, parameter :: XC_D02100 = 38
-  integer, parameter :: XC_D01101 = 43
+  integer, parameter :: XC_D01110 = 42
   integer, parameter :: XC_D00300 = 47
-  integer, parameter :: XC_D00102 = 52
+  integer, parameter :: XC_D00120 = 50
+
+! tau mgga
+! so far only linear response
+! list under construction ...
+  integer, parameter :: XC_D0000000 =  1
+  integer, parameter :: XC_D1000000 =  2
+  integer, parameter :: XC_D0010000 =  4
+  integer, parameter :: XC_D0000100 =  6
+  integer, parameter :: XC_D0000010 =  7
+  integer, parameter :: XC_D0000001 =  8
+  integer, parameter :: XC_D2000000 =  9
+  integer, parameter :: XC_D1010000 = 11
+  integer, parameter :: XC_D1000010 = 14
+  integer, parameter :: XC_D1000001 = 15
+  integer, parameter :: XC_D0200000 = 16
+  integer, parameter :: XC_D0101000 = 18
+  integer, parameter :: XC_D0100010 = 20
+  integer, parameter :: XC_D0100001 = 21
+  integer, parameter :: XC_D0020000 = 22
+  integer, parameter :: XC_D0010010 = 25
+  integer, parameter :: XC_D0010001 = 26
+  integer, parameter :: XC_D0002000 = 27
+  integer, parameter :: XC_D0001010 = 29
+  integer, parameter :: XC_D0001001 = 30
+  integer, parameter :: XC_D0000110 = 32
+  integer, parameter :: XC_D0000101 = 33
+  integer, parameter :: XC_D0000020 = 34
+  integer, parameter :: XC_D0000011 = 35
+  integer, parameter :: XC_D0000002 = 36
 
 contains
   ! We pass strings as null terminated integer arrays to C, this
@@ -122,7 +146,7 @@ contains
     double precision, intent(in) :: val
     call xcsets(funid,param,val)
   end subroutine xc_set_param
-  
+
   function xc_get_param(funid, param)
     integer, intent(in) :: funid, param
     double precision xcgets, xc_get_param
@@ -172,12 +196,14 @@ contains
     xc_get_type = xcgett(funid)
   end function xc_get_type
 
-  subroutine xc_eval(funid, order, densities, results)
-    integer, intent(in) :: funid, order
-    integer :: npoints
-    double precision, intent(out) :: densities(:,:)
-    double precision, intent(in) :: results(:,:)
-    npoints = size(densities,2)
+  subroutine xc_eval(funid, order, npoints, densities, results)
+    integer, intent(in) :: funid, order, npoints
+!radovan: trying to get it explicitly
+!         maybe later we go back to implicit
+!   integer :: npoints
+    double precision, intent(in) :: densities(:,:)
+    double precision, intent(out) :: results(:,:)
+!   npoints = size(densities,2)
     call xceval(funid,order,npoints,densities(1,1),densities(1,2),&
          results(1,1),results(1,2))
   end subroutine xc_eval

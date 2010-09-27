@@ -10,6 +10,7 @@
 int main(void)
 {
   printf("%s",xcfun_splash());
+  printf("XCFun version: %g\n",xcfun_version());
   int i = 0;
   printf("\nAvailable functionals and settings:\n");
   for (i=0;i<XC_NR_PARAMS;i++)

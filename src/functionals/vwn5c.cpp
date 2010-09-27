@@ -1,6 +1,12 @@
 #include "functional.h"
 #include "vwn.h"
 
+template<class num>
+static num vwn5c(const densvars<num> &d)
+{
+  return d.n*vwn::vwn5_eps(d);
+}
+
 void setup_vwn5(functional &f)
 {
   f.describe(XC_VWN5C, XC_LDA,
@@ -12,11 +18,11 @@ void setup_vwn5(functional &f)
 	     "Originally from Dalton, polished and converted by Ulf Ekstrom.\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_c_vwn5.html\n");
 
-  SET_LDA_ENERGY_FUNCTION(f,vwn::vwn5c);
-  SET_GGA_ENERGY_FUNCTION(f,vwn::vwn5c);
+  SET_LDA_ENERGY_FUNCTION(f,vwn5c);
+  SET_GGA_ENERGY_FUNCTION(f,vwn5c);
 
-  static const double d[] = {0.39E+02, 0.38E+02};
-  static const double ref[] =
+  const double d[] = {0.39E+02, 0.38E+02};
+  const double ref[] =
     {
       -0.851077910672E+01,
       -0.119099058995E+00,

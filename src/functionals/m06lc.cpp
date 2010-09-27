@@ -1,7 +1,7 @@
 #include "functional.h"
 #include "m0xy_fun.h"
 
-// M06-2X correlation functional
+// M06 correlation functional
 
 template<class num>
 static num energy (const densvars<num> &d)
@@ -15,44 +15,39 @@ static num energy (const densvars<num> &d)
 
    // parameters for anti-parallel spin contributions
    const parameter param_c_anti[5] =
-     {  8.833596e-01,  3.357972e+01, -7.043548e+01,  4.978271e+01, -1.852891e+01 };
+     {  6.042374e-1,  1.776783e2, -2.513252e2, 7.635173e1, -1.255699e1};
    const parameter param_d_anti[6] =
-     {  1.166404e-01, -9.120847e-02, -6.726189e-02,  6.720580e-05,  8.448011e-04, 
+     { 3.957626e-1, -5.614546e-1, 1.403963e-2, 9.831442e-4, -3.577176e-3,
         0.000000e+00 };
 
    // parameters for parallel spin contributions
    const parameter param_c_para[5] =
-     {  3.097855e-01, -5.528642e+00,  1.347420e+01, -3.213623e+01,  2.846742e+01 };
+     {  5.349466e-1, 5.396620e-1, -3.161217e1, 5.149592e1, -2.919613e1 };
    const parameter param_d_para[6] =
-     {  6.902145e-01,  9.847204e-02,  2.214797e-01, -1.968264e-03, -6.775479e-03,
-        0.000000e+00 }; 
+     {  4.650534e-1, 1.617589e-1, 1.833657e-1, 4.692100e-4, -4.990573e-3,
+        0.000000e+00 };
 
    num chi_a2 = chi2(d.a, d.gaa);
    num chi_b2 = chi2(d.b, d.gbb);
    num zet_a = zet(d.a, d.taua);
    num zet_b = zet(d.b, d.taub);
 
-   num Ec_ab = ueg_c_anti(d) * m06_c_anti(param_c_anti,param_d_anti,chi_a2,zet_a,
+   num Ec_ab = ueg_c_anti(d) * m06_c_anti(param_c_anti,param_d_anti,chi_a2,zet_a, 
                                                                     chi_b2,zet_b);
    num Ec_aa = ueg_c_para(d.a) * m06_c_para(param_c_para,param_d_para,chi_a2,zet_a);
    num Ec_bb = ueg_c_para(d.b) * m06_c_para(param_c_para,param_d_para,chi_b2,zet_b);
-
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
-void setup_m06x2c(functional &f)
+void setup_m06lc(functional &f)
 {
-  f.describe(XC_M06X2C, XC_MGGA,
-	     "M06-2X Correlation",
-             "M06-2X Meta-Hybrid Correlation Functional\n"
-             "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
-             "Implemented by Andre Gomes\n");
+  f.describe(XC_M06LC, XC_MGGA,
+	     "M06-L Correlation",
+             "M06-L Meta GGA Correlation Functional\n"
+             "Zhao, Truhlar, JCP 125, 194101 (2006)\n"
+             "Implemented by Andre Gomes & Ulf Ekstrom\n"
+	     "");
 
   SET_MGGA_ENERGY_FUNCTION(f,energy);
-  const double d[] = 
-    {1., .8, 1., 1., 1., 0.165,   0.1050}; //.33, .21};
-  const double ref[] =
-    { -1.57876583, -2.12127045, -2.11264351, -0.00315462, -0.00444560,  0.00000000,  1.72820116,  2.21748787 };
-  f.add_test(XC_VARS_AB,1,d,ref,1e-5);
 }
 

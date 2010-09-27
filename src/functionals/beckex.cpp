@@ -3,22 +3,22 @@
 template<class num>
 static num becke_alpha(const num &na, const num &gaa)
 {
-  static const parameter c = pow(81/(4*M_PI),1.0/3.0)/2;
-  static const parameter d = 0.0042;
+  const parameter c = pow(81/(4*M_PI),1.0/3.0)/2;
+  const parameter d = 0.0042;
   num na43 = pow(na,4.0/3.0);
   num lda = -c*na43;
-  num chi = sqrt(gaa)/na43;
-  num b88 = -(d*na43*chi*chi)/(1+6*d*chi*asinh(chi));
+  num chi2 = gaa*pow(na,-8.0/3.0);
+  num b88 = -(d*na43*chi2)/(1+6*d*sqrtx_asinh_sqrtx(chi2));
   return lda + b88;
 }
 
 template<class num>
 static num becke_corr(const num &na, const num &gaa)
 {
-  static const parameter d = 0.0042;
+  const parameter d = 0.0042;
   num na43 = pow(na,4.0/3.0);
-  num chi = sqrt(gaa)/na43;
-  return -(d*na43*chi*chi)/(1+6*d*chi*asinh(chi));
+  num chi2 = gaa*pow(na,-8.0/3.0);
+  return -(d*na43*chi2)/(1+6*d*sqrtx_asinh_sqrtx(chi2));
 }
 
 // Short range becke exchange as used in camb3lyp If mu=0 this reduces
@@ -32,13 +32,13 @@ static num becke_corr(const num &na, const num &gaa)
 template<class num>
 static num becke_sr(parameter mu, const num &na, const num &gaa)
 {
-  static const parameter cparam = pow(81/(4*M_PI),1.0/3.0)/2;
-  static const parameter d = 0.0042;
+  const parameter cparam = pow(81/(4*M_PI),1.0/3.0)/2;
+  const parameter d = 0.0042;
   num na43 = pow(na,4.0/3.0);
-  num chi = sqrt(gaa)/na43;
-  num K = 2*(cparam + (d*chi*chi)/(1+6*d*chi*asinh(chi)));
+  num chi2 = gaa*pow(na,-8.0/3.0);
+  num K = 2*(cparam + (d*chi2)/(1+6*d*sqrtx_asinh_sqrtx(chi2)));
   num a = mu*sqrt(K)/(6*M_PI*pow(na,1.0/3.0));
-  num b = exp(-1/(4*a*a))-1;
+  num b = expm1(-1/(4*a*a));
   num c = 2*a*a*b + 0.5;
   return -0.5*na43*K*(1-8.0/3.0*a*(sqrt(M_PI)*erf(1/(2*a))+2*a*(b-c)));
 }
@@ -75,15 +75,17 @@ void setup_beckex(functional &f)
   SET_GGA_ENERGY_FUNCTION(f,energy);
 
   // Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_b88.html
-  static const double d[5] = 
+  const double d[5] = 
     {0.39E+02, 0.38E+02, 0.81E+06, 0.82E+06,0.82E+06};
-  static const double ref[21] =
+  const double ref[21] =
     {	-0.277987329958E+03,
+
 	-0.385951846654E+01,
 	-0.381309494319E+01,
 	-0.172434478018E-04,
-	-0.173712338362E-04,
 	0.000000000000E+00,
+	-0.173712338362E-04,
+
 	-0.441426807406E-01,
 	0.000000000000E+00,
 	0.201415922856E-06,
@@ -91,14 +93,14 @@ void setup_beckex(functional &f)
 	0.000000000000E+00,
 	-0.447245742260E-01,
 	0.000000000000E+00,
-	0.195961359539E-06,
 	0.000000000000E+00,
+	0.195961359539E-06,
 	0.700742719647E-11,
 	0.000000000000E+00,
 	0.000000000000E+00,
-	0.718678968862E-11,
 	0.000000000000E+00,
-	0.000000000000E+00
+	0.000000000000E+00,
+	0.718678968862E-11,
     };
   f.add_test(XC_VARS_AB,2,d,ref,1e-11);
 }
@@ -115,7 +117,7 @@ void setup_beckexcorr(functional &f)
 
   SET_GGA_ENERGY_FUNCTION(f, energy_corr);
 
-  static const double d[5] =
+  const double d[5] =
     {
      0.39e+02,
      0.38e+02,
@@ -124,15 +126,17 @@ void setup_beckexcorr(functional &f)
      0.82e+06
     };
 
-  static const double ref[21] =
+  const double ref[21] =
     {
 //     radovan: reference data obtained from *.c implementation in DIRAC
       -3.603918211981e+01, // 00000
+
        3.479609002901e-01, // 10000
        3.581112448092e-01, // 01000
       -1.724344780183e-05, // 00100
-      -1.737123383621e-05, // 00010
        0.000000000000e+00, // 00001
+      -1.737123383621e-05, // 00010
+
       -8.181318630937e-03, // 20000
        0.000000000000e+00, // 11000
        2.014159228564e-07, // 10100
@@ -140,14 +144,14 @@ void setup_beckexcorr(functional &f)
        0.000000000000e+00, // 10001
       -8.135046261131e-03, // 02000
        0.000000000000e+00, // 01100
+       0.000000000000e+00, // 0100
        1.959613595393e-07, // 01010
-       0.000000000000e+00, // 01001
        7.0074271964711398e-12, // radovan: i got this using xcfun
        0.0000000000000000,
        0.0000000000000000,
-       7.1867896886212297e-12, // radovan: i got this using xcfun
        0.0000000000000000,
-       0.0000000000000000
+      0.0000000000000000,
+       7.1867896886212297e-12, // radovan: i got this using xcfun
     };
 
   f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);

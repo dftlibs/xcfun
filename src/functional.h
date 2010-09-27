@@ -3,14 +3,15 @@
 
 // Everything required to implement a functional
 #include "taylor.h"
+#include "ctaylor.h"
 #define XCFUN_INTERNAL
 #include "xcfun.h"
 #include "config.h"
 #include "specmath.h"
 #include "parameters.h"
 
-// MGGA's have 7 variables (GGA+tau)
-#define XC_MAX_NVAR 7
+// MLGGA's have 9 variables (GGA+tau+laplacian)
+#define XC_MAX_NVAR 9
 
 // Use this type to make it clear what is a hard-coded parameter
 // (for example for grepping for parameters in functionals)
@@ -38,8 +39,12 @@ struct densvars
 
   T tau, taua, taub; // Kinetic energy densities.
 
+  T lapa,lapb; // Density Laplacians
+
   T zeta; //s/n
   T r_s; // (3/4pi)^1/3*n^(-1/3)
+  T n_m13; // pow(n,-1.0/3.0)
+  T a_43, b_43; // pow(a,4.0/3.0), pow(b,4.0/3.0)
 };
 
 class functional
@@ -64,6 +69,15 @@ public:
     assert(Ndeg<=XC_MAX_ORDER);
     ftab[Nvar][Ndeg] = reinterpret_cast<void *>(f);
   }
+#ifdef XCFUN__CONTRACTIONS
+  template<int Ndeg>
+  void contraction_fun(ctaylor<double,Ndeg> 
+		       (*f)(const densvars< ctaylor<double,Ndeg> > &))
+  {
+    assert(Ndeg<=XC_CONTRACT_MAX_ORDER);
+    contract_ftab[Ndeg] = reinterpret_cast<void *>(f);
+  }
+#endif
   template<int Nvar, int Ndeg>
   taylor<double,Nvar,Ndeg> 
   eval(const densvars< taylor<double,Nvar,Ndeg> > &dv)
@@ -77,12 +91,28 @@ public:
       (*)(const densvars< taylor<double,Nvar,Ndeg> > &)>(ftab[Nvar][Ndeg]);
     return f(dv);
   }
+#ifdef XCFUN_CONTRACTIONS
+  template<int Ndeg>  
+  double contract_eval(const densvars< ctaylor<double,Ndeg> > &dv)
+  {
+    assert(Ndeg<=XC_CONTRACT_MAX_ORDER);
+    assert(contract_ftab[Ndeg]);
+    ctaylor<double,Ndeg> 
+      (*f)(const densvars< ctaylor<double,Ndeg> > &) = 
+      reinterpret_cast<ctaylor<double,Ndeg> 
+      (*)(const densvars< ctaylor<double,Ndeg> > &)>(contract_ftab[Ndeg]);
+    return f(dv);
+  }
+#endif
+
   //protected:
   enum xc_parameters m_name;
 
   int m_type;
   void *ftab[XC_MAX_NVAR+1][XC_MAX_ORDER+1];
-
+#ifdef XCFUN_CONTRACTIONS
+  void *contract_ftab[XC_CONTRACT_MAX_ORDER+1]; 
+#endif
   double *test_input;
   double *test_output;
   int test_mode;
@@ -97,6 +127,11 @@ int xc_run_functional_setup(void (*f)(functional &));
 
 //  Macros to help set up functionals to the order defined in config.h
 
+#ifdef XCFUN_CONTRACTIONS
+#define SET_CONTRACT_N(FUNOBJ,ENERGY,ORDER)\
+  FUNOBJ.contraction_fun<ORDER>(ENERGY);
+#endif
+
 #define SET_LDA_N(FUNOBJ,ENERGY,ORDER)\
   FUNOBJ.energy_fun<1,ORDER>(ENERGY);\
   FUNOBJ.energy_fun<2,ORDER>(ENERGY);
@@ -108,6 +143,11 @@ int xc_run_functional_setup(void (*f)(functional &));
 #define SET_MGGA_N(FUNOBJ,ENERGY,ORDER)\
   FUNOBJ.energy_fun<3,ORDER>(ENERGY);\
   FUNOBJ.energy_fun<7,ORDER>(ENERGY);
+
+#define SET_MLGGA_N(FUNOBJ,ENERGY,ORDER)\
+  FUNOBJ.energy_fun<4,ORDER>(ENERGY);\
+  FUNOBJ.energy_fun<9,ORDER>(ENERGY);
+
 
 //Extend this list if you want higher order than 9
 #define SETN0(TYPE,F,ERG) SET_##TYPE##_N(F,ERG,0)
@@ -128,8 +168,35 @@ int xc_run_functional_setup(void (*f)(functional &));
 #define SETNQ(N,TYPE,F,ERG) SETN ## N (TYPE,F,ERG)
 #define SETN(N,TYPE,F,ERG) SETNQ(N,TYPE,F,ERG)
 
-#define SET_LDA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_LDA); SETN(XC_LDA_MAX_ORDER,LDA,FUNOBJ,FUNCTION)
-#define SET_GGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_GGA); SETN(XC_GGA_MAX_ORDER,GGA,FUNOBJ,FUNCTION)
-#define SET_MGGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_MGGA); SETN(XC_MGGA_MAX_ORDER,MGGA,FUNOBJ,FUNCTION)
+#ifdef XCFUN_CONTRACTIONS
+#define SET_LDA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_LDA); \
+SETN(XC_LDA_MAX_ORDER,LDA,FUNOBJ,FUNCTION)\
+SETN(XC_CONTRACT_MAX_ORDER,CONTRACT,FUNOBJ,FUNCTION)
+
+#define SET_GGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_GGA); \
+SETN(XC_GGA_MAX_ORDER,GGA,FUNOBJ,FUNCTION)\
+SETN(XC_CONTRACT_MAX_ORDER,CONTRACT,FUNOBJ,FUNCTION)
+
+#define SET_MGGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_MGGA); \
+SETN(XC_MGGA_MAX_ORDER,MGGA,FUNOBJ,FUNCTION)\
+SETN(XC_CONTRACT_MAX_ORDER,CONTRACT,FUNOBJ,FUNCTION)
+
+#define SET_MLGGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_MLGGA); \
+SETN(XC_MLGGA_MAX_ORDER,MLGGA,FUNOBJ,FUNCTION)\
+SETN(XC_CONTRACT_MAX_ORDER,CONTRACT,FUNOBJ,FUNCTION)
+
+#else
+#define SET_LDA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_LDA); \
+SETN(XC_LDA_MAX_ORDER,LDA,FUNOBJ,FUNCTION)
+
+#define SET_GGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_GGA); \
+SETN(XC_GGA_MAX_ORDER,GGA,FUNOBJ,FUNCTION)
+
+#define SET_MGGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_MGGA); \
+SETN(XC_MGGA_MAX_ORDER,MGGA,FUNOBJ,FUNCTION)
+
+#define SET_MLGGA_ENERGY_FUNCTION(FUNOBJ,FUNCTION) assert(FUNOBJ.m_type <= XC_MLGGA); \
+SETN(XC_MLGGA_MAX_ORDER,MLGGA,FUNOBJ,FUNCTION)
+#endif
 
 #endif

@@ -1559,10 +1559,10 @@ static inline void taylorcompose0(polynomial<numtype, Nvar,Ndeg> &dst,
     ::compose0(dst.c,p.c,c);
 }
 
-template<class numtype, int Nvar, int Ndeg, int Ndegp>
+template<class numtype, int Nvar, int Ndeg, int Ndegp, class ctype>
 static inline void taylorcompose(polynomial<numtype, Nvar,Ndeg> &dst,
 			  const polynomial<numtype, Nvar,Ndegp> &p,
-			  const numtype c[Ndeg+1])
+			  const ctype c[Ndeg+1])
 {
   for (int i=0;i<dst.size;i++)
     dst[i] = 0;

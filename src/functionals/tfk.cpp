@@ -19,9 +19,9 @@ void setup_tfk(functional &f)
 	     "\n"
 	     "Implemented by Andre Gomes.\n"); 
   SET_LDA_ENERGY_FUNCTION(f,energy);
-  static const double d[] =
+  const double d[] =
     {1., .8};
-  static const double ref[] =
+  const double ref[] =
     { 7.64755771625168, 7.08107195949229, 7.08107195949229, 2.62261924425641, 2.62261924425641, 2.62261924425641 };
   f.add_test(XC_VARS_AB,1,d,ref,1e-5);
 

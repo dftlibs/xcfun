@@ -6,7 +6,7 @@
 template<class num>
 static num energy (const densvars<num> &d)
 {
-   using pw91_like_x_internal::chi;
+   using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
    using m0xy_metagga_xc_internal::m06_c_anti;
    using m0xy_metagga_xc_internal::ueg_c_anti;
@@ -14,29 +14,29 @@ static num energy (const densvars<num> &d)
    using m0xy_metagga_xc_internal::ueg_c_para;
 
    // parameters for anti-parallel spin contributions
-   static const parameter param_c_anti[5] =
+   const parameter param_c_anti[5] =
      {  3.741539e+00,  2.187098e+02, -4.531252e+02,  2.936479e+02, -6.287470e+01 };
-   static const parameter param_d_anti[6] =
+   const parameter param_d_anti[6] =
      { -2.741539e+00, -6.720113e-01, -7.932688e-02,  1.918681e-03, -2.032902e-03, 
         0.000000e+00 };
 
    // parameters for parallel spin contributions
-   static const parameter param_c_para[5] =
+   const parameter param_c_para[5] =
      {  5.094055e-01, -1.491085e+00,  1.723922e+01, -3.859018e+01,  2.845044e+01 };
-   static const parameter param_d_para[6] =
+   const parameter param_d_para[6] =
      {  4.905945e-01, -1.437348e-01,  2.357824e-01,  1.871015e-03, -3.788963e-03,
         0.000000e+00 }; 
 
-   num chi_a = chi(d.a, d.gaa);
-   num chi_b = chi(d.b, d.gbb);
+   num chi_a2 = chi2(d.a, d.gaa);
+   num chi_b2 = chi2(d.b, d.gbb);
    num zet_a = zet(d.a, d.taua);
    num zet_b = zet(d.b, d.taub);
 
-   num Ec_ab = ueg_c_anti(d) * m06_c_anti(param_c_anti,param_d_anti,chi_a,zet_a, 
-                                                                    chi_b,zet_b);
-   num Ec_aa = ueg_c_para(d.a) * m06_c_para(param_c_para,param_d_para,chi_a,zet_a);
-   num Ec_bb = ueg_c_para(d.b) * m06_c_para(param_c_para,param_d_para,chi_b,zet_b);
-
+   //About six correct digits in Ec_ab
+   num Ec_ab = ueg_c_anti(d) * m06_c_anti(param_c_anti,param_d_anti,chi_a2,zet_a, 
+                                                                    chi_b2,zet_b);
+   num Ec_aa = ueg_c_para(d.a) * m06_c_para(param_c_para,param_d_para,chi_a2,zet_a);
+   num Ec_bb = ueg_c_para(d.b) * m06_c_para(param_c_para,param_d_para,chi_b2,zet_b);
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
@@ -45,14 +45,43 @@ void setup_m06c(functional &f)
   f.describe(XC_M06C, XC_MGGA,
 	     "M06 Correlation",
              "M06 Meta-Hybrid Correlation Functional\n"
-             "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
-             "Implemented by Andre Gomes\n");
+             "Zhao, Truhlar; Theor Chem Account (2008) 120:215-241\n"
+             "Implemented by Andre Gomes\n"
+	     "Reference data from ADF, except energy which is self-computed.");
 
   SET_MGGA_ENERGY_FUNCTION(f,energy);
-  static const double d[] = 
-    {1., .8, 1., 1., 1., .33, .21};
-  static const double ref[] =
+  /* Test from the midwest: */
+  /*const double d[] = 
+    {1., .8, 1., 1., 1., 0.165,   0.1050};
+  const double ref[] =
     { -1.57876583, -2.12127045, -2.11264351, -0.00315462, -0.00444560,  0.00000000,  1.72820116,  2.21748787 };
-  f.add_test(XC_VARS_AB,1,d,ref,1e-5);
+  */
+  /*
+  const double d[] = {0.153652558932587,
+			     0.153652558932587,     
+			     8.390981882024769E-002,
+			     8.390981882024769E-002, 
+			     8.390981882024769E-002,			     
+			     6.826262722466429E-002,  
+			     6.826262722466429E-002};
+  const double ref[] = {-1.5172686665986701e-02, // Self-computed
+			       -6.500066856941683E-002, 
+			       -6.500066856941683E-002,
+			       -3.829432160900903E-002,  
+			       0.000000000000000E+000,
+			       -3.829432160900903E-002,
+			       8.813615476426437E-002,
+			       8.813615476426437E-002};
+  */
+  const double d[] = {1,2,2,1,3,1,2};
+  const double ref[] = {-1.3563164150574752e-01,
+			       -0.131522634780454,
+			       -1.095804911824488E-002,
+			       -6.743582614131827E-004,
+			       0.000000000000000E+000, 
+			       -7.065762242385136E-004,			      
+			       1.312970361640244E-002, 
+			       -2.732803203907383E-003};
+  f.add_test(XC_VARS_AB,1,d,ref,1e-6);
 }
 

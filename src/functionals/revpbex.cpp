@@ -4,7 +4,7 @@
 template<class num>
 static num energy(const densvars<num> &d)
 {
-  return pbex::energy_pbe_ab(pbex::R_revpbe,d.a,d.gaa)                                              
+  return pbex::energy_pbe_ab(pbex::R_revpbe,d.a,d.gaa)
     + pbex::energy_pbe_ab(pbex::R_revpbe,d.b,d.gbb);
 }
 

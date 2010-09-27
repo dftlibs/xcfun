@@ -1,3 +1,4 @@
+#if 0 // Does not work and should maybe not be here in the first place
 #include "functional.h"
 #include "vwn.h"
 #include "slater.h"
@@ -8,8 +9,8 @@
 template<class T, int Nvar, int Ndeg>
 static taylor<T,Nvar,Ndeg> lb94(const densvars<taylor<T,Nvar,Ndeg> > &d)
 {
-  static const parameter beta = 0.05;
-  taylor<T,Nvar,Ndeg> res = vwn::vwn5c(d) + slaterx(d);
+  const parameter beta = 0.05;
+  taylor<T,Nvar,Ndeg> res = d.n*vwn::vwn5_eps(d) + slaterx(d);
   // LB94 is basically LDA with a GGA modification _for the potential_
   if (Ndeg >= 1)
     {
@@ -42,7 +43,7 @@ void setup_lb94(functional &f)
 
   SET_GGA_ENERGY_FUNCTION(f, lb94);
 
-  static const double d[5] =
+  const double d[5] =
     {
      0.39e+02,
      0.38e+02,
@@ -51,7 +52,7 @@ void setup_lb94(functional &f)
      0.82e+06
     };
 
-  static const double ref[21] =
+  const double ref[21] =
     {
 //     radovan: reference data obtained from *.c implementation in DIRAC
       -2.504589269450e+02, // 00000
@@ -79,3 +80,4 @@ void setup_lb94(functional &f)
 
   f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);
 }
+#endif

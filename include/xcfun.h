@@ -5,7 +5,7 @@
 
 // Which set (mode) of variables to use
 #define XC_VARS_A   0 // 100% spin polarized, i.e. only alpha variables
-#define XC_VARS_R   1 // No spin polarization, total density variables
+#define XC_VARS_N   1 // No spin polarization, total density variables
 #define XC_VARS_AB  2 // Alpha/beta variables
 #define XC_VARS_NS  3 // Total density/spin density variables
 #define XC_NR_MODES 4
@@ -14,8 +14,8 @@
 #define XC_LDA      0 // Local density
 #define XC_GGA      1 // Local density & gradient
 #define XC_MGGA     2 // Local density, gradient and kinetic energy density
-//#define XC_M2GGA    3 // Local density, gradient, laplacian and kinetic energy density
-#define XC_NR_TYPES 3
+#define XC_MLGGA    3 // Local density, gradient, laplacian and kinetic energy density
+#define XC_NR_TYPES 4
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,21 +30,19 @@ extern "C" {
   xc_functional xc_new_functional(void);
   void xc_free_functional(xc_functional fun);
 
-  // If density would result in infinite derivatives,
-  // make a tiny modification to density in order to 
-  // get finite values. The modified density is expected
-  // to give rise to the same derivative values for those
-  // derivatives that are not too large, and finite but very
-  // large derivatives in the case where the unregularized
-  // density would give infinities.
-  void xc_regularize_density(xc_functional fun, double *density);
-
   // Evaluate the functional at density
-  void xc_eval(xc_functional fun, int order, int nr_points,
+  void xc_eval(xc_functional fun, int order,
 	       const double *density,
-	       int density_pitch,
-	       double *result,
-	       int result_pitch);
+	       double *result);
+  /* Vector version of xc_eval. 
+     density_pitch = density[start_of_second_point] - density[start_of_first_point],
+     likewise for result_pitch.
+   */
+  void xc_eval_vec(xc_functional fun, int order, int nr_points,
+		   const double *density,
+		   int density_pitch,
+		   double *result,
+		   int result_pitch);
 
   // Which variables to use/differentiatiate wrt to
   void xc_set_mode(xc_functional fun, int mode);

@@ -3,7 +3,6 @@
 
 PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals -Llib
 CFLAGS+=$(PATHS)
-CXXFLAGS+=$(PATHS)
 
 BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
           src/evaluators.o src/fortran.o
@@ -11,9 +10,9 @@ FUN_OBJ:=$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
 
 lib: lib/libxcfun.a
 
-lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ) include/xcfun_autogen.h fortran/xcfun_autogen.F90
+lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ) include/xcfun_autogen.h fortran/xcfun_autogen.f90
 	ar -r $@ $(BASE_OBJ) $(FUN_OBJ)
-	strip --strip-unneeded $@ 
+	strip --strip-unneeded $@
 
 src/parameters.o: src/parameters.cpp src/parameters.h src/functionals/list_of_parameters.h
 
@@ -25,7 +24,7 @@ geninterface: src/geninterface.cpp
 include/xcfun_autogen.h: geninterface src/functionals/list_of_parameters.h
 	./geninterface
 
-fortran/xcfun_autogen.F90: geninterface src/functionals/list_of_parameters.h
+fortran/xcfun_autogen.f90: geninterface src/functionals/list_of_parameters.h
 	./geninterface
 
 funeval: test/funeval.c lib/libxcfun.a
@@ -34,5 +33,13 @@ funeval: test/funeval.c lib/libxcfun.a
 testall: test/testall.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm
 
+example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.o lib/libxcfun.a
+	$(FC) $(FFLAGS) -o $@ $^ -lxcfun -lm
+
 clean:
-	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a} include/xcfun_autogen.h fortran/xcfun_autogen.F90
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a} include/xcfun_autogen.h fortran/xcfun_autogen.f90
+
+.SUFFIXES: .f90
+
+.f90.o:
+	$(FC) $(FFLAGS) -c -o $*.o $*.f90

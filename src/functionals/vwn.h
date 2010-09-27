@@ -50,23 +50,26 @@ namespace vwn
   }
 
   template<class num>
-  static num vwn5c(const densvars<num> &d)
+  static num vwn5_eps(const densvars<num> &d)
   {
     //ulfek: second elements are multiplied by 2 wrt molpro manual
-    static const parameter  para[] = {-0.10498,   0.0621814, 3.72744, 12.9352};
-    static const parameter ferro[] = {-0.325,     0.0310907, 7.06042, 18.0578};
-    static const parameter inter[] = {-0.0047584,-pow(3*M_PI*M_PI,-1.0), 1.13107, 13.0045};
-  // ulfek: in Dalton and Dirac inter[1] has too few decimals, should
-  // be -1/(3pi^2)
+#ifndef XCFUN_VWN5_REF
+    const parameter  para[] = {-0.10498,   0.0621814, 3.72744, 12.9352};
+    const parameter ferro[] = {-0.325,     0.0310907, 7.06042, 18.0578};
+    const parameter inter[] = {-0.0047584,-pow(3*M_PI*M_PI,-1.0), 1.13107, 13.0045};
+#else
+    const parameter  para[] = {-0.10498,   0.0621813817393097900698817274255, 3.72744, 12.9352};
+    const parameter ferro[] = {-0.325,     0.0310906908696548950349408637127, 7.06042, 18.0578};
+    const parameter inter[] = {-0.0047584,-pow(3*M_PI*M_PI,-1.0), 1.13107, 13.0045};
+#endif
     num s = sqrt(d.r_s);
     // Constant is (2^1/3-1)^-1/2
-    num g = 1.92366105093154*(pow(1 + d.zeta,4.0/3) + pow(1 - d.zeta,4.0/3) - 2);
+    num g = 1.92366105093154*(ufunc(d.zeta,4.0/3.0) - 2);
     num zeta4 = pow(d.zeta,4);
+    // FIXME: 1 - zeta^4 has a cancellation free form (ask maxima)
     num dd = g*((vwn_f(s, ferro) - vwn_f(s, para))*zeta4 +
 		vwn_f(s, inter)*(1 - zeta4)*(9.0/4.0*(pow(2,1.0/3.0)-1)));
-    // Dalton (for some reason??) uses a value:    0.584822305543806
-    // The real value should be 9/4 (2^(1/3) -1) = 0.5848223622634646
-    return d.n*(vwn_f(s, para) + dd);
+    return (vwn_f(s, para) + dd);
   }
 }
 

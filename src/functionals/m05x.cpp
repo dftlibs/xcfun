@@ -9,7 +9,7 @@ static num energy (const densvars<num> &d)
 {
    using m0xy_metagga_xc_internal::fw;
 
-   static const parameter param_a[12] =
+   const parameter param_a[12] =
      {  1.000000e+00,  8.151000e-02, -4.395600e-01, -3.224220e+00,  2.018190e+00,
         8.794310e+00, -2.950000e-03,  9.820290e+00, -4.823510e+00, -4.817574e+01,
         3.648020e+00,  3.402248e+01 };
@@ -27,9 +27,12 @@ void setup_m05x(functional &f)
              "Implemented by Andre Gomes\n");
 
   SET_MGGA_ENERGY_FUNCTION(f,energy);
-  static const double d[] = 
-    {1., .8, 1., 1., 1., .33, .21};
-  static const double ref[] =
-    { -1.57876583, -2.12127045, -2.11264351, -0.00315462, -0.00444560,  0.00000000,  1.72820116,  2.21748787 };
+  const double d[] = 
+    {1., .8, 1., 1., 1., 0.165,   0.1050};
+  const double ref[] =
+    { -1.57876583, -2.12127045, 
+      -2.11264351, -0.00315462, 
+      0.00000000,  -0.00444560,  
+      3.45640232,   4.4349756 };
   f.add_test(XC_VARS_AB,1,d,ref,3e-5);
 }

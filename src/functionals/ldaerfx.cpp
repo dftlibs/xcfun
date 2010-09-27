@@ -11,7 +11,7 @@ template<class num>
 static num esrx_ldaerfspin(const num &na, parameter mu)
 {
 
-  static const parameter ckf = 3.093667726280136;
+  const parameter ckf = 3.093667726280136;
   const num &rhoa = 2*na; // spin-scaling
   num akf = ckf*pow(rhoa,1.0/3.0);
   num a = mu/(2*akf);
@@ -52,8 +52,8 @@ void setup_ldaerfx(functional &f)
 	     "Test case from Gori-Giorgi (personal communication)\n"
 	     "Range separation parameter is XC_RANGESEP_MU\n");
   SET_LDA_ENERGY_FUNCTION(f,energy);
-  static const double d[] = {1.1, 1.0};
-  static const double ref[] = 
+  const double d[] = {1.1, 1.0};
+  const double ref[] = 
     {
 	-1.553573128702155,
 	-1.067732841218878,

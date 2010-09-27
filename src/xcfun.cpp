@@ -1,4 +1,3 @@
-
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -12,6 +11,9 @@ void xcint_assure_setup()
   if (!xcfun_is_setup)
     {
       xcfun_is_setup = true;
+#ifndef NDEBUG
+      fprintf(stderr,"XCFun WARNING: XCFun is built in slow debug mode (without -DNDEBUG).\n");
+#endif
       xcint_setup_functionals();
     }
 }
@@ -27,14 +29,14 @@ void xcint_die(const char *message, int code)
 extern "C"
 double xcfun_version(void)
 {
-  return 0.98;
+  return 0.99;
 }
 
 extern "C"
 const char *xcfun_splash(void)
 {
   return 
-    "XCFun DFT library, Copyright 2009-2010 Ulf Ekstrom and contributors.\n"
+    "XCFun DFT library Copyright 2009-2010 Ulf Ekstrom and contributors.\n"
     "See http://admol.org/xcfun for more information. This is free soft-\n"
     "ware; see the source code for copying conditions. There is ABSOLUTELY\n"
     "NO WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n"
@@ -46,7 +48,7 @@ const char *xcfun_splash(void)
 int xcint_input_length(int mode, int type)
 {
   static int tab[XC_NR_MODES][XC_NR_TYPES] = 
-    {{1,2,3},{1,2,3},{2,5,7},{2,5,7}};
+    {{1,2,3,4},{1,2,3,4},{2,5,7,9},{2,5,7,9}};
   assert(mode>=0 and mode <= XC_NR_MODES);
   assert(type>=0 and type <= XC_NR_TYPES);
   return tab[mode][type];
@@ -56,7 +58,6 @@ int xcint_output_length(int mode, int type, int order)
 {
   return taylorlen(xcint_input_length(mode,type),order);
 }
-
 
 void xc_functional_data::initialize()
 {
@@ -73,50 +74,6 @@ void xc_functional_data::initialize()
 void xc_functional_data::destroy()
 {
   // active_functionals.destroy();
-}
-
-void xc_functional_data::regularize_density(double *density)
-{
-  /*
-    Good density when 
-    na, nb > thres
-    gaa,gbb > thres^2
-    |gab|^2 < |gaa||gbb|
-    ta > thres
-    tb > thres
-    
-    ns variables:
-    n > thres
-    |s| < n - thres
-    tn > thres
-    |ts| < tn - thres
-   */
-  static const double thres = 1e-14, thres2 = thres*thres;
-  
-  if (mode==XC_VARS_AB)
-    {
-      if (density[0] < thres)
-	density[0] = thres;
-      if (density[1] < thres)
-	density[1] = thres;
-      if (type>=XC_GGA)
-	{
-	  if (density[2] < thres2)
-	    density[2] = thres2;
-	  if (density[4] < thres2)
-	    density[4] = thres2;
-	  if (density[3]*density[3] > density[2]*density[4])
-	    density[3] = copysign(sqrt(density[2]*density[4]),density[3]);
-	  if (type>=XC_MGGA)
-	    {
-	      
-	    }
-	}
-    }
-  else
-    {
-      xcint_die("FIXME in regularize_density",mode);
-    }
 }
 
 int xc_functional_data::get_type(void) const
@@ -142,7 +99,6 @@ int xc_functional_data::get_max_order(void) const
 {
   return max_order;
 }
-
 
 int xc_functional_data::input_length(void) const
 {
@@ -172,7 +128,6 @@ derivative_index(const int exponents[]) const
   return idx;
 }
 
-
 // API starts here
 extern "C"
 xc_functional xc_new_functional(void)
@@ -189,17 +144,11 @@ void xc_free_functional(xc_functional fun)
   free(fun);
 }
 
-extern "C"
-void xc_regularize_density(xc_functional fun, double *density)
-{
-  fun->regularize_density(density);
-}
-
-void xc_eval(xc_functional fun, int order, int nr_points,
-	     const double *density, 
-	     int density_pitch,
-	     double *result,
-	     int result_pitch)
+void xc_eval_vec(xc_functional fun, int order, int nr_points,
+		 const double *density, 
+		 int density_pitch,
+		 double *result,
+		 int result_pitch)
 {
   evaluator ev = xc_evaluator_lookup(fun->mode,fun->type,order);
   if (!ev)
@@ -211,6 +160,20 @@ void xc_eval(xc_functional fun, int order, int nr_points,
     }
   for (int i=0;i<nr_points;i++)
     ev(*fun,result+i*result_pitch,density+i*density_pitch);
+}
+
+void xc_eval(xc_functional fun, int order,
+	     const double *density, 
+	     double *result)
+{
+  xc_eval_vec(fun,order,1,density,0,result,0);
+}
+
+void xc_contract(xc_functional fun, int order,
+		 const double *density, 
+		 double *result)
+{
+  xc_eval_vec(fun,order,1,density,0,result,0);
 }
 
 int xc_get_type(xc_functional fun)
@@ -280,7 +243,7 @@ static int run_tests(functional *fun)
   int n = xc_output_length(xf, fun->test_order);
   double out[n];
   double *reference = fun->test_output;
-  xc_eval(xf,fun->test_order,1,fun->test_input,0,out,0);
+  xc_eval(xf,fun->test_order,fun->test_input,out);
 
   int nerr = 0;
   for (int i=0;i<n;i++)
@@ -329,4 +292,10 @@ int xcfun_test(void)
     }
   printf("Nr tests run: %i\n",nr_run);
   return nr_failed;
+}
+
+// Return the tau_a of the uniform electron gas of density n_a
+static double ueg_tau(double na)
+{
+  return 3.0/5.0*pow(6*M_PI*M_PI,2.0/3.0)*pow(na,5.0/3.0);
 }

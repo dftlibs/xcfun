@@ -7,22 +7,22 @@
 template<class num>
 static num energy (const densvars<num> &d)
 {
-   using pw91_like_x_internal::chi;
+   using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
    using m0xy_metagga_xc_internal::fw;
    using m0xy_metagga_xc_internal::h;
    using m0xy_metagga_xc_internal::alpha_x;
 
-   static const parameter param_a[12] = 
+   const parameter param_a[12] = 
        {  5.877943e-01, -1.371776e-01,  2.682367e-01, -2.515898e+00, -2.978892e+00, 
           8.710679e+00,  1.688195e+01, -4.489724e+00, -3.299983e+01, -1.449050e+01,
           2.043747e+01,  1.256504e+01 }; 
-   static const parameter param_d[6] = 
+   const parameter param_d[6] = 
        {  1.422057e-01,  7.370319e-04, -1.601373e-02,  0.000000e+00,  0.000000e+00, 
           0.000000e+00 }; 
 
-   num chia2 = pow(chi(d.a, d.gaa), 2);
-   num chib2 = pow(chi(d.b, d.gbb), 2);
+   num chia2 = chi2(d.a, d.gaa);
+   num chib2 = chi2(d.b, d.gbb);
 
    return (  (  pbex::energy_pbe_ab(pbex::R_pbe,d.a,d.gaa)*fw(param_a, d.a, d.taua) 
               + lsda_x(d.a)*h(param_d, alpha_x, chia2, zet(d.a, d.taua)))
@@ -38,12 +38,30 @@ void setup_m06x(functional &f)
 	     "M06 exchange",
              "M06 Meta-Hybrid Exchange Functional\n"
              "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"
-             "Implemented by Andre Gomes\n");
+             "Implemented by Andre Gomes\n"
+	     "Reference gradient from ADF\n");
 
   SET_MGGA_ENERGY_FUNCTION(f,energy);
-  static const double d[] =
+  /*
+  const double d[] =
     {1., .8, 1., 1., 1., .33, .21};
-  static const double ref[] =
-    { -0.93035619, -1.57676773, -1.59326350, -0.00081086, -0.00129163,  0.00000000,  1.62369085,  2.06708653 };
-  f.add_test(XC_VARS_AB,1,d,ref,3e-5);
+  const double ref[] =
+    { -0.93035619, -1.57676773, -1.59326350, -0.00081086,   0.00000000, -0.00129163, 1.62369085,  2.06708653 };
+  */
+  const double d[] = {0.153652558932587,
+			     0.153652558932587,     
+			     8.390981882024769E-002,
+			     8.390981882024769E-002, 
+			     8.390981882024769E-002,			     
+			     6.826262722466429E-002,  
+			     6.826262722466429E-002};
+  const double ref[] = {-1.0989923683183833e-01, // Energy from xcfun
+			       -0.519568215542419,
+			       -0.519568215542419,
+			       -1.757089749188437E-002,
+			       0.000000000000000E+000,
+			       -1.757089749188437E-002,
+			       9.227728385689479E-002,
+			       9.227728385689479E-002};
+  f.add_test(XC_VARS_AB,1,d,ref,1e-7);
 }

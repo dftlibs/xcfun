@@ -1,6 +1,6 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
-
+#include "config.h"
 /*
   All run-time settings (functional weights and parameters)
   are given their own name in the enum xc_parameters.

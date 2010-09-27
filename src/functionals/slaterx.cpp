@@ -15,9 +15,9 @@ void setup_slaterx(functional &f)
   SET_LDA_ENERGY_FUNCTION(f,slaterx);
   SET_GGA_ENERGY_FUNCTION(f,slaterx);
 
-  static const double d[] = 
+  const double d[] = 
     {0.39E+02, 0.38E+02};
-  static const double ref[] =
+  const double ref[] =
     {-0.241948147838E+03, // energy
      -0.420747936684E+01, // gradient
      -0.417120618800E+01,

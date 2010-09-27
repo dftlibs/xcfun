@@ -40,12 +40,6 @@ void FSYM(xcfree)(int *fun)
   fortran_functionals[*fun] = 0;
 }
 
-void FSYM(xcregu)(int *fun, double *density)
-{
-  assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  xc_regularize_density(fortran_functionals[*fun],density);
-}
-
 /*
   Figure out the memory distance between points
   from the first and second pointers.
@@ -59,10 +53,10 @@ void FSYM(xceval)(int *fun,  int *order,
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   int dpitch = second_density - first_density;
-  int rpitch = first_result - second_result;
-  xc_eval(fortran_functionals[*fun], *order, *nr_points, 
-	  first_density, dpitch,
-	  first_result, rpitch);
+  int rpitch = second_result - first_result;
+  xc_eval_vec(fortran_functionals[*fun], *order, *nr_points, 
+	      first_density, dpitch,
+	      first_result, rpitch);
 }
 
 void FSYM(xcsmod)(int *fun, int *mode)

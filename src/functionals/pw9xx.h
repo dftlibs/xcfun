@@ -17,16 +17,25 @@ namespace pw91_like_x_internal
 //    http://www.molpro.net/info/current/doc/manual/node734.html#dftfun:PW91X
 //
 
+
+  /*
+    The chi2 and S2 functions return the square of the typical chi and S
+    functions. This avoids a square root of the gradient square norm,
+    which makes the functions differentiable at grad = 0. This is 
+    physical, so the square root can always(?) be avoided. A special
+    sqrt(x)asinh(sqrt(x)) function is implemented for use in this context.
+   */
   template<class num>
-  static num chi(const num &rho, const num &grad)
+  static num chi2(const num &rho, const num &grad)
   {
-    return sqrt(grad)/pow(rho,4.0/3.0);
+    return grad/pow(rho,8.0/3.0);
   }
 
+
   template<class num>
-  static num S(const num &rho, const num &grad)
+  static num S2(const num &rho, const num &grad)
   {
-    return chi(rho,grad)*pow(6.0,2.0/3.0)/(12*pow(M_PI,2.0/3.0)); 
+    return grad/pow(rho,8.0/3.0)*pow(pow(6.0,2.0/3.0)/(12*pow(M_PI,2.0/3.0)),2);
   }
 
 // prefactor multiples the enhancement factor F(S), which is then different
@@ -63,16 +72,20 @@ namespace pw91_like_x_internal
   static num pw91xk_enhancement(const parameter param_AB[6],
 				const num &rho,
 				const num &grad)
-  {
-    using pw91_like_x_internal::S;
+  { 
+    // This formula contains a square root of grad, which is not differentiable at zero.
+    //num st = S(rho,grad);
+    //num t1 = 1 + param_AB[0]*st*asinh(param_AB[1]*st); 
     
-    num st = S(rho,grad);
-    
-    num t1 = 1 + param_AB[0]*st*asinh(param_AB[1]*st); 
-    num t2 = st*st*(param_AB[2] - param_AB[3]*exp(-param_AB[4]*st*st)); 
+    // The method below never takes the square root of S explicitly,
+    // and can deal with zero gradients.
+
+    num st2 = S2(rho,grad);
+    num t1 = 1 + param_AB[0]*sqrtx_asinh_sqrtx(pow(param_AB[1],2)*st2)/param_AB[1];
+    num t2 = st2*(param_AB[2] - param_AB[3]*exp(-param_AB[4]*st2)); 
     
     num numerator   = t1 + t2; 
-    num denominator = t1 + param_AB[5]*pow(st,4);
+    num denominator = t1 + param_AB[5]*st2*st2;
     
     return numerator/denominator;
   }

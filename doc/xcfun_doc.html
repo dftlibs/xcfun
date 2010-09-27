@@ -21,8 +21,10 @@ generate a library file <tt>lib/libxcfun.a</tt> which can be
 statically linked to your application. Include files listing all
 available functionals will be generated during the compilation of
 XCFun. These files are <tt>include/xcfun_autogen.h</tt> (for the C
-interface), and <tt>fortran/xcfun_autogen.F90</tt> for the Fortran
-module. C or C++ programs that uses XCFun should include the <tt>xcfun.h</tt> header file, while Fortran programs should use the <tt>xcfun</tt> module defined in <tt>fortran/xcfun_module.F90</tt>.
+interface), and <tt>fortran/xcfun_autogen.f90</tt> for the Fortran
+module. C or C++ programs that uses XCFun should include the <tt>xcfun.h</tt> header file, while Fortran programs should use the <tt>xcfun</tt> module defined in <tt>fortran/xcfun_module.f90</tt>.
+
+<p> See also <a href="#Compile Time Options">Compile Time Options</a> below. </p>
 
 <h2>Usage</h2> 
 
@@ -101,7 +103,7 @@ E<sub>&sigma;<sub>&beta;&beta;</sub>&sigma;<sub>&beta;&beta;</sub></sub>. See th
 The library is written in C++, but can also be directly used in a C
 project or Fortran project. The C interface is described
 in <tt>include/xcfun.h</tt>, while the Fortran interface is described
-in the module file <tt>fortran/xcfun_module.F90</tt>. This
+in the module file <tt>fortran/xcfun_module.f90</tt>. This
 documentation tries to describe both the C and Fortran API at the same
 time, even though small differences may exist between the two
 interfaces.
@@ -140,7 +142,7 @@ Release the memory associated with functional (previously allocated by <tt>xc_ne
 quantities, in the
 order <i>n<sub>&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&tau;<sub>&alpha;</sub></i>
 
-<li> <tt>XC_VARS_R</tt> Completely unpolarized mode using only total density quantities. <i>n</i>, <i>&sigma;<sub>nn</sub></i>, <i>&tau;<sub>n</sub></i>
+<li> <tt>XC_VARS_N</tt> Completely unpolarized mode using only total density quantities. <i>n</i>, <i>&sigma;<sub>nn</sub></i>, <i>&tau;<sub>n</sub></i>
 <li> <tt>XC_VARS_AB</tt> Using alpha and beta variables: <i>n<sub>&alpha;</sub></i>, <i>n<sub>&beta;</sub></i>, <i>&sigma;<sub>&alpha;&alpha;</sub></i>, <i>&sigma;<sub>&alpha;&beta;</sub></i>, <i>&sigma;<sub>&beta;&beta;</sub></i>, <i>&tau;<sub>&alpha;</sub></i>, <i>&tau;<sub>&beta;</sub></i>
 <li> <tt>XC_VARS_NS</tt> Using total density/spin polarization variables: <i>n</i>, <i>s</i>, <i>&sigma;<sub>nn</sub></i>, <i>&sigma;<sub>ns</sub></i>, <i>&sigma;<sub>ss</sub></i>, <i>&tau;<sub>n</sub></i>, <i>&tau;<sub>s</sub></i>
 </ul>
@@ -151,7 +153,7 @@ number of variables used by the functional.
 parameter <tt>param</tt> in <tt>functional</tt> to some double
 precision <tt>value</tt>. <tt>Param</tt> is one of the named constants
 listed in <tt>include/xcfun_autogen.h</tt>
-(or <tt>fortran/xcfun_autogen.F90</tt>). The parameters can be the
+(or <tt>fortran/xcfun_autogen.f90</tt>). The parameters can be the
 weight of different functionals, or some other parameter in the
 functional definition. Example of parameters are <tt>XC_VWN5C</tt>,
 the amount of VWN5 LDA correlation, and <tt>XC_RANGESEP_MU</tt>, the
@@ -214,9 +216,10 @@ that the density is physical and nonzero. In cases where the
 derivatives should be infinite they will instead be very large, but
 otherwise the effect on the output should be minimal.
 
-<h3>C <tt>xc_eval(functional, order, nr_points, density, density_pitch,
+<h3>C <tt>xc_eval(functional, order, density,result)</tt></h3> 
+<h3>C Vector version <tt>xc_eval_vec(functional, order, nr_points, density, density_pitch,
 result, result_pitch)</tt></h3> 
-<h3>Fortran <tt>xc_eval(functional, order, densities, results)</tt></h3>
+<h3>Fortran <tt>xc_eval(functional, order, nr_points, densities, results)</tt></h3>
 <p>
 Evaluate the previously defined <tt>functional</tt>
 at <tt>nr_points</tt> different points, with derivatives up
@@ -228,14 +231,15 @@ are stored in graded lexicographical order. For an LDA functional with alpha/bet
 </p>
 
 <p>
-  The C version accepts two 'pitch' arguments, which is the distance in memory between the first elements of each point in the input and output arrays.
+  The C vector version accepts two 'pitch' arguments, which is the
+  distance in memory between the first elements of each point in the
+  input and output arrays.
 </p>
 
 <p>
-The Fortran version uses the number of rows in the <tt>densities</tt>
-array as the number of points, the output array <tt>results</tt>
-should have at least this number of rows. Note that the input numbers
-for each point must be consecutive in memory (<i>stride</i> must be one).
+The Fortran always works on an array of points, and automatically
+determines the pitch values. Note that the input numbers for each
+point must be consecutive in memory (<i>stride</i> must be one).
 </p>
 
 
@@ -249,6 +253,33 @@ with respect to the second variable, <i>for setups with five variables</i>). To 
 predefined constants you must therefore know the type of your functional
 beforehand. For LDA in a two variable mode the corresponding constant would be 
 <tt>XC_D01</tt>, but this is a <i>different</i> index from <tt>XC_D01000</tt>.
+
+<h2>Compile Time Options</h2> 
+The file <tt>src/config.h</tt> contains a number of compile time options. These are 
+<ul>
+  <li> <tt>XC_MAX_ORDER</tt> Define this to the highest order of
+  derivatives that the library should support. Too high values make
+  the library huge in size.
+  <li> <tt>XC_NO_REGULARIZATION</tt> Define this to turn off
+  regularization of the input densities in <tt>xc_eval()</tt>. If you
+  use this option and feed the library unphysical densities it can and
+  will stop or crash. Use mainly to investigate numerical behaviour
+  near singular points.
+  <li> <tt>XC_NO_SCHWARZ_REGULARIZATION</tt> Do not strictly enforce
+  the Schwarz inequality for the gradient norms. This inequality can
+  be violated without encountering any problems for most functionals,
+  and it's suggested that this option is kept active (i.e. the
+  regularization is turned off).
+  <li> <tt>XCFUN_IN_DEVELOPMENT</tt> Enable code that is still "in
+  development". This code is probably marked "in development" for a
+  reason, and may contain bugs.
+  <li> <tt>XCFUN_REF_PW92C</tt> Use the truncated valued from the
+    reference implementation for some exact constants in the PW92C
+    correlation functional. This can help getting an exact agreement
+    with other implementations. Functionals that use PW92C (i.e. 
+    PBEC) are also affected by this options.
+</ul>
+
 
 </div>
 </body>
