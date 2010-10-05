@@ -586,7 +586,7 @@ template<class T,int Nvar, int Ndeg>
 static taylor<T,Nvar,Ndeg> min(const taylor<T,Nvar,Ndeg> &a,
 			       const taylor<T,Nvar,Ndeg> &b)
 {
-  if (a <= b)
+  if (a[0] <= b[0])
     return a;
   else
     return b;
@@ -596,7 +596,7 @@ template<class T,int Nvar, int Ndeg>
 static taylor<T,Nvar,Ndeg> max(const taylor<T,Nvar,Ndeg> &a,
 			       const taylor<T,Nvar,Ndeg> &b)
 {
-  if (a > b)
+  if (a[0] > b[0])
     return a;
   else
     return b;

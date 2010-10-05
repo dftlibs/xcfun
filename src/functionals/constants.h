@@ -7,6 +7,14 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
+
+#ifndef PI2
+#define PI2 (M_PI*M_PI)
+#endif
+
 namespace xc_constants
 {
   const parameter c_slater = pow(81/(32*M_PI),1.0/3.0); //Typically called C_x
