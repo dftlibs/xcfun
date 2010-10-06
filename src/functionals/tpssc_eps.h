@@ -39,9 +39,9 @@ namespace tpssc_eps
   static num tpssc_eps(const densvars<num> &d)
   {
     num eps_pkzb = epsc_revpkzb(d);
-    num tauwtau2 = pow2(d.gnn/(8.0*d.n*d.tau));
+    num tauwtau3 = pow3(d.gnn/(8.0*d.n*d.tau));
     parameter dd = 2.8;
-    return eps_pkzb*(1 + dd*eps_pkzb*tauwtau2);
+    return eps_pkzb*(1 + dd*eps_pkzb*tauwtau3);
   }
 
 
