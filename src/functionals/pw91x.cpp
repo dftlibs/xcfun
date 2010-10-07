@@ -5,7 +5,7 @@ template<class num>
 static num energy(const densvars<num> &d)
 {
   const parameter param_AB[6] = 
-    { 0.19645, 7.7956, 0.2743, 0.1508, 100.0, 0.004};
+    { 0.19645, 7.7956, 0.2743, 0.15084, 100.0, 0.004};
   using pw91_like_x_internal::prefactor;
   using pw91_like_x_internal::pw91xk_enhancement;
   return prefactor(d.a)*pw91xk_enhancement(param_AB,d.a,d.gaa)
