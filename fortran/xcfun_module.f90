@@ -208,6 +208,16 @@ contains
          results(1,1),results(1,2))
   end subroutine xc_eval
 
+  subroutine xc_potential(funid, density, energy, potentials)
+    integer, intent(in) :: funid    
+!radovan: trying to get it explicitly
+!         maybe later we go back to implicit
+!   integer :: npoints
+    double precision, intent(in) :: density(:)
+    double precision, intent(out) :: energy, potentials(:)
+    call xcpotential(funid,density,energy,potentials)
+  end subroutine xc_potential
+
   function xc_index(funid, exponents)
     integer, intent(in) :: exponents(*)
     integer funid,xc_index, xcdind

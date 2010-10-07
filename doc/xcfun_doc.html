@@ -242,6 +242,23 @@ determines the pitch values. Note that the input numbers for each
 point must be consecutive in memory (<i>stride</i> must be one).
 </p>
 
+<h3><tt>xc_potential(functional, density, energy, potential)</tt></h3>
+<p>
+Compute the XC energy and potential (<tt>potential[0]</tt> is alpha and <tt>potential[1]</tt> is beta) at a single point. For LDA this is
+simply <i>v<sup>&alpha;</sup><sub>xc</sub> = dE/dn<sub>&alpha;</sub></i> and for GGA the expression is
+<i>v<sup>&alpha;</sup><sub>xc</sub> = dE/dn<sub>&alpha;</sub> - &nabla;&middot;dE/d&nabla;n<sub>&alpha;</sub></i>. The latter case thus needs the evaluation of the second derivatives of the functional.
+In the case of GGA the values of the density laplacians should be given at the end of the <tt>density</tt> array,
+giving at total of seven numbers in the XC_VARS_AB case (which is the only one supported at the moment).</p>
+
+<p>
+  This function has to be called one point at a time.
+</p>
+
+<p>
+MetaGGA's are not supported at the moment, although this is in principle possible to implement for functionals
+that depend on the density laplacian (but not on the kinetic energy density).
+</p>
+
 
 <h3><tt>xc_derivative_index(functional, derivative)</tt></h3> Given an
 integer array of "exponents" this function returns the index into the

@@ -59,6 +59,13 @@ void FSYM(xceval)(int *fun,  int *order,
 	      first_result, rpitch);
 }
 
+
+void FSYM(xcpotential)(int *fun, double *density, double *energy, double *potential)
+{
+  assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
+  xc_potential(fortran_functionals[*fun], density, energy, potential);
+}
+
 void FSYM(xcsmod)(int *fun, int *mode)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
