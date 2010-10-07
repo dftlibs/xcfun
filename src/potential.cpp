@@ -30,7 +30,7 @@ void xc_potential(xc_functional fun, const double *density, double *e_xc, double
 	  xc_eval(fun,2,density,out);
 	  e_xc[0] = out[XC_D00000];
 
-	  v_xc[0]  = 0*out[XC_D10000];
+	  v_xc[0]  = out[XC_D10000];
 	  v_xc[0] -= 2*density[lapa]*out[XC_D00100] + density[lapb]*out[XC_D00010];
 	  v_xc[0] -= 2*(out[XC_D10100]*density[gaa]   + 
 			out[XC_D01100]*density[gab] +
@@ -44,7 +44,7 @@ void xc_potential(xc_functional fun, const double *density, double *e_xc, double
 		      out[XC_D00020]*(density[lapb]*density[gab] + density[lapa]*density[gbb]) +
 		      out[XC_D00011]*(2*density[lapb]*density[gbb])); 
 
-	  v_xc[1]  = 0*out[XC_D01000];
+	  v_xc[1]  = out[XC_D01000];
 	  v_xc[1] -= 2*density[lapb]*out[XC_D00001] + density[lapa]*out[XC_D00010];
 	  v_xc[1] -= 2*(out[XC_D01001]*density[gbb]   + 
 			out[XC_D10001]*density[gab]  +
