@@ -183,8 +183,7 @@ template<class S,class T,int N>
 static void pow_taylor(taylor<T,1,N>& t, const T &x0, const S &a)
 {
   if (x0 <= 0)
-    *(int *)0 = 0;
-  assert(x0 > 0 && "pow(x,a) not real analytic at x <= 0");
+    assert(x0 > 0 && "pow(x,a) not real analytic at x <= 0");
   t[0] = pow(x0,a);
   T x0inv = 1/x0;
   for (int i=1;i<=N;i++)
