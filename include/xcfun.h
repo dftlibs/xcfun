@@ -44,6 +44,13 @@ extern "C" {
 		   double *result,
 		   int result_pitch);
 
+  // Calculate the xc potential for fun. This is currently only supported for some
+  // types of functionals (LDA or GGA, AB mode). Here density should be the normal
+  // density as for xc_eval, appended with the extra data needed to construct the
+  // potential. For GGA's this is the laplacian of the density. The energy density
+  // is computed as a by-product.
+  void xc_potential(xc_functional fun, const double *density, double *e_xc, double *v_xc);
+
   // Which variables to use/differentiatiate wrt to
   void xc_set_mode(xc_functional fun, int mode);
 

@@ -5,7 +5,7 @@ PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals -Llib
 CFLAGS+=$(PATHS)
 
 BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
-          src/evaluators.o src/fortran.o
+          src/evaluators.o src/fortran.o src/potential.o
 FUN_OBJ:=$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
 
 lib: lib/libxcfun.a
