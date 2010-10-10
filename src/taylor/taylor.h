@@ -395,6 +395,17 @@ static std::ostream &operator<<(std::ostream& stream, const taylor<num,Nvar,Ndeg
   return stream;
 } 
 
+#else
+
+#include <stdio.h>
+template<class num, int Nvar, int Ndeg>
+void print_taylor(FILE *dst, const taylor<num,Nvar,Ndeg> &t)
+{
+  fprintf(dst,"{%.10e",t[0]);
+  for (int i=1;i<t.size;i++)
+      fprintf(dst,", %.10e",t[i]);
+  fprintf(dst,"}");
+}
 #endif
 
 #endif
