@@ -34,7 +34,7 @@ namespace tpssc_eps
     num epsc_sum = epsc_summax(d);
     num epsc_pbe = pbec_eps::pbec_eps(d);
     num C_zeta_xi = C(d);
-    return epsc_pbe*(1 + C_zeta_xi*tauwtau2);  - (1 + C_zeta_xi)*tauwtau2*epsc_sum;
+    return epsc_pbe*(1 + C_zeta_xi*tauwtau2) - (1 + C_zeta_xi)*tauwtau2*epsc_sum;
   }
 
   template<class num>
