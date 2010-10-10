@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 {
   xc_functional fun = xc_new_functional();
   int nvar, mode = XC_VARS_AB;
+  int dobench = 0;
   printf("XCFun version: %g\n",xcfun_version());
   if (argc > 1)
     {
@@ -57,6 +58,11 @@ int main(int argc, char *argv[])
 	{
 	  double w;
 	  int param = -1;
+	  if (strcmp(argv[i],"--benchmark") == 0)
+	    {
+	      dobench = 1;
+	      i++;
+	    }
 	  // Find a setting with name argv[i]
 	  for (j=0;j<XC_NR_PARAMS;j++)
 	    if (xc_name(j) && (strcmp(xc_name(j),argv[i]) == 0))
@@ -110,7 +116,11 @@ int main(int argc, char *argv[])
 	    return EXIT_FAILURE;
 	  }
       // Only one point, so pitch is unimportant
-      xc_eval(fun,TEST_ORDER,inp,out); 
+      if (dobench)
+	for (i = 1;i<1e6;i++)
+	  xc_eval(fun,TEST_ORDER,inp,out); 
+      else
+	  xc_eval(fun,TEST_ORDER,inp,out); 
       for (i=0;i<nvar;i++)
 	m[i] = 0;
       printf("Derivative        Value\n");
