@@ -7,7 +7,7 @@ static num energy(const densvars<num> &d)
 {
   num eps = tpssc_eps::tpssc_eps(d);
   return d.n*eps;
-}
+} 
 
 void setup_tpssc(functional &f)
 {

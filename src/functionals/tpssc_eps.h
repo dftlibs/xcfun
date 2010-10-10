@@ -4,6 +4,7 @@
 #include "functional.h"
 #include "constants.h"
 #include "pbec_eps.h"
+#include <stdio.h>
 
 namespace tpssc_eps
 {
@@ -13,7 +14,8 @@ namespace tpssc_eps
     num gzeta2 = ( pow2(d.n)*d.gss - 2*d.n*d.s*d.gns + pow2(d.s)*d.gnn )/pow(d.n,4); // (grad zeta)^2
     num xi2 = gzeta2 / (4*pow(3*pow2(M_PI)*d.n,2.0/3.0));  // xi^2
     num C0 = 0.53 + 0.87*pow2(d.zeta) + 0.50*pow(d.zeta,4) + 2.26*pow(d.zeta,6); // C(zeta,0)
-    return C0/pow( 1 + 0.5*xi2*(pow(1+d.zeta,-4.0/3.0) + pow(1-d.zeta,-4.0/3.0)),4);
+    return C0/pow( 1 + 0.5*xi2*(ufunc(d.zeta,-4.0/3.0)),4);
+    //    return C0/pow( 1 + 0.5*xi2*(pow(1+d.zeta,-4.0/3.0) + pow(1-d.zeta,-4.0/3.0)),4);
   }
 
   template<class num>
@@ -32,13 +34,15 @@ namespace tpssc_eps
     num epsc_sum = epsc_summax(d);
     num epsc_pbe = pbec_eps::pbec_eps(d);
     num C_zeta_xi = C(d);
-    return epsc_pbe*(1 + C_zeta_xi*tauwtau2) - (1 + C_zeta_xi)*tauwtau2*epsc_sum;
+    return epsc_pbe*(1 + C_zeta_xi*tauwtau2);  - (1 + C_zeta_xi)*tauwtau2*epsc_sum;
   }
 
   template<class num>
   static num tpssc_eps(const densvars<num> &d)
   {
     num eps_pkzb = epsc_revpkzb(d);
+    for (int i=0;i<eps_pkzb.size;i++)
+      printf("pkzb %.12lf\n",eps_pkzb[i]);
     num tauwtau3 = pow3(d.gnn/(8.0*d.n*d.tau));
     parameter dd = 2.8;
     return eps_pkzb*(1 + dd*eps_pkzb*tauwtau3);

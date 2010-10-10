@@ -5,9 +5,9 @@
 template<class num>
 static num energy(const densvars<num> &d)
 {
-  num eps = tpssx_eps::tpssx_eps(d);
-  return d.n*eps;
-}
+  num eps = tpssx_eps::tpssx_energy(d);
+  return eps;
+}   
 
 void setup_tpssx(functional &f)
 {
