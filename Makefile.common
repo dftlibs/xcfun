@@ -1,8 +1,9 @@
 #This file probably requires GNU Make, but should be easily
 #convertible to regular Make format.
 
-PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals -Llib
+PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals 
 CFLAGS+=$(PATHS)
+LIBS+=-Llib
 
 BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
           src/evaluators.o src/fortran.o src/potential.o
@@ -28,16 +29,16 @@ fortran/xcfun_autogen.f90: geninterface src/functionals/list_of_parameters.h
 	./geninterface
 
 funeval: test/funeval.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm
+	$(CC) $(CFLAGS) $(LIBS) $< -o $@ -lxcfun -lm
 
 testall: test/testall.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm
+	$(CC) $(CFLAGS) $(LIBS) $< -o $@ -lxcfun -lm
 
 example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.o lib/libxcfun.a
-	$(FC) $(FFLAGS) -o $@ $^ -lxcfun -lm
+	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
 
 clean:
-	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.{so,a} include/xcfun_autogen.h fortran/xcfun_autogen.f90
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.a include/xcfun_autogen.h fortran/xcfun_autogen.f90
 
 .SUFFIXES: .f90
 
