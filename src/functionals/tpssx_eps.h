@@ -42,9 +42,6 @@ namespace tpssx_eps
   {
     const parameter kappa = 0.804;
     num xpz = x(d_n,d_gnn,d_tau);
-    printf("x: ");
-    print_taylor(stdout,xpz);
-    printf("\n");
     return 1 + kappa - kappa/(1+xpz/kappa);
   }
 }

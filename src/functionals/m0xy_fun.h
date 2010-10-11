@@ -221,20 +221,17 @@ namespace m0xy_metagga_xc_internal
   // 
   // Zhao, Schultz, Truhlar, J. Chem. Theory Comput. 2006, 2, 264   equations 7,8
   //  
-
-  template<class num>
-  static num ueg_c_anti(const densvars<num> &d)
-  {
-    return (pw92eps::pw92eps(d)*d.n) - ueg_c_para(d.a) - ueg_c_para(d.b);
-  }
-
   template<class num>
   static num ueg_c_para(const num &rho)
   {
     return pw92eps::pw92eps_polarized(rho)*rho;
   }
 
-
+  template<class num>
+  static num ueg_c_anti(const densvars<num> &d)
+  {
+    return (pw92eps::pw92eps(d)*d.n) - ueg_c_para(d.a) - ueg_c_para(d.b);
+  }
 }
 
 // local spin density approximation for the exchange

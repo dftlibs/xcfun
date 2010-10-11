@@ -1,5 +1,4 @@
 #include "xcfun_internal.h"
-#include <stdio.h>
 
 // Compute the xc potential(s). This is simple for lda and more complicated for 
 // GGA's. For metaGAA's that depend on tau this is a non-local problem and 

@@ -233,8 +233,6 @@ static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t,
 template<class T,int N>
 static void sqrt_taylor(taylor<T,1,N>& t, const T &x0)
 {
-  if (x0 <= 0)
-    *(int *)0 = 0;
   assert(x0 > 0 && "sqrt(x) not real analytic at x <= 0");
   t[0] = sqrt(x0);
   T x0inv = 1/x0;
@@ -257,8 +255,6 @@ static taylor<T,Nvar,Ndeg> sqrt(const taylor<T,Nvar,Ndeg> &t)
 template<class T,int N>
 static void cbrt_taylor(taylor<T,1,N>& t, const T &x0)
 {
-  if (x0 <= 0)
-    *(int *)0 = 0;
   assert(x0 > 0 && "pow(x,a) not real analytic at x <= 0");
   t[0] = cbrt(x0);
   T x0inv = 1/x0;

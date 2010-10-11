@@ -9,6 +9,7 @@
 #include "config.h"
 #include "specmath.h"
 #include "parameters.h"
+#include <stdio.h>
 
 // MLGGA's have 9 variables (GGA+tau+laplacian)
 #define XC_MAX_NVAR 9

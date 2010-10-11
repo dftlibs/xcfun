@@ -38,7 +38,7 @@ example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.
 	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
 
 clean:
-	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.a include/xcfun_autogen.h fortran/xcfun_autogen.f90
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.a include/xcfun_autogen.h fortran/xcfun_autogen.f90 example_fortran_
 
 .SUFFIXES: .f90
 

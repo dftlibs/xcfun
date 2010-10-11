@@ -14,6 +14,7 @@ void setup_slaterx(functional &f)
 
   SET_LDA_ENERGY_FUNCTION(f,slaterx);
   SET_GGA_ENERGY_FUNCTION(f,slaterx);
+  SET_MGGA_ENERGY_FUNCTION(f,slaterx);
 
   const double d[] = 
     {0.39E+02, 0.38E+02};
