@@ -13,7 +13,6 @@ lib: lib/libxcfun.a
 
 lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ) include/xcfun_autogen.h fortran/xcfun_autogen.f90
 	ar -r $@ $(BASE_OBJ) $(FUN_OBJ)
-	strip --strip-unneeded $@
 
 src/parameters.o: src/parameters.cpp src/parameters.h src/functionals/list_of_parameters.h
 
