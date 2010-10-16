@@ -63,6 +63,21 @@ int main(int argc, char *argv[])
 	      dobench = 1;
 	      i++;
 	    }
+	  if (strcmp(argv[i],"--ns") == 0)
+	    {
+	      mode = XC_VARS_NS;
+	      i++;
+	    }
+	  if (strcmp(argv[i],"--n") == 0)
+	    {
+	      mode = XC_VARS_N;
+	      i++;
+	    }
+	  if (strcmp(argv[i],"--ab") == 0)
+	    {
+	      mode = XC_VARS_AB;
+	      i++;
+	    }
 	  // Find a setting with name argv[i]
 	  for (j=0;j<XC_NR_PARAMS;j++)
 	    if (xc_name(j) && (strcmp(xc_name(j),argv[i]) == 0))
