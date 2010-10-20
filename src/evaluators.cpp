@@ -5,6 +5,25 @@
 // Used for regularizing input
 #define TINYDENS 1e-14
 
+// This is a replacement for copysign from C99
+static inline double cpsign(double x, double y)
+{
+  if (x<0)
+    {
+      if (y<0)
+	return x;
+      else
+	return -x;
+    }
+  else
+    {
+      if (y<0)
+	return -x;
+      else
+	return x;
+    }
+}
+
 static struct evaluator_table
 {
   void construct(void)
@@ -118,7 +137,7 @@ static void eval_lda_ns(const xc_functional_data &fun,
 #else
   dv.n = ttype(d[0] > TINYDENS ? d[0] : TINYDENS,0);
   // Not differentiable at complete spin polarization
-  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : copysign(d[0]-TINYDENS,d[1]),1);
+  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : cpsign(d[0]-TINYDENS,d[1]),1);
 #endif
   dv.a = 0.5*(dv.n + dv.s);
   dv.b = 0.5*(dv.n - dv.s);
@@ -185,7 +204,7 @@ static void eval_gga_ns(const xc_functional_data &fun,
 #else
   dv.n = ttype(d[0] > TINYDENS ? d[0] : TINYDENS,0);
   // Not differentiable at complete spin polarization
-  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : copysign(d[0]-TINYDENS,d[1]),1);
+  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : cpsign(d[0]-TINYDENS,d[1]),1);
 #endif
   dv.a = (dv.n + dv.s)/2;
   dv.b = (dv.n - dv.s)/2;
@@ -316,7 +335,7 @@ static void eval_mgga_ns(const xc_functional_data &fun,
 #else
   dv.n = ttype(d[0] > TINYDENS ? d[0] : TINYDENS,0);
   // Not differentiable at complete spin polarization
-  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : copysign(d[0]-TINYDENS,d[1]),1);
+  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : cpsign(d[0]-TINYDENS,d[1]),1);
 #endif
   dv.a = (dv.n + dv.s)/2;
   dv.b = (dv.n - dv.s)/2;
@@ -347,7 +366,7 @@ static void eval_mgga_ns(const xc_functional_data &fun,
   dv.tau = ttype(d[5] >= TINYDENS ? d[5] : TINYDENS, 5);
   dv.taua = 0.5*(dv.tau + 
 		 ttype(fabs(d[6]) < dv.tau ? 
-		       d[6] : copysign(dv.tau[0]-TINYDENS,d[6]), 6));
+		       d[6] : cpsign(dv.tau[0]-TINYDENS,d[6]), 6));
   dv.taub = dv.tau - dv.taua;
 #endif
 
@@ -426,7 +445,7 @@ static void eval_mlgga_ns(const xc_functional_data &fun,
 #else
   dv.n = ttype(d[0] > TINYDENS ? d[0] : TINYDENS,0);
   // Not differentiable at complete spin polarization
-  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : copysign(d[0]-TINYDENS,d[1]),1);
+  dv.s = ttype(fabs(d[1]) < d[0] ? d[1] : cpsign(d[0]-TINYDENS,d[1]),1);
 #endif
   dv.a = (dv.n + dv.s)/2;
   dv.b = (dv.n - dv.s)/2;
@@ -457,7 +476,7 @@ static void eval_mlgga_ns(const xc_functional_data &fun,
   dv.tau = ttype(d[5] >= TINYDENS ? d[5] : TINYDENS, 5);
   dv.taua = 0.5*(dv.tau + 
 		 ttype(fabs(d[6]) < dv.tau ? 
-		       d[6] : copysign(dv.tau[0]-TINYDENS,d[6]), 6));
+		       d[6] : cpsign(dv.tau[0]-TINYDENS,d[6]), 6));
   dv.taub = dv.tau - dv.taua;
 #endif
 
