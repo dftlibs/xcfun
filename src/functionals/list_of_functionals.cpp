@@ -25,6 +25,7 @@ void xcint_setup_functionals()
 
   SETUP(setup_ldaerfx);
   SETUP(setup_ldaerfc);
+  SETUP(setup_ldaerfc_jt);
   SETUP(setup_ktx);
   SETUP(setup_tfk);
   SETUP(setup_pw91x);
