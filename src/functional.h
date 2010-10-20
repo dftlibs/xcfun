@@ -3,7 +3,9 @@
 
 // Everything required to implement a functional
 #include "taylor.h"
+#ifdef XCFUN_CONTRACTIONS
 #include "ctaylor.h"
+#endif
 #define XCFUN_INTERNAL
 #include "xcfun.h"
 #include "config.h"
@@ -68,7 +70,12 @@ public:
   {
     assert(Nvar<=XC_MAX_NVAR);
     assert(Ndeg<=XC_MAX_ORDER);
+    // See comment at eval about this cast
+#ifdef _MSC_VER
+    ftab[Nvar][Ndeg] = *reinterpret_cast<void **>(&f);
+#else
     ftab[Nvar][Ndeg] = reinterpret_cast<void *>(f);
+#endif
   }
 #ifdef XCFUN__CONTRACTIONS
   template<int Ndeg>
@@ -86,10 +93,22 @@ public:
     assert(Nvar<=XC_MAX_NVAR);
     assert(Ndeg<=XC_MAX_ORDER);
     assert(ftab[Nvar][Ndeg]);
+#ifdef _MSC_VER
+    /* Here we need to cast the void pointer back to a function
+       pointer of the appropriate type. This is supposed to work
+       under C++0x, may not be supported under all compilers.
+       Using solution from 
+       http://stackoverflow.com/questions/1096341/function-pointers-casting-in-c
+     */
+    taylor<double,Nvar,Ndeg> 
+      (*f)(const densvars< taylor<double,Nvar,Ndeg> > &);
+    *reinterpret_cast<void**>(&f) = ftab[Nvar][Ndeg];
+#else
     taylor<double,Nvar,Ndeg> 
       (*f)(const densvars< taylor<double,Nvar,Ndeg> > &) = 
       reinterpret_cast<taylor<double,Nvar,Ndeg> 
       (*)(const densvars< taylor<double,Nvar,Ndeg> > &)>(ftab[Nvar][Ndeg]);
+#endif
     return f(dv);
   }
 #ifdef XCFUN_CONTRACTIONS

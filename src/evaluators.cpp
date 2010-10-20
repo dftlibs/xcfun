@@ -544,8 +544,8 @@ evaluator xc_evaluator_lookup(int mode, int type, int order)
       eval_setup_mgga<XC_MGGA_MAX_ORDER>();
       eval_setup_mlgga<XC_MLGGA_MAX_ORDER>();
     }
-  assert(mode>=0 and mode < XC_NR_MODES);
-  assert(type>=0 and type < XC_NR_TYPES);
-  assert(order>=0 and order <= XC_MAX_ORDER);
+  assert(mode>=0 && mode < XC_NR_MODES);
+  assert(type>=0 && type < XC_NR_TYPES);
+  assert(order>=0 && order <= XC_MAX_ORDER);
   return eval_tab->tab[mode][type][order];
 }

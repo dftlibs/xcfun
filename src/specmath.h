@@ -100,6 +100,7 @@ static taylor<T,Nvar,Ndeg> ufunc(const taylor<T,Nvar,Ndeg> &x, const double &a)
   return res;
 }
 
+#ifdef XCFUN_CONTRACTIONS
 template<class T, int Ndeg>
 static ctaylor<T,Ndeg> ufunc(const ctaylor<T,Ndeg> &x, const double &a)
 {
@@ -113,5 +114,6 @@ static ctaylor<T,Ndeg> ufunc(const ctaylor<T,Ndeg> &x, const double &a)
   x.compose(res,tmp1.c);
   return res;
 }
+#endif
 
 #endif

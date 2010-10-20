@@ -26,7 +26,7 @@ void functional::describe(enum xc_parameters weight_param, int type,
 			  const char *oneliner,
 			  const char *reference)
 {
-  assert(type >= 0 and type < XC_NR_TYPES);
+  assert(type >= 0 && type < XC_NR_TYPES);
   m_type = type;
   m_name = weight_param;
   xcint_set_short_description(weight_param, oneliner);

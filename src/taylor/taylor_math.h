@@ -5,6 +5,10 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#ifdef _MSC_VER
+#include "micromath.h"
+#endif
+
 //Taylor series of 1/(a+x)
 template<class T,int N>
 static void inv_taylor(taylor<T,1,N>& t, const T &a)

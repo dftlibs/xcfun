@@ -31,14 +31,14 @@ static functional *param_functionals[XC_NR_PARAMS] = {0};
 extern "C"
 const char *xc_name(int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);    
   return param_symbols[param];
 }
 extern "C"
 const char *xc_short_description(int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   xcint_assure_setup();
   return param_short[param];
@@ -46,7 +46,7 @@ const char *xc_short_description(int param)
 extern "C"
 const char *xc_long_description(int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   xcint_assure_setup();
   return param_long[param];
@@ -54,7 +54,7 @@ const char *xc_long_description(int param)
 
 double xcint_default(int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   xcint_assure_setup();
   return param_default[param];
@@ -64,21 +64,21 @@ double xcint_default(int param)
 // Short description is a string without newlines!
 void xcint_set_short_description(int param, const char *text)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
     xcint_die("Invalid parameter nr (version mismatch?)",param);
   param_short[param] = text;
 }
 // Long description should end with a final newline, and may have many lines.
 void xcint_set_long_description(int param, const char *text)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   param_long[param] = text;
 }
 
 void xcint_set_default(int param, double value)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   param_default[param] = value;
 }
@@ -86,14 +86,14 @@ void xcint_set_default(int param, double value)
 // Short description is a string without newlines!
 void xcint_set_functional(int param, functional *f)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   param_functionals[param] = f;
 }
 // Long description should end with a final newline, and may have many lines.
 functional *xcint_functional(int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter nr (version mismatch?)",param);
   return param_functionals[param];
 }

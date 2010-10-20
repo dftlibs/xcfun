@@ -90,6 +90,14 @@ extern "C" {
   // Get the current value of the setting.
   double xc_get_param(xc_functional fun, int param);
 
+  /* Transform the output of xc_eval to a different mode,
+     for example because your program wants AB mode but you
+     want to take advantage of knowing that you only care
+     about non-polarizing N mode derivatives. */
+  void xc_transform(int order, 
+		    int from_mode, const double *from_data,
+		    int to_mode, double *to_data);
+
 #ifdef __cplusplus
 } // End of extern "C"
 #endif

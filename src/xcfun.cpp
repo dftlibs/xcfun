@@ -49,8 +49,8 @@ int xcint_input_length(int mode, int type)
 {
   static int tab[XC_NR_MODES][XC_NR_TYPES] = 
     {{1,2,3,4},{1,2,3,4},{2,5,7,9},{2,5,7,9}};
-  assert(mode>=0 and mode <= XC_NR_MODES);
-  assert(type>=0 and type <= XC_NR_TYPES);
+  assert(mode>=0 && mode <= XC_NR_MODES);
+  assert(type>=0 && type <= XC_NR_TYPES);
   return tab[mode][type];
 }
 
@@ -82,7 +82,7 @@ int xc_functional_data::get_type(void) const
 }
 void xc_functional_data::set_mode(int mode)
 {
-  if (!(mode>=0 and mode < XC_NR_MODES))
+  if (!(mode>=0 && mode < XC_NR_MODES))
     xcint_die("Invalid mode to xc_functional::set_mode()",mode);
   this->mode = mode;
   find_max_order();
@@ -91,7 +91,7 @@ void xc_functional_data::set_mode(int mode)
 void xc_functional_data::find_max_order(void)
 {
   max_order = -1;
-  while (max_order < XC_MAX_ORDER and xc_evaluator_lookup(mode,type,max_order+1))
+  while (max_order < XC_MAX_ORDER && xc_evaluator_lookup(mode,type,max_order+1))
     max_order++;
 }
 
@@ -208,10 +208,10 @@ void xc_set_mode(xc_functional fun, int mode)
 
 void xc_set_param(xc_functional fun, int param, double value)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter in xc_set_param()",param);
   fun->parameters[param] = value;
-  if (xc_is_functional(param) and value != 0)
+  if (xc_is_functional(param) && value != 0)
     {
       if (xcint_functional(param)->m_type > fun->type)
 	fun->type = xcint_functional(param)->m_type;
@@ -221,7 +221,7 @@ void xc_set_param(xc_functional fun, int param, double value)
 
 double xc_get_param(xc_functional fun, int param)
 {
-  if (param < 0 or param >= XC_NR_PARAMS)
+  if (param < 0 || param >= XC_NR_PARAMS)
       xcint_die("Invalid parameter in xc_get_param()",param);
   return fun->parameters[param];
 }
@@ -241,7 +241,7 @@ static int run_tests(functional *fun)
   xc_set_mode(xf,fun->test_mode);
   xc_set_param(xf,fun->m_name,1.0);
   int n = xc_output_length(xf, fun->test_order);
-  double out[n];
+  double *out = (double *)malloc(n*sizeof*out);
   double *reference = fun->test_output;
   xc_eval(xf,fun->test_order,fun->test_input,out);
 
@@ -271,6 +271,7 @@ static int run_tests(functional *fun)
       printf("%s ok\n",xc_name(fun->m_name));
     }
   xc_free_functional(xf);
+  free(out);
   return nerr;
 }
 
@@ -286,7 +287,7 @@ int xcfun_test(void)
 	{
 	  nr_run++;
 	  int res = run_tests(f);
-	  if (res != 0 and res != -1)
+	  if (res != 0 && res != -1)
 	    nr_failed++;
 	}
     }

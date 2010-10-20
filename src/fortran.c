@@ -51,9 +51,10 @@ void FSYM(xceval)(int *fun,  int *order,
 		  double *first_result,
 		  double *second_result)
 {
+  int dpitch, rpitch;
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  int dpitch = second_density - first_density;
-  int rpitch = second_result - first_result;
+  dpitch = second_density - first_density;
+  rpitch = second_result - first_result;
   xc_eval_vec(fortran_functionals[*fun], *order, *nr_points, 
 	      first_density, dpitch,
 	      first_result, rpitch);
