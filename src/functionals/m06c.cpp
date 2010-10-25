@@ -82,6 +82,6 @@ void setup_m06c(functional &f)
 			       -7.065762242385136E-004,			      
 			       1.312970361640244E-002, 
 			       -2.732803203907383E-003};
-  f.add_test(XC_VARS_AB,1,d,ref,1e-6);
+  f.add_test(XC_VARS_AB,1,d,ref,5e-5);
 }
 
