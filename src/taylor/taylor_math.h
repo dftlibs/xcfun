@@ -294,7 +294,7 @@ static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, int n)
     }
   else if (n < 0)
     {
-      return pow(t,double(n));
+      return 1/pow(t,-n);
     }
   else 
     {
