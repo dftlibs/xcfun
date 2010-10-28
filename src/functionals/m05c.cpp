@@ -25,10 +25,12 @@ static num energy (const densvars<num> &d)
    num chi_b2 = chi2(d.b, d.gbb);
    num zet_a = zet(d.a, d.taua);
    num zet_b = zet(d.b, d.taub);
+   num Dsigma_a = m0xy_metagga_xc_internal::Dsigma(d.a,d.gaa,d.taua);
+   num Dsigma_b = m0xy_metagga_xc_internal::Dsigma(d.b,d.gbb,d.taub);
 
    num Ec_ab = ueg_c_anti(d)   * m05_c_anti(param_c_anti,chi_a2,chi_b2);
-   num Ec_aa = ueg_c_para(d.a) * m05_c_para(param_c_para,chi_a2,zet_a);
-   num Ec_bb = ueg_c_para(d.b) * m05_c_para(param_c_para,chi_b2,zet_b);
+   num Ec_aa = ueg_c_para(d.a) * m05_c_para(param_c_para,chi_a2,zet_a, Dsigma_a);
+   num Ec_bb = ueg_c_para(d.b) * m05_c_para(param_c_para,chi_b2,zet_b, Dsigma_b);
 
    return Ec_ab + Ec_aa + Ec_bb;
 }

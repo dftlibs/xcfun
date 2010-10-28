@@ -337,22 +337,23 @@ static taylor<T, Nvar, Ndeg> operator+(const taylor<T, Nvar,Ndeg>& t1, const tay
   return tmp;
 }
 
-template<class T, int Nvar, int Ndeg>
-static taylor<T, Nvar, Ndeg> operator-(const T& x, const taylor<T, Nvar,Ndeg>& t)
+template<class T, int Nvar, int Ndeg, class S>
+static taylor<T, Nvar, Ndeg> operator-(const S& x, const taylor<T, Nvar,Ndeg>& t)
 {
   taylor<T, Nvar,Ndeg> tmp = -t;
   tmp[0] += x;
   return tmp;
 }
 
-template<class T, int Nvar, int Ndeg>
-static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, const T &x)
+template<class T, int Nvar, int Ndeg, class S>
+static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, const S &x)
 {
   taylor<T, Nvar,Ndeg> tmp = t;
   tmp[0] -= x;
   return tmp;
 }
 
+/*
 template<class T, int Nvar, int Ndeg>
 static taylor<T, Nvar, Ndeg> operator-(int x, const taylor<T, Nvar,Ndeg>& t)
 {
@@ -368,6 +369,7 @@ static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t, int x)
   tmp[0] -= x;
   return tmp;
 }
+*/
 
 template<class T, int Nvar, int Ndeg>
 static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t1, 

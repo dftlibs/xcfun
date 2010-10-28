@@ -207,7 +207,7 @@ static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const double &a)
   return res;
 }
 
-#if 0
+
 template<class T,int Nvar, int Ndeg, class S>
 static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const S &a)
 {
@@ -218,7 +218,7 @@ static taylor<T,Nvar,Ndeg> pow(const taylor<T,Nvar,Ndeg> &t, const S &a)
   t.compose(res,tmp);
   return res;
 }
-#endif
+
 
 #if 0
 // This might be slightly dangerous to enable this, since
@@ -254,6 +254,13 @@ static taylor<T,Nvar,Ndeg> sqrt(const taylor<T,Nvar,Ndeg> &t)
   taylor<T,Nvar,Ndeg> res;
   t.compose(res,tmp);
   return res;
+}
+
+// This is used only when there is no native cbrt.
+template<class T>
+inline T cbrt(T x)
+{
+  return pow(x,1.0/3.0);
 }
 
 template<class T,int N>
@@ -351,28 +358,29 @@ static void gauss_taylor(taylor<T,1,Ndeg>& t, const T &a)
   t*=g;
 }
 #ifdef WITH_QD
-// QD does not provide an error function, so here is a slow and
-// not so smart Taylor expansion.
-static inline qd_real erf(const qd_real &x)
-{
-  qd_real sum = 0;
-  qd_real x2 = x*x, term = x;
-  int k = 0;
-  if (fabs(x) > 12) // erf(12) = 1 - 1e-64
-    return 1;
-  sum += term;
-  if (fabs(x) > 1e-64)
-    {
-      double magn = erf(to_double(x)); // order of magnitude of answer.
-      while (fabs(term/magn) > 1e-64)
-	{
-	  k++;
-	  term *= qd_real(-(2*k-1)*x2)/(k*(2*k+1));
-	  sum += term;
-	}
-    }
-  return sum*2/sqrt(qd_real::_pi);
-}
+// Does not work afaik
+/* // QD does not provide an error function, so here is a slow and */
+/* // not so smart Taylor expansion. */
+/* static inline qd_real erf(const qd_real &x) */
+/* { */
+/*   qd_real sum = 0; */
+/*   qd_real x2 = x*x, term = x; */
+/*   int k = 0; */
+/*   if (fabs(x) > 12) // erf(12) = 1 - 1e-64 */
+/*     return 1; */
+/*   sum += term; */
+/*   if (fabs(x) > 1e-64) */
+/*     { */
+/*       double magn = erf(to_double(x)); // order of magnitude of answer. */
+/*       while (fabs(term/magn) > 1e-64) */
+/* 	{ */
+/* 	  k++; */
+/* 	  term *= qd_real(-(2*k-1)*x2)/(k*(2*k+1)); */
+/* 	  sum += term; */
+/* 	} */
+/*     } */
+/*   return sum*2/sqrt(qd_real::_pi); */
+/* } */
 #endif
 
 // Use that d/dx erf(x) = 2/sqrt(pi)*exp(-x^2),
@@ -537,12 +545,12 @@ static taylor<T,Nvar,Ndeg> sinc(const taylor<T,Nvar,Ndeg> &t)
   the Boys function. Use an [8,8] Pade approximation when |t[0]| is
   small. This works less well but still ok in single precision.
  */
-template<int Nvar, int Ndeg>
-static taylor<double,Nvar,Ndeg> sqrtx_asinh_sqrtx(const taylor<double,Nvar,Ndeg> &t)
+template<class T, int Nvar, int Ndeg>
+static taylor<T,Nvar,Ndeg> sqrtx_asinh_sqrtx(const taylor<T,Nvar,Ndeg> &t)
 {
   assert(t[0] > -0.5);
   // Coefficients of an [8,8] Pade approximation at x = 0
-  static const double P[] = {0,
+  static const T P[] = {0,
 			     3.510921856028398e3,
 			     1.23624388373212e4,
 			     1.734847003883674e4,
@@ -551,7 +559,7 @@ static taylor<double,Nvar,Ndeg> sqrtx_asinh_sqrtx(const taylor<double,Nvar,Ndeg>
 			     9.119186273274577e2,
 			     7.815848629220836e1,	     
 			     1.96088643023654e0};
-  static const double Q[] = {3.510921856028398e3,
+  static const T Q[] = {3.510921856028398e3,
 			     1.29475924799926e4,
 			     1.924308297963337e4,
 			     1.474357149568687e4,    
@@ -564,18 +572,18 @@ static taylor<double,Nvar,Ndeg> sqrtx_asinh_sqrtx(const taylor<double,Nvar,Ndeg>
     {
       // Shift polys
       assert(Ndeg<=8);
-      taylor<double,1,Ndeg> pp,pq,ppade;
-      reinterpret_cast<const taylor<double,1,8> *>(P)->shift(pp,&t[0]);
-      reinterpret_cast<const taylor<double,1,8> *>(Q)->shift(pq,&t[0]);
+      taylor<T,1,Ndeg> pp,pq,ppade;
+      reinterpret_cast<const taylor<T,1,8> *>(P)->shift(pp,&t[0]);
+      reinterpret_cast<const taylor<T,1,8> *>(Q)->shift(pq,&t[0]);
       ppade = pp/pq;
-      taylor<double,Nvar,Ndeg> res;
+      taylor<T,Nvar,Ndeg> res;
       t.compose(res,ppade);
       return res;
     }
     else
     {
       // This is the unstable form
-      taylor<double,Nvar,Ndeg> s = sqrt(t);
+      taylor<T,Nvar,Ndeg> s = sqrt(t);
       return s*asinh(s);
     }
 }

@@ -3,7 +3,7 @@
 
 PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals 
 CFLAGS+=$(PATHS)
-LIBS+=-Llib
+LIBS+=-Llib -lqd
 
 BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
           src/evaluators.o src/fortran.o src/potential.o
@@ -28,10 +28,10 @@ fortran/xcfun_autogen.f90: geninterface src/functionals/list_of_parameters.h
 	./geninterface
 
 funeval: test/funeval.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $(LIBS) $< -o $@ -lxcfun -lm
+	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) 
 
 testall: test/testall.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $(LIBS) $< -o $@ -lxcfun -lm
+	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) 
 
 example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.o lib/libxcfun.a
 	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm

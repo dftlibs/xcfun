@@ -39,7 +39,7 @@ namespace pbec_eps
     num eps = pw92eps::pw92eps(d);
     num u = phi(d);
     // Avoiding the square root of d.gnn here
-    num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2)*
+    num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2.0)*
       d.gnn/(u*u*pow(d.n,7.0/3.0));
     return (eps + H(d2,eps,pow3(u)));
   }
@@ -51,7 +51,7 @@ namespace pbec_eps
     parameter u = pow(2.0,-1.0/3.0); //phi(d) for alpha or beta density =0
     
     // Avoiding the square root of d.gnn here
-    num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2)*
+    num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2.0)*
       gaa/(u*u*pow(a,7.0/3.0));
     return (eps + H(d2,eps,pow3(u)));
   }

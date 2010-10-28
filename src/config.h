@@ -30,4 +30,20 @@
 // This is used in the ADF program (for historical reasons)
 //#define XCFUN_VWN5_PBEC
 
+// Some platforms do not have erf(), make erf() calls stop
+// AT RUN TIME!
+#define XCFUN_NO_ERF 
+
+// This is the internal scalar type of the library, can be
+// different from the external interface. 
+#ifndef WITH_QD
+typedef double ireal_t; 
+#define INNER_TO_OUTER(INNER) INNER
+#else
+#include <qd/qd_real.h>
+typedef qd_real ireal_t;
+#define XCFUN_NUM_CONVERT // Must convert real types at i/o
+#define INNER_TO_OUTER(INNER) to_double(INNER)
+#endif
+
 #endif
