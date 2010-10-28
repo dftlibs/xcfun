@@ -94,7 +94,7 @@ extern "C" {
      for example because your program wants AB mode but you
      want to take advantage of knowing that you only care
      about non-polarizing N mode derivatives. */
-  void xc_transform(int order, 
+  void xc_transform(int order,
 		    int from_mode, const double *from_data,
 		    int to_mode, double *to_data);
 

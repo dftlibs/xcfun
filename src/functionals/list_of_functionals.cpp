@@ -22,10 +22,11 @@ void xcint_setup_functionals()
   SETUP(setup_pbec);
   SETUP(setup_spbec);
   SETUP(setup_vwn_pbec);
-
+#ifndef XCFUN_NO_ERF
   SETUP(setup_ldaerfx);
   SETUP(setup_ldaerfc);
   SETUP(setup_ldaerfc_jt);
+#endif
   SETUP(setup_ktx);
   SETUP(setup_tfk);
   SETUP(setup_pw91x);

@@ -35,7 +35,7 @@ namespace pw91_like_x_internal
   template<class num>
   static num S2(const num &rho, const num &grad)
   {
-    return grad/pow(rho,8.0/3.0)*pow(pow(6.0,2.0/3.0)/(12*pow(M_PI,2.0/3.0)),2);
+    return grad/pow(rho,8.0/3.0)*pow(pow(6.0,2.0/3.0)/(12*pow(M_PI,2.0/3.0)),2.0);
   }
 
 // prefactor multiples the enhancement factor F(S), which is then different

@@ -2,9 +2,9 @@
 #define XCFUN_INTERNAL_H
 #define XCFUN_INTERNAL
 #include "xcfun.h"
+#include "config.h"
 #include "functional.h"
 //#include "array.h"
-#include "config.h"
 #include "parameters.h"
 
 struct xc_functional_data
@@ -18,10 +18,7 @@ public:
   int get_type(void) const;
   int get_max_order(void) const;
 
-  void regularize_density(double *density);
-  void eval(double *res, int order, const double *dens) const;
-
-  bool is_functional(const char *name);
+  void eval(ireal_t *res, int order, const ireal_t *dens) const;
 
   int input_length(void) const;
   int output_length(int order) const;
@@ -41,7 +38,7 @@ void xcint_die(const char *message, int code);
 int xcint_input_length(int mode, int type);
 int xcint_output_length(int mode, int type, int order);
 
-typedef void (*evaluator)(const xc_functional_data &fun, double *, const double *);
+typedef void (*evaluator)(const xc_functional_data &fun, ireal_t *, const ireal_t *);
 evaluator xc_evaluator_lookup(int mode, int type, int order);
 
 void xcint_setup_functionals();

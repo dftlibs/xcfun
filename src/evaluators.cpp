@@ -6,7 +6,7 @@
 #define TINYDENS 1e-14
 
 // This is a replacement for copysign from C99
-static inline double cpsign(double x, double y)
+static inline ireal_t cpsign(ireal_t x, ireal_t y)
 {
   if (x<0)
     {
@@ -496,10 +496,10 @@ static void eval_mlgga_ns(const xc_functional_data &fun,
 template<int Ndeg>
 static void eval_setup_lda(void)
 {
-  eval_tab->tab[XC_VARS_A][XC_LDA][Ndeg] = eval_lda_a<double,Ndeg>;
-  eval_tab->tab[XC_VARS_AB][XC_LDA][Ndeg] = eval_lda_ab<double,Ndeg>;
-  eval_tab->tab[XC_VARS_N][XC_LDA][Ndeg] = eval_lda_n<double,Ndeg>;
-  eval_tab->tab[XC_VARS_NS][XC_LDA][Ndeg] = eval_lda_ns<double,Ndeg>;
+  eval_tab->tab[XC_VARS_A][XC_LDA][Ndeg] = eval_lda_a<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_LDA][Ndeg] = eval_lda_ab<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_N][XC_LDA][Ndeg] = eval_lda_n<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_NS][XC_LDA][Ndeg] = eval_lda_ns<ireal_t,Ndeg>;
   eval_setup_lda<Ndeg-1>();
 }
 template<> void eval_setup_lda<-1>(void) {}
@@ -507,9 +507,9 @@ template<> void eval_setup_lda<-1>(void) {}
 template<int Ndeg>
 static void eval_setup_gga(void)
 {
-  eval_tab->tab[XC_VARS_AB][XC_GGA][Ndeg] = eval_gga_ab<double,Ndeg>;
-  eval_tab->tab[XC_VARS_NS][XC_GGA][Ndeg] = eval_gga_ns<double,Ndeg>;
-  eval_tab->tab[XC_VARS_N][XC_GGA][Ndeg] = eval_gga_n<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_GGA][Ndeg] = eval_gga_ab<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_NS][XC_GGA][Ndeg] = eval_gga_ns<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_N][XC_GGA][Ndeg] = eval_gga_n<ireal_t,Ndeg>;
   eval_setup_gga<Ndeg-1>();
 }
 template<> void eval_setup_gga<-1>(void) {}
@@ -517,8 +517,8 @@ template<> void eval_setup_gga<-1>(void) {}
 template<int Ndeg>
 static void eval_setup_mgga(void)
 {
-  eval_tab->tab[XC_VARS_AB][XC_MGGA][Ndeg] = eval_mgga_ab<double,Ndeg>;
-  eval_tab->tab[XC_VARS_NS][XC_MGGA][Ndeg] = eval_mgga_ns<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_MGGA][Ndeg] = eval_mgga_ab<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_NS][XC_MGGA][Ndeg] = eval_mgga_ns<ireal_t,Ndeg>;
   eval_setup_mgga<Ndeg-1>();
 }
 template<> void eval_setup_mgga<-1>(void) {}
@@ -526,8 +526,8 @@ template<> void eval_setup_mgga<-1>(void) {}
 template<int Ndeg>
 static void eval_setup_mlgga(void)
 {
-  eval_tab->tab[XC_VARS_AB][XC_MLGGA][Ndeg] = eval_mlgga_ab<double,Ndeg>;
-  eval_tab->tab[XC_VARS_NS][XC_MLGGA][Ndeg] = eval_mlgga_ns<double,Ndeg>;
+  eval_tab->tab[XC_VARS_AB][XC_MLGGA][Ndeg] = eval_mlgga_ab<ireal_t,Ndeg>;
+  eval_tab->tab[XC_VARS_NS][XC_MLGGA][Ndeg] = eval_mlgga_ns<ireal_t,Ndeg>;
   eval_setup_mlgga<Ndeg-1>();
 }
 template<> void eval_setup_mlgga<-1>(void) {}

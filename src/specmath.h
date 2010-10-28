@@ -1,6 +1,16 @@
 #ifndef SPECMATH_H
 #define SPECMATH_H
 
+#ifdef XCFUN_NO_ERF
+void xcint_die(const char *message, int code);
+template<class T>
+T erf(T x)
+{
+  xcint_die("XcFun erf called but XCFUN_NO_ERF was defined",0);
+  return 0;
+}
+#endif
+
 // Some math-related functions useful in many places
 #include "taylor.h"
 
@@ -87,7 +97,7 @@ static T ufunc(const T &x, T &a)
 }
 
 template<class T, int Nvar, int Ndeg>
-static taylor<T,Nvar,Ndeg> ufunc(const taylor<T,Nvar,Ndeg> &x, const double &a)
+static taylor<T,Nvar,Ndeg> ufunc(const taylor<T,Nvar,Ndeg> &x, const ireal_t &a)
 {
   taylor<T,1,Ndeg> tmp1,tmp2;
   taylor<T,Nvar,Ndeg> res;
@@ -102,7 +112,7 @@ static taylor<T,Nvar,Ndeg> ufunc(const taylor<T,Nvar,Ndeg> &x, const double &a)
 
 #ifdef XCFUN_CONTRACTIONS
 template<class T, int Ndeg>
-static ctaylor<T,Ndeg> ufunc(const ctaylor<T,Ndeg> &x, const double &a)
+static ctaylor<T,Ndeg> ufunc(const ctaylor<T,Ndeg> &x, const ireal_t &a)
 {
   taylor<T,1,Ndeg> tmp1,tmp2;
   pow_taylor(tmp1,1+x[0],a);

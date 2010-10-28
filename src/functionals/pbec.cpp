@@ -35,7 +35,7 @@ static num energy(const densvars<num> &d)
   num eps = pw92eps::pw92eps(d);
   num u = phi(d);
   // Avoiding the square root of d.gnn here
-  num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2)*
+  num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2.0)*
     d.gnn/(u*u*pow(d.n,7.0/3.0));
   return d.n*(eps + H(d2,eps,pow3(u)));
 }
@@ -46,7 +46,7 @@ static num energy_vwn_pbec(const densvars<num> &d)
   num eps = vwn::vwn5_eps(d);
   num u = phi(d);
   // Avoiding the square root of d.gnn here
-  num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2)*
+  num d2 = pow(1.0/12*pow(3,5.0/6.0)/pow(M_PI,-1.0/6),2.0)*
     d.gnn/(u*u*pow(d.n,7.0/3.0));
   return d.n*(eps + H(d2,eps,pow3(u)));
 }

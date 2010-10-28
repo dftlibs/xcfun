@@ -158,8 +158,32 @@ void xc_eval_vec(xc_functional fun, int order, int nr_points,
       fprintf(stderr,"type: %i\n",fun->type);
       xcint_die("eval(): Functional not available for order",order);
     }
+#ifdef XCFUN_NUM_CONVERT
+  // ev expects input as ireal_t, must convert here. Also the output
+  int ni = fun->input_length();
+  int no = fun->output_length(order);
+  ireal_t in[ni];
+  ireal_t out[no];
+#endif
+#ifdef WITH_QD
+  unsigned int oldcw;
+  fpu_fix_start(&oldcw);
+#endif
   for (int i=0;i<nr_points;i++)
-    ev(*fun,result+i*result_pitch,density+i*density_pitch);
+    {
+#ifdef XCFUN_NUM_CONVERT
+      for (int j=0;j<ni;j++)
+	in[j] = density[i*density_pitch+j];
+      ev(*fun,out,in);
+      for (int j=0;j<no;j++)
+	result[i*result_pitch+j] = INNER_TO_OUTER(out[j]);
+#else
+      ev(*fun,result+i*result_pitch,density+i*density_pitch);
+#endif
+    }
+#ifdef WITH_QD
+  fpu_fix_end(&oldcw);
+#endif
 }
 
 void xc_eval(xc_functional fun, int order,
@@ -296,7 +320,7 @@ int xcfun_test(void)
 }
 
 // Return the tau_a of the uniform electron gas of density n_a
-static double ueg_tau(double na)
+static ireal_t ueg_tau(ireal_t na)
 {
   return 3.0/5.0*pow(6*M_PI*M_PI,2.0/3.0)*pow(na,5.0/3.0);
 }

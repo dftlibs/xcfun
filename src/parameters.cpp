@@ -3,16 +3,6 @@
 #include "xcfun_internal.h"
 #include <cstdio>
 #include <cstdlib>
-#if 0
-// TODO: Remove this and use the commone one
-static void xcint_die(const char *message, int code)
-{
-  fprintf(stderr,"XCFun fatal error %i: ",code);
-  fprintf(stderr,"%s",message);
-  fprintf(stderr,"\n");
-  exit(-1);
-}
-#endif
 
 static const char *param_symbols[XC_NR_PARAMS+1] =
   {

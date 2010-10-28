@@ -12,10 +12,10 @@ T BR_y(const T &x)
 // Determine x as a function of y = BR_y(x), using first 
 // a guess and then root polishing.
 // We need about 3-5 NR iterations depending on the y value.
-double BR(double y)
+ireal_t BR(ireal_t y)
 {
-  double d;
-  taylor<double,1,2> x(0,0),fx;
+  ireal_t d;
+  taylor<ireal_t,1,2> x(0,0),fx;
   // More or less clever starting guesses
   if (y < 0)
     {
@@ -45,7 +45,7 @@ double BR(double y)
       // Newton:
       // d = (y-fx[0])/fx[1];
       // Halley:
-      double yn = fx[0] - y;
+      ireal_t yn = fx[0] - y;
       d = -yn*fx[1]/(fx[1]*fx[1] - yn*fx[2]);
       x[0] += d;
       if (++niter > 100)

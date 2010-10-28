@@ -19,7 +19,7 @@
 // Use this type to make it clear what is a hard-coded parameter
 // (for example for grepping for parameters in functionals)
 
-typedef double parameter;
+typedef ireal_t parameter;
 
 // Variables for expressing functionals, these are redundant because
 // different functionals have different needs.
@@ -65,8 +65,8 @@ public:
 		double threshold);
   int validate();
   template<int Nvar, int Ndeg>
-  void energy_fun(taylor<double,Nvar,Ndeg> 
-		  (*f)(const densvars< taylor<double,Nvar,Ndeg> > &))
+  void energy_fun(taylor<ireal_t,Nvar,Ndeg> 
+		  (*f)(const densvars< taylor<ireal_t,Nvar,Ndeg> > &))
   {
     assert(Nvar<=XC_MAX_NVAR);
     assert(Ndeg<=XC_MAX_ORDER);
@@ -79,16 +79,16 @@ public:
   }
 #ifdef XCFUN__CONTRACTIONS
   template<int Ndeg>
-  void contraction_fun(ctaylor<double,Ndeg> 
-		       (*f)(const densvars< ctaylor<double,Ndeg> > &))
+  void contraction_fun(ctaylor<ireal_t,Ndeg> 
+		       (*f)(const densvars< ctaylor<ireal_t,Ndeg> > &))
   {
     assert(Ndeg<=XC_CONTRACT_MAX_ORDER);
     contract_ftab[Ndeg] = reinterpret_cast<void *>(f);
   }
 #endif
   template<int Nvar, int Ndeg>
-  taylor<double,Nvar,Ndeg> 
-  eval(const densvars< taylor<double,Nvar,Ndeg> > &dv)
+  taylor<ireal_t,Nvar,Ndeg> 
+  eval(const densvars< taylor<ireal_t,Nvar,Ndeg> > &dv)
   {
     assert(Nvar<=XC_MAX_NVAR);
     assert(Ndeg<=XC_MAX_ORDER);
@@ -100,27 +100,27 @@ public:
        Using solution from 
        http://stackoverflow.com/questions/1096341/function-pointers-casting-in-c
      */
-    taylor<double,Nvar,Ndeg> 
-      (*f)(const densvars< taylor<double,Nvar,Ndeg> > &);
+    taylor<ireal_t,Nvar,Ndeg> 
+      (*f)(const densvars< taylor<ireal_t,Nvar,Ndeg> > &);
     *reinterpret_cast<void**>(&f) = ftab[Nvar][Ndeg];
 #else
-    taylor<double,Nvar,Ndeg> 
-      (*f)(const densvars< taylor<double,Nvar,Ndeg> > &) = 
-      reinterpret_cast<taylor<double,Nvar,Ndeg> 
-      (*)(const densvars< taylor<double,Nvar,Ndeg> > &)>(ftab[Nvar][Ndeg]);
+    taylor<ireal_t,Nvar,Ndeg> 
+      (*f)(const densvars< taylor<ireal_t,Nvar,Ndeg> > &) = 
+      reinterpret_cast<taylor<ireal_t,Nvar,Ndeg> 
+      (*)(const densvars< taylor<ireal_t,Nvar,Ndeg> > &)>(ftab[Nvar][Ndeg]);
 #endif
     return f(dv);
   }
 #ifdef XCFUN_CONTRACTIONS
   template<int Ndeg>  
-  double contract_eval(const densvars< ctaylor<double,Ndeg> > &dv)
+  ireal_t contract_eval(const densvars< ctaylor<ireal_t,Ndeg> > &dv)
   {
     assert(Ndeg<=XC_CONTRACT_MAX_ORDER);
     assert(contract_ftab[Ndeg]);
-    ctaylor<double,Ndeg> 
-      (*f)(const densvars< ctaylor<double,Ndeg> > &) = 
-      reinterpret_cast<ctaylor<double,Ndeg> 
-      (*)(const densvars< ctaylor<double,Ndeg> > &)>(contract_ftab[Ndeg]);
+    ctaylor<ireal_t,Ndeg> 
+      (*f)(const densvars< ctaylor<ireal_t,Ndeg> > &) = 
+      reinterpret_cast<ctaylor<ireal_t,Ndeg> 
+      (*)(const densvars< ctaylor<ireal_t,Ndeg> > &)>(contract_ftab[Ndeg]);
     return f(dv);
   }
 #endif

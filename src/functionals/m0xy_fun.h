@@ -124,11 +124,15 @@ namespace m0xy_metagga_xc_internal
   //
 
   template<class num>
-  static num Dsigma(const num &chi2, const num &zet)
+  static num Dsigma(const num &na, const num &gaa, const num &taua)
+    //  static num Dsigma(const num &chi2, const num &zet)
   {
-    using xc_constants::CF;
+    //    using xc_constants::CF;
 
-    return (1.0 - 0.25*chi2/(zet + CF*scalefactorTFconst)); 
+    //    return (1.0 - 0.25*chi2/(zet + CF*scalefactorTFconst)); 
+    // Idiotic to subtract the constant (inside zet) and then add it back again
+    // Better simplify
+    return 1.0 - 0.125*gaa/(na*taua);
   }
 
   // g is an auxiliary function that can be used in connection to both
@@ -169,7 +173,7 @@ namespace m0xy_metagga_xc_internal
   static num m06_c_anti(const parameter param_c[5], 
                         const parameter param_d[5], 
                         const num &chi_a2, const num &zet_a, 
-                        const num &chi_b2, const num &zet_b) 
+                        const num &chi_b2, const num &zet_b)
   {
     const parameter gamma_c_anti = 0.0031;  // this is an "universal" constant for all M05/M06 functionals 
 
@@ -181,12 +185,12 @@ namespace m0xy_metagga_xc_internal
   template<class num>
   static num m06_c_para(const parameter param_c[5], 
                         const parameter param_d[5], 
-                        const num &chi2, const num &zet) 
+                        const num &chi2, const num &zet, const num &Dsigma) 
   {
     // this is an "universal" constant for all M05/M06 functionals 
     const parameter gamma_c_parallel = 0.06;  
 
-    return (g(param_c,gamma_c_parallel*chi2) + h(param_d,alpha_c_parallel,chi2,zet))*Dsigma(chi2,zet);
+    return (g(param_c,gamma_c_parallel*chi2) + h(param_d,alpha_c_parallel,chi2,zet))*Dsigma;
   }
 
 
@@ -208,11 +212,12 @@ namespace m0xy_metagga_xc_internal
   }
 
   template<class num>
-  static num m05_c_para(const parameter param_c[5], const num &chi2, const num &zet) 
+  static num m05_c_para(const parameter param_c[5], const num &chi2, const num &zet,
+			  const num &Dsigma) 
   {
     // this is an "universal" constant for all M05/M06 functionals 
     const parameter gamma_c_parallel = 0.06;  
-    return g(param_c,gamma_c_parallel*chi2)*Dsigma(chi2,zet);
+    return g(param_c,gamma_c_parallel*chi2)*Dsigma;
   }
 
 
