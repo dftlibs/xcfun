@@ -3,7 +3,7 @@
 
 PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals 
 CFLAGS+=$(PATHS)
-LIBS+=-Llib -lqd
+LIBS+=-Llib
 
 BASE_OBJ:=src/xcfun.o src/functional.o src/parameters.o \
           src/evaluators.o src/fortran.o src/potential.o
