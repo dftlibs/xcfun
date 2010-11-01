@@ -46,6 +46,8 @@ void xcint_setup_functionals()
   SETUP(setup_m06x2c);
   SETUP(setup_tpssc);
   SETUP(setup_tpssx);
+  SETUP(setup_revtpssc);
+  SETUP(setup_revtpssx);
 #endif
   SETUP(setup_brx);
 }

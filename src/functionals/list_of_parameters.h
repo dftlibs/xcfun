@@ -43,6 +43,8 @@
   PARAM(XC_M06X2C),
   PARAM(XC_TPSSC),
   PARAM(XC_TPSSX),
+  PARAM(XC_REVTPSSC),
+  PARAM(XC_REVTPSSX),
 #endif
   // This has to be last:
   PARAM(XC_NR_PARAMS) 
