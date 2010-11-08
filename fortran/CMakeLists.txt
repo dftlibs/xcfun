@@ -15,4 +15,8 @@ add_executable(example_fortran
 	${PROJECT_BINARY_DIR}/src/fortran/xcfun_autogen.f90
 	)
 
+set_target_properties(example_fortran 
+	PROPERTIES LINKER_LANGUAGE Fortran
+	)
+
 target_link_libraries(example_fortran xcfun m)
