@@ -47,6 +47,7 @@ elseif (CMAKE_Fortran_COMPILER_ID MATCHES Intel)
 	set (CMAKE_Fortran_FLAGS "")
 	set (CMAKE_Fortran_FLAGS_DEBUG "-g -O0")
 	set (CMAKE_Fortran_FLAGS_RELEASE "-g -O2")
+	set (CMAKE_Fortran_LINKER_FLAGS "-shared-intel")
 endif ()
 config_compiler_flags(Fortran)
 
