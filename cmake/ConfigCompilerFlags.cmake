@@ -27,6 +27,10 @@ if (NOT DEFINED DEFAULT_${_lang}_COMPILER_FLAGS_SET)
         CACHE STRING 
 		"Flags used by the compiler during release builds." FORCE)
 
+    set(CMAKE_${_lang}_LINK_FLAGS "${CMAKE_${_lang}_LINK_FLAGS}"
+        CACHE STRING 
+		"Flags used by the linker during linking." FORCE)
+
 	set (DEFAULT_${_lang}_COMPILER_FLAGS_SET ON 
 		CACHE INTERNAL 
 		"Flag that the default ${_lang} compiler flags have been set.")
