@@ -98,28 +98,26 @@ static num ecorrlr(const densvars<num> &d, parameter mu, const num &ec)
 	  a4*pow(mu,6) + pow(b0*mu,8)*ec)/pow(1 + pow(b0*mu,2),4);
 }
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_LDAERFC)(const densvars<num> &d)
 {
   double mu = d.get_param(XC_RANGESEP_MU);
   num eps = pw92eps::pw92eps(d);
   return d.n*(eps - ecorrlr(d,mu,eps));
 }
 
-void setup_ldaerfc(functional &f)
-{
-  f.describe(XC_LDAERFC, XC_LDA,
-	     "Short-range spin-dependent LDA correlation functional",
-	     "Short-range spin-dependent LDA correlation functional from\n"
+NEW_LDA_FUNCTIONAL(XC_LDAERFC);
+SHORT_DESCRIPTION(XC_LDAERFC) = "Short-range spin-dependent LDA correlation functional";
+LONG_DESCRIPTION(XC_LDAERFC) =	     "Short-range spin-dependent LDA correlation functional from\n"
 	     "Paziani, Moroni, Gori-Giorgi and Bachelet, PRB 73, 155111 (2006)"
 	     "Adapted from Gori-Giorgi and MOLPRO by Ulf Ekstrom\n"
 	     "Test case from Gori-Giorgi (personal communication),\n"
 	     "up to 10^-7, then xcfun decimals due to more accurate pw92c.\n"
-	     "Range separation parameter is XC_RANGESEP_MU\n");
-  SET_LDA_ENERGY_FUNCTION(f,energy);
-
-  const double d[] = {1.1, 1.0};
-  const double ref[] = 
-    {
+	     "Range separation parameter is XC_RANGESEP_MU\n";
+TEST_VARS(XC_LDAERFC) = XC_A_B;
+TEST_ORDER(XC_LDAERFC) = 2;
+TEST_THRESHOLD(XC_LDAERFC) = 1e-7;
+TEST_IN(XC_LDAERFC) = {1.1, 1.0};
+TEST_OUT(XC_LDAERFC) = {    
       -1.4579390272267870e-01,
       -7.7624817385549980e-02,
       -8.2132052511772885e-02,
@@ -138,6 +136,4 @@ void setup_ldaerfc(functional &f)
       0.019539653410626807
     };
   */
-  f.add_test(XC_VARS_AB,2,d,ref,1e-7);
-}
 

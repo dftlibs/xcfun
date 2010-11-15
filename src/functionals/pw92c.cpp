@@ -2,23 +2,21 @@
 #include "pw92eps.h"
 
 template<class num>
-static num energy(const densvars<num> &d) 
+static num ENERGY_FUNCTION(XC_PW92C)(const densvars<num> &d) 
 { 
   return pw92eps::pw92eps(d)*d.n;
 }  
 
-void setup_pw92c(functional &f)
-{
-  f.describe(XC_PW92C, XC_LDA,
-	     "PW92 LDA correlation",
-	     "Electron-gas correlation energy\n"
+NEW_LDA_FUNCTIONAL(XC_PW92C);
+SHORT_DESCRIPTION(XC_PW92C) = "PW92 LDA correlation";
+LONG_DESCRIPTION(XC_PW92C) =	     "Electron-gas correlation energy\n"
 	     "J.P.Perdew,Y. Wang; Phys. Rew. B; 40, 13244, (1992)\n"
 	     "Implemented by Ulf Ekstrom. Some parameters have higher\n"
-	     "accuracy than given in the paper.\n");
-  SET_LDA_ENERGY_FUNCTION(f,energy);
-  SET_GGA_ENERGY_FUNCTION(f,energy);
-  const double d[] = 
-    {0.39E+02, 0.38E+02};
+	     "accuracy than given in the paper.\n";
+TEST_VARS(XC_PW92C) = XC_A_B;
+TEST_ORDER(XC_PW92C) = 2;
+TEST_THRESHOLD(XC_PW92C) = 1e-11;
+TEST_IN(XC_PW92C) = {0.39E+02, 0.38E+02};
   /* Daresbury numbers: 
   const double ref[] =
     {
@@ -31,8 +29,7 @@ void setup_pw92c(functional &f)
     };
   */
   /* Self computed numbers: */
-  const double ref[] =
-    {
+TEST_OUT(XC_PW92C) =    {
       -8.4713855882783946e+00,
       -1.1861930857502517e-01,
       -1.2041769989725633e-01,
@@ -40,5 +37,4 @@ void setup_pw92c(functional &f)
       -1.0249091426230799e-03,	
       +7.9516089195232130e-04,
     };
-  f.add_test(XC_VARS_AB,2,d,ref,1e-11);
-}
+

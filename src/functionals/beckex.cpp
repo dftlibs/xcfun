@@ -44,40 +44,38 @@ static num becke_sr(parameter mu, const num &na, const num &gaa)
 }
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_BECKEX)(const densvars<num> &d)
 {
   return becke_alpha(d.a,d.gaa) + becke_alpha(d.b,d.gbb);
 }
 
 template<class num>
-static num energy_corr(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_BECKECORRX)(const densvars<num> &d)
 {
   return becke_corr(d.a,d.gaa) + becke_corr(d.b,d.gbb);
 }
 
 template<class num>
-static num energy_sr(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_BECKESRX)(const densvars<num> &d)
 {
   parameter mu = d.get_param(XC_RANGESEP_MU);
   return becke_sr(mu,d.a,d.gaa) + becke_sr(mu,d.b,d.gbb);
 }
 
-void setup_beckex(functional &f)
-{
-  f.describe(XC_BECKEX,XC_GGA,
-	     "Becke 88 exchange",
+NEW_GGA_FUNCTIONAL(XC_BECKEX);
+SHORT_DESCRIPTION(XC_BECKEX) = "Becke 88 exchange";
+LONG_DESCRIPTION(XC_BECKEX) =
 	     "Becke 88 exchange including Slater part\n"
 	     "A.D. Becke, Density-functional exchange-energy approximation\n"
 	     "with correct asymptotic behaviour, Phys. Rev. A38 (1988) 3098-3100.\n"
 	     "Implemented by Ulf Ekstrom\n"
-	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
-
-  SET_GGA_ENERGY_FUNCTION(f,energy);
-
-  // Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_b88.html
-  const double d[5] = 
-    {0.39E+02, 0.38E+02, 0.81E+06, 0.82E+06,0.82E+06};
-  const double ref[21] =
+	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n";
+TEST_VARS(XC_BECKEX) = XC_A_B_GAA_GAB_GBB;
+TEST_ORDER(XC_BECKEX) = 2;
+TEST_THRESHOLD(XC_BECKEX) = 1e-11;
+TEST_IN(XC_BECKEX) =
+   {0.39E+02, 0.38E+02, 0.81E+06, 0.82E+06,0.82E+06};
+TEST_OUT(XC_BECKEX) =
     {	-0.277987329958E+03,
 
 	-0.385951846654E+01,
@@ -100,33 +98,26 @@ void setup_beckex(functional &f)
 	0.000000000000E+00,
 	0.000000000000E+00,
 	0.000000000000E+00,
-	0.718678968862E-11,
-    };
-  f.add_test(XC_VARS_AB,2,d,ref,1e-11);
-}
-
-void setup_beckexcorr(functional &f)
-{
-  f.describe(XC_BECKECORRX, XC_GGA,
-	     "Becke 88 exchange correction",
+	0.718678968862E-11, };
+ 
+NEW_GGA_FUNCTIONAL(XC_BECKECORRX);
+SHORT_DESCRIPTION(XC_BECKECORRX) =  "Becke 88 exchange correction";
+LONG_DESCRIPTION(XC_BECKECORRX) =
 	     "Becke 88 exchange not including Slater part\n"
 	     "A.D. Becke, Density-functional exchange-energy approximation\n"
 	     "with correct asymptotic behaviour, Phys. Rev. A38 (1988) 3098-3100.\n"
 	     "Implemented by Ulf Ekstrom\n"
-	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
-
-  SET_GGA_ENERGY_FUNCTION(f, energy_corr);
-
-  const double d[5] =
-    {
+	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n";
+TEST_VARS(XC_BECKECORRX) = XC_A_B_GAA_GAB_GBB;
+TEST_ORDER(XC_BECKECORRX) = 2;
+TEST_THRESHOLD(XC_BECKECORRX) = 1e-11;
+TEST_IN(XC_BECKECORRX) = {
      0.39e+02,
      0.38e+02,
      0.81e+06,
      0.82e+06,
-     0.82e+06
-    };
-
-  const double ref[21] =
+     0.82e+06};
+TEST_OUT(XC_BECKECORRX) =
     {
 //     radovan: reference data obtained from *.c implementation in DIRAC
       -3.603918211981e+01, // 00000
@@ -154,18 +145,12 @@ void setup_beckexcorr(functional &f)
        7.1867896886212297e-12, // radovan: i got this using xcfun
     };
 
-  f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);
-}
-
-void setup_beckexsr(functional &f)
-{
-  f.describe(XC_BECKESRX, XC_GGA,
-	     "Short range Becke 88 exchange",
+NEW_GGA_FUNCTIONAL(XC_BECKESRX);
+SHORT_DESCRIPTION(XC_BECKESRX) = "Short range Becke 88 exchange";
+LONG_DESCRIPTION(XC_BECKESRX) =
 	     "Implemented by Ulf Ekstrom\n"
-	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n");
-  f.describe_parameter(XC_RANGESEP_MU,
-		       "Error function range separation parameter (1/a0)",0.4);
+	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n";
+//  f.describe_parameter(XC_RANGESEP_MU,
+//		       "Error function range separation parameter (1/a0)",0.4);
+NO_TEST(XC_BECKESRX);
 
-  SET_GGA_ENERGY_FUNCTION(f,energy_sr);
-
-}

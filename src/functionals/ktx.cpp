@@ -2,7 +2,7 @@
 #include "constants.h"
 
 template<class num>
-static num new_energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_KTX)(const densvars<num> &d)
 {
   const parameter DELTA = 0.1;
 
@@ -11,11 +11,9 @@ static num new_energy(const densvars<num> &d)
   return ea + eb;
 }
 
-void setup_ktx(functional &f)
-{
-  f.describe(XC_KTX, XC_GGA,
-	     "KT exchange GGA correction",
-	     "KT exchange GGA correction\n"
+NEW_GGA_FUNCTIONAL(XC_KTX);
+SHORT_DESCRIPTION(XC_KTX) = "KT exchange GGA correction";
+LONG_DESCRIPTION(XC_KTX) = "KT exchange GGA correction\n"
              "reference:\n"
              "@article{keal:3015,\n"
              "author = {Thomas W. Keal and David J. Tozer},\n"
@@ -33,21 +31,19 @@ void setup_ktx(functional &f)
              "}\n"
              "xcfun version: Radovan Bast (radovan.bast@uit.no)\n"
              "tested against implementation in Dalton by Dave Wilson (davidwi@kjemi.uio.no)\n"
-             "compared first derivatives only\n");
+             "compared first derivatives only\n";
 
-  SET_GGA_ENERGY_FUNCTION(f, new_energy);
-
-  const double d[5] =
-    {
+TEST_VARS(XC_KTX) = XC_A_B_GAA_GAB_GBB;
+TEST_ORDER(XC_KTX) = 2;
+TEST_THRESHOLD(XC_KTX) = 1e-11;
+TEST_IN(XC_KTX) = {
      0.39e+02,
      0.38e+02,
      0.81e+06,
      0.82e+06,
      0.82e+06
     };
-
-  const double ref[21] =
-    {
+TEST_OUT(XC_KTX) =    {
       0.12533312965365759737e+05, // 00000
       -.20906588852649329624e+03, // 10000
       -.22485950142470750279e+03, // 01000
@@ -71,5 +67,3 @@ void setup_ktx(functional &f)
       0.00000000000000000000e+00  // 00002
     };
 
-  f.add_test(XC_VARS_AB, 2, d, ref, 1e-11);
-}

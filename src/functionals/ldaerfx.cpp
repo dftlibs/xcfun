@@ -35,26 +35,26 @@ static num esrx_ldaerfspin(const num &na, parameter mu)
     return 0;
 }
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_LDAERFX)(const densvars<num> &d)
 {
   double mu = d.get_param(XC_RANGESEP_MU);
   return 0.5*(esrx_ldaerfspin(d.a,mu) + esrx_ldaerfspin(d.b,mu)); 
 }
 
-void setup_ldaerfx(functional &f)
-{
-  f.describe(XC_LDAERFX, XC_LDA,	     
-	     "Short-range spin-dependent LDA exchange functional",
+NEW_LDA_FUNCTIONAL(XC_LDAERFX);
+SHORT_DESCRIPTION(XC_LDAERFX) = "Short-range spin-dependent LDA exchange functional";
+LONG_DESCRIPTION(XC_LDAERFX) =
 	     "Short-range spin-dependent LDA exchange functional\n"
 	     "obtained by spin-scaling Ex[na,nb] = 1/2 (Ex[na]+Ex[nb])\n"
 	     "where Ex[n] is from Toulouse, Savin, Flad, IJQC 100, 1047 (2004)"
 	     "Adapted from Gori-Giorgi and MOLPRO by Ulf Ekstrom\n"
 	     "Test case from Gori-Giorgi (personal communication)\n"
-	     "Range separation parameter is XC_RANGESEP_MU\n");
-  SET_LDA_ENERGY_FUNCTION(f,energy);
-  const double d[] = {1.1, 1.0};
-  const double ref[] = 
-    {
+	     "Range separation parameter is XC_RANGESEP_MU\n";
+TEST_VARS(XC_LDAERFX) = XC_A_B;
+TEST_ORDER(XC_LDAERFX) = 2;
+TEST_THRESHOLD(XC_LDAERFX) = 1e-7;
+TEST_IN(XC_LDAERFX) = {1.1, 1.0};
+TEST_OUT(XC_LDAERFX) =    {
 	-1.553573128702155,
 	-1.067732841218878,
 	-1.028091463003927,
@@ -62,5 +62,4 @@ void setup_ldaerfx(functional &f)
 	0,
 	-0.4092115557248567	
     };
-  f.add_test(XC_VARS_AB,2,d,ref,1e-7);
-}
+

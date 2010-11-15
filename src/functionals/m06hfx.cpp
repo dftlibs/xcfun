@@ -5,7 +5,7 @@
 // M06-HF exchange functional. to be used with HF exchange factor of 1.00 
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_M06HFX) (const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -32,19 +32,16 @@ static num energy (const densvars<num> &d)
           );
 }
 
-void setup_m06hfx(functional &f)
-{
-  f.describe(XC_M06HFX, XC_MGGA,
-	     "M06-HF exchange",
+NEW_TMGGA_FUNCTIONAL(XC_M06HFX);
+SHORT_DESCRIPTION(XC_M06HFX) = "M06-HF exchange";
+LONG_DESCRIPTION(XC_M06HFX) =
              "M06-HF Meta-Hybrid Exchange Functional\n"
              "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"
-             "Implemented by Andre Gomes\n");
-
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
-  const double d[] =
-    {1., .8, 1., 1., 1.,  0.165,   0.1050};
-  const double ref[] =
-    {  0.19601260,  0.87809662,  0.90304189,  0.00284062, 
+             "Implemented by Andre Gomes\n";
+TEST_VARS(XC_M06HFX) = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+TEST_ORDER(XC_M06HFX) = 1;
+TEST_THRESHOLD(XC_M06HFX) = 1e-5;
+TEST_IN(XC_M06HFX) =  {1., .8, 1., 1., 1.,  0.165,   0.1050};
+TEST_OUT(XC_M06HFX) =    {  0.19601260,  0.87809662,  0.90304189,  0.00284062, 
        0.00000000, 0.00398338,  -2.7579263,  -3.42255772 };
-  f.add_test(XC_VARS_AB,1,d,ref,1e-5);
-}
+

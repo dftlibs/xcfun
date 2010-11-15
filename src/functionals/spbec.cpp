@@ -30,7 +30,7 @@ static num phi(const densvars<num> &d)
 }
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_SPBEC)(const densvars<num> &d)
 {
   num eps = vwn::vwn5_eps(d);
   num p = phi(d);
@@ -39,12 +39,11 @@ static num energy(const densvars<num> &d)
 }
 
 
-void setup_spbec(functional &f)
-{
-  f.describe(XC_SPBEC, XC_GGA,
-	     "sPBE correlation functional",
-	     "Simplified PBE correlation functional for use with the SSB functionals.\n"
+NEW_GGA_FUNCTIONAL(XC_SPBEC);
+SHORT_DESCRIPTION(XC_SPBEC) = "sPBE correlation functional";
+LONG_DESCRIPTION(XC_SPBEC) =	     
+             "Simplified PBE correlation functional for use with the SSB functionals.\n"
 	     "Swart, M. and Sola, M. and Bickelhaupt M.; JCP 131 094103 (2009)\n"
-	     "Implemented by Ulf Ekstrom\n");
-  SET_GGA_ENERGY_FUNCTION(f,energy);
-}
+	     "Implemented by Ulf Ekstrom\n";
+NO_TEST(XC_SPBEC);
+

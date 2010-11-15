@@ -4,7 +4,7 @@
 // M05 correlation functional
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_M05X2C) (const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -35,18 +35,16 @@ static num energy (const densvars<num> &d)
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
-void setup_m05x2c(functional &f)
-{
-  f.describe(XC_M05X2C, XC_MGGA,
-	     "M05-2X Correlation",
+NEW_TMGGA_FUNCTIONAL(XC_M05X2C);
+SHORT_DESCRIPTION(XC_M05X2C) = "M05-2X Correlation";
+LONG_DESCRIPTION(XC_M05X2C) =
              "M05-2X Meta-Hybrid Correlation Functional\n"
              "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
-             "Implemented by Andre Gomes\n");
-
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
+             "Implemented by Andre Gomes\n";
+NO_TEST(XC_M05X2C);
   /*  const double d[] = 
     {1., .8, 1., 1., 1., .33, .21};
   const double ref[] =
     { -0.06717000, -0.14727520,  0.04240607,  0.02498949,  0.03125835,  0.00000000, -0.07317847, -0.16011489 };
   f.add_test(XC_VARS_AB,1,d,ref,1e-5);*/
-}
+

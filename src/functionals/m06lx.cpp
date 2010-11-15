@@ -5,7 +5,7 @@
 // M06-L exchange functional. does not use HF exchange 
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_M06LX)(const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -32,18 +32,16 @@ static num energy (const densvars<num> &d)
           );
 }
 
-void setup_m06lx(functional &f)
-{
-  f.describe(XC_M06LX, XC_MGGA,
-	     "M06-L exchange",
+NEW_TMGGA_FUNCTIONAL(XC_M06LX);
+SHORT_DESCRIPTION(XC_M06LX) = "M06-L exchange";
+LONG_DESCRIPTION(XC_M06LX) =
              "M06-L Meta-GGA Exchange Functional\n"
              "Y Zhao and D. G. Truhlar, J. Chem. Phys. 125, 194101 (2006)\n"
-             "Implemented by Andre Gomes\n");
-
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
-  const double d[] =
-    {1., .8, 1., 1., 1.,  0.165,   0.1050};
-  const double ref[] =
+             "Implemented by Andre Gomes\n";
+TEST_VARS(XC_M06LX) = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+TEST_ORDER(XC_M06LX) = 1;
+TEST_THRESHOLD(XC_M06LX) = 1e-5;
+TEST_IN(XC_M06LX) =  {1., .8, 1., 1., 1.,  0.165,   0.1050};
+TEST_OUT(XC_M06LX) =
     { -1.60059999, -1.85109109, -1.81344820, -0.00370516,   0.00000000,  -0.00508827, 2.3886147,   3.05312252 }; 
-  f.add_test(XC_VARS_AB,1,d,ref,1e-5);
-}
+

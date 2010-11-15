@@ -5,7 +5,7 @@
 // M05-2X exchange functional. to be used with HF exchange factor of .56 
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_M05X2X) (const densvars<num> &d)
 {
    using m0xy_metagga_xc_internal::fw;
 
@@ -18,19 +18,15 @@ static num energy (const densvars<num> &d)
            + pbex::energy_pbe_ab(pbex::R_pbe,d.b,d.gbb)*fw(param_a, d.b, d.taub) );
 }
 
-void setup_m05x2x(functional &f)
-{
-  f.describe(XC_M05X2X,XC_MGGA,
-	     "M05-2X exchange",
-             "M05-2X Meta-Hybrid Exchange Functional\n"
+NEW_TMGGA_FUNCTIONAL(XC_M05X2X);
+SHORT_DESCRIPTION(XC_M05X2X) = "M05-2X exchange";
+LONG_DESCRIPTION(XC_M05X2X) =             "M05-2X Meta-Hybrid Exchange Functional\n"
              "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
-             "Implemented by Andre Gomes\n");
-
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
-  const double d[] =
-    {1., .8, 1., 1., 1.,  0.165,   0.1050};
-  const double ref[] =
-    { -1.38233309, -0.19638222, -0.08614105, -0.00289174,   
+             "Implemented by Andre Gomes\n";
+TEST_VARS(XC_M05X2X) = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+TEST_ORDER(XC_M05X2X) = 1;
+TEST_THRESHOLD(XC_M05X2X) = 3e-5;
+TEST_IN(XC_M05X2X) = {1., .8, 1., 1., 1.,  0.165,   0.1050};
+TEST_OUT(XC_M05X2X) =    { -1.38233309, -0.19638222, -0.08614105, -0.00289174,   
       0.00000000, -0.00365982, -3.18842316000000,  -3.90587738 }; 
-  f.add_test(XC_VARS_AB,1,d,ref,3e-5);
-}
+

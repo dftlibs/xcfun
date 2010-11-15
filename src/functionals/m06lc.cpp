@@ -4,7 +4,7 @@
 // M06 correlation functional
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_M06LC) (const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -41,15 +41,12 @@ static num energy (const densvars<num> &d)
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
-void setup_m06lc(functional &f)
-{
-  f.describe(XC_M06LC, XC_MGGA,
-	     "M06-L Correlation",
+NEW_TMGGA_FUNCTIONAL(XC_M06LC);
+SHORT_DESCRIPTION(XC_M06LC) = "M06-L Correlation";
+LONG_DESCRIPTION(XC_M06LC) =
              "M06-L Meta GGA Correlation Functional\n"
              "Zhao, Truhlar, JCP 125, 194101 (2006)\n"
              "Implemented by Andre Gomes & Ulf Ekstrom\n"
-	     "");
-
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
-}
+	     "";
+NO_TEST(XC_M06LC);
 

@@ -33,7 +33,7 @@ static num c2(const densvars<num> &d)
 }
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_LDAERFC_JT)(const densvars<num> &d)
 {
   double mu          = d.get_param(XC_RANGESEP_MU);
   num    denominator = 1.0 + c1(d.r_s)*mu + c2(d)*mu*mu;
@@ -42,20 +42,18 @@ static num energy(const densvars<num> &d)
   return result;
 }
 
-void setup_ldaerfc_jt(functional &f)
-{
-  f.describe(XC_LDAERFC_JT, XC_LDA,
-	     "Short-range spin-unpolarized LDA correlation functional",
+NEW_LDA_FUNCTIONAL(XC_LDAERFC_JT);
+SHORT_DESCRIPTION(XC_LDAERFC_JT) = "Short-range spin-unpolarized LDA correlation functional";
+LONG_DESCRIPTION(XC_LDAERFC_JT) =
 	     "Short-range spin-unpolarized LDA correlation functional of\n"
 	     "Julien Toulouse et al.\n"
 	     "Written by Radovan Bast based on the Ph.D. thesis of Julien Toulouse (page 159)\n"
 	     "and the Dalton implementation by Julien Toulouse.\n"
-	     "Range separation parameter is XC_RANGESEP_MU\n");
-
-  SET_LDA_ENERGY_FUNCTION(f, energy);
+	     "Range separation parameter is XC_RANGESEP_MU\n";
+NO_TEST(XC_LDAERFC_JT);
 
 // radovan:
 // selftest yet to be written. i have compared SCF energy with Dalton
 // and could obtain 11 matching digits
 
-}
+

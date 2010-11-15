@@ -2,7 +2,7 @@
 #include "pbex.h"
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_RPBEX)(const densvars<num> &d)
 {
   using namespace pbex;
   using pw91_like_x_internal::prefactor;
@@ -11,12 +11,10 @@ static num energy(const densvars<num> &d)
 }
 
 
-void setup_rpbex(functional &f)
-{
-  f.describe(XC_RPBEX, XC_GGA,
-	     "RPBE Exchange Functional",
-	     "RPBE Exchange Functional\n"
+NEW_GGA_FUNCTIONAL(XC_RPBEX);
+SHORT_DESCRIPTION(XC_RPBEX) = "RPBE Exchange Functional";
+LONG_DESCRIPTION(XC_RPBEX) =	     "RPBE Exchange Functional\n"
 	     "Hammer, B. Hansen, L.B., Norskov, J.K.; PRB (59) p.7413, 1999\n"
-	     "Implemented by Ulf Ekstrom\n");
-  SET_GGA_ENERGY_FUNCTION(f,energy);
-}
+	     "Implemented by Ulf Ekstrom\n";
+NO_TEST(XC_RPBEX);
+

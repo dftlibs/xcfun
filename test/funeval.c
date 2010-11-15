@@ -46,10 +46,10 @@ static void next_exponents(int nvar, int m[])
 int main(int argc, char *argv[])
 {
   xc_functional fun = xc_new_functional();
-  int nvar, mode = XC_VARS_AB;
   int dobench = 0;
   int quiet = 0;
   int order = 1;
+#if 0
   if (argc > 1)
     {
       int i,j;
@@ -64,18 +64,6 @@ int main(int argc, char *argv[])
 	  else if (strcmp(argv[i],"--quiet") == 0)
 	    {
 	      quiet = 1;
-	    }
-	  else if (strcmp(argv[i],"--ns") == 0)
-	    {
-	      mode = XC_VARS_NS;
-	    }
-	  else if (strcmp(argv[i],"--n") == 0)
-	    {
-	      mode = XC_VARS_N;
-	    }
-	  else if (strcmp(argv[i],"--ab") == 0)
-	    {
-	      mode = XC_VARS_AB;
 	    }
 	  else if (strcmp(argv[i],"--order") == 0)
 	    {
@@ -132,8 +120,20 @@ int main(int argc, char *argv[])
       printf("Usage: funeval FUNCTIONAL WEIGHT [FUNCTIONAL WEIGHT ..]\n");
       return 0;
     }
-
-  xc_set_mode(fun,mode);
+#endif
+  xc_set(fun,XC_LYPC,1.0);
+  xc_set_mode(fun,XC_PARTIAL_DERIVATIVES);
+  if (!xc_try_vars(fun,XC_A_B_GAA_GAB_GBB))
+    {
+      fprintf(stderr,"Cannot set vars, quitting\n");
+      return EXIT_FAILURE;
+    }
+  if (!xc_try_order(fun,2))
+    {
+      fprintf(stderr,"Cannot set order, quitting\n");
+      return EXIT_FAILURE;
+    }
+#ifdef OLD
   nvar = xc_input_length(fun);
   if (!quiet)
     {
@@ -145,50 +145,43 @@ int main(int argc, char *argv[])
 	     xc_output_length(fun,order));
       printf("Reading input density.. (%i values)\n",nvar);
     }
-  if (xc_max_order(fun) >= order)
+#endif
+  int i,j;
+  int inlen = 5;
+  int outlen = 21;
+  double *inp = malloc(sizeof*inp*inlen);
+  int *m = malloc(sizeof*m*outlen);
+  double *out = malloc(sizeof*out*outlen);
+  for (i=0;i<inlen;i++)
+    if (scanf("%lf",&inp[i]) != 1)
+      {
+	fprintf(stderr,"Error reading density value, quitting.\n");
+	return EXIT_FAILURE;
+      }
+  // Only one point, so pitch is unimportant
+  if (dobench)
+    for (i = 1;i<1e6;i++)
+      xc_eval(fun,inp,out); 
+  else
+    xc_eval(fun,inp,out); 
+  for (i=0;i<inlen;i++)
+    m[i] = 0;
+  if (!quiet) 
     {
-      int i,j;
-      double *inp = malloc(sizeof*inp*xc_input_length(fun));
-      int *m = malloc(sizeof*m*xc_input_length(fun));
-      double *out = malloc(sizeof*out*xc_output_length(fun,order));
-      for (i=0;i<xc_input_length(fun);i++)
-	if (scanf("%lf",&inp[i]) != 1)
-	  {
-	    fprintf(stderr,"Error reading density value, quitting.\n");
-	    return EXIT_FAILURE;
-	  }
-      // Only one point, so pitch is unimportant
-      if (dobench)
-	for (i = 1;i<1e6;i++)
-	  xc_eval(fun,order,inp,out); 
-      else
-	  xc_eval(fun,order,inp,out); 
-      for (i=0;i<nvar;i++)
-	m[i] = 0;
-      if (!quiet) 
+      printf("Derivative        Value\n");
+      for (i=0;i<outlen;i++)
 	{
-	  printf("Derivative        Value\n");
-	  for (i=0;i<xc_output_length(fun,order);i++)
-	    {
-	      for (j=0;j<nvar;j++)
-		printf("%i ",m[j]);
-	      printf("  %.15f\n",out[i]);
-	      next_exponents(nvar,m);
-	    }
-	}
-      else
-	{
-	  for (i=0;i<xc_output_length(fun,order);i++)
-	    printf("%.16e ",out[i]);
-	  printf("\n");
+	  for (j=0;j<inlen;j++)
+	    printf("%i ",m[j]);
+	  printf("  %.15f\n",out[i]);
+	  next_exponents(inlen,m);
 	}
     }
   else
     {
-      fprintf(stderr,"ERROR: Derivative order too high, check config.h\n");
-      fprintf(stderr,"max order is %i, you asked for %i\n",xc_max_order(fun),
-	      order);
-      return EXIT_FAILURE;
+      for (i=0;i<outlen;i++)
+	printf("%.16e ",out[i]);
+      printf("\n");
     }
-  return 0;
+  return EXIT_SUCCESS;
 }
