@@ -23,8 +23,7 @@ extern "C" {
 
   enum xc_functional_id
     {
-      XC_LYPC,
-      /*      XC_SLATERX,
+      XC_SLATERX,
       XC_VWN5C,
       XC_BECKEX,
       XC_BECKECORRX,
@@ -60,7 +59,7 @@ extern "C" {
       XC_TPSSC,
       XC_TPSSX,
       XC_REVTPSSC,
-      XC_REVTPSSX,*/
+      XC_REVTPSSX,
       XC_NR_FUNCTIONALS
     };
 

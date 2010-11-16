@@ -14,6 +14,7 @@ LONG_DESCRIPTION(XC_PW92C) =	     "Electron-gas correlation energy\n"
 	     "Implemented by Ulf Ekstrom. Some parameters have higher\n"
 	     "accuracy than given in the paper.\n";
 TEST_VARS(XC_PW92C) = XC_A_B;
+TEST_MODE(XC_PW92C) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_PW92C) = 2;
 TEST_THRESHOLD(XC_PW92C) = 1e-11;
 TEST_IN(XC_PW92C) = {0.39E+02, 0.38E+02};

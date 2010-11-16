@@ -115,6 +115,7 @@ LONG_DESCRIPTION(XC_LDAERFC) =	     "Short-range spin-dependent LDA correlation 
 	     "Range separation parameter is XC_RANGESEP_MU\n";
 TEST_VARS(XC_LDAERFC) = XC_A_B;
 TEST_ORDER(XC_LDAERFC) = 2;
+TEST_MODE(XC_LDAERFC) = XC_PARTIAL_DERIVATIVES;
 TEST_THRESHOLD(XC_LDAERFC) = 1e-7;
 TEST_IN(XC_LDAERFC) = {1.1, 1.0};
 TEST_OUT(XC_LDAERFC) = {    

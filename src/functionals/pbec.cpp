@@ -59,6 +59,7 @@ LONG_DESCRIPTION(XC_PBEC) =	     "PBE correlation functional.\n"
 	     "Phys. Rev. Lett. 77 (1996) 3865-3868\n"
 	     "Implemented by Ulf Ekstrom\n";
   // Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_c_pbe.html
+TEST_MODE(XC_PBEC) = XC_PARTIAL_DERIVATIVES;
 TEST_VARS(XC_PBEC) = XC_A_B_GAA_GAB_GBB;
 TEST_ORDER(XC_PBEC) = 2;
 TEST_THRESHOLD(XC_PBEC) = 1e-11;
@@ -99,5 +100,5 @@ LONG_DESCRIPTION(XC_VWN_PBEC) =
 	     "This version of PBEc used VWN instead of PW92 as the LDA\n"
 	     "correlation energy.\n"
 	     "Implemented by Ulf Ekstrom\n";
-NO_TEST(XC_VWN_PBEC);
+NO_TEST(XC_VWN_PBEC); 
 

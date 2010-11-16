@@ -118,7 +118,7 @@ static num ENERGY_FUNCTION(XC_BRX)(const densvars<num> &d)
 NEW_LTMGGA_FUNCTIONAL(XC_BRX);
 SHORT_DESCRIPTION(XC_BRX) = "BR exchange\n";
 LONG_DESCRIPTION(XC_BRX) =
-	     "Becke-Roussels exchange functional\n",
+	     "Becke-Roussels exchange functional\n"
 	     "Implemented by Ulf Ekstrom\n";
 NO_TEST(XC_BRX);
 

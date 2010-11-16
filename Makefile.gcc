@@ -6,7 +6,7 @@
 # C++ compiler and flags
 CXX=g++
 CC=gcc
-CFLAGS=-g -Wall -O2
+CFLAGS=-g -Wall -O2 -lefence
 CXXFLAGS=$(CFLAGS) -fno-rtti -fno-exceptions
 
 # Fortran compiler and flags (used for fortran/example.f90)

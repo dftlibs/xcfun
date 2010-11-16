@@ -24,6 +24,7 @@ LONG_DESCRIPTION(XC_M05X2X) =             "M05-2X Meta-Hybrid Exchange Functiona
              "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
              "Implemented by Andre Gomes\n";
 TEST_VARS(XC_M05X2X) = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+TEST_MODE(XC_M05X2X) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_M05X2X) = 1;
 TEST_THRESHOLD(XC_M05X2X) = 3e-5;
 TEST_IN(XC_M05X2X) = {1., .8, 1., 1., 1.,  0.165,   0.1050};

@@ -5,8 +5,8 @@ PATHS:=-Iinclude -Isrc -Isrc/taylor -Isrc/functionals
 CFLAGS+=$(PATHS)
 LIBS+=-Llib
 
-BASE_OBJ:=src/xcint.o src/functional.o src/evaluators.o src/xcfun.o src/parameters.o
-FUN_OBJ:= src/functionals/lypc.o #$(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
+BASE_OBJ:=src/xcint.o src/evaluators.o src/xcfun.o src/parameters.o
+FUN_OBJ:= $(patsubst %.cpp,%.o,$(wildcard src/functionals/*.cpp))
 
 lib: lib/libxcfun.a
 
@@ -22,7 +22,7 @@ fortran/xcfun_autogen.f90: geninterface src/functionals/list_of_parameters.h
 	./geninterface
 
 funeval: test/funeval.c lib/libxcfun.a
-	$(CC) -Wl,--cref $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) > cref
+	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) > cref
 
 testmain: src/testmain.o lib/libxcfun.a
 	$(CXX) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)

@@ -10,10 +10,10 @@ static num ENERGY_FUNCTION(XC_REVPBEX)(const densvars<num> &d)
 
 
 NEW_GGA_FUNCTIONAL(XC_REVPBEX);
-SHORT_DESCRIPTION(XC_REVPBEX) = "Revised PBE Exchange Functional",;
+SHORT_DESCRIPTION(XC_REVPBEX) = "Revised PBE Exchange Functional";
 LONG_DESCRIPTION(XC_REVPBEX) =
 	     "Revised PBE Exchange Functional\n"
 	     "Y. Zhang and W., Phys. Rev. Lett 80, 890 (1998)\n"
-	     "Implemented by Ulf Ekstrom and Andre Gomes\n");
+	     "Implemented by Ulf Ekstrom and Andre Gomes\n";
 NO_TEST(XC_REVPBEX);
 

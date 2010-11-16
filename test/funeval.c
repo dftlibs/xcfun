@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
   int dobench = 0;
   int quiet = 0;
   int order = 1;
+  int test_res = xcfun_test();
+  printf("nr failed tests: %i\n",test_res);
 #if 0
   if (argc > 1)
     {

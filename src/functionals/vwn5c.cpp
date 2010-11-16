@@ -16,7 +16,8 @@ LONG_DESCRIPTION(XC_VWN5C) =
 	     "calculations: a critical analysis, Can. J. Phys. 58 (1980) 1200-1211.\n"
 	     "Originally from Dalton, polished and converted by Ulf Ekstrom.\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_c_vwn5.html\n";
-TEST_VARS(XC_VWN5C) = XC_A_B
+TEST_VARS(XC_VWN5C) = XC_A_B;
+TEST_MODE(XC_VWN5C) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_VWN5C) = 2;
 TEST_THRESHOLD(XC_VWN5C) = 1e-11;
 TEST_IN(XC_VWN5C) = {0.39E+02, 0.38E+02};

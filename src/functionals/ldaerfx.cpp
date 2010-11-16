@@ -51,6 +51,7 @@ LONG_DESCRIPTION(XC_LDAERFX) =
 	     "Test case from Gori-Giorgi (personal communication)\n"
 	     "Range separation parameter is XC_RANGESEP_MU\n";
 TEST_VARS(XC_LDAERFX) = XC_A_B;
+TEST_MODE(XC_LDAERFX) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_LDAERFX) = 2;
 TEST_THRESHOLD(XC_LDAERFX) = 1e-7;
 TEST_IN(XC_LDAERFX) = {1.1, 1.0};

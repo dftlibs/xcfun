@@ -23,6 +23,7 @@ LONG_DESCRIPTION(XC_PW91X) =
 	     "Test from http://www.cse.scitech.ac.uk/ccg/dft/"
 	     "data_pt_x_pw91.html\n"; 
 TEST_VARS(XC_PW91X) = XC_A_B_GAA_GAB_GBB;
+TEST_MODE(XC_PW91X) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_PW91X) = 2;
 TEST_THRESHOLD(XC_PW91X) = 1e-11;
 TEST_IN(XC_PW91X) =  {0.82E+02, 0.81E+02, 0.49E+07, 0.49E+07, 0.49E+07};

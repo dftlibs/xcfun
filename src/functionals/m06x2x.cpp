@@ -27,6 +27,7 @@ LONG_DESCRIPTION(XC_M06X2X) =
              "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"
              "Implemented by Andre Gomes\n";
 TEST_VARS(XC_M06X2X) = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+TEST_MODE(XC_M06X2X) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_M06X2X) = 1;
 TEST_THRESHOLD(XC_M06X2X) = 3e-5;
 TEST_IN(XC_M06X2X) = {1., .8, 1., 1., 1., 0.165,   0.1050};

@@ -7,7 +7,7 @@ struct spec_table
   static void setup(T (**table)(const densvars<T> &d))
   {
     table[F] = erg<F,T>::f;
-    printf("table[%i] = %p\n",F,table[F]);
+    //    printf("table[%i] = %p\n",F,table[F]);
     spec_table<T,F-1>::setup(table);
   }
 };
@@ -29,7 +29,6 @@ T (*xcint_spec(enum xc_functional_id f))(const densvars<T> &d)
   if (!table)
     {
       // TODO: NOT THREADSAFE
-      printf("building table for some T\n");
       table = 
 	reinterpret_cast<T (**)(const densvars<T> &d)>
 	(malloc(sizeof(T (*)(const densvars<T> &d))*XC_NR_FUNCTIONALS));
@@ -136,12 +135,12 @@ static inline ireal_t cpsign(ireal_t x, ireal_t y)
 template<int VARS, class T>
 void xcint_setup_vars(densvars<T> &dv, const double *d)
 {
-  if (VARS == XC_A || vars == XC_A_GAA || vars == XC_A_GAA_TAUA)
+  if (VARS == XC_A || VARS == XC_A_GAA || VARS == XC_A_GAA_TAUA)
     {
 #ifdef XC_NO_REGULARIZATION
       dv.a = T(d[0],0);
 #else
-      dv.a = T(d[0] > XC_TINY_DENS ? d[0] : TINYDENS,0);
+      dv.a = T(d[0] > XC_TINY_DENS ? d[0] : XC_TINY_DENS,0);
 #endif
       dv.b = 0;
       dv.n = dv.a;
@@ -151,38 +150,38 @@ void xcint_setup_vars(densvars<T> &dv, const double *d)
       dv.n_m13 = pow(dv.n,-1.0/3.0);
       dv.a_43 = pow(dv.a,4.0/3.0);
       dv.b_43 = 0;
-      if (vars != XC_A)
+      if (VARS != XC_A)
 	{
 #ifdef XC_NO_REGULARIZATION
-	  dv.gaa = ttype(d[1],1);
+	  dv.gaa = T(d[1],1);
 #else
-	  dv.gaa = ttype(d[1] >= 0 ? d[2] : 0,2);
+	  dv.gaa = T(d[1] >= 0 ? d[2] : 0,2);
 #endif
 	  dv.gab = 0;
 	  dv.gbb = 0;  
 	  dv.gnn  = dv.gaa;
 	  dv.gss  = dv.gaa;
 	  dv.gns  = dv.gaa;
-	  if (vars == XC_A_GAA_TAUA)
+	  if (VARS == XC_A_GAA_TAUA)
 	    {
 #ifdef XC_NO_REGULARIZATION
-	      dv.taua = ttype(d[2], 2);
+	      dv.taua = T(d[2], 2);
 #else
-	      dv.taua = ttype(d[2] >= TINYDENS ? d[2] : TINYDENS, 2);
+	      dv.taua = T(d[2] >= XC_TINY_DENS ? d[2] : XC_TINY_DENS, 2);
 #endif
 	      dv.taub = 0;
 	      dv.tau = dv.taua + dv.taub;
 	    }
 	}
     }
-  if (VARS == XC_A_B || vars == XC_A_B_GAA_GAB_GBB || vars == XC_A_B_GAA_GAB_GBB_TAUA_TAUB)
+  if (VARS == XC_A_B || VARS == XC_A_B_GAA_GAB_GBB || VARS == XC_A_B_GAA_GAB_GBB_TAUA_TAUB)
     {
 #ifdef XC_NO_REGULARIZATION
-      dv.a = ttype(d[0],0);
-      dv.b = ttype(d[1],1);
+      dv.a = T(d[0],0);
+      dv.b = T(d[1],1);
 #else
-      dv.a = ttype(d[0] > TINYDENS ? d[0] : TINYDENS,0);
-      dv.b = ttype(d[1] > TINYDENS ? d[1] : TINYDENS,1);
+      dv.a = T(d[0] > XC_TINY_DENS ? d[0] : XC_TINY_DENS,0);
+      dv.b = T(d[1] > XC_TINY_DENS ? d[1] : XC_TINY_DENS,1);
 #endif  
       dv.n = dv.a+dv.b;
       dv.s = dv.a-dv.b;
@@ -194,17 +193,17 @@ void xcint_setup_vars(densvars<T> &dv, const double *d)
       if (VARS != XC_A_B)
 	{
 #ifdef XC_NO_REGULARIZATION
-	  dv.gaa = ttype(d[2],2);
-	  dv.gab = ttype(d[3],3);
-	  dv.gbb = ttype(d[4],4);
+	  dv.gaa = T(d[2],2);
+	  dv.gab = T(d[3],3);
+	  dv.gbb = T(d[4],4);
 #else
-	  dv.gaa = ttype(d[2] >= 0 ? d[2] : 0,2);
+	  dv.gaa = T(d[2] >= 0 ? d[2] : 0,2);
 #ifdef XC_NO_SCHWARZ_REGULARIZATION
-	  dv.gab = ttype(d[3],3); 
+	  dv.gab = T(d[3],3); 
 #else
-	  dv.gab = ttype(d[3]*d[3] <= d[2]*d[4] ? d[3] : sqrt(d[2]*d[4]),3); 
+	  dv.gab = T(d[3]*d[3] <= d[2]*d[4] ? d[3] : sqrt(d[2]*d[4]),3); 
 #endif
-	  dv.gbb = ttype(d[4] >= 0 ? d[4] : 0,4);
+	  dv.gbb = T(d[4] >= 0 ? d[4] : 0,4);
 #endif  
 	  dv.gnn  = dv.gaa + 2*dv.gab + dv.gbb; 
 	  dv.gss  = dv.gaa - 2*dv.gab + dv.gbb;
@@ -212,11 +211,11 @@ void xcint_setup_vars(densvars<T> &dv, const double *d)
 	  if (VARS == XC_A_B_GAA_GAB_GBB_TAUA_TAUB)
 	    {
 #ifdef XC_NO_REGULARIZATION
-	      dv.taua = ttype(d[5], 5);
-	      dv.taub = ttype(d[6], 6);
+	      dv.taua = T(d[5], 5);
+	      dv.taub = T(d[6], 6);
 #else
-	      dv.taua = ttype(d[5] >= TINYDENS ? d[5] : TINYDENS, 5);
-	      dv.taub = ttype(d[6] >= TINYDENS ? d[6] : TINYDENS, 6);
+	      dv.taua = T(d[5] >= XC_TINY_DENS ? d[5] : XC_TINY_DENS, 5);
+	      dv.taub = T(d[6] >= XC_TINY_DENS ? d[6] : XC_TINY_DENS, 6);
 #endif
 	      dv.tau = dv.taua + dv.taub;
 	    }
@@ -233,7 +232,7 @@ void evaluator_instance<MODE,VARS,ORDER>::eval_fun(xc_functional_obj *f, const d
 {
   if (MODE == XC_PARTIAL_DERIVATIVES)
     {
-      typedef ttypes<MODE,VARS,ORDER>::t ttype;
+      typedef taylor<ireal_t,vars_info<VARS>::nr_variables,ORDER> ttype;
       ttype *result = reinterpret_cast<ttype *>(output);
       densvars<ttype> d;
       xcint_setup_vars<VARS,ttype>(d,input);
@@ -247,12 +246,13 @@ void evaluator_instance<MODE,VARS,ORDER>::eval_fun(xc_functional_obj *f, const d
 	  else
 	    xcint_die("Functional does not have requested specialization",f->active_functionals[i]);
 	}
+      result->deriv_facs();
     }
   else if (MODE == XC_POTENTIAL)
     {
       // First derivatives needed for lda, second for gga
       // TODO: select proper type here
-      typedef ttypes<MODE,VARS,ORDER>::t ttype;
+      typedef taylor<ireal_t,vars_info<VARS>::nr_variables,vars_info<VARS>::pot_order> ttype;
       ttype out = 0;
       densvars<ttype> d;
       xcint_setup_vars<VARS,ttype>(d,input);
@@ -329,7 +329,7 @@ static void xcint_pick_evaluator(xc_functional_obj *fun)
 {
   fun->eval_fun = evaluator_instance<XC_NR_MODES-1,XC_NR_VARS-1,XC_MAX_ORDER>
     ::get_evaluator(fun->mode,fun->vars,fun->order);
-  printf("Evaluator set to %p\n",fun->eval_fun);
+  //  printf("Evaluator set to %p\n",fun->eval_fun);
 }
 
 template<int VARS, int ORDER>
@@ -354,7 +354,7 @@ bool xcint_try_helper(xc_functional fun, enum xc_vars vars, int order)
 }
 
 template<>
-bool xcint_try_helper<-1,XC_MAX_ORDER>(xc_functional fun, enum xc_vars vars, int order) { printf("hier\n");return false; }
+bool xcint_try_helper<-1,XC_MAX_ORDER>(xc_functional fun, enum xc_vars vars, int order) { return false; }
 
 
 int xc_try_vars(xc_functional fun, enum xc_vars vars)

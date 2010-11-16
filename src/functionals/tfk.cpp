@@ -18,6 +18,7 @@ LONG_DESCRIPTION(XC_TFK) =
 	     "\n"
 	     "Implemented by Andre Gomes.\n"; 
 TEST_VARS(XC_TFK) = XC_A_B;
+TEST_MODE(XC_TFK) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_TFK) = 1;
 TEST_THRESHOLD(XC_TFK) = 1e-5;
 TEST_IN(XC_TFK) =  {1., .8};

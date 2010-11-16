@@ -34,6 +34,7 @@ LONG_DESCRIPTION(XC_KTX) = "KT exchange GGA correction\n"
              "compared first derivatives only\n";
 
 TEST_VARS(XC_KTX) = XC_A_B_GAA_GAB_GBB;
+TEST_MODE(XC_KTX) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_KTX) = 2;
 TEST_THRESHOLD(XC_KTX) = 1e-11;
 TEST_IN(XC_KTX) = {

@@ -71,6 +71,7 @@ LONG_DESCRIPTION(XC_BECKEX) =
 	     "Implemented by Ulf Ekstrom\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n";
 TEST_VARS(XC_BECKEX) = XC_A_B_GAA_GAB_GBB;
+TEST_MODE(XC_BECKEX) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_BECKEX) = 2;
 TEST_THRESHOLD(XC_BECKEX) = 1e-11;
 TEST_IN(XC_BECKEX) =
@@ -109,6 +110,7 @@ LONG_DESCRIPTION(XC_BECKECORRX) =
 	     "Implemented by Ulf Ekstrom\n"
 	     "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n";
 TEST_VARS(XC_BECKECORRX) = XC_A_B_GAA_GAB_GBB;
+TEST_MODE(XC_BECKECORRX) = XC_PARTIAL_DERIVATIVES;
 TEST_ORDER(XC_BECKECORRX) = 2;
 TEST_THRESHOLD(XC_BECKECORRX) = 1e-11;
 TEST_IN(XC_BECKECORRX) = {
