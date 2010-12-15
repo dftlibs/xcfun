@@ -1,0 +1,18 @@
+# Compile time options:
+# -DNDEBUG Turn off run time checks in production calculations to gain speed
+#radovan: presently it doesn't correctly link f90 to c routines
+#         perhaps some underscore issue but i wasn't able to see it
+
+# C compiler and flags
+CC=pgCC
+CFLAGS=-g -fastsse
+
+# C++ compiler and flags
+CXX=pgcpp
+CXXFLAGS=$(CFLAGS)
+
+# Fortran compiler and flags (used for fortran/example.f90)
+FC=pgf90
+FFLAGS=-g -fastsse
+
+include Makefile.common
