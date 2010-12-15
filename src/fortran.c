@@ -12,7 +12,7 @@
 #ifdef FTN_UPPERCASE
 #define FSYM(name)
 #define FCSYM(name) name
-#elif FTN_UPPERCASE_UNDERSCORE
+#elif defined FTN_UPPERCASE_UNDERSCORE
 #define FSYM(name)
 #define FCSYM(name) name##_
 #else
