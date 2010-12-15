@@ -32,31 +32,36 @@ module xcfun
   integer, parameter :: XC_D13 = 14
   integer, parameter :: XC_D04 = 15
 
-! gga up to order 3
+! gga up to order 4
 ! only derivatives that are nonzero at closed-shell reference
 ! with XC_VARS_NS are here
-  integer, parameter :: XC_D00000 = 1
-  integer, parameter :: XC_D10000 = 2
-  integer, parameter :: XC_D00100 = 4
-  integer, parameter :: XC_D00001 = 6
-  integer, parameter :: XC_D20000 = 7
-  integer, parameter :: XC_D10100 = 9
-  integer, parameter :: XC_D10001 = 11
-  integer, parameter :: XC_D02000 = 12
-  integer, parameter :: XC_D01010 = 14
-  integer, parameter :: XC_D00200 = 16
-  integer, parameter :: XC_D00101 = 18
-  integer, parameter :: XC_D00020 = 19
-  integer, parameter :: XC_D30000 = 22
-  integer, parameter :: XC_D20100 = 24
-  integer, parameter :: XC_D12000 = 27
-  integer, parameter :: XC_D11010 = 29
-  integer, parameter :: XC_D10200 = 31
-  integer, parameter :: XC_D10020 = 34
-  integer, parameter :: XC_D02100 = 38
-  integer, parameter :: XC_D01110 = 42
-  integer, parameter :: XC_D00300 = 47
-  integer, parameter :: XC_D00120 = 50
+  integer, parameter :: XC_D00000 =   1
+  integer, parameter :: XC_D10000 =   2
+  integer, parameter :: XC_D00100 =   4
+  integer, parameter :: XC_D00001 =   6
+  integer, parameter :: XC_D20000 =   7
+  integer, parameter :: XC_D10100 =   9
+  integer, parameter :: XC_D10001 =  11
+  integer, parameter :: XC_D02000 =  12
+  integer, parameter :: XC_D01010 =  14
+  integer, parameter :: XC_D00200 =  16
+  integer, parameter :: XC_D00101 =  18
+  integer, parameter :: XC_D00020 =  19
+  integer, parameter :: XC_D30000 =  22
+  integer, parameter :: XC_D20100 =  24
+  integer, parameter :: XC_D12000 =  27
+  integer, parameter :: XC_D11010 =  29
+  integer, parameter :: XC_D10200 =  31
+  integer, parameter :: XC_D10020 =  34
+  integer, parameter :: XC_D02100 =  38
+  integer, parameter :: XC_D01110 =  42
+  integer, parameter :: XC_D00300 =  47
+  integer, parameter :: XC_D00120 =  50
+  integer, parameter :: XC_D40000 =  57
+  integer, parameter :: XC_D30100 =  59
+  integer, parameter :: XC_D20200 =  66
+  integer, parameter :: XC_D10300 =  82
+  integer, parameter :: XC_D00400 = 112
 
 ! tau mgga
 ! so far only linear response
