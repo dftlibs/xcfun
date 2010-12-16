@@ -2,7 +2,7 @@
 # -DNDEBUG Turn off run time checks in production calculations to gain speed
 
 # C compiler and flags
-CC=pgCC
+CC=pgcc
 CFLAGS=-g -fastsse
 
 # C++ compiler and flags
