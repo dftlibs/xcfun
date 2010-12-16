@@ -2,7 +2,8 @@
 module xcfun
   use xcfun_autogen
   implicit none
-! These parameters should mirror those in xcfun.h
+
+! these parameters should mirror those in xcfun.h
   integer, parameter ::  XC_VARS_A  = 0
   integer, parameter ::  XC_VARS_N  = 1
   integer, parameter ::  XC_VARS_AB = 2
@@ -10,12 +11,15 @@ module xcfun
   integer, parameter ::  XC_LDA  = 0
   integer, parameter ::  XC_GGA  = 1
   integer, parameter ::  XC_MGGA = 2
-! Indices into the output array of derivatives. Fortran numbering.
+
+! one-variable derivatives up to order 4
   integer, parameter :: XC_D0 = 1
   integer, parameter :: XC_D1 = 2
   integer, parameter :: XC_D2 = 3
+  integer, parameter :: XC_D3 = 4
+  integer, parameter :: XC_D4 = 5
 
-! all lda derivatives up to order 4
+! two-variable derivatives up to order 4
   integer, parameter :: XC_D00 =  1
   integer, parameter :: XC_D10 =  2
   integer, parameter :: XC_D01 =  3
@@ -32,7 +36,7 @@ module xcfun
   integer, parameter :: XC_D13 = 14
   integer, parameter :: XC_D04 = 15
 
-! gga up to order 4
+! five-variable derivatives up to order 4
 ! only derivatives that are nonzero at closed-shell reference
 ! with XC_VARS_NS are here
   integer, parameter :: XC_D00000 =   1
@@ -63,9 +67,8 @@ module xcfun
   integer, parameter :: XC_D10300 =  82
   integer, parameter :: XC_D00400 = 112
 
-! tau mgga
+! seven-variable derivatives up to order 4
 ! so far only linear response
-! list under construction ...
   integer, parameter :: XC_D0000000 =  1
   integer, parameter :: XC_D1000000 =  2
   integer, parameter :: XC_D0010000 =  4
@@ -203,21 +206,14 @@ contains
 
   subroutine xc_eval(funid, order, npoints, densities, results)
     integer, intent(in) :: funid, order, npoints
-!radovan: trying to get it explicitly
-!         maybe later we go back to implicit
-!   integer :: npoints
     double precision, intent(in) :: densities(:,:)
     double precision, intent(out) :: results(:,:)
-!   npoints = size(densities,2)
     call xceval(funid,order,npoints,densities(1,1),densities(1,2),&
          results(1,1),results(1,2))
   end subroutine xc_eval
 
   subroutine xc_potential(funid, density, energy, potentials)
     integer, intent(in) :: funid    
-!radovan: trying to get it explicitly
-!         maybe later we go back to implicit
-!   integer :: npoints
     double precision, intent(in) :: density(:)
     double precision, intent(out) :: energy, potentials(:)
     call xcpotential(funid,density,energy,potentials)
@@ -226,12 +222,6 @@ contains
   function xc_index(funid, exponents)
     integer, intent(in) :: exponents(*)
     integer funid,xc_index, xcdind
-!radovan: it's easier to start in fortran with 1
-!         it would be possible to start with 0
-!         but then we would allocate 0:length-1
-!         instead of 1:length
-!         i find 0:length-1 allocations error-prone
-!   xc_index = xcdind(funid,exponents)
     xc_index = xcdind(funid,exponents) + 1
   end function xc_index
 
