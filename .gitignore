@@ -1,0 +1,5 @@
+.gitignore
+fortran/xcfun_autogen.f90
+geninterface
+include/xcfun_autogen.h
+*.o

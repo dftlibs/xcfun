@@ -3,11 +3,17 @@
 #NOTE: Using -fast gives wrong output from pbex, disappears at -O2
 #level (without ipo) for icpc 10.1.017
 
-# C++ compiler and flags
-CXX=icpc
+# C compiler and flags
 CC=icc
 # Turn of messages that hide real errors
-CFLAGS= -Wall -g -O2 -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177
+CFLAGS=-g -O2 -vec-report0 -Wall -diag-disable 177,279,383,869,981,1418,1419,1572
+
+# C++ compiler and flags
+CXX=icpc
 CXXFLAGS=$(CFLAGS) -fno-rtti -fno-exceptions
+
+# Fortran compiler and flags (used for fortran/example.f90)
+FC=ifort
+FFLAGS=-g -O3
 
 include Makefile.common

@@ -1,0 +1,16 @@
+# Compile time options:
+# -DNDEBUG Turn off run time checks in production calculations to gain speed
+
+# C compiler and flags
+CC=pgcc
+CFLAGS=-g -fastsse
+
+# C++ compiler and flags
+CXX=pgcpp
+CXXFLAGS=$(CFLAGS) --no_warnings
+
+# Fortran compiler and flags (used for fortran/example.f90)
+FC=pgf90
+FFLAGS=-g -fastsse
+
+include Makefile.common

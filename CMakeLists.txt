@@ -8,7 +8,7 @@ set (XCFun_VERSION_MAJOR 1)
 set (XCFun_VERSION_MINOR 0)
 
 option(XCFUN_NO_STDC++ "Disable libsrdc++" OFF)
-option(XCFUN_ENABLE_TESTS "Disable libsrdc++" ON)
+option(XCFUN_ENABLE_TESTS "Enable tests" ON)
 
 include(ConfigCompilerFlags)
 if (CMAKE_COMPILER_IS_GNUCXX)

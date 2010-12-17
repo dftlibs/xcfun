@@ -7,12 +7,16 @@
   Functions used by the Fortran interface. Use single underscore 
   convention. Do _not_ put underscores in the names except for
   the final one.
+
+  note about pgi compilation:
+  pgcc 10.2-0 does not like FSYM(foo)FCSYM(FOO)
+  instead please use FSYM(foo) FCSYM(FOO)
  */
 
 #ifdef FTN_UPPERCASE
 #define FSYM(name)
 #define FCSYM(name) name
-#elif FTN_UPPERCASE_UNDERSCORE
+#elif defined FTN_UPPERCASE_UNDERSCORE
 #define FSYM(name)
 #define FCSYM(name) name##_
 #else
@@ -43,7 +47,7 @@ int FSYM(xcnewf) FCSYM(XCNEWF)(void)
   return -1;
 }
 
-void FSYM(xcfree)FCSYM(XCFREE)(int *fun)
+void FSYM(xcfree) FCSYM(XCFREE)(int *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_free_functional(fortran_functionals[*fun]);
@@ -54,7 +58,7 @@ void FSYM(xcfree)FCSYM(XCFREE)(int *fun)
   Figure out the memory distance between points
   from the first and second pointers.
  */
-void FSYM(xceval)FCSYM(XCEVAL)(int *fun,  int *order, 
+void FSYM(xceval) FCSYM(XCEVAL)(int *fun,  int *order, 
 		  int *nr_points, 
 		  double *first_density,
 		  double *second_density,
@@ -71,43 +75,43 @@ void FSYM(xceval)FCSYM(XCEVAL)(int *fun,  int *order,
 }
 
 
-void FSYM(xcpotential)FCSYM(XCPOTENTIAL)(int *fun, double *density, double *energy, double *potential)
+void FSYM(xcpotential) FCSYM(XCPOTENTIAL)(int *fun, double *density, double *energy, double *potential)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_potential(fortran_functionals[*fun], density, energy, potential);
 }
 
-void FSYM(xcsmod)FCSYM(XCSMOD)(int *fun, int *mode)
+void FSYM(xcsmod) FCSYM(XCSMOD)(int *fun, int *mode)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_set_mode(fortran_functionals[*fun], *mode);
 }
 
-int FSYM(xcgett)FCSYM(XCGETT)(int *fun)
+int FSYM(xcgett) FCSYM(XCGETT)(int *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_get_type(fortran_functionals[*fun]);
 }
 
-int FSYM(xcmord)FCSYM(XCMORD)(int *fun)
+int FSYM(xcmord) FCSYM(XCMORD)(int *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_max_order(fortran_functionals[*fun]);
 }
 
-int FSYM(xcinle)FCSYM(XCINLE)(int *fun)
+int FSYM(xcinle) FCSYM(XCINLE)(int *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_input_length(fortran_functionals[*fun]);
 }
 
-int FSYM(xcoule)FCSYM(XCOULE)(int *fun, int *order)
+int FSYM(xcoule) FCSYM(XCOULE)(int *fun, int *order)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_output_length(fortran_functionals[*fun],*order);
 }
 
-int FSYM(xcdind)FCSYM(XCDIND)(int *fun, const int *derivative)
+int FSYM(xcdind) FCSYM(XCDIND)(int *fun, const int *derivative)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_derivative_index(fortran_functionals[*fun],derivative);
@@ -137,12 +141,12 @@ static char *ints2str(int ints[])
 }
 #endif
 
-void FSYM(xcspla)FCSYM(XCSPLA)(int *text, int *len)
+void FSYM(xcspla) FCSYM(XCSPLA)(int *text, int *len)
 {
   str2ints(text,*len,xcfun_splash());
 }
 
-void FSYM(xcsnam)FCSYM(XCSNAM)(int *dst, int *dstlen, int *n)
+void FSYM(xcsnam) FCSYM(XCSNAM)(int *dst, int *dstlen, int *n)
 {
   const char *s;
   s= xc_name(*n-1);
@@ -152,32 +156,32 @@ void FSYM(xcsnam)FCSYM(XCSNAM)(int *dst, int *dstlen, int *n)
     dst[0] = 0;
 }
 
-void FSYM(xcssho)FCSYM(XCSSHO)(int *dst, int *dstlen, int *n)
+void FSYM(xcssho) FCSYM(XCSSHO)(int *dst, int *dstlen, int *n)
 {
   const char *s;
   s = xc_short_description(*n-1);
   str2ints(dst,*dstlen,s);
 }
 
-void FSYM(xcslon)FCSYM(XCSLON)(int *dst, int *dstlen, int *n)
+void FSYM(xcslon) FCSYM(XCSLON)(int *dst, int *dstlen, int *n)
 {
   const char *s;   
   s = xc_long_description(*n-1);
   str2ints(dst,*dstlen,s);
 }
 
-int FSYM(xcisfu)FCSYM(XCISFU)(int *n)
+int FSYM(xcisfu) FCSYM(XCISFU)(int *n)
 {
   return xc_is_functional(*n-1);
 }
 
-void FSYM(xcsets)FCSYM(XCSETS)(int *fun, int *n, double *value)
+void FSYM(xcsets) FCSYM(XCSETS)(int *fun, int *n, double *value)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_set_param(fortran_functionals[*fun],*n-1,*value);
 }
 
-double FSYM(xcgets)FCSYM(XCGETS)(int *fun, int *n)
+double FSYM(xcgets) FCSYM(XCGETS)(int *fun, int *n)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_get_param(fortran_functionals[*fun],*n-1);
