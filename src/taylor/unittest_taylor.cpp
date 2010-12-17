@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "taylor.h"
+using namespace polymul;
 typedef double num_t;
 
 // Some taylor coefficients around x = 2.5, calculated using
