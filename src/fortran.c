@@ -19,6 +19,9 @@
 #elif defined FTN_UPPERCASE_UNDERSCORE
 #define FSYM(name)
 #define FCSYM(name) name##_
+#elif defined FTN_NO_UNDERSCORE
+#define FSYM(name) name
+#define FCSYM(name)
 #else
 #define FSYM(name) name##_
 #define FCSYM(name)
