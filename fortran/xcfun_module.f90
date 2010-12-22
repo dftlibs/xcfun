@@ -37,33 +37,70 @@ module xcfun
   integer, parameter :: XC_D04 = 15
 
 ! five-variable derivatives up to order 4
-! only derivatives that are nonzero at closed-shell reference
-! with XC_VARS_NS are here
+! all up to order 3 are here
+! not all order 4
   integer, parameter :: XC_D00000 =   1
   integer, parameter :: XC_D10000 =   2
+  integer, parameter :: XC_D01000 =   3
   integer, parameter :: XC_D00100 =   4
+  integer, parameter :: XC_D00010 =   5
   integer, parameter :: XC_D00001 =   6
   integer, parameter :: XC_D20000 =   7
+  integer, parameter :: XC_D11000 =   8
   integer, parameter :: XC_D10100 =   9
+  integer, parameter :: XC_D10010 =  10
   integer, parameter :: XC_D10001 =  11
   integer, parameter :: XC_D02000 =  12
+  integer, parameter :: XC_D01100 =  13
   integer, parameter :: XC_D01010 =  14
+  integer, parameter :: XC_D01001 =  15
   integer, parameter :: XC_D00200 =  16
+  integer, parameter :: XC_D00110 =  17
   integer, parameter :: XC_D00101 =  18
   integer, parameter :: XC_D00020 =  19
+  integer, parameter :: XC_D00011 =  20
+  integer, parameter :: XC_D00002 =  21
   integer, parameter :: XC_D30000 =  22
+  integer, parameter :: XC_D21000 =  23
   integer, parameter :: XC_D20100 =  24
+  integer, parameter :: XC_D20010 =  25
+  integer, parameter :: XC_D20001 =  26
   integer, parameter :: XC_D12000 =  27
+  integer, parameter :: XC_D11100 =  28
   integer, parameter :: XC_D11010 =  29
+  integer, parameter :: XC_D11001 =  30
   integer, parameter :: XC_D10200 =  31
+  integer, parameter :: XC_D10110 =  32
+  integer, parameter :: XC_D10101 =  33
   integer, parameter :: XC_D10020 =  34
+  integer, parameter :: XC_D10011 =  35
+  integer, parameter :: XC_D10002 =  36
+  integer, parameter :: XC_D03000 =  37
   integer, parameter :: XC_D02100 =  38
+  integer, parameter :: XC_D02010 =  39
+  integer, parameter :: XC_D02001 =  40
+  integer, parameter :: XC_D01200 =  41
   integer, parameter :: XC_D01110 =  42
+  integer, parameter :: XC_D01101 =  43
+  integer, parameter :: XC_D01020 =  44
+  integer, parameter :: XC_D01011 =  45
+  integer, parameter :: XC_D01002 =  46
   integer, parameter :: XC_D00300 =  47
+  integer, parameter :: XC_D00210 =  48
+  integer, parameter :: XC_D00201 =  49
   integer, parameter :: XC_D00120 =  50
+  integer, parameter :: XC_D00111 =  51
+  integer, parameter :: XC_D00102 =  52
+  integer, parameter :: XC_D00030 =  53
+  integer, parameter :: XC_D00021 =  54
+  integer, parameter :: XC_D00012 =  55
+  integer, parameter :: XC_D00003 =  56
   integer, parameter :: XC_D40000 =  57
   integer, parameter :: XC_D30100 =  59
   integer, parameter :: XC_D20200 =  66
+  integer, parameter :: XC_D12100 =  73
+  integer, parameter :: XC_D12010 =  74
+  integer, parameter :: XC_D12001 =  75
   integer, parameter :: XC_D10300 =  82
   integer, parameter :: XC_D00400 = 112
 
