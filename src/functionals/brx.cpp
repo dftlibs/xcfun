@@ -1,3 +1,5 @@
+#ifdef TODO
+/* Needs some work to work with ctaylor */
 #include "functional.h"
 #include "slater.h"
 
@@ -108,20 +110,18 @@ static num polarized(const num &na,
 }
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num ENERGY_FUNCTION(XC_BRX)(const densvars<num> &d)
 {
   return 0.5*(d.a*polarized(d.a,d.gaa,d.lapa,2*d.taua) +
 	      d.a*polarized(d.b,d.gbb,d.lapb,2*d.taub));
 }
 
 
-void setup_brx(functional &f)
-{
-  f.describe(XC_BRX, XC_MLGGA,
-	     "BR exchange\n"
-	     "Becke-Roussels exchange functional\n",
-	     "Implemented by Ulf Ekstrom\n");
+NEW_LTMGGA_FUNCTIONAL(XC_BRX);
+SHORT_DESCRIPTION(XC_BRX) = "BR exchange\n";
+LONG_DESCRIPTION(XC_BRX) =
+	     "Becke-Roussels exchange functional\n"
+	     "Implemented by Ulf Ekstrom\n";
+NO_TEST(XC_BRX);
 
-  SET_MLGGA_ENERGY_FUNCTION(f,energy);
-
-}
+#endif

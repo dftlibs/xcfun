@@ -1,79 +1,157 @@
 #ifndef XCFUN_H
 #define XCFUN_H
 
-#define XCFUN_API_VERSION 0
-
-// Which set (mode) of variables to use
-#define XC_VARS_A   0 // 100% spin polarized, i.e. only alpha variables
-#define XC_VARS_N   1 // No spin polarization, total density variables
-#define XC_VARS_AB  2 // Alpha/beta variables
-#define XC_VARS_NS  3 // Total density/spin density variables
-#define XC_NR_MODES 4
-
-// Type of functional
-#define XC_LDA      0 // Local density
-#define XC_GGA      1 // Local density & gradient
-#define XC_MGGA     2 // Local density, gradient and kinetic energy density
-#define XC_MLGGA    3 // Local density, gradient, laplacian and kinetic energy density
-#define XC_NR_TYPES 4
+#define XCFUN_API_VERSION 1
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define XC_MAX_ORDER 3
+
+// Used for regularizing input
+#define XC_TINY_DENSITY 1e-14
+
+#define XC_NO_REGULARIZATION
+
+#define XC_EORDER 1 // Invalid order for given mode and vars
+#define XC_EVARS  2 // Invalid vars for functional type (ie. lda vars for gga)
+#define XC_EMODE  4 // Invalid mode for functional type (ie. potential for mgga)
+  
+  enum xc_mode
+    {
+      XC_MODE_UNSET = 0, // Need to be zero for default initialized structs
+      XC_PARTIAL_DERIVATIVES,
+      XC_POTENTIAL,
+      XC_CONTRACTED,
+      XC_NR_MODES
+    };
+
+  enum xc_functional_id
+    {
+      XC_SLATERX,
+      XC_VWN5C,
+      XC_PBEC,
+      XC_PBEX,
+      XC_BECKEX,
+      XC_BECKECORRX,
+      XC_BECKESRX,
+      XC_LDAERFX,
+      XC_LDAERFC,
+      XC_LDAERFC_JT,
+      XC_LYPC,
+      XC_OPTX, 
+      XC_REVPBEX,
+      XC_RPBEX,
+      XC_SPBEC,
+      XC_VWN_PBEC,
+      XC_KTX,
+      XC_TFK,
+      XC_PW91X,
+      XC_PW91K,
+      XC_PW92C,
+      XC_M05X,
+      XC_M05X2X,
+      XC_M06X,
+      XC_M06X2X,
+      XC_M06LX,
+      XC_M06HFX,
+      /*   XC_BRX, must fix this to work with ctaylor */
+      XC_M05X2C,
+      XC_M05C,
+      XC_M06C,
+      XC_M06LC,
+      XC_M06X2C,
+      XC_TPSSC,
+      XC_TPSSX,
+      XC_REVTPSSC,
+      XC_REVTPSSX,
+      XC_PZ81C,
+      XC_P86C,
+      XC_NR_FUNCTIONALS
+    };
+
+  enum xc_parameter
+    {
+      XC_RANGESEP_MU = XC_NR_FUNCTIONALS,
+      XC_NR_PARAMETERS_AND_FUNCTIONALS
+    };
+  
+  enum xc_vars // Must be in sync with xcint_vars in xcint.cpp
+    {
+      XC_VARS_UNSET=-1,
+      // LDA
+      XC_A,
+      XC_N,
+      XC_A_B,
+      XC_N_S,
+      // GGA 
+      XC_A_GAA,
+      XC_N_GNN,
+      XC_A_B_GAA_GAB_GBB,
+      XC_N_S_GNN_GNS_GSS,
+      // MetaGGA
+      XC_A_GAA_LAPA,
+      XC_A_GAA_TAUA,
+      XC_N_GNN_LAPN,
+      XC_N_GNN_TAUN,
+      XC_A_B_GAA_GAB_GBB_LAPA_LAPB,
+      XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
+      XC_N_S_GNN_GNS_GSS_LAPN_LAPS,
+      XC_N_S_GNN_GNS_GSS_TAUN_TAUS,
+      /* 2:nd order Taylor coefficients of alpha density, 1+3+6=10
+	 numbers, rev gradlex order */	
+      XC_A_2ND_TAYLOR, 
+      /* 2:nd order Taylor expansion of alpha and beta densities
+	 (first alpha, then beta) 20 numbers */
+      XC_A_B_2ND_TAYLOR, 
+      XC_N_2ND_TAYLOR,
+      XC_N_S_2ND_TAYLOR,
+      XC_NR_VARS
+    };
+
   double xcfun_version(void);
   const char *xcfun_splash(void);
   int xcfun_test(void);
   
-  typedef struct xc_functional_data * xc_functional;
+  typedef struct xc_functional_obj * xc_functional;
 
   xc_functional xc_new_functional(void);
   void xc_free_functional(xc_functional fun);
 
+
+  // Set weight of functional or value of parameter
+  void xc_set(xc_functional fun, int item, double value);
+  double xc_get(xc_functional fun, int item);
+
+
+  // Try to set the functional evaluation vars, mode and order
+  // return some combination of XC_E* if an error occurs, else 0.
+  int xc_eval_setup(xc_functional fun,
+		    enum xc_vars vars,
+		    enum xc_mode mode,
+		    int order);
+
+  // Length of the result[] argument to eval()
+  int xc_output_length(xc_functional fun);
+
   // Evaluate the functional at density
-  void xc_eval(xc_functional fun, int order,
+  // With cubes: density is of dimension 2^porder*Nvars
+  void xc_eval(xc_functional fun,
 	       const double *density,
 	       double *result);
   /* Vector version of xc_eval. 
      density_pitch = density[start_of_second_point] - density[start_of_first_point],
-     likewise for result_pitch.
-   */
-  void xc_eval_vec(xc_functional fun, int order, int nr_points,
+     likewise for result_pitch. */
+  void xc_eval_vec(xc_functional fun, int nr_points,
 		   const double *density,
 		   int density_pitch,
 		   double *result,
 		   int result_pitch);
 
-  // Calculate the xc potential for fun. This is currently only supported for some
-  // types of functionals (LDA or GGA, AB mode). Here density should be the normal
-  // density as for xc_eval, appended with the extra data needed to construct the
-  // potential. For GGA's this is the laplacian of the density. The energy density
-  // is computed as a by-product.
-  void xc_potential(xc_functional fun, const double *density, double *e_xc, double *v_xc);
-
-  // Which variables to use/differentiatiate wrt to
-  void xc_set_mode(xc_functional fun, int mode);
-
-  // The type of the currently defined functional (LDA, GGA etc)
-  int xc_get_type(xc_functional fun);
-
-  // The highest order supported by the currently defined functional.
-  // This depends on compile time parameters, it's in principle unlimited.
-  int xc_max_order(xc_functional fun);
-
-  // Length of the density[] argument to eval()
-  int xc_input_length(xc_functional fun);
-
-  // Length of the result[] argument to eval()
-  int xc_output_length(xc_functional fun, int order);
 
   // Index into result[] for derivative with given index (length as input_length() )
   int xc_derivative_index(xc_functional fun, const int derivative[]);
-
-  // List of all settings, there are XC_NR_PARAMS settings in total.
-#ifndef XCFUN_INTERNAL
-#include "xcfun_autogen.h"
-#endif
 
   /* Discover and manipulate settings */
 
@@ -83,26 +161,13 @@ extern "C" {
   const char *xc_short_description(int param);
   // Long description of the setting, ends with a \n
   const char *xc_long_description(int param);
-  // Is this setting a functional?
-  int xc_is_functional(int param);
-  // Set the setting
-  void xc_set_param(xc_functional fun, int param, double value);
-  // Get the current value of the setting.
-  double xc_get_param(xc_functional fun, int param);
 
-  /* Transform the output of xc_eval to a different mode,
-     for example because your program wants AB mode but you
-     want to take advantage of knowing that you only care
-     about non-polarizing N mode derivatives. */
-  void xc_transform(int order,
-		    int from_mode, const double *from_data,
-		    int to_mode, double *to_data);
 
 #ifdef __cplusplus
 } // End of extern "C"
 #endif
 
-// Derivative indices into xc_eval output
+// Derivative indices into xc_eval output in partial derivative mode
 
 #define XC_D0 0
 #define XC_D1 1

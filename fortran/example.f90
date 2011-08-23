@@ -9,7 +9,7 @@ program xc_example
    implicit none
 
    character(1000)      :: text
-   integer              :: id, order, ilen, olen
+   integer              :: id, order, ilen, olen, res
    integer              :: i, k, ipoint, nr_points, block_length, max_block_length
    real(8)              :: derivative_nn_ab, derivative_ss_ab
    real(8)              :: derivative_nn_rs, derivative_ss_rs
@@ -26,30 +26,44 @@ program xc_example
 
 !  in this example we use PBE
    print *, 'Setting up PBE'
-   call xc_set_param(id, XC_PBEX, 1.0d0)
-   call xc_set_param(id, XC_PBEC, 1.0d0)
+   call xc_set(id, XC_PBEX, 1.0d0)
+   call xc_set(id, XC_PBEC, 1.0d0)
 
 !  print currently set parameters
 !  discover all settings
-   print *, 'Now defined (nonzero weights and parameters, including defaults):'
-   do i = 1, XC_NR_PARAMS
-      call xc_param_name(i, text)
-      if (dabs(xc_get_param(id, i)) > tiny(0.0d0)) then
-         print *, text(4:len_trim(text)), xc_get_param(id, i)
-      end if
-   end do
+!   print *, 'Now defined (nonzero weights and parameters, including defaults):'
+!   do i = 1, XC_NR_PARAMS
+!      call xc_param_name(i, text)
+!      if (dabs(xc_get_param(id, i)) > tiny(0.0d0)) then
+!         print *, text(4:len_trim(text)), xc_get_param(id, i)
+!      end if
+!   end do
 
 !  functional type
-   print *, 'Functional type:', xc_get_type(id), ' (0 LDA, 1 GGA, 2 MGGA)'
+!   print *, 'Functional type:', xc_get_type(id), ' (0 LDA, 1 GGA, 2 MGGA)'
 
 !  let's get derivatives to second order
    order = 2
-   print *, 'Order:', order
+   res = xc_eval_setup(id, XC_A_B_GAA_GAB_GBB, XC_PARTIAL_DERIVATIVES, order)
+   if (res.eq.0) then
+      print *,'xc_eval_setup ok ',res
+   else
+      print *,'xc_eval_setup failed with error ',res
+   endif
 
-!  ask for the length of the input
-   ilen = xc_input_length(id)
+#if 0
+   print *, 'Order:', order
+   if (.not.xc_try_order(id,order)) then
+      print *, 'Could not set order ',order
+      stop
+   endif
+
+   if (.not.xc_try_vars(id,XC_A_B_GAA_GAB_GBB)) then
+      print *, 'Could not set order ',order
+      stop
+   endif
+
    olen = xc_output_length(id, order)
-   print *, 'Length of input (how many density variables):', ilen
    print *, 'Length of output (how many derivatives):', olen
 
 !  set alpha/beta density variable mode
@@ -139,5 +153,5 @@ program xc_example
 
    deallocate(density_variables)
    deallocate(derivatives)
-
+#endif
 end program

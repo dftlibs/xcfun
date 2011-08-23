@@ -13,12 +13,11 @@ static num optx(const densvars<num> &d)
 }
 
 
-void setup_optx(functional &f)
-{
-  f.describe(XC_OPTX, XC_GGA,
-	     "OPTX Handy & Cohen exchange",
-	     "OPTX Handy & Cohen exchange GGA exchange functional\n"
-	     "Implemented by Ulf Ekstrom\n");
+FUNCTIONAL(XC_OPTX) = {
+  "OPTX Handy & Cohen exchange",
+  "OPTX Handy & Cohen exchange GGA exchange functional\n"
+  "Implemented by Ulf Ekstrom\n",
+  XC_DENSITY | XC_GRADIENT,
+  ENERGY_FUNCTION(optx)
+};
 
-  SET_GGA_ENERGY_FUNCTION(f,optx);
-}

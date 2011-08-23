@@ -4,7 +4,7 @@
 // M06 correlation functional
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num m06c(const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -41,16 +41,30 @@ static num energy (const densvars<num> &d)
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
-void setup_m06c(functional &f)
-{
-  f.describe(XC_M06C, XC_MGGA,
-	     "M06 Correlation",
-             "M06 Meta-Hybrid Correlation Functional\n"
-             "Zhao, Truhlar; Theor Chem Account (2008) 120:215-241\n"
-             "Implemented by Andre Gomes\n"
-	     "Reference data from ADF, except energy which is self-computed.");
+FUNCTIONAL(XC_M06C) = {
+  "M06 Correlation",
+  "M06 Meta-Hybrid Correlation Functional\n"
+  "Zhao, Truhlar; Theor Chem Account (2008) 120:215-241\n"
+  "Implemented by Andre Gomes\n"
+  "Reference data from ADF, except energy which is self-computed.\n",
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC,
+  ENERGY_FUNCTION(m06c)
+  XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
+  XC_PARTIAL_DERIVATIVES,
+  1,
+  5e-5,
+  {1,2,2,1,3,1,2},
+  {-1.3563164150574752e-01,
+   -0.131522634780454,
+   -1.095804911824488E-002,
+   -6.743582614131827E-004,
+   0.000000000000000E+000, 
+   -7.065762242385136E-004,			      
+   1.312970361640244E-002, 
+   -2.732803203907383E-003}
+};
 
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
+
   /* Test from the midwest: */
   /*const double d[] = 
     {1., .8, 1., 1., 1., 0.165,   0.1050};
@@ -74,15 +88,4 @@ void setup_m06c(functional &f)
 			       8.813615476426437E-002,
 			       8.813615476426437E-002};
   */
-  const double d[] = {1,2,2,1,3,1,2};
-  const double ref[] = {-1.3563164150574752e-01,
-			       -0.131522634780454,
-			       -1.095804911824488E-002,
-			       -6.743582614131827E-004,
-			       0.000000000000000E+000, 
-			       -7.065762242385136E-004,			      
-			       1.312970361640244E-002, 
-			       -2.732803203907383E-003};
-  f.add_test(XC_VARS_AB,1,d,ref,5e-5);
-}
 

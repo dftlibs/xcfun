@@ -4,7 +4,7 @@
 // M06-2X correlation functional
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num m06x2c(const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -42,19 +42,19 @@ static num energy (const densvars<num> &d)
    return Ec_ab + Ec_aa + Ec_bb;
 }
 
-void setup_m06x2c(functional &f)
-{
-  f.describe(XC_M06X2C, XC_MGGA,
-	     "M06-2X Correlation",
-             "M06-2X Meta-Hybrid Correlation Functional\n"
-             "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
-             "Implemented by Andre Gomes\n");
+FUNCTIONAL(XC_M06X2C) = {
+  "M06-2X Correlation",
+  "M06-2X Meta-Hybrid Correlation Functional\n"
+  "Y Zhao, N. E. Schultz and D. G. Truhlar, J. Chem. Theory Comput. 2, 364 (2006)\n"
+  "Implemented by Andre Gomes\n",
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC,
+  ENERGY_FUNCTION(m06x2c)
+};
 
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
   /*  const double d[] = 
     {1., .8, 1., 1., 1., 0.165,   0.1050}; //.33, .21};
   const double ref[] =
     { -1.57876583, -2.12127045, -2.11264351, -0.00315462, -0.00444560,  0.00000000,  1.72820116,  2.21748787 };
   f.add_test(XC_VARS_AB,1,d,ref,1e-5); */
-}
+
 

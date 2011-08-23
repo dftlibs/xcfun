@@ -1,326 +1,551 @@
-#include <cstdlib>
 #include <cstdio>
-#include <cstring>
-#include <cmath>
-#include "xcfun_internal.h"
+#include <cstdlib>
+#include "xcint.h"
 
-static bool xcfun_is_setup = false;
 
-void xcint_assure_setup()
-{
-  if (!xcfun_is_setup)
-    {
-      xcfun_is_setup = true;
-#ifndef NDEBUG
-      fprintf(stderr,"XCFun WARNING: XCFun is built in slow debug mode (without -DNDEBUG).\n");
-#endif
-      xcint_setup_functionals();
-    }
-}
-
-void xcint_die(const char *message, int code)
-{
-  fprintf(stderr,"XCFun fatal error %i: ",code);
-  fprintf(stderr,"%s",message);
-  fprintf(stderr,"\n");
-  exit(-1);
-}
-
-extern "C"
-double xcfun_version(void)
-{
-  return 0.99;
-}
-
-extern "C"
-const char *xcfun_splash(void)
-{
-  return 
-    "XCFun DFT library Copyright 2009-2010 Ulf Ekstrom and contributors.\n"
-    "See http://admol.org/xcfun for more information. This is free soft-\n"
-    "ware; see the source code for copying conditions. There is ABSOLUTELY\n"
-    "NO WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n"
-    "PURPOSE. For details see the documentation. Scientific users of this \n"
-    "library should cite U. Ekstrom, L. Visscher, R. Bast, A. J. Thorvald-\n"
-    "sen and K. Ruud; J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
-}
-
-int xcint_input_length(int mode, int type)
-{
-  static int tab[XC_NR_MODES][XC_NR_TYPES] = 
-    {{1,2,3,4},{1,2,3,4},{2,5,7,9},{2,5,7,9}};
-  assert(mode>=0 && mode <= XC_NR_MODES);
-  assert(type>=0 && type <= XC_NR_TYPES);
-  return tab[mode][type];
-}
-
-int xcint_output_length(int mode, int type, int order)
-{
-  return taylorlen(xcint_input_length(mode,type),order);
-}
-
-void xc_functional_data::initialize()
+xc_functional xc_new_functional()
 {
   xcint_assure_setup();
-  mode = XC_VARS_AB; //Use alpha/beta as default
-  type = XC_LDA; // LDA is smallest type, so assume this initially
-  max_order = -1;
-  // Just default settings to start with
-  for (int i=0;i<XC_NR_PARAMS;i++)
-    parameters[i] = xcint_default(i);
-  //active_functionals.construct();
+  xc_functional fun = (xc_functional)malloc(sizeof*fun);
+  if (!fun)
+    xcint_die("Out of memory in xc_new_functional()",0);
+  fun->mode = XC_MODE_UNSET;
+  fun->vars = XC_VARS_UNSET;
+  fun->order = -1;
+  fun->depends = 0;
+  for (int i=0;i<XC_NR_FUNCTIONALS;i++)
+    fun->settings[i] = 0;
+  for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+    fun->settings[i] = xcint_params[i].default_value;
+  fun->nr_active_functionals = 0;
+  return fun;
 }
 
-void xc_functional_data::destroy()
-{
-  // active_functionals.destroy();
-}
-
-int xc_functional_data::get_type(void) const
-{
-  return type;
-}
-void xc_functional_data::set_mode(int mode)
-{
-  if (!(mode>=0 && mode < XC_NR_MODES))
-    xcint_die("Invalid mode to xc_functional::set_mode()",mode);
-  this->mode = mode;
-  find_max_order();
-}
-
-void xc_functional_data::find_max_order(void)
-{
-  max_order = -1;
-  while (max_order < XC_MAX_ORDER && xc_evaluator_lookup(mode,type,max_order+1))
-    max_order++;
-}
-
-int xc_functional_data::get_max_order(void) const
-{
-  return max_order;
-}
-
-int xc_functional_data::input_length(void) const
-{
-  return xcint_input_length(mode,type);
-}
-
-int xc_functional_data::output_length(int order) const
-{
-  return taylorlen(input_length(),order);
-}
-
-int xc_functional_data::
-derivative_index(const int exponents[]) const
-{
-  int nvar = input_length();
-  int N = 0;
-  for (int i=0;i<nvar;i++)
-    N += exponents[i];
-  int i = 0, idx = 0;
-  N--;
-  while (N >= 0)
-    {
-      idx += taylorlen(nvar-i,N);
-      N -= exponents[i];
-      i++;
-    }
-  return idx;
-}
-
-// API starts here
-extern "C"
-xc_functional xc_new_functional(void)
-{
-  xc_functional_data *p = (xc_functional_data *)malloc(sizeof*p);
-  p->initialize();
-  return p;
-}
-
-extern "C"
 void xc_free_functional(xc_functional fun)
 {
-  fun->destroy();
   free(fun);
 }
 
-void xc_eval_vec(xc_functional fun, int order, int nr_points,
-		 const double *density, 
+void xc_eval_vec(xc_functional fun, int nr_points,
+		 const double *density,
 		 int density_pitch,
 		 double *result,
 		 int result_pitch)
 {
-  evaluator ev = xc_evaluator_lookup(fun->mode,fun->type,order);
-  if (!ev)
-    {
-      fprintf(stderr,"XCFun error in eval()\n");
-      fprintf(stderr,"mode: %i\n",fun->mode);
-      fprintf(stderr,"type: %i\n",fun->type);
-      xcint_die("eval(): Functional not available for order",order);
-    }
-#ifdef XCFUN_NUM_CONVERT
-  // ev expects input as ireal_t, must convert here. Also the output
-  int ni = fun->input_length();
-  int no = fun->output_length(order);
-  ireal_t in[ni];
-  ireal_t out[no];
-#endif
-#ifdef WITH_QD
-  unsigned int oldcw;
-  fpu_fix_start(&oldcw);
-#endif
   for (int i=0;i<nr_points;i++)
+    xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
+}
+
+
+void xc_set(xc_functional fun, int item, double value)
+{
+  if (item >= 0 && item < XC_NR_FUNCTIONALS)
     {
-#ifdef XCFUN_NUM_CONVERT
-      for (int j=0;j<ni;j++)
-	in[j] = density[i*density_pitch+j];
-      ev(*fun,out,in);
-      for (int j=0;j<no;j++)
-	result[i*result_pitch+j] = INNER_TO_OUTER(out[j]);
-#else
-      ev(*fun,result+i*result_pitch,density+i*density_pitch);
-#endif
+      fun->settings[item] = value;
+      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
+      fun->depends |= xcint_funs[item].depends;
     }
-#ifdef WITH_QD
-  fpu_fix_end(&oldcw);
-#endif
-}
-
-void xc_eval(xc_functional fun, int order,
-	     const double *density, 
-	     double *result)
-{
-  xc_eval_vec(fun,order,1,density,0,result,0);
-}
-
-void xc_contract(xc_functional fun, int order,
-		 const double *density, 
-		 double *result)
-{
-  xc_eval_vec(fun,order,1,density,0,result,0);
-}
-
-int xc_get_type(xc_functional fun)
-{
-  return fun->get_type();
-}
-
-int xc_max_order(xc_functional fun)
-{
-  return fun->get_max_order();
-}
-
-int xc_input_length(xc_functional fun)
-{
-  return fun->input_length();
-}
-
-int xc_output_length(xc_functional fun, int order)
-{
-  return fun->output_length(order);
-}
-
-int xc_derivative_index(xc_functional fun, const int derivative[])
-{
-  return fun->derivative_index(derivative);
-}
-
-void xc_set_mode(xc_functional fun, int mode)
-{
-  fun->set_mode(mode);
-}
-
-void xc_set_param(xc_functional fun, int param, double value)
-{
-  if (param < 0 || param >= XC_NR_PARAMS)
-      xcint_die("Invalid parameter in xc_set_param()",param);
-  fun->parameters[param] = value;
-  if (xc_is_functional(param) && value != 0)
+  else if (item < XC_NR_PARAMETERS_AND_FUNCTIONALS)
     {
-      if (xcint_functional(param)->m_type > fun->type)
-	fun->type = xcint_functional(param)->m_type;
-      fun->find_max_order();
-    } 
-}
-
-double xc_get_param(xc_functional fun, int param)
-{
-  if (param < 0 || param >= XC_NR_PARAMS)
-      xcint_die("Invalid parameter in xc_get_param()",param);
-  return fun->parameters[param];
-}
-
-extern "C"
-int xc_is_functional(int param)
-{
-  return xcint_functional(param) != 0;
-}
-
-
-static int run_tests(functional *fun)
-{
-  if (fun->test_mode == -1)
-    return -1;
-  xc_functional xf = xc_new_functional();
-  xc_set_mode(xf,fun->test_mode);
-  xc_set_param(xf,fun->m_name,1.0);
-  int n = xc_output_length(xf, fun->test_order);
-  double *out = (double *)malloc(n*sizeof*out);
-  double *reference = fun->test_output;
-  xc_eval(xf,fun->test_order,fun->test_input,out);
-
-  int nerr = 0;
-  for (int i=0;i<n;i++)
-    if (fabs(out[i] - fun->test_output[i]) > 
-	fabs(fun->test_output[i]*fun->test_threshold))
-      nerr++;
-
-  if (nerr > 0)
-    {
-      fprintf(stderr,"Error detected in functional %s with tolerance %g:\n",
-	      xc_name(fun->m_name),fun->test_threshold);
-      fprintf(stderr,"Abs.Error \tComputed              Reference\n");
-      for (int i=0;i<n;i++)
-	{
-	  fprintf(stderr,"%.1e",fabs(out[i]-reference[i]));
-	  fprintf(stderr,"    %+.16e \t%+.16e",out[i],reference[i]);
-	  if (fabs(out[i] - reference[i]) > 
-	      fabs(reference[i]*fun->test_threshold))
-	     fprintf(stderr," *");
-	  fprintf(stderr,"\n");
-	}
+      fun->settings[item] = value;
     }
   else
     {
-      printf("%s ok\n",xc_name(fun->m_name));
+      xcint_die("Invalid item to xc_set():",item);
     }
-  xc_free_functional(xf);
-  free(out);
-  return nerr;
+}
+
+double xc_get(xc_functional fun, int item)
+{
+  if (item >= 0 && item < XC_NR_PARAMETERS_AND_FUNCTIONALS)
+    {
+      return fun->settings[item];
+    }
+  else
+    {
+      xcint_die("Invalid item to xc_get():",item);
+      return 0;
+    }
+}
+
+int xc_output_length(xc_functional fun)
+{
+  if (fun->mode == XC_MODE_UNSET)
+    xcint_die("xc_output_length() called before a mode was succesfully set",0);
+  if (fun->vars == XC_VARS_UNSET)
+    xcint_die("xc_output_length() called before variables were succesfully set",0);
+  if (fun->order == -1)
+    xcint_die("xc_output_length() called before the order were succesfully set",0);
+  if (fun->mode == XC_PARTIAL_DERIVATIVES)
+    {
+      return taylorlen(xcint_vars[fun->vars].len,fun->order);
+    }
+  else if (fun->mode == XC_POTENTIAL)
+    {
+      if (fun->vars == XC_A || fun->vars == XC_A_2ND_TAYLOR)
+	return 2; // Energy+potential
+      else
+	return 3; // Spin-resolved potential
+    }
+  else
+    {
+      xcint_die("XC_CONTRACTED not implemented in xc_output_length()",0);
+      return 0;
+    }
 }
 
 int xcfun_test(void)
 {
-  int nr_failed = 0;
-  int nr_run = 0;
-  xcint_assure_setup();
-  for (int i=0;i<XC_NR_PARAMS;i++)
+  int nfail = 0, res;
+  for (int f=0;f<XC_NR_FUNCTIONALS;f++)
     {
-      functional *f = xcint_functional(i);
-      if (f)
+      xc_functional fun = xc_new_functional();
+      xc_set(fun,f,1.0);
+      const functional_data *fd = &xcint_funs[f];
+      if (fd->test_mode != XC_MODE_UNSET)
 	{
-	  nr_run++;
-	  int res = run_tests(f);
-	  if (res != 0 && res != -1)
-	    nr_failed++;
+	  if ((res = xc_eval_setup(fun,fd->test_vars,fd->test_mode,fd->test_order)) == 0)
+	    {
+	      int n = xc_output_length(fun);
+	      double *out = 
+		reinterpret_cast<double *>( malloc(sizeof(*out)*n) );
+	      if (!fd->test_in)
+		xcint_die("Functional has no test input!",f);
+	      xc_eval(fun,fd->test_in,out);
+	      int nerr = 0;
+	      for (int i=0;i<n;i++)
+		if (fabs(out[i] - fd->test_out[i]) > 
+		    fabs(fd->test_out[i]*fd->test_threshold))
+		  nerr++;
+	      if (nerr > 0)
+		{
+		  fprintf(stderr,"Error detected in functional %s with tolerance %g:\n",
+			  fd->symbol, fd->test_threshold);
+		  fprintf(stderr,"Abs.Error \tComputed              Reference\n");
+		  for (int i=0;i<n;i++)
+		    {
+		      fprintf(stderr,"%.1e",fabs(out[i]-fd->test_out[i]));
+		      fprintf(stderr,"    %+.16e \t%+.16e",out[i],fd->test_out[i]);
+		      if (fabs(out[i] - fd->test_out[i]) > 
+			  fabs(fd->test_out[i]*fd->test_threshold))
+			fprintf(stderr," *");
+		      fprintf(stderr,"\n");
+		    }
+		  nfail++;
+		}
+	      free((void *)out);
+	    }
+	  else
+	    {
+	      fprintf(stderr,"Functional %s not supporting its own test, error %i\n",fd->symbol,res);
+	      nfail++;
+	    }
 	}
+      else
+	{
+	  fprintf(stderr,"%s has no test\n",fd->symbol);
+	}
+      xc_free_functional(fun);
     }
-  printf("Nr tests run: %i\n",nr_run);
-  return nr_failed;
+  return nfail;
 }
 
-// Return the tau_a of the uniform electron gas of density n_a
-static ireal_t ueg_tau(ireal_t na)
+double xcfun_version(void)
 {
-  return 3.0/5.0*pow(6*M_PI*M_PI,2.0/3.0)*pow(na,5.0/3.0);
+  return 1.99;
+}
+
+const char *xcfun_splash(void)
+{
+  return 
+    "XCFun DFT library Copyright 2009-2011 Ulf Ekstrom and contributors.\n"
+    "See http://admol.org/xcfun for more information.\n\n"
+    "This is free software; see the source code for copying conditions.\n"
+    "There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n"
+    "FITNESS FOR A PARTICULAR PURPOSE. For details see the documentation.\n"
+    "Scientific users of this library should cite\n"
+    "U. Ekstrom, L. Visscher, R. Bast, A. J. Thorvaldsen and K. Ruud;\n"
+    "J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
+}
+
+void xc_eval(xc_functional_obj *f, const double *input, double *output)
+{
+  if (f->mode == XC_MODE_UNSET)
+    xcint_die("xc_eval() called before a mode was successfully set",0);
+  if (f->vars == XC_VARS_UNSET)
+    xcint_die("xc_eval() called before variables were successfully set",0);
+  if (f->order == -1 && f->mode != XC_POTENTIAL)
+    xcint_die("xc_eval() called before the order was successfully set",0);
+  if (f->mode == XC_PARTIAL_DERIVATIVES)
+    {
+      switch (f->order)
+	{
+	case 0:
+	  {
+	    typedef ctaylor<ireal_t,0> ttype;
+	    int inlen = xcint_vars[f->vars].len;
+	    ttype in[inlen], out = 0;
+	    for (int i=0;i<inlen;i++)
+	      in[i] = input[i];
+	    densvars<ttype> d(f,in);
+	    for (int i=0;i<f->nr_active_functionals;i++)
+	      out +=  f->settings[f->active_functionals[i]->id]
+		      * f->active_functionals[i]->fp0(d);
+	    output[0] = out.get(CNST);
+	  }
+	  break;
+#if XC_MAX_ORDER >= 1
+	case 1:
+	  {
+	  int inlen = xcint_vars[f->vars].len;
+	  {
+	    typedef ctaylor<ireal_t,2> ttype2;
+	    ttype2 in2[inlen], out2 = 0;
+	    for (int i=0;i<inlen;i++)
+	      in2[i] = input[i];
+	    for (int j=0;j<inlen/2;j++)
+	      {
+		in2[2*j].set(VAR0,1);
+		in2[2*j+1].set(VAR1,1);
+		densvars<ttype2> d(f,in2);
+		out2 = 0;
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out2 += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+		in2[2*j] = input[2*j];
+		in2[2*j+1] = input[2*j+1];
+		output[2*j+1] = out2.get(VAR0); // First derivatives
+		output[2*j+2] = out2.get(VAR1); // First derivatives
+	      }
+	    output[0] = out2.get(CNST); // Energy
+	  }
+	  if (inlen & 1)
+	  {
+	    typedef ctaylor<ireal_t,1> ttype;
+	    int inlen = xcint_vars[f->vars].len;
+	    ttype in[inlen], out = 0;
+	    for (int i=0;i<inlen;i++)
+	      in[i] = input[i];
+	    int j = inlen-1;
+	      {
+		in[j].set(VAR0,1);
+		densvars<ttype> d(f,in);
+		out = 0;
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp1(d);
+		in[j] = input[j];
+		output[j+1] = out.get(VAR0); // First derivatives
+	      }
+	      output[0] = out.get(CNST); // Energy
+	  }
+	  }
+	  break;
+#if 0
+	    typedef ctaylor<ireal_t,1> ttype;
+	    int inlen = xcint_vars[f->vars].len;
+	    ttype in[inlen], out = 0;
+	    for (int i=0;i<inlen;i++)
+	      in[i] = input[i];
+	    for (int j=0;j<inlen;j++)
+	      {
+		in[j].set(VAR0,1);
+		densvars<ttype> d(f,in);
+		out = 0;
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp1(d);
+		in[j] = input[i];
+		output[j+1] = out[1]; // First derivatives
+	      }
+	    output[0] = out[0]; // Energy
+	  }
+	  break;
+#endif
+#endif
+#if XC_MAX_ORDER >= 2
+	case 2:
+	  {
+	    typedef ctaylor<ireal_t,2> ttype;
+	    int inlen = xcint_vars[f->vars].len;
+	    ttype in[inlen], out = 0;
+	    for (int i=0;i<inlen;i++)
+	      in[i] = input[i];
+	    int k = inlen+1;
+	    for (int i=0;i<inlen;i++)
+	      {
+		in[i].set(VAR0,1);
+		for (int j=i;j<inlen;j++)
+		  {
+		    in[j].set(VAR1,1);
+		    densvars<ttype> d(f,in);
+		    out = 0;
+		    for (int n=0;n<f->nr_active_functionals;n++)
+		      out += f->settings[f->active_functionals[n]->id]
+		      * f->active_functionals[n]->fp2(d); 
+		    output[k++] = out.get(VAR0|VAR1); //Second derivative
+		    in[j].set(VAR1,0); // slightly pessimized
+		  }
+		output[i+1] = out.get(VAR0); //First derivative
+		in[i] = input[i];
+	      }
+	    output[0] = out.get(CNST); //Energy
+	  }
+	  break;
+#endif
+	default:
+	  xcint_die("FIXME: Order too high for partial derivatives in xc_eval",f->order);
+	}
+    }
+  else if (f->mode == XC_CONTRACTED)
+    {
+#define DOEVAL(N,E) if (f->order == N) {\
+      typedef ctaylor<ireal_t,N> ttype; \
+      int inlen = xcint_vars[f->vars].len; \
+      ttype in[inlen], out = 0; \
+      int k = 0; \
+      for (int i=0;i<inlen;i++) \
+	for (int j=0;j<(1 << f->order);j++) \
+	  in[i].set(j,input[k++]);	    \
+      densvars<ttype> d(f,in); \
+      for (int i=0;i<f->nr_active_functionals;i++) \
+	out += f->settings[f->active_functionals[i]->id] \
+	  * f->active_functionals[i]->fp##N(d);\
+      for (int i=0;i<(1<<f->order);i++) output[i] = out.get(i); } else
+      FOR_EACH(XC_MAX_ORDER,DOEVAL,)
+      xcint_die("bug! Order too high in XC_CONTRACTED",f->order);
+    }
+  else if (f->mode == XC_POTENTIAL)
+    {
+      int inlen = xcint_vars[f->vars].len;
+      int npot; // One or two potentials
+      if (inlen == 1 || inlen == 10)
+	npot = 1;
+      else
+	npot = 2;
+      {
+	typedef ctaylor<ireal_t,1> ttype;      
+	ttype in[inlen], out = 0;
+	for (int i=0;i<inlen;i++)
+	  in[i] = input[i];
+	for (int j=0;j<npot;j++)
+	  {
+	    in[j].set(VAR0,1);
+	    densvars<ttype> d(f,in);
+	    out = 0;
+	    for (int i=0;i<f->nr_active_functionals;i++)
+	      out += f->settings[f->active_functionals[i]->id]
+		* f->active_functionals[i]->fp1(d);
+	    in[j] = input[j];
+	    output[j+1] = out.get(VAR0); // First derivatives
+	  }
+	output[0] = out.get(CNST); // Energy
+      }
+      if (f->depends & XC_GRADIENT) // GGA potential
+	{
+	  /*
+	     v = dE/dn - nabla.dE/dg
+	   */
+	  typedef ctaylor<ireal_t,2> ttype;
+	  ttype in[inlen];
+	  // n gx gy gz xx xy xz yy yz zz
+          // 0 1  2  3  4  5  6  7  8  9
+	  if (f->vars == XC_A_2ND_TAYLOR || f->vars == XC_N_2ND_TAYLOR)
+	    {
+	      ttype out = 0;
+	      // d/dx
+	      in[0] = ttype(input[0],0,input[1]);
+	      for (int i=0;i<3;i++)
+		in[1+i] = ttype(input[1+i],VAR0,input[4+i]);
+	      in[1].set(VAR1,1); // d/dgx
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+
+	      // d/dy
+	      in[0] = ttype(input[0],VAR0,input[2]);
+	      in[1] = ttype(input[1],VAR0,input[5]);
+	      in[2] = ttype(input[2],VAR0,input[7]);
+	      in[3] = ttype(input[3],VAR0,input[8]);
+	      in[2].set(VAR1,1); // d/dgy
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+	      // d/dz
+	      in[0] = ttype(input[0],VAR0,input[3]);
+	      in[1] = ttype(input[1],VAR0,input[6]);
+	      in[2] = ttype(input[2],VAR0,input[8]);
+	      in[3] = ttype(input[3],VAR0,input[9]);
+	      in[3].set(VAR1,1); // d/dgz
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+	      output[1] -= out.get(VAR0|VAR1); // Subtract divergence of dE/dg from lda part of potential
+	    }
+	  else
+	    {
+	      xcint_die("TODO: AB GGA potential",f->mode);
+	    }
+	}
+    }
+  else 
+    {
+      xcint_die("Illegal mode in xc_eval()",f->mode);
+    }
+}
+
+#if 0
+
+void xcint_evaluator(xc_functional_obj *f, const double *input, double *output)
+{
+#if 0
+  else if (f->mode == XC_POTENTIAL)
+    {
+      // First derivatives needed for lda, second for gga
+      // TODO: select proper type here
+      typedef taylor<ireal_t,vars_info<VARS>::nr_variables,vars_info<VARS>::pot_order> 
+	ttype;
+      ttype out = 0;
+      densvars<ttype> d;
+      xcint_setup_vars<VARS,ttype>(d,input);
+      d.parent = f;
+      for (int i=0;i<f->nr_active_functionals;i++)
+	{
+	  if (xcint_spec<ttype>(f->active_functionals[i]))
+	    out += f->settings[f->active_functionals[i]] *
+	      xcint_spec<ttype>(f->active_functionals[i])(d);
+	  else
+	    xcint_die("Functional does not have requested specialization",
+		      f->active_functionals[i]);
+	}
+      output[0] = out[0];
+      if (VARS == XC_A or VARS == XC_N)
+	{
+	  output[1] = out[1];
+	}
+      else if (VARS == XC_A_B or VARS == XC_N_S)
+	{
+	  output[1] = out[1];
+	  output[2] = out[2];
+	}
+      else if (VARS == XC_A_B_GAA_GAB_GBB)
+	{
+	  const int gaa = 2, gab = 3, gbb = 4, lapa = 5, lapb = 6;
+	  output[1] = out[1];
+	  output[2] = out[2];
+
+	  output[1]  = out[XC_D10000];
+	  output[1] -= 2*input[lapa]*out[XC_D00100] + input[lapb]*out[XC_D00010];
+	  output[1] -= 2*(out[XC_D10100]*input[gaa]   + 
+			out[XC_D01100]*input[gab] +
+			out[XC_D00200]*(2*input[lapa]*input[gaa]) +
+			out[XC_D00110]*(input[lapa]*input[gab] + input[lapb]*input[gaa]) +
+			out[XC_D00101]*(2*input[lapb]*input[gab]) 
+			); 
+	  output[1] -= (out[XC_D10010]*input[gab] +
+		      out[XC_D01010]*input[gbb] +
+		      out[XC_D00110]*(2*input[lapa]*input[gab]) +
+		      out[XC_D00020]*(input[lapb]*input[gab] + input[lapa]*input[gbb]) +
+		      out[XC_D00011]*(2*input[lapb]*input[gbb])); 
+
+	  output[2]  = out[XC_D01000];
+	  output[2] -= 2*input[lapb]*out[XC_D00001] + input[lapa]*out[XC_D00010];
+	  output[2] -= 2*(out[XC_D01001]*input[gbb]   + 
+			out[XC_D10001]*input[gab]  +
+			out[XC_D00002]*(2*input[lapb]*input[gbb]) +
+			out[XC_D00011]*(input[lapb]*input[gab] + input[lapa]*input[gbb]) +
+			out[XC_D00101]*(2*input[lapa]*input[gab])  ); 
+	  output[2] -= (out[XC_D01010]*input[gab] +
+			out[XC_D10010]*input[gaa] +
+			out[XC_D00011]*(2*input[lapb]*input[gab]) +
+			out[XC_D00020]*(input[lapa]*input[gab] + input[lapb]*input[gaa]) +
+			out[XC_D00110]*(2*input[lapa]*input[gaa])); 
+	}
+      else
+	{
+	  xcint_die("XC_POTENTIAL not implemented for this functional and variables",0);
+	}
+    }
+  else if (f->mode == XC_CONTRACTED)
+    {
+      xcint_die("XC_CONTRACT not implemented",0);
+    }
+#endif
+}
+#endif
+
+
+int xc_eval_setup(xc_functional fun,
+		  enum xc_vars vars,
+		  enum xc_mode mode,
+		  int order)
+{
+  // Check that vars are enough for the functional
+  if ((fun->depends & xcint_vars[vars].provides) != fun->depends)
+    {
+      printf("depends %i, provides %i\n",fun->depends,xcint_vars[vars].provides);
+      return XC_EVARS;
+    }
+  if ((order < 0 || order > XC_MAX_ORDER) ||
+      (mode == XC_PARTIAL_DERIVATIVES && order > 2))
+    return XC_EORDER;
+  if (mode == XC_POTENTIAL)
+    {
+      // GGA potential needs full laplacian
+      if ((fun->depends & XC_GRADIENT) && !(vars == XC_A_2ND_TAYLOR ||
+					    vars == XC_A_B_2ND_TAYLOR ||
+					    vars == XC_N_2ND_TAYLOR ||
+					    vars == XC_N_S_2ND_TAYLOR))
+	return XC_EVARS | XC_EMODE;
+      // No potential for meta gga's
+      if (fun->depends & (XC_LAPLACIAN | XC_KINETIC))
+	return XC_EMODE;
+    }
+  fun->mode = mode;
+  fun->vars = vars;
+  fun->order = order;
+  return 0;
+}
+
+const char *xc_name(int param)
+{
+  xcint_assure_setup();
+  if (param >= 0 && param < XC_NR_FUNCTIONALS)
+    return xcint_funs[param].symbol;
+  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
+    return xcint_params[param].symbol;
+  else
+    return 0;
+}
+
+// Describe in one line what the setting does
+const char *xc_short_description(int param)
+{
+  xcint_assure_setup();
+  if (param >= 0 && param < XC_NR_FUNCTIONALS)
+    return xcint_funs[param].short_description;
+  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
+    return xcint_params[param].description;
+  else
+    return 0;
+}
+// Long description of the setting, ends with a \n
+const char *xc_long_description(int param)
+{
+  xcint_assure_setup();
+  if (param >= 0 && param < XC_NR_FUNCTIONALS)
+    return xcint_funs[param].long_description;
+  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
+    return xcint_params[param].description;
+  else
+    return 0;
 }

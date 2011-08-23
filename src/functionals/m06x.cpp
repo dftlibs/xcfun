@@ -5,7 +5,7 @@
 // M06 exchange functional. to be used with HF exchange factor of .27 
 
 template<class num>
-static num energy (const densvars<num> &d)
+static num m06x(const densvars<num> &d)
 {
    using pw91_like_x_internal::chi2;
    using m0xy_metagga_xc_internal::zet;
@@ -32,36 +32,38 @@ static num energy (const densvars<num> &d)
           );
 }
 
-void setup_m06x(functional &f)
-{
-  f.describe(XC_M06X, XC_MGGA,
-	     "M06 exchange",
-             "M06 Meta-Hybrid Exchange Functional\n"
-             "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"
-             "Implemented by Andre Gomes\n"
-	     "Reference gradient from ADF\n");
+FUNCTIONAL(XC_M06X) = {
+  "M06 exchange",
+  "M06 Meta-Hybrid Exchange Functional\n"
+  "Y Zhao and D. G. Truhlar, Theor. Chem. Account 120, 215 (2008)\n"
+  "Implemented by Andre Gomes\n"
+  "Reference gradient from ADF\n",
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC,
+  ENERGY_FUNCTION(m06x)
+  XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
+  XC_PARTIAL_DERIVATIVES,
+  1,
+  1e-7,
+  {0.153652558932587,
+   0.153652558932587,     
+   8.390981882024769E-002,
+   8.390981882024769E-002, 
+   8.390981882024769E-002,			     
+   6.826262722466429E-002,  
+   6.826262722466429E-002},
+  {-1.0989923683183833e-01, // Energy from xcfun
+   -0.519568215542419,
+   -0.519568215542419,
+   -1.757089749188437E-002,
+   0.000000000000000E+000,
+   -1.757089749188437E-002,
+   9.227728385689479E-002,
+   9.227728385689479E-002}
+};
 
-  SET_MGGA_ENERGY_FUNCTION(f,energy);
   /*
   const double d[] =
     {1., .8, 1., 1., 1., .33, .21};
   const double ref[] =
     { -0.93035619, -1.57676773, -1.59326350, -0.00081086,   0.00000000, -0.00129163, 1.62369085,  2.06708653 };
   */
-  const double d[] = {0.153652558932587,
-			     0.153652558932587,     
-			     8.390981882024769E-002,
-			     8.390981882024769E-002, 
-			     8.390981882024769E-002,			     
-			     6.826262722466429E-002,  
-			     6.826262722466429E-002};
-  const double ref[] = {-1.0989923683183833e-01, // Energy from xcfun
-			       -0.519568215542419,
-			       -0.519568215542419,
-			       -1.757089749188437E-002,
-			       0.000000000000000E+000,
-			       -1.757089749188437E-002,
-			       9.227728385689479E-002,
-			       9.227728385689479E-002};
-  f.add_test(XC_VARS_AB,1,d,ref,1e-7);
-}

@@ -13,7 +13,7 @@ int main(void)
   printf("%s",xcfun_splash());
   printf("XCFun version: %g\n",xcfun_version());
   printf("\nAvailable functionals and settings:\n");
-  for (i=0;i<XC_NR_PARAMS;i++)
+  for (i=0;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
     {
       const char *s;
       printf("%s \t",xc_name(i));
@@ -21,8 +21,6 @@ int main(void)
 	printf("%s",s);
       else
 	printf("[No description]");
-      if (!xc_is_functional(i))
-	printf(" [parameter or disabled functional]");
       printf("\n");
     }
   printf("Running tests..\n");
