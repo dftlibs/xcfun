@@ -505,7 +505,11 @@ int xc_eval_setup(xc_functional fun,
 					    vars == XC_A_B_2ND_TAYLOR ||
 					    vars == XC_N_2ND_TAYLOR ||
 					    vars == XC_N_S_2ND_TAYLOR))
-	return XC_EVARS | XC_EMODE;
+	{
+	  printf("xxx\n");
+	  return XC_EVARS | XC_EMODE;
+	  
+	}
       // No potential for meta gga's
       if (fun->depends & (XC_LAPLACIAN | XC_KINETIC))
 	return XC_EMODE;

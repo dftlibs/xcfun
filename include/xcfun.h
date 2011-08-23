@@ -99,6 +99,10 @@ extern "C" {
       XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
       XC_N_S_GNN_GNS_GSS_LAPN_LAPS,
       XC_N_S_GNN_GNS_GSS_TAUN_TAUS,
+      XC_A_AX_AY_AZ,
+      XC_A_B_AX_AY_AZ_BX_BY_BZ,
+      XC_N_NX_NY_NZ,
+      XC_N_S_NX_NY_NZ_SX_SY_SZ,
       /* 2:nd order Taylor coefficients of alpha density, 1+3+6=10
 	 numbers, rev gradlex order */	
       XC_A_2ND_TAYLOR, 

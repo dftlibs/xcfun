@@ -2,9 +2,9 @@ module xcfun
   use xcfun_autogen
   implicit none
 ! Evaluation modes
-  integer, parameter :: XC_PARTIAL_DERIVATIVES = 0
-  integer, parameter :: XC_POTENTIAL = 1
-  integer, parameter :: XC_CONTRACTED = 2
+  integer, parameter :: XC_PARTIAL_DERIVATIVES = 1
+  integer, parameter :: XC_POTENTIAL = 2
+  integer, parameter :: XC_CONTRACTED = 3
 
 ! Indices into the output array of derivatives. Fortran numbering.
   integer, parameter :: XC_D0 = 1

@@ -77,6 +77,40 @@ struct densvars
 	a = 0.5*n;
 	b = a;
 	break;
+      case XC_N_2ND_TAYLOR: 
+        lapa = 0.5*(d[4]+d[7]+d[9]);
+        lapb = lapa;
+      case XC_N_NX_NY_NZ:
+        gnn = d[1]*d[1] + d[2]*d[2] + d[3]*d[3];
+        gss = 0;
+        gns = 0;
+        gaa = 0.25*gnn;
+        gab = gaa;
+        gbb = gaa;
+        n = d[0];
+        regularize(n);
+        s = 0;
+        a = 0.5*n;
+        b = a;
+        break;
+      case XC_A_B_2ND_TAYLOR: // a gax gay gaz haxx haxy haxz hayy hayz hazz 
+                              // 0 1   2   3   4    5    6    7    8    9
+        lapa = d[4]+d[7]+d[9];
+        lapb = d[14]+d[17]+d[19];
+      case XC_A_B_AX_AY_AZ_BX_BY_BZ:
+        a = d[0];             
+        regularize(a);
+        b = d[10];
+        regularize(b);
+        gaa = d[1]*d[1] + d[2]*d[2] + d[3]*d[3];
+        gab = d[1]*d[11] + d[2]*d[12] + d[3]*d[13];
+        gbb = d[11]*d[11] + d[12]*d[12] + d[13]*d[13];
+        gnn  = gaa + 2*gab + gbb; 
+        gss  = gaa - 2*gab + gbb;
+        gns  = gaa - gbb;
+        n = a+b;
+        s = a-b;
+        break;
       default:
 	xcint_die("Illegal vars value in densvars()",parent->vars);	
       }
