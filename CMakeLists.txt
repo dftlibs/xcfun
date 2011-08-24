@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 project(XCFun CXX C Fortran)
 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+    )
+
 # set build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE
@@ -20,10 +25,10 @@ if(    NOT cmake_build_type_tolower STREQUAL "debug"
 endif()
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/taylor
-    ${PROJECT_SOURCE_DIR}/src/functionals
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/functionals
     )
 
 set(BASE_SOURCES
@@ -49,10 +54,10 @@ target_link_libraries(
     xcfun
     )
 
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fortran)
 add_custom_command(
     OUTPUT
-    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
+    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
     DEPENDS
     genfortran
     COMMAND
@@ -60,14 +65,14 @@ add_custom_command(
     )
 add_executable(
     genfortran
-    ${PROJECT_SOURCE_DIR}/src/genfortran.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/genfortran.cpp
     )
 target_link_libraries(
     genfortran
     xcfun
     )
 set(GENERATED_FILES
-    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
+    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
     )
 add_custom_target(xcfun_interfaces
     ALL
@@ -77,8 +82,8 @@ add_custom_target(xcfun_interfaces
 
 add_library(
     xcfun_f90_bindings
-    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
-    ${CMAKE_SOURCE_DIR}/fortran/xcfun_module.F90
+    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
+    ${CMAKE_CURRENT_SOURCE_DIR}/fortran/xcfun_module.F90
     )
 add_executable(
     kernel_example
