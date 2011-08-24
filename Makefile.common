@@ -40,6 +40,7 @@ fortran/xcfun_autogen.o: fortran/xcfun_autogen.F90
 fortran/xcfun_module.o: fortran/xcfun_module.F90 fortran/xcfun_autogen.o fortran/xcfun_autogen.F90
 	$(FC) $(FFLAGS) -c -o $@ $<
 
+# radovan: seems broken
 example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.o lib/libxcfun.a
 	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
 
