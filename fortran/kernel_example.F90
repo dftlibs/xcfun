@@ -9,7 +9,7 @@ program xc_example
    implicit none
 
    character(1000)      :: text
-   integer              :: id, order, npoints, res, ideriv, i
+   integer              :: id, order, npoints, res, ideriv
    real(8), allocatable :: groundstate_density(:, :), output(:, :), density2(:,:,:), density3(:,:,:,:)
    real(8)              :: result_derv(4), result_derv_reference(4)
 
