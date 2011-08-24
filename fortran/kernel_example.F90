@@ -26,6 +26,7 @@ program xc_example
    print *, 'Setting up PBE'
    call xc_set(id, XC_PBEX, 1.0d0)
    call xc_set(id, XC_PBEC, 1.0d0)
+
 !  We will compute the kernel for an unpolarized system using total density and the
 !  gradient components as the variables. These are linear in the density matrix, which
 !  helps the code using the results from xcfun.
@@ -34,51 +35,50 @@ program xc_example
 !  We have one gridpoint, and four variables, density N and gradient
 !  components NX NY NZ.
    order = 0
-   npoints = 1
    res = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-   if (res.ne.0) then
-      print *,'xc_eval_setup failed with error ',res
-      stop
+   if (res /= 0) then
+      print *, 'xc_eval_setup failed with error ', res
+      stop 1
    endif
 
-!  Allocate space for the input
-   allocate(groundstate_density(4,1))
-!  and the output (one number, the XC energy density)
-   allocate(output(1,1))
+!  allocate space for the input
+   allocate(groundstate_density(4, 1))
+!  and the output (one number, the xc energy density)
+   allocate(output(1, 1))
 !  fill in some density
-   groundstate_density(1,1) = 1.0 ! density
-   groundstate_density(2,1) = 2.0 ! g_x
-   groundstate_density(3,1) = 3.0 ! g_y
-   groundstate_density(4,1) = 4.0 ! g_z
-!  Ok, now compute the xc energy density at this point
-   call xc_eval(id,npoints,groundstate_density,output)
-   print *,'The XC energy density is',output(1,1)
+   groundstate_density(1, 1) = 1.0 ! density
+   groundstate_density(2, 1) = 2.0 ! g_x
+   groundstate_density(3, 1) = 3.0 ! g_y
+   groundstate_density(4, 1) = 4.0 ! g_z
+!  now compute the xc energy density at this point
+   npoints = 1
+   call xc_eval(id, npoints, groundstate_density, output)
+   print *, 'The XC energy density is', output(1, 1)
 
    deallocate(groundstate_density)
    deallocate(output)
 
-!  Now let's compute the first derivatives ('potential')
-!  First set up xcfun for first derivatives
+!  now let's compute the first derivatives ('potential')
+!  first set up xcfun for first derivatives
    order = 1
    res = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-   if (res.ne.0) then
-      print *,'xc_eval_setup failed with error ',res
-      stop
+   if (res /= 0) then
+      print *, 'xc_eval_setup failed with error ', res
+      stop 1
    endif
 
-!  This time we need a two dimensional (+1 gridpoint dimension)
+!  this time we need a two dimensional (+1 gridpoint dimension)
 !  input, as follows
-   allocate(density2(2,4,1))
+   allocate(density2(2, 4, 1))
 !  and the output (two numbers in this "gridpoint", one energy, one derivative)
-   allocate(output(2,1))
+   allocate(output(2, 1))
 !  fill in the ground state density
-   density2(1,1,1) = 1.0 ! density
-   density2(1,2,1) = 2.0 ! g_x
-   density2(1,3,1) = 3.0 ! g_y
-   density2(1,4,1) = 4.0 ! g_z
+   density2(1, 1, 1) = 1.0 ! density
+   density2(1, 2, 1) = 2.0 ! g_x
+   density2(1, 3, 1) = 3.0 ! g_y
+   density2(1, 4, 1) = 4.0 ! g_z
 
-
-
+!  reference values for self test
    result_derv_reference(1) = -0.97182658347124051d0
    result_derv_reference(2) = -8.98025300594966838d-3
    result_derv_reference(3) = -1.34703795089245043d-2
@@ -105,31 +105,35 @@ program xc_example
       end if
    end do
 
+   deallocate(density2)
    deallocate(output)
-!  Now second derivative of the "potential", contracted with one perturbed density.
-!  Hopefully the strange input/output format will start to make sense
+
+!  now second derivative of the "potential", contracted with one perturbed density.
+!  hopefully the strange input/output format will start to make sense
    order = 2
    res = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-   if (res.ne.0) then
-      print *,'xc_eval_setup failed with error ',res
-      stop
+   if (res /= 0) then
+      print *, 'xc_eval_setup failed with error ', res
+      stop 1
    endif
-!  This time we need a three dimensional (+1 gridpoint dimension)
-!  input, as follows
-   allocate(density3(2,2,4,1))
-!  and the output (four numbers in this "gridpoint", one energy, two first derivatives, one second derivative)
-   allocate(output(4,1))
-!  fill in the ground state density
-   density3(1,1,1,1) = 1.0 ! density
-   density3(1,1,2,1) = 2.0 ! g_x
-   density3(1,1,3,1) = 3.0 ! g_y
-   density3(1,1,4,1) = 4.0 ! g_z
-!  fill in the perturbed density (a trial vector probably)
-   density3(2,1,1,1) = 5.0 ! density
-   density3(2,1,2,1) = 6.0 ! g_x
-   density3(2,1,3,1) = 7.0 ! g_y
-   density3(2,1,4,1) = 8.0 ! g_z
 
+!  this time we need a three dimensional (+1 gridpoint dimension)
+!  input, as follows
+   allocate(density3(2, 2, 4, 1))
+!  and the output (four numbers in this "gridpoint", one energy, two first derivatives, one second derivative)
+   allocate(output(4, 1))
+!  fill in the ground state density
+   density3(1, 1, 1, 1) = 1.0 ! density
+   density3(1, 1, 2, 1) = 2.0 ! g_x
+   density3(1, 1, 3, 1) = 3.0 ! g_y
+   density3(1, 1, 4, 1) = 4.0 ! g_z
+!  fill in the perturbed density (a trial vector probably)
+   density3(2, 1, 1, 1) = 5.0 ! density
+   density3(2, 1, 2, 1) = 6.0 ! g_x
+   density3(2, 1, 3, 1) = 7.0 ! g_y
+   density3(2, 1, 4, 1) = 8.0 ! g_z
+
+!  reference values for self test
    result_derv_reference(1) = -2.0795504461938754d0
    result_derv_reference(2) =  2.14893341430147031d-2
    result_derv_reference(3) =  4.12142542204717230d-2
@@ -157,26 +161,26 @@ program xc_example
       end if
    end do
 
+   deallocate(density3)
+   deallocate(output)
 
+!  Note: the computed second derivatives are now already contracted with the
+!  perturbed density! This works to any order.
+!  In this example we put in once and zeros, which you need to do to compute matrix
+!  elements. You can also put in a perturbed density instead of ones and zeros,
+!  then you generate a response contribution d^2E/dD1dD2. Typically this is what
+!  you want to do to high order, because by the 2N+1 rule you don't have to compute
+!  matrix elements to very high order. Then you need only one call of xc_eval,
+!  not one for each variable. This is very efficient, much better than computing
+!  all partial derivatives. For second derivative it might be better to compute
+!  all partial derivatives and reuse them in the response solved.
 
-
-   ! Note: the computed second derivatives are now already contracted with the
-   ! perturbed density! This works to any order.
-   ! In this example we put in once and zeros, which you need to do to compute matrix
-   ! elements. You can also put in a perturbed density instead of ones and zeros,
-   ! then you generate a response contribution d^2E/dD1dD2. Typically this is what
-   ! you want to do to high order, because by the 2N+1 rule you don't have to compute
-   ! matrix elements to very high order. Then you need only one call of xc_eval,
-   ! not one for each variable. This is very efficient, much better than computing
-   ! all partial derivatives. For second derivative it might be better to compute
-   ! all partial derivatives and reuse them in the response solved.
-
-   ! Note2: In this example I used the variables that are linear in the density
-   ! matrix. This makes life easier because you can construct them trivially from
-   ! perturbed density matrices. If you use i.e. the square norm of the density
-   ! gradient things get more complicated.
-   ! Note3: You can extend this example trivially to alpha/beta densities
-   ! By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
-   ! Then the number 4 above will be replaced by 8.
+!  Note2: In this example I used the variables that are linear in the density
+!  matrix. This makes life easier because you can construct them trivially from
+!  perturbed density matrices. If you use i.e. the square norm of the density
+!  gradient things get more complicated.
+!  Note3: You can extend this example trivially to alpha/beta densities
+!  By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
+!  Then the number 4 above will be replaced by 8.
 
 end program
