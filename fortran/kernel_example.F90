@@ -1,6 +1,6 @@
 program xc_example
 
-!  this example contains all f90 interface routines
+!  this example contains calls to all f90 interface routines
 !  that are needed to "talk to" the xcfun library
 !  and demonstrates how to use them
 
@@ -31,7 +31,7 @@ program xc_example
 !  helps the code using the results from xcfun.
 
 !  First we just compute the energy, i.e. the 0-th order integrand.
-!  We have one gridpoint, and four variables, density N and gradient 
+!  We have one gridpoint, and four variables, density N and gradient
 !  components NX NY NZ.
    order = 0
    npoints = 1
@@ -39,7 +39,7 @@ program xc_example
    if (res.ne.0) then
       print *,'xc_eval_setup failed with error ',res
       stop
-   endif  
+   endif
 
 !  Allocate space for the input
    allocate(groundstate_density(4,1))
@@ -64,9 +64,9 @@ program xc_example
    if (res.ne.0) then
       print *,'xc_eval_setup failed with error ',res
       stop
-   endif     
-   
-!  This time we need a two dimensional (+1 gridpoint dimension) 
+   endif
+
+!  This time we need a two dimensional (+1 gridpoint dimension)
 !  input, as follows
    allocate(density2(2,4,1))
 !  and the output (two numbers in this "gridpoint", one energy, one derivative)
@@ -84,30 +84,26 @@ program xc_example
    result_derv_reference(3) = -1.34703795089245043d-2
    result_derv_reference(4) = -1.79605060118993368d-2
 
-!  Here is a tricky part, we need a loop and we need to put 
+!  here is a tricky part, we need a loop and we need to put
 !  in a '1' where we want the derivative
 !  we loop over all variables we want a derivative with respect to
-   do ideriv=1,4
-      do i=1,4
-         if (i.eq.ideriv) then
-            density2(2,i,1) = 1.0d0
-         else
-            density2(2,i,1) = 0.0d0
-         endif
-      enddo
-      ! call xcfun to evaluate derivative with respect to the variable ideriv
-      call xc_eval(id,npoints,reshape(density2,(/8,1/)),output)
-      print *,'dE/dx_i for i =',ideriv,'is',output(2,1)
+   do ideriv = 1, 4
+      density2(2, :,      1) = 0.0d0
+      density2(2, ideriv, 1) = 1.0d0
+!     It is possible to put in other numbers than 1 and 0 in the density2 array
+!     this is where perturbed densities go for automatic contraction
 
-      ! test against reference numbers
+!     call xcfun to evaluate derivative with respect to the variable ideriv
+      call xc_eval(id, npoints, reshape(density2, (/8, 1/)), output)
+      print *, 'dE/dx_i for i =', ideriv, 'is', output(2, 1)
+
+!     test against reference numbers
       result_derv(ideriv) = output(2, 1)
       if (abs(result_derv(ideriv) - result_derv_reference(ideriv)) > 1.0d-6) then
+         print *, 'error: derivatives do not match reference numbers'
          stop 1
       end if
-   enddo
-
-!  It is possible to put in other numbers than 1 and 0 in the density2 array, this
-!  is where perturbed densities goes for automatic contraction.
+   end do
 
    deallocate(output)
 !  Now second derivative of the "potential", contracted with one perturbed density.
@@ -117,8 +113,8 @@ program xc_example
    if (res.ne.0) then
       print *,'xc_eval_setup failed with error ',res
       stop
-   endif     
-!  This time we need a three dimensional (+1 gridpoint dimension) 
+   endif
+!  This time we need a three dimensional (+1 gridpoint dimension)
 !  input, as follows
    allocate(density3(2,2,4,1))
 !  and the output (four numbers in this "gridpoint", one energy, two first derivatives, one second derivative)
@@ -139,27 +135,32 @@ program xc_example
    result_derv_reference(3) =  4.12142542204717230d-2
    result_derv_reference(4) =  6.09391742979287290d-2
 
-!  Now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
-!  Note: we have grounstate values in (1,1,:), perturbed density in (2,1,:) and ones and zeroes in (1,2,:).
-!  (2,2,:) is not used. In general there will be 2^N elements, 1 groundstate, 2^N-2 perturbed and one unused.
-   do ideriv=1,4
-      do i=1,4
-         if (i.eq.ideriv) then
-            density3(1,2,i,1) = 1.0d0
-         else
-            density3(1,2,i,1) = 0.0d0
-         endif
-      enddo
-      ! call xcfun to evaluate derivative with respect to the variable ideriv
-      call xc_eval(id,npoints,reshape(density3,(/16,1/)),output)
-      print *,'d^2 E/dx_i dD_pert for i =',ideriv,'is',output(4,1)
-      ! test against reference numbers
+!  now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
+!  (1, 1, :) ground state values
+!  (2, 1, :) perturbed density
+!  (1, 2, :) ones and zeros
+!  (2, 2, :) not used
+!  in general there will be 2^N elements, 1 ground state, 2^N-2 perturbed and one unused.
+   do ideriv = 1, 4
+      density3(1, 2, :,      1) = 0.0d0
+      density3(1, 2, ideriv, 1) = 1.0d0
+
+!     call xcfun to evaluate derivative with respect to the variable ideriv
+      call xc_eval(id, npoints, reshape(density3, (/16, 1/)), output)
+      print *, 'd^2 E/dx_i dD_pert for i =', ideriv, 'is', output(4, 1)
+
+!     test against reference numbers
       result_derv(ideriv) = output(4, 1)
       if (abs(result_derv(ideriv) - result_derv_reference(ideriv)) > 1.0d-6) then
+         print *, 'error: derivatives do not match reference numbers'
          stop 1
       end if
-   enddo
-   ! Note: the computed second derivatives are now already contracted with the 
+   end do
+
+
+
+
+   ! Note: the computed second derivatives are now already contracted with the
    ! perturbed density! This works to any order.
    ! In this example we put in once and zeros, which you need to do to compute matrix
    ! elements. You can also put in a perturbed density instead of ones and zeros,
@@ -169,13 +170,13 @@ program xc_example
    ! not one for each variable. This is very efficient, much better than computing
    ! all partial derivatives. For second derivative it might be better to compute
    ! all partial derivatives and reuse them in the response solved.
-   
+
    ! Note2: In this example I used the variables that are linear in the density
    ! matrix. This makes life easier because you can construct them trivially from
    ! perturbed density matrices. If you use i.e. the square norm of the density
    ! gradient things get more complicated.
    ! Note3: You can extend this example trivially to alpha/beta densities
    ! By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
-   ! Then the number 4 above will be replaced by 8.  
+   ! Then the number 4 above will be replaced by 8.
 
 end program
