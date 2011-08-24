@@ -166,19 +166,20 @@ program xc_example
 
 !  Note: the computed second derivatives are now already contracted with the
 !  perturbed density! This works to any order.
-!  In this example we put in once and zeros, which you need to do to compute matrix
+!  In this example we put in ones and zeros, which you need to do to compute matrix
 !  elements. You can also put in a perturbed density instead of ones and zeros,
 !  then you generate a response contribution d^2E/dD1dD2. Typically this is what
 !  you want to do to high order, because by the 2N+1 rule you don't have to compute
 !  matrix elements to very high order. Then you need only one call of xc_eval,
 !  not one for each variable. This is very efficient, much better than computing
-!  all partial derivatives. For second derivative it might be better to compute
-!  all partial derivatives and reuse them in the response solved.
+!  all partial derivatives. For second derivatives it might be better to compute
+!  all partial derivatives and reuse them in the response solver.
 
 !  Note2: In this example I used the variables that are linear in the density
 !  matrix. This makes life easier because you can construct them trivially from
 !  perturbed density matrices. If you use i.e. the square norm of the density
 !  gradient things get more complicated.
+
 !  Note3: You can extend this example trivially to alpha/beta densities
 !  By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
 !  Then the number 4 above will be replaced by 8.
