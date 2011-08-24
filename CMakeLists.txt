@@ -32,17 +32,13 @@ set(BASE_SOURCES
     src/fortran.c
     )
 
-file(GLOB FUN_SOURCES src/functionals/*.cpp)
+file(GLOB FUNCTIONAL_SOURCES src/functionals/*.cpp)
 
 add_library(
     xcfun
     ${BASE_SOURCES} 
-    ${FUN_SOURCES} 
+    ${FUNCTIONAL_SOURCES} 
     )
-
-
-
-
 
 add_executable(
     testall
