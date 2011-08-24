@@ -19,15 +19,18 @@ genfortran: src/genfortran.cpp lib/libxcfun.a
 fortran/xcfun_autogen.F90: genfortran include/xcfun.h
 	./genfortran
 
+# radovan: seems broken
 funeval: test/funeval.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) > cref
 
+# radovan: seems broken
 testmain: src/testmain.o lib/libxcfun.a
 	$(CXX) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
 testall: test/testall.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
+# radovan: seems broken
 test3: test/test3.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
