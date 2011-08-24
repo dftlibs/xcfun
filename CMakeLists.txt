@@ -36,8 +36,8 @@ file(GLOB FUNCTIONAL_SOURCES src/functionals/*.cpp)
 
 add_library(
     xcfun
-    ${BASE_SOURCES} 
-    ${FUNCTIONAL_SOURCES} 
+    ${BASE_SOURCES}
+    ${FUNCTIONAL_SOURCES}
     )
 
 add_executable(
@@ -49,25 +49,44 @@ target_link_libraries(
     xcfun
     )
 
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
+add_custom_command(
+    OUTPUT
+    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
+    DEPENDS
+    genfortran
+    COMMAND
+    genfortran
+    )
+add_executable(
+    genfortran
+    ${PROJECT_SOURCE_DIR}/src/genfortran.cpp
+    )
+target_link_libraries(
+    genfortran
+    xcfun
+    )
+set(GENERATED_FILES
+    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
+    )
+add_custom_target(xcfun_interfaces
+    ALL
+    DEPENDS
+    ${GENERATED_FILES}
+)
 
-#todo:
-
-#genfortran: src/genfortran.cpp lib/libxcfun.a
-#        $(CXX) $(CXXFLAGS) $^ -o $@ -lxcfun -lm $(LIBS)
-#
-#fortran/xcfun_autogen.F90: genfortran include/xcfun.h
-#        ./genfortran
-#
-#fortran/xcfun_autogen.o: fortran/xcfun_autogen.F90
-#        $(FC) $(FFLAGS) -c -o $@ $^
-#
-#fortran/xcfun_module.o: fortran/xcfun_module.F90 fortran/xcfun_autogen.o fortran/xcfun_autogen.F90
-#        $(FC) $(FFLAGS) -c -o $@ $<
-#
-#example_fortran: fortran/xcfun_autogen.o fortran/xcfun_module.o fortran/example.o lib/libxcfun.a
-#        $(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
-#
-#kernel_example: fortran/xcfun_autogen.o fortran/kernel_example.o fortran/xcfun_module.o  lib/libxcfun.a
-#        $(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
-
+add_library(
+    xcfun_f90_bindings
+    ${CMAKE_BINARY_DIR}/fortran/xcfun_autogen.F90
+    ${CMAKE_SOURCE_DIR}/fortran/xcfun_module.F90
+    )
+add_executable(
+    kernel_example
+    ${CMAKE_CURRENT_SOURCE_DIR}/fortran/kernel_example.F90
+    )
+target_link_libraries(
+    kernel_example
+    xcfun_f90_bindings
+    xcfun
+    )
 
