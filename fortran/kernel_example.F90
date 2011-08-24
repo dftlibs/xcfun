@@ -11,6 +11,7 @@ program xc_example
    character(1000)      :: text
    integer              :: id, order, npoints, res, ideriv, i
    real(8), allocatable :: groundstate_density(:, :), output(:, :), density2(:,:,:), density3(:,:,:,:)
+   real(8)              :: result_derv(4), result_derv_reference(4)
 
 !  print some info and copyright about the library
 !  please always include this info in your code
@@ -75,6 +76,14 @@ program xc_example
    density2(1,2,1) = 2.0 ! g_x
    density2(1,3,1) = 3.0 ! g_y
    density2(1,4,1) = 4.0 ! g_z
+
+
+
+   result_derv_reference(1) = -0.97182658347124051d0
+   result_derv_reference(2) = -8.98025300594966838d-3
+   result_derv_reference(3) = -1.34703795089245043d-2
+   result_derv_reference(4) = -1.79605060118993368d-2
+
 !  Here is a tricky part, we need a loop and we need to put 
 !  in a '1' where we want the derivative
 !  we loop over all variables we want a derivative with respect to
@@ -89,7 +98,14 @@ program xc_example
       ! call xcfun to evaluate derivative with respect to the variable ideriv
       call xc_eval(id,npoints,reshape(density2,(/8,1/)),output)
       print *,'dE/dx_i for i =',ideriv,'is',output(2,1)
+
+      ! test against reference numbers
+      result_derv(ideriv) = output(2, 1)
+      if (abs(result_derv(ideriv) - result_derv_reference(ideriv)) > 1.0d-6) then
+         stop 1
+      end if
    enddo
+
 !  It is possible to put in other numbers than 1 and 0 in the density2 array, this
 !  is where perturbed densities goes for automatic contraction.
 
@@ -117,6 +133,12 @@ program xc_example
    density3(2,1,2,1) = 6.0 ! g_x
    density3(2,1,3,1) = 7.0 ! g_y
    density3(2,1,4,1) = 8.0 ! g_z
+
+   result_derv_reference(1) = -2.0795504461938754d0
+   result_derv_reference(2) =  2.14893341430147031d-2
+   result_derv_reference(3) =  4.12142542204717230d-2
+   result_derv_reference(4) =  6.09391742979287290d-2
+
 !  Now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
 !  Note: we have grounstate values in (1,1,:), perturbed density in (2,1,:) and ones and zeroes in (1,2,:).
 !  (2,2,:) is not used. In general there will be 2^N elements, 1 groundstate, 2^N-2 perturbed and one unused.
@@ -131,6 +153,11 @@ program xc_example
       ! call xcfun to evaluate derivative with respect to the variable ideriv
       call xc_eval(id,npoints,reshape(density3,(/16,1/)),output)
       print *,'d^2 E/dx_i dD_pert for i =',ideriv,'is',output(4,1)
+      ! test against reference numbers
+      result_derv(ideriv) = output(4, 1)
+      if (abs(result_derv(ideriv) - result_derv_reference(ideriv)) > 1.0d-6) then
+         stop 1
+      end if
    enddo
    ! Note: the computed second derivatives are now already contracted with the 
    ! perturbed density! This works to any order.
@@ -150,4 +177,5 @@ program xc_example
    ! Note3: You can extend this example trivially to alpha/beta densities
    ! By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
    ! Then the number 4 above will be replaced by 8.  
+
 end program
