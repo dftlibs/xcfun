@@ -95,3 +95,6 @@ target_link_libraries(
     xcfun
     )
 
+include(Tests)
+include(CTest)
+enable_testing()
