@@ -16,16 +16,18 @@ static num pw86x(const num &na, const num &gaa)
 }
 
 template<class num>
-static num energy(const densvars<num> &d)
+static num pw86xtot(const densvars<num> &d)
 {
   return 0.5*(pw86x(d.a,d.gaa) + pw86x(d.b,d.gbb));
 }
 
-void setup_pw86x(functional &f)
-{
-  f.describe(XC_PW86X, XC_GGA,
-	     "Perdew-Wang 1986 GGA Exchange Functional",
-	     "Perdew-Wang 1986 GGA Exchange Functional\n"
-	     "Phys. Rev. B 33. 8800 (1986)"); 
-  SET_GGA_ENERGY_FUNCTION(f,energy);
-}
+
+FUNCTIONAL(XC_PW86X) = {
+  "PW86 exchange",
+  "Perdew-Wang 86 GGA exchange including Slater part\n"
+  "Phys. Rev. B 33. 8800 (1986)\n",
+  XC_DENSITY | XC_GRADIENT,
+  ENERGY_FUNCTION(pw86xtot)
+  XC_A_B_GAA_GAB_GBB,
+};
+
