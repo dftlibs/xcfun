@@ -116,6 +116,7 @@ target_link_libraries(
     xcfun_f90_bindings
     xcfun
     )
+set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)
 
 include(Tests)
 include(CTest)
