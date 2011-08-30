@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 project(XCFun CXX C Fortran)
 
+# XCFun version
+set(VERSION 2.0.0)
+# Library version
+set(SOVERSION 2.0.0)
+
+
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
@@ -44,6 +50,15 @@ add_library(
     ${BASE_SOURCES}
     ${FUNCTIONAL_SOURCES}
     )
+# Set .so version
+if(BUILD_SHARED_LIBS)
+ set_target_properties(xcfun PROPERTIES
+  VERSION ${VERSION} SOVERSION ${SOVERSION} )
+endif(BUILD_SHARED_LIBS)
+
+install(TARGETS xcfun DESTINATION lib${LIB_SUFFIX})
+file(GLOB headers "include/*.h")
+install(FILES ${headers} DESTINATION include)
 
 add_executable(
     testall
@@ -85,6 +100,13 @@ add_library(
     ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
     ${CMAKE_CURRENT_SOURCE_DIR}/fortran/xcfun_module.F90
     )
+# Set .so version
+if(BUILD_SHARED_LIBS)
+ set_target_properties(xcfun_f90_bindings PROPERTIES
+  VERSION ${VERSION} SOVERSION ${SOVERSION} )
+endif(BUILD_SHARED_LIBS)
+install(TARGETS xcfun_f90_bindings DESTINATION lib${LIB_SUFFIX})
+
 add_executable(
     kernel_example
     ${CMAKE_CURRENT_SOURCE_DIR}/fortran/kernel_example.F90
