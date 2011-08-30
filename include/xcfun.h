@@ -115,13 +115,18 @@ extern "C" {
       XC_NR_VARS
     };
 
+  /* Define a checksum to check for header/library consistency when using shared libraries. */ 
+#define XCFUN_CHECKSUM (XC_NR_MODES + 7*XC_NR_FUNCTIONALS + 1723*XC_NR_PARAMETERS_AND_FUNCTIONALS + 9091*XC_NR_VARS)
+
   double xcfun_version(void);
   const char *xcfun_splash(void);
   int xcfun_test(void);
   
   typedef struct xc_functional_obj * xc_functional;
 
-  xc_functional xc_new_functional(void);
+  xc_functional xc_new_functional_not_macro(int checksum);
+#define xc_new_functional() xc_new_functional_not_macro(XCFUN_CHECKSUM)
+
   void xc_free_functional(xc_functional fun);
 
 

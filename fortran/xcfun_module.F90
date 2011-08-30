@@ -129,7 +129,12 @@ contains
   ! Create a new, "empty" functional and return its id
   function xc_new_functional()
     integer xc_new_functional, xcnewf
-    xc_new_functional = xcnewf()
+    if (sizeof(xc_new_functional).ne.XCFUN_FORTRAN_INT_SIZE) then
+       print *,'XCFun Fortran integer size mismatch, define XCFUN_FORTRAN_INT and recompile XCFun.'
+       xc_new_functional = -1
+    else
+       xc_new_functional = xcnewf(XCFUN_CHECKSUM)
+    endif
   end function xc_new_functional
 
   subroutine xc_free_functional(funid)

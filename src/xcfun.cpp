@@ -3,9 +3,11 @@
 #include "xcint.h"
 
 
-xc_functional xc_new_functional()
+xc_functional xc_new_functional_not_macro(int checksum)
 {
   xcint_assure_setup();
+  if (checksum != XCFUN_CHECKSUM)
+    xcint_die("Header/library inconsistency detected, aborting",checksum);
   xc_functional fun = (xc_functional)malloc(sizeof*fun);
   if (!fun)
     xcint_die("Out of memory in xc_new_functional()",0);
