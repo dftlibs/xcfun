@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "m0xy_fun.h"
+#include "functional.hpp"
+#include "m0xy_fun.hpp"
 
 // M05 correlation functional
 

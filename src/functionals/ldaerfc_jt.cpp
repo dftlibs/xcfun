@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "vwn.h"
+#include "functional.hpp"
+#include "vwn.hpp"
 
 // This code was written by Radovan Bast based on the Ph.D. thesis of Julien Toulouse (page 159)
 // and the Dalton implementation of the short-range spin-unpolarized LDA correlation functional

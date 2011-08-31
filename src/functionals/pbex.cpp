@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "pbex.h"
+#include "functional.hpp"
+#include "pbex.hpp"
 
 // original PBE exchange functional
 

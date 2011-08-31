@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "pw92eps.h"
+#include "functional.hpp"
+#include "pw92eps.hpp"
 
 /*
   This code was adapted by Ulf Ekstrom from a Fortran program provided

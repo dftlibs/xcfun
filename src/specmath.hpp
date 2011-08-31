@@ -12,7 +12,7 @@ T erf(T x)
 #endif
 
 // Some math-related functions useful in many places
-#include "ctaylor.h"
+#include "ctaylor.hpp"
 
 template<class T>
 static T pow2(const T &t)

@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "constants.h"
-#include "pz81c.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "pz81c.hpp"
 
 template<class num>
 static num Cg(const num &r) 

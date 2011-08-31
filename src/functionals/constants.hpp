@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "functional.h"
+#include "functional.hpp"
 
 #ifndef M_PI // M_PI is not standard for some reason
 #define M_PI 3.14159265358979323846

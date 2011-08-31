@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "pw9xx.h"
+#include "functional.hpp"
+#include "pw9xx.hpp"
 
 // PW91 kinetic energy functional
 // reduces to TF kinetic energy functional for zero gradient

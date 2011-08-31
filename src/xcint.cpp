@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
-#include "xcint.h"
+#include "xcint.hpp"
 
 #ifndef FORTRAN_INT
 typedef int fortran_int_t;

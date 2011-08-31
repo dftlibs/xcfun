@@ -1,8 +1,8 @@
 #ifndef REVTPSSX_EPS_H
 #define REVTPSSX_EPS_H
 
-#include "functional.h"
-#include "constants.h"
+#include "functional.hpp"
+#include "constants.hpp"
 
 namespace revtpssx_eps
 {

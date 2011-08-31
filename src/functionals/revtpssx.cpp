@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "constants.h"
-#include "revtpssx_eps.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "revtpssx_eps.hpp"
 
 template<class num>
 static num revtpssx(const densvars<num> &d)

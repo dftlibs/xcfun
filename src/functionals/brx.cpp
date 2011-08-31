@@ -1,7 +1,7 @@
 #ifdef TODO
 /* Needs some work to work with ctaylor */
-#include "functional.h"
-#include "slater.h"
+#include "functional.hpp"
+#include "slater.hpp"
 
 // This is the function we want to find roots for
 template<class T>

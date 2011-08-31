@@ -1211,7 +1211,7 @@ struct composer<numtype,Nvar,0,Ndegp>
 };
 
 #ifdef POLYMUL_TAB
-#include "polymul_tab.h"
+#include "polymul_tab.hpp"
 #endif
 
 } // End of namespace polymul_internal

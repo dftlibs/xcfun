@@ -1,10 +1,10 @@
 #ifndef FUNCTIONAL_H
 #define FUNCTIONAL_H
 
-#include "ctaylor.h"
-#include "config.h"
-#include "specmath.h"
-#include "xcint.h"
+#include "ctaylor.hpp"
+#include "config.hpp"
+#include "specmath.hpp"
+#include "xcint.hpp"
 
 #define FUNCTIONAL(F) template<> const char *fundat_db<F>::symbol = #F; template<> functional_data fundat_db<F>::d
 #define EN(N,FUN) FUN<ctaylor<ireal_t,N> >,

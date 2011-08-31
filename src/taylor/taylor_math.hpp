@@ -6,7 +6,7 @@
 #endif
 
 #ifdef _MSC_VER
-#include "micromath.h"
+#include "micromath.hpp"
 #endif
 
 //Taylor series of 1/(a+x)

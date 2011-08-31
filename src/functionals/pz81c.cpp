@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "pz81c.h"
+#include "functional.hpp"
+#include "pz81c.hpp"
 
 template<class num>
 static num pz81c(const densvars<num> &d) 

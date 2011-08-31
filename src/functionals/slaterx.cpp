@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "slater.h"
+#include "functional.hpp"
+#include "slater.hpp"
 
 FUNCTIONAL(XC_SLATERX) = {
   "Slater LDA exchange",

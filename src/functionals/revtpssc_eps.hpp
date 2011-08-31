@@ -1,9 +1,9 @@
 #ifndef REVTPSSC_EPS_H
 #define REVTPSSC_EPS_H
 
-#include "functional.h"
-#include "constants.h"
-#include "pbec_eps.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "pbec_eps.hpp"
 
 namespace revtpssc_eps
 {

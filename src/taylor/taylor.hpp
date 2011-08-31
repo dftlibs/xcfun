@@ -2,7 +2,7 @@
 #define TAYLOR_H
 
 #include <cmath>
-#include "polymul.h"
+#include "polymul.hpp"
 
 static inline int taylorlen(int nvar, int ndeg)
 {
@@ -381,7 +381,7 @@ static taylor<T, Nvar, Ndeg> operator-(const taylor<T, Nvar,Ndeg>& t1,
   return tmp;
 }
 
-#include "taylor_math.h"
+#include "taylor_math.hpp"
 
 #ifdef TAYLOR_CXXIO
 

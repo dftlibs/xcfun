@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "pbex.h"
-#include "m0xy_fun.h"
+#include "functional.hpp"
+#include "pbex.hpp"
+#include "m0xy_fun.hpp"
 
 // M05-2X exchange functional. to be used with HF exchange factor of .56 
 

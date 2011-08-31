@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "constants.h"
-#include "vwn.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "vwn.hpp"
 
 /* "Simplified" PBEc, spbec. Implemented by ulfek */
 

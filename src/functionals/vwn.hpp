@@ -1,7 +1,7 @@
 #ifndef VWN_H
 #define VWN_H
 
-#include "functional.h"
+#include "functional.hpp"
 
 namespace vwn
 {

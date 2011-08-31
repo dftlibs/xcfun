@@ -1,7 +1,7 @@
 #ifndef SLATER_H
 #define SLATER_H
 
-#include "constants.h"
+#include "constants.hpp"
 
 template<class num>
 static num slaterx(const densvars<num> &d) 

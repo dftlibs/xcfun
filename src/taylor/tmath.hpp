@@ -26,7 +26,7 @@
 #endif
 
 #ifdef _MSC_VER
-#include "micromath.h"
+#include "micromath.hpp"
 #endif
 
 // Taylor math, template style

@@ -1,4 +1,4 @@
-#include "functional.h"
+#include "functional.hpp"
 
   /* Short-range spin-dependent LDA exchange functional
      obtained by spin-scaling Ex[na,nb] = 1/2 (Ex[na]+Ex[nb])

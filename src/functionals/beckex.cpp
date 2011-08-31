@@ -1,4 +1,4 @@
-#include "functional.h"
+#include "functional.hpp"
 
 template<class num>
 static num becke_alpha(const num &na, const num &gaa)

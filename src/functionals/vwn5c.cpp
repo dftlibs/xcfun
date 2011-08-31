@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "vwn.h"
+#include "functional.hpp"
+#include "vwn.hpp"
 
 template<class num>
 static num vwn5c(const densvars<num> &d)

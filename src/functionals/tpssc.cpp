@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "constants.h"
-#include "tpssc_eps.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "tpssc_eps.hpp"
 
 template<class num>
 static num tpssc(const densvars<num> &d)

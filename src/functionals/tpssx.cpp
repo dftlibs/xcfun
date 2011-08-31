@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "constants.h"
-#include "tpssx_eps.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "tpssx_eps.hpp"
 
 using namespace tpssx_eps;
 

@@ -1,4 +1,4 @@
-#include "functional.h"
+#include "functional.hpp"
 
 PARAMETER(XC_RANGESEP_MU) = 
 {

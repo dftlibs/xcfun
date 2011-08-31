@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "pw92eps.h"
+#include "functional.hpp"
+#include "pw92eps.hpp"
 
 template<class num>
 static num pw92c(const densvars<num> &d) 

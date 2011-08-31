@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
-#include "xcint.h"
-
+#include "xcint.hpp"
 
 xc_functional xc_new_functional_not_macro(int checksum)
 {
@@ -37,7 +36,6 @@ void xc_eval_vec(xc_functional fun, int nr_points,
   for (int i=0;i<nr_points;i++)
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
 }
-
 
 void xc_set(xc_functional fun, int item, double value)
 {

@@ -1,7 +1,7 @@
 #if 0 // Does not work and should maybe not be here in the first place
-#include "functional.h"
-#include "vwn.h"
-#include "slater.h"
+#include "functional.hpp"
+#include "vwn.hpp"
+#include "slater.hpp"
 
 //Have to be a bit special here since lb94 is not a functional but 
 //a potential.

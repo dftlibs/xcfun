@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#include "taylor.h"
+#include "taylor.hpp"
 typedef double num_t;
 
 // Some taylor coefficients around x = 2.5, calculated using

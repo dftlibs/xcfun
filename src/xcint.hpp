@@ -4,8 +4,8 @@
 #include <cstdio>
 
 #include "xcfun.h"
-#include "config.h"
-#include "ctaylor.h"
+#include "config.hpp"
+#include "ctaylor.hpp"
 
 // Macros to iterate up to XC_MAX_ORDER
 #define REP0(F,E) F(0,E)
@@ -102,7 +102,7 @@ static inline int taylorlen(int nvar, int ndeg)
   return len;
 }
 
-#include "densvars.h"
+#include "densvars.hpp"
 
 // This gets filled in by the functional implementations
 template<int FUN>

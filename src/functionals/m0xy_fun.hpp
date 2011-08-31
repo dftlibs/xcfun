@@ -1,8 +1,8 @@
 #ifndef M0xy_H
 #define M0xy_H
 
-#include "pw92eps.h"
-#include "pw9xx.h"
+#include "pw92eps.hpp"
+#include "pw9xx.hpp"
 #include <stdio.h>
 
 // common functions for MO5 and M06 family of (hybrid) meta-gga functionals

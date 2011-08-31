@@ -1,7 +1,7 @@
-#include "functional.h"
-#include "constants.h"
-#include "pw92eps.h"
-#include "vwn.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "pw92eps.hpp"
+#include "vwn.hpp"
 
 
 template<class num>

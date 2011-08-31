@@ -615,7 +615,7 @@ static ctaylor<T, Nvar> operator-(const ctaylor<T, Nvar>& t1,
   return tmp;
 }
 
-#include "ctaylor_math.h"
+#include "ctaylor_math.hpp"
 
 #ifdef CTAYLOR_CXXIO
 

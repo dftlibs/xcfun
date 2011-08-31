@@ -1,5 +1,5 @@
-#include "functional.h"
-#include "constants.h"
+#include "functional.hpp"
+#include "constants.hpp"
 
 namespace pz81eps
 {

@@ -1,6 +1,6 @@
 #ifndef PBEX_H
 #define PBEX_H
-#include "pw9xx.h"
+#include "pw9xx.hpp"
 
 namespace pbex
 {

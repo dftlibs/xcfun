@@ -1,7 +1,7 @@
 #ifndef PW9xx_H
 #define PW9xx_H
-#include "functional.h"
-#include "constants.h"
+#include "functional.hpp"
+#include "constants.hpp"
 
 
 // common functions for exchange (and kinetic energy) functionals

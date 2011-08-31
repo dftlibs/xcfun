@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "xcint.h"
+#include "xcint.hpp"
 
 int main()
 {

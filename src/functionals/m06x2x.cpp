@@ -1,6 +1,6 @@
-#include "functional.h"
-#include "pbex.h"
-#include "m0xy_fun.h"
+#include "functional.hpp"
+#include "pbex.hpp"
+#include "m0xy_fun.hpp"
 
 // M06-2X exchange functional. to be used with HF exchange factor of .54
 // because the param_d[5] array is all zero, it is not included here, and

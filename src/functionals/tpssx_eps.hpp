@@ -1,9 +1,9 @@
 #ifndef TPSSX_EPS_H
 #define TPSSX_EPS_H
 
-#include "functional.h"
-#include "constants.h"
-#include "pbec_eps.h"
+#include "functional.hpp"
+#include "constants.hpp"
+#include "pbec_eps.hpp"
 
 namespace tpssx_eps
 {

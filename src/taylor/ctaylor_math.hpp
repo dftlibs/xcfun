@@ -1,5 +1,5 @@
 // For inclusion in ctaylor.h only!
-#include "tmath.h"
+#include "tmath.hpp"
 
 template<class T,int Nvar, class S>
 static ctaylor<T,Nvar> operator/(const S &x, const ctaylor<T,Nvar>& t)

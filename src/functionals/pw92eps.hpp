@@ -1,7 +1,7 @@
 #ifndef PW92EPS_H
 #define PW92EPS_H
 
-#include "constants.h"
+#include "constants.hpp"
 
 namespace pw92eps
 {
