@@ -126,10 +126,19 @@ contains
     call ints2str(ibuf,text)
   end subroutine xcfun_splash
 
+  function xcfun_sizeof_int()
+    integer :: i, xcfun_sizeof_int
+    if (huge(i).eq.2147483647) then
+       xcfun_sizeof_int = 4
+    else
+       xcfun_sizeof_int = 8
+    endif
+  end function xcfun_sizeof_int
+
   ! Create a new, "empty" functional and return its id
   function xc_new_functional()
-    integer xc_new_functional, xcnewf
-    if (sizeof(xc_new_functional).ne.XCFUN_FORTRAN_INT_SIZE) then
+    integer :: xc_new_functional, xcnewf
+    if (xcfun_sizeof_int().ne.XCFUN_FORTRAN_INT_SIZE) then
        print *,'XCFun Fortran integer size mismatch, define XCFUN_FORTRAN_INT and recompile XCFun.'
        xc_new_functional = -1
     else
