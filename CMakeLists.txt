@@ -106,6 +106,7 @@ if(BUILD_SHARED_LIBS)
   VERSION ${VERSION} SOVERSION ${SOVERSION} )
 endif(BUILD_SHARED_LIBS)
 install(TARGETS xcfun_f90_bindings DESTINATION lib${LIB_SUFFIX})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xcfun.mod ${CMAKE_CURRENT_BINARY_DIR}/xcfun_autogen.mod DESTINATION include)
 
 add_executable(
     kernel_example
