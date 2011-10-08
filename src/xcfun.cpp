@@ -356,7 +356,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	      // 0 1  2  3  4  5  6  7  8  9
 	      ttype out = 0;
 	      // d/dx
-	      in[0] = ttype(input[0],0,input[1]);
+	      in[0] = ttype(input[0],VAR0,input[1]);
 	      for (int i=0;i<3;i++)
 		in[1+i] = ttype(input[1+i],VAR0,input[4+i]);
 	      in[1].set(VAR1,1); // d/dgx
@@ -401,7 +401,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 		{
 		  int spinoff = 10*spin;
 		  // d/dx
-		  in[0] = ttype(input[0+spinoff],0,input[1+spinoff]);
+		  in[0] = ttype(input[0+spinoff],VAR0,input[1+spinoff]);
 		  for (int i=0;i<3;i++)
 		    in[1+i] = ttype(input[1+i+spinoff],VAR0,input[4+i+spinoff]);
 		  in[1].set(VAR1,1); // d/dgx
