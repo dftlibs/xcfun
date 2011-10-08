@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include "xcint.hpp"
 
 xc_functional xc_new_functional_not_macro(int checksum)
@@ -35,6 +36,17 @@ void xc_eval_vec(xc_functional fun, int nr_points,
 {
   for (int i=0;i<nr_points;i++)
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
+}
+
+int xc_lookup(const char *name)
+{
+   for (int i=0;i<XC_NR_FUNCTIONALS;i++)
+     if (strcmp(xcint_funs[i].symbol,name) == 0)
+       return i;
+  for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+    if (strcmp(xcint_params[i].symbol,name) == 0)
+      return i;
+  return -1;
 }
 
 void xc_set(xc_functional fun, int item, double value)

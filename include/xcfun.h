@@ -115,7 +115,8 @@ extern "C" {
       XC_NR_VARS
     };
 
-  /* Define a checksum to check for header/library consistency when using shared libraries. */ 
+  /* Define a checksum to check for header/library consistency when
+     using shared libraries. */ 
 #define XCFUN_CHECKSUM (XC_NR_MODES + 7*XC_NR_FUNCTIONALS + 1723*XC_NR_PARAMETERS_AND_FUNCTIONALS + 9091*XC_NR_VARS)
 
   double xcfun_version(void);
@@ -129,6 +130,11 @@ extern "C" {
 
   void xc_free_functional(xc_functional fun);
 
+  /* Return an integer that can be used together with xc_set or xc_get
+  for the item with some name. Return a negative number if not
+  found. Valid names are the symbols in xc_functional_id and
+  xc_parameter. */
+  int xc_lookup(const char *name);
 
   // Set weight of functional or value of parameter
   void xc_set(xc_functional fun, int item, double value);
@@ -146,7 +152,7 @@ extern "C" {
   int xc_output_length(xc_functional fun);
 
   // Evaluate the functional at density
-  // With cubes: density is of dimension 2^porder*Nvars
+  // In contracted mode density is of dimension 2^porder*Nvars
   void xc_eval(xc_functional fun,
 	       const double *density,
 	       double *result);
