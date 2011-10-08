@@ -323,6 +323,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	npot = 1;
       else
 	npot = 2;
+
       {
 	typedef ctaylor<ireal_t,1> ttype;      
 	ttype in[inlen], out = 0;
@@ -341,6 +342,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  }
 	output[0] = out.get(CNST); // Energy
       }
+
       if (f->depends & XC_GRADIENT) // GGA potential
 	{
 	  /*
@@ -348,10 +350,10 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	   */
 	  typedef ctaylor<ireal_t,2> ttype;
 	  ttype in[inlen];
-	  // n gx gy gz xx xy xz yy yz zz
-          // 0 1  2  3  4  5  6  7  8  9
 	  if (f->vars == XC_A_2ND_TAYLOR || f->vars == XC_N_2ND_TAYLOR)
 	    {
+	      // n gx gy gz xx xy xz yy yz zz
+	      // 0 1  2  3  4  5  6  7  8  9
 	      ttype out = 0;
 	      // d/dx
 	      in[0] = ttype(input[0],0,input[1]);
@@ -391,9 +393,51 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	      }
 	      output[1] -= out.get(VAR0|VAR1); // Subtract divergence of dE/dg from lda part of potential
 	    }
-	  else
+	  else if (f->vars == XC_A_B_2ND_TAYLOR || f->vars == XC_N_S_2ND_TAYLOR)
 	    {
-	      xcint_die("TODO: AB GGA potential",f->mode);
+	      xcint_die("AB potential Under construction in xc_eval()",f->mode);
+	      ttype out = 0;
+	      for (int spin=0;spin<=1;spin++)
+		{
+		  int spinoff = 10*spin;
+		  // d/dx
+		  in[0] = ttype(input[0+spinoff],0,input[1+spinoff]);
+		  for (int i=0;i<3;i++)
+		    in[1+i] = ttype(input[1+i+spinoff],VAR0,input[4+i+spinoff]);
+		  in[1].set(VAR1,1); // d/dgx
+		  {
+		    densvars<ttype> d(f,in);
+		    for (int i=0;i<f->nr_active_functionals;i++)
+		      out += f->settings[f->active_functionals[i]->id]
+			* f->active_functionals[i]->fp2(d);
+		  }
+
+		  // d/dy
+		  in[0] = ttype(input[0+spinoff],VAR0,input[2+spinoff]);
+		  in[1] = ttype(input[1+spinoff],VAR0,input[5+spinoff]);
+		  in[2] = ttype(input[2+spinoff],VAR0,input[7+spinoff]);
+		  in[3] = ttype(input[3+spinoff],VAR0,input[8+spinoff]);
+		  in[2].set(VAR1,1); // d/dgy
+		  {
+		    densvars<ttype> d(f,in);
+		    for (int i=0;i<f->nr_active_functionals;i++)
+		      out += f->settings[f->active_functionals[i]->id]
+			* f->active_functionals[i]->fp2(d);
+		  }
+		  // d/dz
+		  in[0] = ttype(input[0+spinoff],VAR0,input[3+spinoff]);
+		  in[1] = ttype(input[1+spinoff],VAR0,input[6+spinoff]);
+		  in[2] = ttype(input[2+spinoff],VAR0,input[8+spinoff]);
+		  in[3] = ttype(input[3+spinoff],VAR0,input[9+spinoff]);
+		  in[3].set(VAR1,1); // d/dgz
+		  {
+		    densvars<ttype> d(f,in);
+		    for (int i=0;i<f->nr_active_functionals;i++)
+		      out += f->settings[f->active_functionals[i]->id]
+			* f->active_functionals[i]->fp2(d);
+		  }
+		  output[1+spin] -= out.get(VAR0|VAR1); // Subtract divergence of dE/dg from lda part of potential
+		}
 	    }
 	}
     }
@@ -402,87 +446,6 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
       xcint_die("Illegal mode in xc_eval()",f->mode);
     }
 }
-
-#if 0
-
-void xcint_evaluator(xc_functional_obj *f, const double *input, double *output)
-{
-#if 0
-  else if (f->mode == XC_POTENTIAL)
-    {
-      // First derivatives needed for lda, second for gga
-      // TODO: select proper type here
-      typedef taylor<ireal_t,vars_info<VARS>::nr_variables,vars_info<VARS>::pot_order> 
-	ttype;
-      ttype out = 0;
-      densvars<ttype> d;
-      xcint_setup_vars<VARS,ttype>(d,input);
-      d.parent = f;
-      for (int i=0;i<f->nr_active_functionals;i++)
-	{
-	  if (xcint_spec<ttype>(f->active_functionals[i]))
-	    out += f->settings[f->active_functionals[i]] *
-	      xcint_spec<ttype>(f->active_functionals[i])(d);
-	  else
-	    xcint_die("Functional does not have requested specialization",
-		      f->active_functionals[i]);
-	}
-      output[0] = out[0];
-      if (VARS == XC_A or VARS == XC_N)
-	{
-	  output[1] = out[1];
-	}
-      else if (VARS == XC_A_B or VARS == XC_N_S)
-	{
-	  output[1] = out[1];
-	  output[2] = out[2];
-	}
-      else if (VARS == XC_A_B_GAA_GAB_GBB)
-	{
-	  const int gaa = 2, gab = 3, gbb = 4, lapa = 5, lapb = 6;
-	  output[1] = out[1];
-	  output[2] = out[2];
-
-	  output[1]  = out[XC_D10000];
-	  output[1] -= 2*input[lapa]*out[XC_D00100] + input[lapb]*out[XC_D00010];
-	  output[1] -= 2*(out[XC_D10100]*input[gaa]   + 
-			out[XC_D01100]*input[gab] +
-			out[XC_D00200]*(2*input[lapa]*input[gaa]) +
-			out[XC_D00110]*(input[lapa]*input[gab] + input[lapb]*input[gaa]) +
-			out[XC_D00101]*(2*input[lapb]*input[gab]) 
-			); 
-	  output[1] -= (out[XC_D10010]*input[gab] +
-		      out[XC_D01010]*input[gbb] +
-		      out[XC_D00110]*(2*input[lapa]*input[gab]) +
-		      out[XC_D00020]*(input[lapb]*input[gab] + input[lapa]*input[gbb]) +
-		      out[XC_D00011]*(2*input[lapb]*input[gbb])); 
-
-	  output[2]  = out[XC_D01000];
-	  output[2] -= 2*input[lapb]*out[XC_D00001] + input[lapa]*out[XC_D00010];
-	  output[2] -= 2*(out[XC_D01001]*input[gbb]   + 
-			out[XC_D10001]*input[gab]  +
-			out[XC_D00002]*(2*input[lapb]*input[gbb]) +
-			out[XC_D00011]*(input[lapb]*input[gab] + input[lapa]*input[gbb]) +
-			out[XC_D00101]*(2*input[lapa]*input[gab])  ); 
-	  output[2] -= (out[XC_D01010]*input[gab] +
-			out[XC_D10010]*input[gaa] +
-			out[XC_D00011]*(2*input[lapb]*input[gab]) +
-			out[XC_D00020]*(input[lapa]*input[gab] + input[lapb]*input[gaa]) +
-			out[XC_D00110]*(2*input[lapa]*input[gaa])); 
-	}
-      else
-	{
-	  xcint_die("XC_POTENTIAL not implemented for this functional and variables",0);
-	}
-    }
-  else if (f->mode == XC_CONTRACTED)
-    {
-      xcint_die("XC_CONTRACT not implemented",0);
-    }
-#endif
-}
-#endif
-
 
 int xc_eval_setup(xc_functional fun,
 		  enum xc_vars vars,
