@@ -250,7 +250,7 @@ isscalar = 0;
       c[i] = 0;
     assert(var>=0);
     assert(Nvar>var);
-    c[POW2(var)] = 1;
+    c[var] = 1;
 #ifdef CTAYLOR_SPARSE
     isscalar = 0;
 #endif
@@ -262,7 +262,7 @@ isscalar = 0;
       c[i] = 0;
     assert(var>=0);
     assert(Nvar>var);
-    c[POW2(var)] = varval;
+    c[var] = varval;
 #ifdef CTAYLOR_SPARSE
     isscalar = 0;
 #endif
