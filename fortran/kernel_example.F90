@@ -34,8 +34,11 @@ program xc_example
 
 !  in this example we use PBE
    print *, 'Setting up PBE'
-   call xc_set(id, XC_PBEX, 1.0d0)
-   call xc_set(id, XC_PBEC, 1.0d0)
+   ierr = xc_set(id, 'pbe', 1.0d0)
+   if (ierr.ne.0) then
+      print *, 'Functional name not recognized, quitting.'
+      stop
+   endif
 
 !  First we just compute the energy, i.e. the 0-th order integrand.
 !  We have one gridpoint, and four variables, density N and gradient

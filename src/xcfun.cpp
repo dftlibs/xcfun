@@ -38,51 +38,6 @@ void xc_eval_vec(xc_functional fun, int nr_points,
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
 }
 
-// TODO: remove
-int xc_lookup(const char *name)
-{
-   for (int i=0;i<XC_NR_FUNCTIONALS;i++)
-     if (strcmp(xcint_funs[i].name,name) == 0)
-       return i;
-  for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
-    if (strcmp(xcint_params[i].name,name) == 0)
-      return i;
-  return -1;
-}
-
-#ifdef OLD
-void xc_set(xc_functional fun, int item, double value)
-{
-  if (item >= 0 && item < XC_NR_FUNCTIONALS)
-    {
-      fun->settings[item] = value;
-      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
-      fun->depends |= xcint_funs[item].depends;
-    }
-  else if (item < XC_NR_PARAMETERS_AND_FUNCTIONALS)
-    {
-      fun->settings[item] = value;
-    }
-  else
-    {
-      xcint_die("Invalid item to xc_set():",item);
-    }
-}
-
-double xc_get(xc_functional fun, int item)
-{
-  if (item >= 0 && item < XC_NR_PARAMETERS_AND_FUNCTIONALS)
-    {
-      return fun->settings[item];
-    }
-  else
-    {
-      xcint_die("Invalid item to xc_get():",item);
-      return 0;
-    }
-}
-#endif
-
 int xc_output_length(xc_functional fun)
 {
   if (fun->mode == XC_MODE_UNSET)
@@ -511,8 +466,12 @@ int xc_set(xc_functional fun, const char *name, double value)
 	    break;
 	  if (xc_set(fun,xcint_aliases[item].terms[i].name,
 		     value*xcint_aliases[item].terms[i].weight) != 0)
-	    xcint_die("Alias with unknown terms, fix aliases.cpp",item);
+	    {
+	      fprintf(stderr,"Trying to set %s\n",xcint_aliases[item].terms[i].name);
+	      xcint_die("Alias with unknown terms, fix aliases.cpp",item);
+	    }
 	}
+      return 0;
     }
   return -1;
 }

@@ -15,7 +15,7 @@ parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 int xcint_lookup_functional(const char *name)
 {
   for (int i=0;i<XC_NR_FUNCTIONALS;i++)
-    if (strcmp(name,xcint_funs[i].name) == 0)
+    if (strcasecmp(name,xcint_funs[i].name) == 0)
       return i;
   return -1;
 }
@@ -23,7 +23,7 @@ int xcint_lookup_functional(const char *name)
 int xcint_lookup_parameter(const char *name)
 {
   for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
-    if (strcmp(name,xcint_params[i].name) == 0)
+    if (strcasecmp(name,xcint_params[i].name) == 0)
       return i;
   return -1;
 }
@@ -31,7 +31,7 @@ int xcint_lookup_parameter(const char *name)
 int xcint_lookup_alias(const char *name)
 {
   for (int i=0;i<XC_MAX_ALIASES and xcint_aliases[i].name;i++)
-    if (strcmp(name,xcint_aliases[i].name) == 0)
+    if (strcasecmp(name,xcint_aliases[i].name) == 0)
       return i;
   return -1;
 }

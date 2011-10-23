@@ -12,7 +12,7 @@ extern "C" {
 // Used for regularizing input
 #define XC_TINY_DENSITY 1e-14
 
-// #define XC_NO_REGULARIZATION
+#define XC_NO_REGULARIZATION
 
 #define XC_EORDER 1 // Invalid order for given mode and vars
 #define XC_EVARS  2 // Invalid vars for functional type (ie. lda vars for gga)

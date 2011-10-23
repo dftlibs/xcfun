@@ -40,7 +40,7 @@ fortran/xcfun_autogen.o: fortran/xcfun_autogen.F90
 fortran/xcfun_module.o: fortran/xcfun_module.F90 fortran/xcfun_autogen.o fortran/xcfun_autogen.F90
 	$(FC) $(FFLAGS) -c -o $@ $<
 
-kernel_example: fortran/xcfun_autogen.o fortran/kernel_example.o fortran/xcfun_module.o  lib/libxcfun.a
+kernel_example: fortran/xcfun_autogen.o  fortran/xcfun_module.o  lib/libxcfun.a fortran/kernel_example.o
 	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
 
 clean:

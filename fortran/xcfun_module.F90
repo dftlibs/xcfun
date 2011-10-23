@@ -151,17 +151,21 @@ contains
     call xcfree(funid)
   end subroutine xc_free_functional
 
-  subroutine xc_set(funid, param, val)
-    integer, intent(in) :: funid, param
+  function xc_set(funid, param, val)
+    character, intent(in) :: param*(*)
+    integer, intent(in) :: funid
+    integer :: xc_set, xcsets
     double precision, intent(in) :: val
-    call xcsets(funid,param,val)
-  end subroutine xc_set
+    xc_set = xcsets(funid,val,len_trim(param),param)
+  end function xc_set
 
-  function xc_get(funid, param)
-    integer, intent(in) :: funid, param
-    double precision xcgets, xc_get
-    xc_get = xcgets(funid,param)
-      end function xc_get
+  function xc_get(funid, param, val)
+    character, intent(in) :: param*(*)
+    integer, intent(in) :: funid
+    integer :: xcgets, xc_get
+    double precision, intent(out) :: val
+    xc_get = xcgets(funid,val,len_trim(param),param)
+  end function xc_get
 #ifdef XXX
   subroutine xc_short_description(param,description)
     integer, intent(in) :: param
