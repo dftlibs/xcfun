@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <string>
 #include "xcint.hpp"
 
 #ifndef FORTRAN_INT
@@ -11,10 +12,36 @@ typedef FORTRAN_INT fortran_int_t;
 functional_data xcint_funs[XC_NR_FUNCTIONALS]; 
 parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 
+int xcint_lookup_functional(const char *name)
+{
+  for (int i=0;i<XC_NR_FUNCTIONALS;i++)
+    if (strcmp(name,xcint_funs[i].name) == 0)
+      return i;
+  return -1;
+}
+
+int xcint_lookup_parameter(const char *name)
+{
+  for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+    if (strcmp(name,xcint_params[i].name) == 0)
+      return i;
+  return -1;
+}
+
+int xcint_lookup_alias(const char *name)
+{
+  for (int i=0;i<XC_MAX_ALIASES and xcint_aliases[i].name;i++)
+    if (strcmp(name,xcint_aliases[i].name) == 0)
+      return i;
+  return -1;
+}
+
 template<int FUN>
 void xcint_functional_setup_helper()
 {
-  fundat_db<FUN>::d.symbol = fundat_db<FUN>::symbol;
+  if (!(fundat_db<FUN>::symbol[0] == 'X' and fundat_db<FUN>::symbol[1] == 'C' and fundat_db<FUN>::symbol[2] == '_'))
+    xcint_die("Functional symbol does not start with XC_",FUN);
+  fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
   fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
   xcint_funs[FUN] = fundat_db<FUN>::d;
   xcint_functional_setup_helper<FUN+1>();
@@ -25,7 +52,9 @@ template<> void xcint_functional_setup_helper<XC_NR_FUNCTIONALS>() {  }
 template<int P>
 void xcint_parameter_setup_helper()
 {
-  pardat_db<P>::d.symbol = pardat_db<P>::symbol;
+  if (!(pardat_db<P>::symbol[0] == 'X' and pardat_db<P>::symbol[1] == 'C' and pardat_db<P>::symbol[2] == '_'))
+    xcint_die("Symbol does not start with XC_",P);
+  pardat_db<P>::d.name = pardat_db<P>::symbol + 3;
   xcint_params[P] = pardat_db<P>::d;
   xcint_parameter_setup_helper<P+1>();
 }
@@ -60,7 +89,6 @@ vars_data xcint_vars[XC_NR_VARS] =
     {"XC_N_2ND_TAYLOR", 10, XC_DENSITY | XC_GRADIENT | XC_LAPLACIAN},
     {"XC_N_S_2ND_TAYLOR", 20, XC_DENSITY | XC_GRADIENT | XC_LAPLACIAN},
   };
-
 
 void xcint_assure_setup()
 {
@@ -108,13 +136,13 @@ int xcint_write_fortran_module()
   fprintf(dst,"\n");
   fprintf(dst,"!Functionals\n");
   for (i=0;i<XC_NR_FUNCTIONALS;i++)
-    fprintf(dst,"  integer, parameter :: %s = %i\n",
-	    xcint_funs[i].symbol,i);
+    fprintf(dst,"  integer, parameter :: XC_%s = %i\n",
+	    xcint_funs[i].name,i);
   fprintf(dst,"\n");
   fprintf(dst,"!Parameters\n");
   for (i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
-    fprintf(dst,"  integer, parameter :: %s = %i\n",
-	    xcint_params[i].symbol,i);
+    fprintf(dst,"  integer, parameter :: XC_%s = %i\n",
+	    xcint_params[i].name,i);
   fprintf(dst,"\n");
   for (i=0;i<XC_NR_VARS;i++)
     fprintf(dst,"  integer, parameter :: %s = %i\n",

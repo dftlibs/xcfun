@@ -27,6 +27,8 @@ typedef XCFUN_FORTRAN_INT fortran_int_t;
 
 static xc_functional fortran_functionals[MAX_FORTRAN_FUNCTIONALS] = {0};
 
+void xcint_die(const char *message, int code);
+
 double FSYM(xcfuve) FCSYM(XCFUVE)(void)
 {
   return xcfun_version();
@@ -107,14 +109,26 @@ void FSYM(xcspla)FCSYM(XCSPLA)(fortran_int_t *text, fortran_int_t *len)
   str2ints(text,*len,xcfun_splash());
 }
 
-void FSYM(xcsets)FCSYM(XCSETS)(fortran_int_t *fun, fortran_int_t *n, double *value)
+int FSYM(xcsets)FCSYM(XCSETS)(fortran_int_t *fun,  double *value, fortran_int_t *namelen, const char *name)
 {
-  assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  xc_set(fortran_functionals[*fun],*n,*value);
+  int i;
+  char buf[257];
+  if (*namelen>256)
+    xcint_die("In xcsets_(): name string too long",*namelen);
+  for (i=0;i<*namelen;i++)
+    buf[i] = name[i];
+  buf[*namelen] = 0;
+  return xc_set(fortran_functionals[*fun],buf,*value);
 }
 
-double FSYM(xcgets)FCSYM(XCGETS)(fortran_int_t *fun, fortran_int_t *n)
+int FSYM(xcgets)FCSYM(XCGETS)(fortran_int_t *fun, double *value, fortran_int_t *namelen, const char *name)
 {
-  assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
-  return xc_get(fortran_functionals[*fun],*n);
+  int i;
+  char buf[257];
+  if (*namelen>256)
+    xcint_die("In xcgets_(): name string too long",*namelen);
+  for (i=0;i<*namelen;i++)
+    buf[i] = name[i];
+  buf[*namelen] = 0;
+  return xc_get(fortran_functionals[*fun],buf,value);
 }

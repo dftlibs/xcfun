@@ -12,71 +12,20 @@ extern "C" {
 // Used for regularizing input
 #define XC_TINY_DENSITY 1e-14
 
-#define XC_NO_REGULARIZATION
+// #define XC_NO_REGULARIZATION
 
 #define XC_EORDER 1 // Invalid order for given mode and vars
 #define XC_EVARS  2 // Invalid vars for functional type (ie. lda vars for gga)
 #define XC_EMODE  4 // Invalid mode for functional type (ie. potential for mgga)
   
-  enum xc_mode
-    {
-      XC_MODE_UNSET = 0, // Need to be zero for default initialized structs
-      XC_PARTIAL_DERIVATIVES,
-      XC_POTENTIAL,
-      XC_CONTRACTED,
-      XC_NR_MODES
-    };
-
-  enum xc_functional_id
-    {
-      XC_SLATERX,
-      XC_PW86X,
-      XC_VWN5C,
-      XC_PBEC,
-      XC_PBEX,
-      XC_BECKEX,
-      XC_BECKECORRX,
-      XC_BECKESRX,
-      XC_LDAERFX,
-      XC_LDAERFC,
-      XC_LDAERFC_JT,
-      XC_LYPC,
-      XC_OPTX, 
-      XC_REVPBEX,
-      XC_RPBEX,
-      XC_SPBEC,
-      XC_VWN_PBEC,
-      XC_KTX,
-      XC_TFK,
-      XC_PW91X,
-      XC_PW91K,
-      XC_PW92C,
-      XC_M05X,
-      XC_M05X2X,
-      XC_M06X,
-      XC_M06X2X,
-      XC_M06LX,
-      XC_M06HFX,
-      /*   XC_BRX, must fix this to work with ctaylor */
-      XC_M05X2C,
-      XC_M05C,
-      XC_M06C,
-      XC_M06LC,
-      XC_M06X2C,
-      XC_TPSSC,
-      XC_TPSSX,
-      XC_REVTPSSC,
-      XC_REVTPSSX,
-      XC_PZ81C,
-      XC_P86C,
-      XC_NR_FUNCTIONALS
-    };
-
-  enum xc_parameter
-    {
-      XC_RANGESEP_MU = XC_NR_FUNCTIONALS,
-      XC_NR_PARAMETERS_AND_FUNCTIONALS
-    };
+enum xc_mode
+{
+  XC_MODE_UNSET = 0, // Need to be zero for default initialized structs
+  XC_PARTIAL_DERIVATIVES,
+  XC_POTENTIAL,
+  XC_CONTRACTED,
+  XC_NR_MODES
+};
   
   enum xc_vars // Must be in sync with xcint_vars in xcint.cpp
     {
@@ -117,7 +66,7 @@ extern "C" {
 
   /* Define a checksum to check for header/library consistency when
      using shared libraries. */ 
-#define XCFUN_CHECKSUM (XC_NR_MODES + 7*XC_NR_FUNCTIONALS + 1723*XC_NR_PARAMETERS_AND_FUNCTIONALS + 9091*XC_NR_VARS)
+#define XCFUN_CHECKSUM (XC_NR_MODES + 9091*XC_NR_VARS + 1723*XCFUN_API_VERSION)
 
   double xcfun_version(void);
   const char *xcfun_splash(void);
@@ -130,16 +79,17 @@ extern "C" {
 
   void xc_free_functional(xc_functional fun);
 
-  /* Return an integer that can be used together with xc_set or xc_get
-  for the item with some name. Return a negative number if not
-  found. Valid names are the symbols in xc_functional_id and
-  xc_parameter. */
-  int xc_lookup(const char *name);
-
-  // Set weight of functional or value of parameter
-  void xc_set(xc_functional fun, int item, double value);
-  double xc_get(xc_functional fun, int item);
-
+  // Call with n >= 0, Returns a pointer to an internal string with the name
+  // of parameter nr n. Return NULL when n is too large.
+  const char *xc_enumerate_parameters(int n);
+  // Like xc_enumerate_parameters, but over aliases
+  const char *xc_enumerate_aliases(int n);
+  // Try to either set or get a parameter. Return 0 if all was well,
+  // otherwise the name was invalid.
+  int xc_set(xc_functional fun, const char *name, double value);
+  int xc_get(xc_functional fun, const char *name, double *value);
+  const char *xc_describe_short(const char *name);
+  const char *xc_describe_long(const char *name);
 
   // Try to set the functional evaluation vars, mode and order
   // return some combination of XC_E* if an error occurs, else 0.
@@ -168,16 +118,6 @@ extern "C" {
 
   // Index into result[] for derivative with given index (length as input_length() )
   int xc_derivative_index(xc_functional fun, const int derivative[]);
-
-  /* Discover and manipulate settings */
-
-  // Return the internal name of setting param
-  const char *xc_name(int param);
-  // Describe in one line what the setting does
-  const char *xc_short_description(int param);
-  // Long description of the setting, ends with a \n
-  const char *xc_long_description(int param);
-
 
 #ifdef __cplusplus
 } // End of extern "C"

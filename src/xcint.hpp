@@ -4,8 +4,12 @@
 #include <cstdio>
 
 #include "xcfun.h"
+#include "list_of_functionals.hpp"
 #include "config.hpp"
 #include "ctaylor.hpp"
+
+#define XC_MAX_ALIASES 10
+#define MAX_ALIAS_TERMS 5
 
 // Macros to iterate up to XC_MAX_ORDER
 #define REP0(F,E) F(0,E)
@@ -58,7 +62,7 @@ struct functional_data
   double test_out[128];
 
   enum xc_functional_id id;
-  const char *symbol; // Set up automatically
+  const char *name; // Set up automatically from the symbol
 };
 
 typedef ireal_t parameter;
@@ -68,7 +72,7 @@ struct parameter_data
   const char *description;
   parameter default_value;
 
-  const char *symbol; // Set up automatically
+  const char *name; // Set up automatically
 };
 
 struct vars_data
@@ -78,9 +82,20 @@ struct vars_data
   int provides; // XC_DENSITY | XC_GRADIENT etc
 };
 
+struct alias_data
+{
+  const char *name;
+  const char *description;
+  struct {
+    const char *name;
+    double weight;
+  } terms[MAX_ALIAS_TERMS];
+}; 
+
 extern functional_data xcint_funs[XC_NR_FUNCTIONALS]; 
 extern parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 extern vars_data xcint_vars[XC_NR_VARS];
+extern alias_data *xcint_aliases;
 
 void xcint_assure_setup();
 
@@ -101,6 +116,12 @@ static inline int taylorlen(int nvar, int ndeg)
     }
   return len;
 }
+
+// The lookup functions return -1 if not found
+// TODO: Case insensitive string comparison should be used
+int xcint_lookup_functional(const char *name);
+int xcint_lookup_parameter(const char *name);
+int xcint_lookup_alias(const char *name);
 
 #include "densvars.hpp"
 

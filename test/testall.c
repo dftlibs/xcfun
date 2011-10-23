@@ -10,28 +10,39 @@
 int main(void)
 {
   int i = 0;
+  const char *n,*s;
   printf("%s",xcfun_splash());
   printf("XCFun version: %g\n",xcfun_version());
-  printf("\nAvailable functionals and settings:\n");
-  for (i=0;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+  printf("\nAvailable functionals and other settings:\n");
+  while ((n = xc_enumerate_parameters(i++)))
     {
-      const char *s;
-      printf("%s \t",xc_name(i));
-      if ((s = xc_short_description(i)))
+      printf("%s \t",n);
+      if ((s = xc_describe_short(n)))
 	printf("%s",s);
       else
 	printf("[No description]");
       printf("\n");
     }
-  printf("Running tests..\n");
+  printf("\nAvailable aliases:\n");
+  i = 0;
+  while ((n = xc_enumerate_aliases(i++)))
+    {
+      printf("%s \t",n);
+      if ((s = xc_describe_short(n)))
+	printf("%s",s);
+      else
+	printf("[No description]");
+      printf("\n");
+    }
+  printf("\nRunning tests..\n");
   if (xcfun_test() == 0)
     {
-      printf("All tests ok\n");
+      printf("\nAll tests ok\n");
       return 0;
     }
   else
     {
-      printf("Some tests failed\n");
+      printf("\nSome tests failed\n");
       return -1;
     }
 }

@@ -38,17 +38,19 @@ void xc_eval_vec(xc_functional fun, int nr_points,
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
 }
 
+// TODO: remove
 int xc_lookup(const char *name)
 {
    for (int i=0;i<XC_NR_FUNCTIONALS;i++)
-     if (strcmp(xcint_funs[i].symbol,name) == 0)
+     if (strcmp(xcint_funs[i].name,name) == 0)
        return i;
   for (int i=XC_NR_FUNCTIONALS;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
-    if (strcmp(xcint_params[i].symbol,name) == 0)
+    if (strcmp(xcint_params[i].name,name) == 0)
       return i;
   return -1;
 }
 
+#ifdef OLD
 void xc_set(xc_functional fun, int item, double value)
 {
   if (item >= 0 && item < XC_NR_FUNCTIONALS)
@@ -79,6 +81,7 @@ double xc_get(xc_functional fun, int item)
       return 0;
     }
 }
+#endif
 
 int xc_output_length(xc_functional fun)
 {
@@ -111,9 +114,10 @@ int xcfun_test(void)
   int nfail = 0, res;
   for (int f=0;f<XC_NR_FUNCTIONALS;f++)
     {
-      xc_functional fun = xc_new_functional();
-      xc_set(fun,f,1.0);
       const functional_data *fd = &xcint_funs[f];
+      xc_functional fun = xc_new_functional();
+      xc_set(fun,fd->name,1.0);
+
       if (fd->test_mode != XC_MODE_UNSET)
 	{
 	  if ((res = xc_eval_setup(fun,fd->test_vars,fd->test_mode,fd->test_order)) == 0)
@@ -132,7 +136,7 @@ int xcfun_test(void)
 	      if (nerr > 0)
 		{
 		  fprintf(stderr,"Error detected in functional %s with tolerance %g:\n",
-			  fd->symbol, fd->test_threshold);
+			  fd->name, fd->test_threshold);
 		  fprintf(stderr,"Abs.Error \tComputed              Reference\n");
 		  for (int i=0;i<n;i++)
 		    {
@@ -149,13 +153,13 @@ int xcfun_test(void)
 	    }
 	  else
 	    {
-	      fprintf(stderr,"Functional %s not supporting its own test, error %i\n",fd->symbol,res);
+	      fprintf(stderr,"Functional %s not supporting its own test, error %i\n",fd->name,res);
 	      nfail++;
 	    }
 	}
       else
 	{
-	  fprintf(stderr,"%s has no test\n",fd->symbol);
+	  fprintf(stderr,"%s has no test\n",fd->name);
 	}
       xc_free_functional(fun);
     }
@@ -178,6 +182,17 @@ const char *xcfun_splash(void)
     "Scientific users of this library should cite\n"
     "U. Ekstrom, L. Visscher, R. Bast, A. J. Thorvaldsen and K. Ruud;\n"
     "J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
+}
+
+const char *xcfun_authors(void)
+{  
+  return "XCFun was written by Ulf Ekstrom, with contributions from\n"
+    "Andre S. P. Gomes\n"
+    "Radovan Bast\n"
+    "Andrea Debnarova\n"
+    "Paola Gori-Giorgi\n"
+    "Alexei ??\n"
+    "Michael Seth\n";
 }
 
 void xc_eval(xc_functional_obj *f, const double *input, double *output)
@@ -253,27 +268,6 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  }
 	  }
 	  break;
-#if 0
-	    typedef ctaylor<ireal_t,1> ttype;
-	    int inlen = xcint_vars[f->vars].len;
-	    ttype in[inlen], out = 0;
-	    for (int i=0;i<inlen;i++)
-	      in[i] = input[i];
-	    for (int j=0;j<inlen;j++)
-	      {
-		in[j].set(VAR0,1);
-		densvars<ttype> d(f,in);
-		out = 0;
-		for (int i=0;i<f->nr_active_functionals;i++)
-		  out += f->settings[f->active_functionals[i]->id]
-		    * f->active_functionals[i]->fp1(d);
-		in[j] = input[i];
-		output[j+1] = out[1]; // First derivatives
-	      }
-	    output[0] = out[0]; // Energy
-	  }
-	  break;
-#endif
 #endif
 #if XC_MAX_ORDER >= 2
 	case 2:
@@ -481,9 +475,7 @@ int xc_eval_setup(xc_functional fun,
 					    vars == XC_N_2ND_TAYLOR ||
 					    vars == XC_N_S_2ND_TAYLOR))
 	{
-	  printf("xxx\n");
-	  return XC_EVARS | XC_EMODE;
-	  
+	  return XC_EVARS | XC_EMODE;	  
 	}
       // No potential for meta gga's
       if (fun->depends & (XC_LAPLACIAN | XC_KINETIC))
@@ -495,36 +487,99 @@ int xc_eval_setup(xc_functional fun,
   return 0;
 }
 
-const char *xc_name(int param)
+int xc_set(xc_functional fun, const char *name, double value)
+{
+  xcint_assure_setup();
+  int item;
+  if ( (item = xcint_lookup_functional(name)) >= 0)
+    {
+      fun->settings[item] = value;
+      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
+      fun->depends |= xcint_funs[item].depends;
+      return 0;
+    }
+  else if ( (item = xcint_lookup_parameter(name)) >= 0)
+    {
+      fun->settings[item] = value;
+      return 0;
+    }
+  else if ( (item = xcint_lookup_alias(name)) >= 0)
+    {
+      for (int i=0;i<MAX_ALIAS_TERMS;i++)
+	{
+	  if (!xcint_aliases[item].terms[i].name)
+	    break;
+	  if (xc_set(fun,xcint_aliases[item].terms[i].name,
+		     value*xcint_aliases[item].terms[i].weight) != 0)
+	    xcint_die("Alias with unknown terms, fix aliases.cpp",item);
+	}
+    }
+  return -1;
+}
+
+// Getting aliases is not supported
+int xc_get(xc_functional fun, const char *name, double *value)
+{
+  xcint_assure_setup();
+  int item;
+  if ( (item = xcint_lookup_functional(name)) >= 0)
+    {
+      *value = fun->settings[item];
+      return 0;
+    }
+  else if ( (item = xcint_lookup_parameter(name)) >= 0)
+    {
+      *value = fun->settings[item];
+      return 0;
+    }
+  return -1;
+}
+
+const char *xc_enumerate_parameters(int param)
 {
   xcint_assure_setup();
   if (param >= 0 && param < XC_NR_FUNCTIONALS)
-    return xcint_funs[param].symbol;
+    return xcint_funs[param].name;
   else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
-    return xcint_params[param].symbol;
+    return xcint_params[param].name;
   else
     return 0;
 }
 
-// Describe in one line what the setting does
-const char *xc_short_description(int param)
+// Like xc_enumerate_parameters, but over aliases
+const char *xc_enumerate_aliases(int n)
 {
-  xcint_assure_setup();
-  if (param >= 0 && param < XC_NR_FUNCTIONALS)
-    return xcint_funs[param].short_description;
-  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
-    return xcint_params[param].description;
+  if (n>=0 and n<XC_MAX_ALIASES)
+    return xcint_aliases[n].name;
   else
     return 0;
 }
-// Long description of the setting, ends with a \n
-const char *xc_long_description(int param)
+
+const char *xc_describe_short(const char *name)
 {
   xcint_assure_setup();
-  if (param >= 0 && param < XC_NR_FUNCTIONALS)
-    return xcint_funs[param].long_description;
-  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
-    return xcint_params[param].description;
+  int k;
+  if ( (k = xcint_lookup_functional(name)) >= 0)
+    return xcint_funs[k].short_description;
+  else if ( (k = xcint_lookup_parameter(name)) >= 0)
+    return xcint_params[k].description;
+  else if ( (k = xcint_lookup_alias(name)) >= 0)
+    return xcint_aliases[k].description;
   else
     return 0;
 }
+
+const char *xc_describe_long(const char *name)
+{
+  xcint_assure_setup();
+  int k;
+  if ( (k = xcint_lookup_functional(name)) >= 0)
+    return xcint_funs[k].long_description;
+  else if ( (k = xcint_lookup_parameter(name)) >= 0)
+    return xcint_params[k].description;
+  else if ( (k = xcint_lookup_alias(name)) >= 0)
+    return xcint_aliases[k].description;
+  else
+    return 0;
+}
+
