@@ -146,7 +146,7 @@ const char *xcfun_authors(void)
     "Radovan Bast\n"
     "Andrea Debnarova\n"
     "Paola Gori-Giorgi\n"
-    "Alexei ??\n"
+    "Alexei Yakovlev\n"
     "Michael Seth\n";
 }
 
@@ -292,7 +292,13 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  in[i] = input[i];
 	for (int j=0;j<npot;j++)
 	  {
-	    in[j].set(VAR0,1);
+	    // In all variable sets except the 2nd taylor the second variables has index 1.
+	    if (j == 1 && 
+		((f->vars == XC_A_B_2ND_TAYLOR) ||
+		 (f->vars == XC_N_S_2ND_TAYLOR)))
+	      in[10].set(VAR0,1);
+	    else
+	      in[j].set(VAR0,1);
 	    densvars<ttype> d(f,in);
 	    out = 0;
 	    for (int i=0;i<f->nr_active_functionals;i++)
@@ -300,6 +306,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 		* f->active_functionals[i]->fp1(d);
 	    in[j] = input[j];
 	    output[j+1] = out.get(VAR0); // First derivatives
+	    printf("setting output[%i] = %f\n",j+1,output[j+1]);
 	  }
 	output[0] = out.get(CNST); // Energy
       }
@@ -356,7 +363,6 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	    }
 	  else if (f->vars == XC_A_B_2ND_TAYLOR || f->vars == XC_N_S_2ND_TAYLOR)
 	    {
-	      xcint_die("AB potential Under construction in xc_eval()",f->mode);
 	      ttype out = 0;
 	      for (int spin=0;spin<=1;spin++)
 		{
