@@ -9,7 +9,7 @@ CC=gcc
 CFLAGS=-g -Wall -O2 # -ffast-math  -DNDEBUG
 CXXFLAGS=$(CFLAGS) -fno-rtti -fno-exceptions
 
-# Fortran compiler and flags (used for fortran/example.f90)
+# Fortran compiler and flags (used in fortran/kernel_example.F90)
 FC=gfortran
 FFLAGS=-Wall -Llib -Jfortran
 

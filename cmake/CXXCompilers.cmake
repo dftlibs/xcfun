@@ -1,0 +1,11 @@
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS         "-g -Wall -fno-rtti -fno-exceptions")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
+    set(CMAKE_CXX_FLAGS         "-Wall -g -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177 -fno-rtti -fno-exceptions")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+endif()
