@@ -237,7 +237,7 @@ program xc_example
 
    order = 2
    nr_variables = 8
-   ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SZ_SY_SZ, XC_CONTRACTED, order)
+   ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SX_SY_SZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
       print *, 'xc_eval_setup failed with error ', ierr
       stop 1
@@ -288,6 +288,6 @@ program xc_example
                                  density(:, 7, ipoint), &
                                  density(:, 8, ipoint)/)
    end do
-!  call xc_eval(id, NR_POINTS, input_array, output_array)
+!   call xc_eval(id, NR_POINTS, input_array, output_array)
 
 end program

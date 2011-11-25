@@ -21,6 +21,7 @@ static void regularize(T &x)
 
 // Variables for expressing functionals, these are redundant because
 // different functionals have different needs.
+// TODO: Make sure all variables are handled in the switch.
 template<typename T>
 struct densvars
 {
@@ -63,6 +64,26 @@ struct densvars
 	n = a+b;
 	s = a-b;
 	break;
+      case XC_N_S_GNN_GNS_GSS_TAUN_TAUS:
+	taua = d[5]+d[6];
+	taub = d[5]-d[6];
+	tau = taua + taub;
+      case XC_N_S_GNN_GNS_GSS:
+	gnn = d[2];
+	gns = d[3];
+	gss = d[4];
+	gaa = 0.25*(gnn+2*gns+gss);
+	gab = 0.25*(gnn - gss);
+	gbb = 0.25*(gnn-2*gns+gss);
+      case XC_N_S:
+	n = d[0];
+	regularize(n);
+	s = d[1];
+	a = n + s;
+	regularize(a);
+	b = n - s;
+	regularize(b);
+	break;
       case XC_N_GNN:
 	gnn = d[1];
 	gss = 0;
@@ -97,7 +118,6 @@ struct densvars
                               // 0 1   2   3   4    5    6    7    8    9
         lapa = d[4]+d[7]+d[9];
         lapb = d[14]+d[17]+d[19];
-      case XC_A_B_AX_AY_AZ_BX_BY_BZ:
         a = d[0];             
         regularize(a);
         b = d[10];
@@ -111,8 +131,24 @@ struct densvars
         n = a+b;
         s = a-b;
         break;
+      case XC_N_S_NX_NY_NZ_SX_SY_SZ:
+	//    0 1  2  3  4  5  6  7
+	n = d[0];
+	regularize(n);
+	s = d[1];
+	a = n+s;
+        regularize(a);
+        b = n-s;
+        regularize(b);
+        gnn = d[2]*d[2] + d[3]*d[3] + d[4]*d[4];
+        gss = d[5]*d[5] + d[6]*d[6] + d[7]*d[7];
+        gns = d[2]*d[5] + d[3]*d[6] + d[4]*d[7];
+	gaa = 0.25*(gnn+2*gns+gss);
+	gab = 0.25*(gnn - gss);
+	gbb = 0.25*(gnn-2*gns+gss);
+	break;
       default:
-	xcint_die("Illegal vars value in densvars()",parent->vars);	
+	xcint_die("Illegal/Not yet implemented vars value in densvars()",parent->vars);	
       }
     zeta = s/n;
     r_s = pow(3.0/(n*4.0*M_PI),1.0/3.0); // (3/4pi)^1/3*n^(-1/3) !check
