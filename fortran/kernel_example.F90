@@ -231,8 +231,48 @@ program xc_example
 !  perturbed density matrices. If you use i.e. the square norm of the density
 !  gradient things get more complicated.
 
-!  Note3: You can extend this example trivially to alpha/beta densities
-!  By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
-!  Then the nr_variables becomes 8.
+
+
+!  now we extend the case to the spin polarized mode (8 variables)
+
+   order = 0
+   nr_variables = 8
+   ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SZ_SY_SZ, XC_CONTRACTED, order)
+   if (ierr /= 0) then
+      print *, 'xc_eval_setup failed with error ', ierr
+      stop 1
+   endif
+
+   vector_length = 2**order
+!  allocate density and fill in some phantasy values
+   allocate(density(vector_length, nr_variables, NR_POINTS))
+   density = 0.0d0
+   do ipoint = 1, NR_POINTS
+      density(1, 1, ipoint) = 1.0d0 !        n
+      density(1, 2, ipoint) = 0.0d0 !        s
+      density(1, 3, ipoint) = 2.0d0 !nabla_x n
+      density(1, 4, ipoint) = 3.0d0 !nabla_y n
+      density(1, 5, ipoint) = 4.0d0 !nabla_z n
+      density(1, 6, ipoint) = 0.0d0 !nabla_x s
+      density(1, 7, ipoint) = 0.0d0 !nabla_y s
+      density(1, 8, ipoint) = 0.0d0 !nabla_z s
+   end do
+
+   allocate(input_array(nr_variables*vector_length, NR_POINTS))
+   allocate(output_array(vector_length, NR_POINTS))
+
+   do ipoint = 1, NR_POINTS
+      input_array(:, ipoint) = (/density(:, 1, ipoint), &
+                                 density(:, 2, ipoint), &
+                                 density(:, 3, ipoint), &
+                                 density(:, 4, ipoint), &
+                                 density(:, 5, ipoint), &
+                                 density(:, 6, ipoint), &
+                                 density(:, 7, ipoint), &
+                                 density(:, 8, ipoint)/)
+   end do
+!  call xc_eval(id, NR_POINTS, input_array, output_array)
+!radovan: if i uncomment the above, i get:
+!         XCFun fatal error 19: Illegal vars value in densvars()
 
 end program
