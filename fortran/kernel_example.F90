@@ -256,7 +256,24 @@ program xc_example
       density(1, 6, ipoint) = 0.0d0 !nabla_x s
       density(1, 7, ipoint) = 0.0d0 !nabla_y s
       density(1, 8, ipoint) = 0.0d0 !nabla_z s
+      density(2, 1, ipoint) = 1.0d0 !        n
+      density(2, 2, ipoint) = 0.0d0 !        s
+      density(2, 3, ipoint) = 2.0d0 !nabla_x n
+      density(2, 4, ipoint) = 3.0d0 !nabla_y n
+      density(2, 5, ipoint) = 4.0d0 !nabla_z n
+      density(2, 6, ipoint) = 0.0d0 !nabla_x s
+      density(2, 7, ipoint) = 0.0d0 !nabla_y s
+      density(2, 8, ipoint) = 0.0d0 !nabla_z s
+      density(3, 1, ipoint) = 1.0d0
+      density(3, 2, ipoint) = 0.0d0
+      density(3, 3, ipoint) = 0.0d0
+      density(3, 4, ipoint) = 0.0d0
+      density(3, 5, ipoint) = 0.0d0
+      density(3, 6, ipoint) = 0.0d0
+      density(3, 7, ipoint) = 0.0d0
+      density(3, 8, ipoint) = 0.0d0
    end do
+   vector_length = 2**order
 
    allocate(input_array(nr_variables*vector_length, NR_POINTS))
    allocate(output_array(vector_length, NR_POINTS))
@@ -272,7 +289,5 @@ program xc_example
                                  density(:, 8, ipoint)/)
    end do
 !  call xc_eval(id, NR_POINTS, input_array, output_array)
-!radovan: if i uncomment the above, i get:
-!         XCFun fatal error 19: Illegal vars value in densvars()
 
 end program
