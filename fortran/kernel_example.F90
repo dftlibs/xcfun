@@ -235,7 +235,7 @@ program xc_example
 
 !  now we extend the case to the spin polarized mode (8 variables)
 
-   order = 0
+   order = 2
    nr_variables = 8
    ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SZ_SY_SZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
@@ -256,14 +256,14 @@ program xc_example
       density(1, 6, ipoint) = 0.0d0 !nabla_x s
       density(1, 7, ipoint) = 0.0d0 !nabla_y s
       density(1, 8, ipoint) = 0.0d0 !nabla_z s
-      density(2, 1, ipoint) = 1.0d0 !        n
-      density(2, 2, ipoint) = 0.0d0 !        s
-      density(2, 3, ipoint) = 2.0d0 !nabla_x n
-      density(2, 4, ipoint) = 3.0d0 !nabla_y n
-      density(2, 5, ipoint) = 4.0d0 !nabla_z n
-      density(2, 6, ipoint) = 0.0d0 !nabla_x s
-      density(2, 7, ipoint) = 0.0d0 !nabla_y s
-      density(2, 8, ipoint) = 0.0d0 !nabla_z s
+      density(2, 1, ipoint) = 1.0d0
+      density(2, 2, ipoint) = 0.0d0
+      density(2, 3, ipoint) = 0.0d0
+      density(2, 4, ipoint) = 0.0d0
+      density(2, 5, ipoint) = 0.0d0
+      density(2, 6, ipoint) = 0.0d0
+      density(2, 7, ipoint) = 0.0d0
+      density(2, 8, ipoint) = 0.0d0
       density(3, 1, ipoint) = 1.0d0
       density(3, 2, ipoint) = 0.0d0
       density(3, 3, ipoint) = 0.0d0
