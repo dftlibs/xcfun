@@ -12,16 +12,17 @@ program xc_example
    implicit none
 
    integer, parameter   :: NR_POINTS = 1
-   integer, parameter   :: NR_VARIABLES = 4
 
    character(1000)      :: text
    integer              :: id, order, ierr, ideriv, ipoint
    integer              :: vector_length
-   real(8)              :: res, res_reference(NR_VARIABLES)
+   integer              :: nr_variables
+   real(8)              :: res
 
    real(8), allocatable :: density(:, :, :)
    real(8), allocatable :: input_array(:, :)
    real(8), allocatable :: output_array(:, :)
+   real(8), allocatable :: res_reference(:)
 
 !  print some info and copyright about the library
 !  please always include this info in your code
@@ -44,6 +45,7 @@ program xc_example
 !  We have one gridpoint, and four variables, density N and gradient
 !  components NX NY NZ.
    order = 0
+   nr_variables = 4
    ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
       print *, 'xc_eval_setup failed with error ', ierr
@@ -52,7 +54,7 @@ program xc_example
 
    vector_length = 2**order
 !  allocate density and fill in some phantasy values
-   allocate(density(vector_length, NR_VARIABLES, NR_POINTS))
+   allocate(density(vector_length, nr_variables, NR_POINTS))
    density = 0.0d0
    do ipoint = 1, NR_POINTS
       density(1, 1, ipoint) = 1.0d0 !        n
@@ -61,7 +63,7 @@ program xc_example
       density(1, 4, ipoint) = 4.0d0 !nabla_z n
    end do
 
-   allocate(input_array(NR_VARIABLES*vector_length, NR_POINTS))
+   allocate(input_array(nr_variables*vector_length, NR_POINTS))
    allocate(output_array(vector_length, NR_POINTS))
 
    do ipoint = 1, NR_POINTS
@@ -79,6 +81,7 @@ program xc_example
    deallocate(output_array)
 
 !  reference values for self test
+   allocate(res_reference(nr_variables))
    res_reference(1) = -0.97182658347124051d0
    res_reference(2) = -8.98025300594966838d-3
    res_reference(3) = -1.34703795089245043d-2
@@ -87,6 +90,7 @@ program xc_example
 !  now let's compute the first derivatives ('potential')
 !  first set up xcfun for first derivatives
    order = 1
+   nr_variables = 4
    ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
       print *, 'xc_eval_setup failed with error ', ierr
@@ -95,7 +99,7 @@ program xc_example
 
    vector_length = 2**order
 !  allocate density and fill in some phantasy values
-   allocate(density(vector_length, NR_VARIABLES, NR_POINTS))
+   allocate(density(vector_length, nr_variables, NR_POINTS))
    density = 0.0d0
    do ipoint = 1, NR_POINTS
       density(1, 1, ipoint) = 1.0d0 !        n
@@ -104,13 +108,13 @@ program xc_example
       density(1, 4, ipoint) = 4.0d0 !nabla_z n
    end do
 
-   allocate(input_array(NR_VARIABLES*vector_length, NR_POINTS))
+   allocate(input_array(nr_variables*vector_length, NR_POINTS))
    allocate(output_array(vector_length, NR_POINTS))
 
 !  here is a tricky part, we need a loop and we need to put
 !  in a '1' where we want the derivative
 !  we loop over all variables we want a derivative with respect to
-   do ideriv = 1, NR_VARIABLES
+   do ideriv = 1, nr_variables
       do ipoint = 1, NR_POINTS
          density(2, :,      ipoint) = 0.0d0
          density(2, ideriv, ipoint) = 1.0d0
@@ -138,8 +142,10 @@ program xc_example
    deallocate(density)
    deallocate(input_array)
    deallocate(output_array)
+   deallocate(res_reference)
 
 !  reference values for self test
+   allocate(res_reference(nr_variables))
    res_reference(1) = -2.0795504461938754d0
    res_reference(2) =  2.14893341430147031d-2
    res_reference(3) =  4.12142542204717230d-2
@@ -148,6 +154,7 @@ program xc_example
 !  now second derivative of the "potential", contracted with one perturbed density.
 !  hopefully the strange input/output_array format will start to make sense
    order = 2
+   nr_variables = 4
    ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
       print *, 'xc_eval_setup failed with error ', ierr
@@ -156,7 +163,7 @@ program xc_example
 
    vector_length = 2**order
 !  allocate density and fill in some phantasy values
-   allocate(density(vector_length, NR_VARIABLES, NR_POINTS))
+   allocate(density(vector_length, nr_variables, NR_POINTS))
    density = 0.0d0
    do ipoint = 1, NR_POINTS
       density(1, 1, ipoint) = 1.0d0
@@ -169,7 +176,7 @@ program xc_example
       density(2, 4, ipoint) = 8.0d0
    end do
 
-   allocate(input_array(NR_VARIABLES*vector_length, NR_POINTS))
+   allocate(input_array(nr_variables*vector_length, NR_POINTS))
    allocate(output_array(vector_length, NR_POINTS))
 
 !  now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
@@ -178,7 +185,7 @@ program xc_example
 !  density(3, :, :)  ones and zeros
 !  density(4, :, :)  not used
 !  in general there will be 2^order elements, 1 ground state, 2^order-2 perturbed and one unused.
-   do ideriv = 1, NR_VARIABLES
+   do ideriv = 1, nr_variables
       do ipoint = 1, NR_POINTS
          density(3, :,      ipoint) = 0.0d0
          density(3, ideriv, ipoint) = 1.0d0
@@ -206,6 +213,7 @@ program xc_example
    deallocate(density)
    deallocate(input_array)
    deallocate(output_array)
+   deallocate(res_reference)
 
 !  Note: the computed second derivatives are now already contracted with the
 !  perturbed density! This works to any order.
@@ -225,6 +233,6 @@ program xc_example
 
 !  Note3: You can extend this example trivially to alpha/beta densities
 !  By specifying XC_A_B_AX_AY_AZ_BX_BY_BZ instead of  XC_N_NX_NY_NZ
-!  Then the NR_VARIABLES becomes 8.
+!  Then the nr_variables becomes 8.
 
 end program
