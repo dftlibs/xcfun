@@ -96,6 +96,10 @@ add_custom_target(xcfun_interfaces
     ${GENERATED_FILES}
 )
 
+include(FortranCompilers)
+include(CCompilers)
+include(CXXCompilers)
+
 add_library(
     xcfun_f90_bindings
     ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90

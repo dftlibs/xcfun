@@ -1,0 +1,11 @@
+if(CMAKE_C_COMPILER_ID MATCHES GNU)
+    set(CMAKE_C_FLAGS         "-g -Wall")
+    set(CMAKE_C_FLAGS_DEBUG   "-O0")
+    set(CMAKE_C_FLAGS_RELEASE "-O2")
+endif()
+
+if(CMAKE_C_COMPILER_ID MATCHES Intel)
+    set(CMAKE_C_FLAGS         "-Wall -g -wd981 -wd279 -wd383 -vec-report0 -wd1572 -wd177")
+    set(CMAKE_C_FLAGS_DEBUG   "-O0")
+    set(CMAKE_C_FLAGS_RELEASE "-O2")
+endif()
