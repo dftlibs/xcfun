@@ -131,6 +131,21 @@ struct densvars
         n = a+b;
         s = a-b;
         break;
+      case XC_A_B_AX_AY_AZ_BX_BY_BZ:
+	//    0 1  2  3  4  5  6  7
+        a = d[0];             
+        regularize(a);
+        b = d[1];
+        regularize(b);
+        gaa = d[2]*d[2] + d[3]*d[3] + d[4]*d[4];
+        gab = d[2]*d[5] + d[3]*d[6] + d[4]*d[7];
+        gbb = d[5]*d[5] + d[6]*d[6] + d[7]*d[7];
+        gnn  = gaa + 2*gab + gbb; 
+        gss  = gaa - 2*gab + gbb;
+        gns  = gaa - gbb;
+        n = a+b;
+        s = a-b;
+        break;
       case XC_N_S_NX_NY_NZ_SX_SY_SZ:
 	//    0 1  2  3  4  5  6  7
 	n = d[0];
