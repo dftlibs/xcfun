@@ -18,6 +18,17 @@ void check(const char *what, int cond)
     }
 }
 
+void checknum(const char *what, double x, double xref, double abserr, double relerr)
+{
+  if (fabs(x - xref) < abserr)
+    return;
+  if (fabs(x - xref) < relerr*xref)
+    return; 
+  fprintf(stderr,"Numerical check failed: %s\n got      %.16e\n expected %.16e\n Absolute error is %.4e, relative error is %.4e\n",
+	  what,x,xref,x - xref,(x - xref)/xref);
+  exit(-1);
+}
+
 /* Test permutation symmetries over variables and modes etc. */
 void consistency_test(void)
 {
@@ -38,20 +49,20 @@ void consistency_test(void)
   xc_eval(fun,d_unpolarized,output);
   for (i=0;i<nout;i++)
     printf("%.14e\n",output[i]);
-  check("unpolarized symmetry 1",fabs(output[1] - output[2]) < 1e-14);
-  check("unpolarized symmetry 2",fabs(output[3] - output[6]) < 1e-14);
-  check("unpolarized symmetry 3",fabs(output[4] - output[7]) < 1e-14);
-  check("unpolarized symmetry 4",fabs(output[5] - output[8]) < 1e-14);
+  checknum("unpolarized symmetry 1",output[1] - output[2],0,1e-14,1e-12);
+  checknum("unpolarized symmetry 2",output[3] - output[6],0,1e-14,1e-12);
+  checknum("unpolarized symmetry 3",output[4] - output[7],0,1e-14,1e-12);
+  checknum("unpolarized symmetry 4",output[5] - output[8],0,1e-14,1e-12);
   xc_eval(fun,d_pol_a,output);
   xc_eval(fun,d_pol_b,out2);
-  check("polarized symmetry 1",fabs(output[1] - out2[2]) < 1e-14);
-  check("polarized symmetry 2",fabs(output[3] - out2[6]) < 1e-14);
-  check("polarized symmetry 3",fabs(output[4] - out2[7]) < 1e-14);
-  check("polarized symmetry 4",fabs(output[5] - out2[8]) < 1e-14);
-  check("polarized symmetry 5",fabs(out2[1] - output[2]) < 1e-14);
-  check("polarized symmetry 6",fabs(out2[3] - output[6]) < 1e-14);
-  check("polarized symmetry 7",fabs(out2[4] - output[7]) < 1e-14);
-  check("polarized symmetry 8",fabs(out2[5] - output[8]) < 1e-14);
+  checknum("polarized symmetry 1",output[1] - out2[2],0,1e-14,1e-12);
+  checknum("polarized symmetry 2",output[3] - out2[6],0,1e-14,1e-12);
+  checknum("polarized symmetry 3",output[4] - out2[7],0,1e-14,1e-12);
+  checknum("polarized symmetry 4",output[5] - out2[8],0,1e-14,1e-12);
+  checknum("polarized symmetry 5",out2[1] - output[2],0,1e-14,1e-12);
+  checknum("polarized symmetry 6",out2[3] - output[6],0,1e-14,1e-12);
+  checknum("polarized symmetry 7",out2[4] - output[7],0,1e-14,1e-12);
+  checknum("polarized symmetry 8",out2[5] - output[8],0,1e-14,1e-12);
   free(output);
   free(out2);
 
