@@ -306,7 +306,6 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 		* f->active_functionals[i]->fp1(d);
 	    in[j] = input[j];
 	    output[j+1] = out.get(VAR0); // First derivatives
-	    printf("setting output[%i] = %f\n",j+1,output[j+1]);
 	  }
 	output[0] = out.get(CNST); // Energy
       }
