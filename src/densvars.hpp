@@ -153,7 +153,7 @@ struct densvars
 	s = d[1];
 	a = 0.5*(n+s);
         regularize(a);
-	b = 0.5*(n+s);
+	b = 0.5*(n-s);
         regularize(b);
         gnn = d[2]*d[2] + d[3]*d[3] + d[4]*d[4];
         gss = d[5]*d[5] + d[6]*d[6] + d[7]*d[7];
