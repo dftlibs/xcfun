@@ -36,7 +36,7 @@ program xc_example
 !  in this example we use PBE
    print *, 'Setting up PBE'
    ierr = xc_set(id, 'pbe', 1.0d0)
-   if (ierr.ne.0) then
+   if (ierr /= 0) then
       print *, 'Functional name not recognized, quitting.'
       stop
    endif
@@ -235,7 +235,7 @@ program xc_example
 
 !  now we extend the case to the spin polarized mode (8 variables)
 
-   order = 2
+   order = 0
    nr_variables = 8
    ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SX_SY_SZ, XC_CONTRACTED, order)
    if (ierr /= 0) then
@@ -256,24 +256,7 @@ program xc_example
       density(1, 6, ipoint) = 0.0d0 !nabla_x s
       density(1, 7, ipoint) = 0.0d0 !nabla_y s
       density(1, 8, ipoint) = 0.0d0 !nabla_z s
-      density(2, 1, ipoint) = 1.0d0
-      density(2, 2, ipoint) = 0.0d0
-      density(2, 3, ipoint) = 0.0d0
-      density(2, 4, ipoint) = 0.0d0
-      density(2, 5, ipoint) = 0.0d0
-      density(2, 6, ipoint) = 0.0d0
-      density(2, 7, ipoint) = 0.0d0
-      density(2, 8, ipoint) = 0.0d0
-      density(3, 1, ipoint) = 1.0d0
-      density(3, 2, ipoint) = 0.0d0
-      density(3, 3, ipoint) = 0.0d0
-      density(3, 4, ipoint) = 0.0d0
-      density(3, 5, ipoint) = 0.0d0
-      density(3, 6, ipoint) = 0.0d0
-      density(3, 7, ipoint) = 0.0d0
-      density(3, 8, ipoint) = 0.0d0
    end do
-   vector_length = 2**order
 
    allocate(input_array(nr_variables*vector_length, NR_POINTS))
    allocate(output_array(vector_length, NR_POINTS))
@@ -288,6 +271,58 @@ program xc_example
                                  density(:, 7, ipoint), &
                                  density(:, 8, ipoint)/)
    end do
-!   call xc_eval(id, NR_POINTS, input_array, output_array)
+   call xc_eval(id, NR_POINTS, input_array, output_array)
+   res = output_array(vector_length, 1)
+   print *, 'The XC energy density (spin polarized) is', res
+
+   deallocate(density)
+   deallocate(input_array)
+   deallocate(output_array)
+
+!  now let's test alpha and beta densities
+
+   order = 0
+   nr_variables = 8
+   ierr = xc_eval_setup(id, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_CONTRACTED, order)
+   if (ierr /= 0) then
+      print *, 'xc_eval_setup failed with error ', ierr
+      stop 1
+   endif
+
+   vector_length = 2**order
+!  allocate density and fill in some phantasy values
+   allocate(density(vector_length, nr_variables, NR_POINTS))
+   density = 0.0d0
+   do ipoint = 1, NR_POINTS
+      density(1, 1, ipoint) = 0.5d0 !        a
+      density(1, 2, ipoint) = 0.5d0 !        b
+      density(1, 3, ipoint) = 1.0d0 !nabla_x a
+      density(1, 4, ipoint) = 1.5d0 !nabla_y a
+      density(1, 5, ipoint) = 2.0d0 !nabla_z a
+      density(1, 6, ipoint) = 1.0d0 !nabla_x b
+      density(1, 7, ipoint) = 1.5d0 !nabla_y b
+      density(1, 8, ipoint) = 2.0d0 !nabla_z b
+   end do
+
+   allocate(input_array(nr_variables*vector_length, NR_POINTS))
+   allocate(output_array(vector_length, NR_POINTS))
+
+   do ipoint = 1, NR_POINTS
+      input_array(:, ipoint) = (/density(:, 1, ipoint), &
+                                 density(:, 2, ipoint), &
+                                 density(:, 3, ipoint), &
+                                 density(:, 4, ipoint), &
+                                 density(:, 5, ipoint), &
+                                 density(:, 6, ipoint), &
+                                 density(:, 7, ipoint), &
+                                 density(:, 8, ipoint)/)
+   end do
+   call xc_eval(id, NR_POINTS, input_array, output_array)
+   res = output_array(vector_length, 1)
+   print *, 'The XC energy density (a/b mode) is', res
+
+   deallocate(density)
+   deallocate(input_array)
+   deallocate(output_array)
 
 end program
