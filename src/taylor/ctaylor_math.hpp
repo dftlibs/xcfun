@@ -254,6 +254,27 @@ static ctaylor<T,Nvar> cos(const ctaylor<T,Nvar> &t)
   return res;
 }
 
+template<class T,int Nvar>
+static ctaylor<T,Nvar> asin(const ctaylor<T,Nvar> &t)
+{
+  T tmp[Nvar+1];
+  asin_expand<T,Nvar>(tmp,t.c[0]);
+
+  ctaylor<T,Nvar> res;
+  ctaylor_rec<T,Nvar>::compose(res.c,t.c,tmp);
+  return res;
+}
+
+template<class T,int Nvar>
+static ctaylor<T,Nvar> acos(const ctaylor<T,Nvar> &t)
+{
+  T tmp[Nvar+1];
+  acos_expand<T,Nvar>(tmp,t.c[0]);
+
+  ctaylor<T,Nvar> res;
+  ctaylor_rec<T,Nvar>::compose(res.c,t.c,tmp);
+  return res;
+}
 
 
 template<class T,int Nvar>
@@ -270,6 +291,8 @@ static ctaylor<T,Nvar> asinh(const ctaylor<T,Nvar> &t)
   ctaylor_rec<T,Nvar>::compose(res.c,t.c,tmp);
   return res;
 }
+
+
 
 /*
   The original function is unstable for small t[0] values similarly to

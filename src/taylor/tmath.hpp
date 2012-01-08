@@ -15,6 +15,8 @@
   erf
   sin
   cos
+  asin
+  acos
   asinh
 */
 
@@ -316,5 +318,53 @@ static void asinh_expand(T *t, const T &a)
   tfuns<T,Ndeg>::integrate(t);
   t[0] = asinh(a);
 }
+
+// arcsin function. d/dx asin(x) = 1/sqrt(1-x^2)
+// 1 - (a+x)^2 = 1-a^2 - 2ax - x^2
+template<class T,int Ndeg>
+static void asin_expand(T *t, const T &a)
+{
+  T tmp[Ndeg+1];
+  tmp[0] = 1-a*a;
+  if (Ndeg>0)
+    tmp[1] = -2*a;
+  if (Ndeg>1)
+    tmp[2] = -1;
+  for (int i=3;i<=Ndeg;i++)
+    tmp[i] = 0;
+  pow_expand<T,Ndeg>(t,tmp[0],-0.5);
+  tfuns<T,Ndeg>::compose(t,tmp);
+  tfuns<T,Ndeg>::integrate(t);
+  t[0] = asinh(a);
+}
+
+
+template<class T,int Ndeg>
+static void acosh_expand(T *t, const T &a)
+{
+  asinh_expand(t,a);
+  for (int i=0;i<Ndeg+1;i++)
+    t[i] *= -1;
+}
+
+template<class T,int Ndeg>
+static void acos_expand(T *t, const T &a)
+{
+  T tmp[Ndeg+1];
+  tmp[0] = 1-a*a;
+  if (Ndeg>0)
+    tmp[1] = -2*a;
+  if (Ndeg>1)
+    tmp[2] = -1;
+  for (int i=3;i<=Ndeg;i++)
+    tmp[i] = 0;
+  pow_expand<T,Ndeg>(t,tmp[0],-0.5);
+  tfuns<T,Ndeg>::compose(t,tmp);
+  tfuns<T,Ndeg>::integrate(t);
+  for  (int i=1;i<Ndeg;i++)
+    t[i] *= -1;
+  t[0] = asinh(a);
+}
+
 
 #endif

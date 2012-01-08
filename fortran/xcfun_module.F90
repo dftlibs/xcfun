@@ -191,6 +191,7 @@ contains
     integer :: funid, vars, mode, order, xc_eval_setup, xcevse
     xc_eval_setup = xcevse(funid,vars,mode,order)
   end function xc_eval_setup
+
   subroutine xc_eval(funid, npoints, densities, results)
     integer, intent(in) :: funid, npoints
 !radovan: trying to get it explicitly

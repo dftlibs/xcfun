@@ -5,40 +5,42 @@ using namespace std;
 #include "taylor.hpp"
 typedef double num_t;
 
+using namespace polymul;
+
 // Some taylor coefficients around x = 2.5, calculated using
 // Maxima bfloat(taylor(...))
 const num_t exp_good[] = {1.218249396070347e1,
-			   1.218249396070347e1,
-			   6.091246980351737e0,
-			   2.030415660117246e0,
-			   5.076039150293114e-1,
-			   1.015207830058623e-1,
-			   1.692013050097705e-2};
+			  1.218249396070347e1,
+			  6.091246980351737e0,
+			  2.030415660117246e0,
+			  5.076039150293114e-1,
+			  1.015207830058623e-1,
+			  1.692013050097705e-2};
 
 const num_t log_good[] = {9.162907318741551e-1,
-			   4.0e-1,
-			   -8.0e-2,
-			   2.133333333333333e-2,
-			   -6.4e-3,
-			   2.048e-3,
-			   -6.826666666666667e-4};
+			  4.0e-1,
+			  -8.0e-2,
+			  2.133333333333333e-2,
+			  -6.4e-3,
+			  2.048e-3,
+			  -6.826666666666667e-4};
 
 const num_t atan_good[] = {1.1902899496825317,
-			    1.379310344827586e-1,
-			    -4.756242568370987e-2,
-			    1.552612516571679e-2,
-			    -4.750587107528691e-3,
-			    1.336092873197889e-3,
-			    -3.310338712605161e-4};
+			   1.379310344827586e-1,
+			   -4.756242568370987e-2,
+			   1.552612516571679e-2,
+			   -4.750587107528691e-3,
+			   1.336092873197889e-3,
+			   -3.310338712605161e-4};
 
 
 //exp(1/(2.5 + 3x + 7y))
 const num_t composed_good[] = { 1.49182469764127,
 				-7.160758548678098e-1, //x
 				-1.670843661358223, //y
-				 1.031149231009646, //x^2
-				 4.812029744711682, //xy
-				 5.614034702163628}; //y^2
+				1.031149231009646, //x^2
+				4.812029744711682, //xy
+				5.614034702163628}; //y^2
 
 template<class num, int Nvar, int Ndeg>
 void printpoly(ostream &dst, const polynomial<num,Nvar,Ndeg> &p)
@@ -273,54 +275,12 @@ int main(void)
 	      res++;
 	    }
 	}
-#if 0
-  // Assignment with conversion for tensors.
-  tensored_taylor<3,double,1,3>::type tens_conv;
-  tens_conv = tens_res;
-
-  // Conversion from tensor
-  int tnsr[3][3][3],tnsr2[3][3][3];
-  int val=0, sumtens=0;
-  for (int i=0;i<3;i++)
-    for (int j=0;j<3;j++)
-      for (int k=0;k<3;k++)
-	{
-	  tnsr[i][j][k] = ++val;
-	  sumtens += tnsr[i][j][k];
-	  //	  cout << i << " " << j << " " << k << " " << tnsr[i][j][k] << endl;
-	}
-  taylor<int,3,7> from_tensor;
-  int sumfrom = 0;
-  from_tensor.from_tensor<3>((int *)tnsr);
-  for (int i=0;i<from_tensor.size;i++)
-    sumfrom += from_tensor[i];
-  if (sumfrom != sumtens)
-    {
-      cout << "from_tensor checksum error" << endl;
-      res++;
-    }
-  from_tensor.to_tensor<3>((int *)tnsr2);
-  for (int i=0;i<3;i++)
-    for (int j=0;j<3;j++)
-      for (int k=0;k<3;k++)
-	{
-	  if (tnsr[i][j][k] != tnsr2[i][j][k])
-	    {
-	      cout << "from/to tensor error" << endl;
-	      res++;
-	    }
-	}
-#endif
-  //  cout << "From tensor:" << endl;
-  //printpoly(cout,from_tensor);
-/*
-  // sinc
+  // acos
   cout << scientific;
   cout.precision(16);
-  taylor<num_t,1,6> sincx(1e-4,0), sincout = sinc(sincx);
-  for (int i=0;i<sincout.size;i++)
-      cout << i << " " << sincout[i] << endl;
-*/
+  taylor<num_t,1,6> acosx(1e-4,0), acosout = acos(acosx);
+  for (int i=0;i<acosout.size;i++)
+      cout << i << " " << acosout[i] << endl;
   
 // Test fast functions
   taylor<double,2,12> xin(2,0),yin(1,1),tslow,tfast;
