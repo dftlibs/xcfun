@@ -215,114 +215,25 @@ program xc_example
    deallocate(output_array)
    deallocate(res_reference)
 
-!  Note: the computed second derivatives are now already contracted with the
-!  perturbed density! This works to any order.
-!  In this example we put in ones and zeros, which you need to do to compute matrix
-!  elements. You can also put in a perturbed density instead of ones and zeros,
-!  then you generate a response contribution d^2E/dD1dD2. Typically this is what
-!  you want to do to high order, because by the 2N+1 rule you don't have to compute
-!  matrix elements to very high order. Then you need only one call of xc_eval,
-!  not one for each variable. This is very efficient, much better than computing
-!  all partial derivatives. For second derivatives it might be better to compute
-!  all partial derivatives and reuse them in the response solver.
+!  Notes:
 
-!  Note2: In this example I used the variables that are linear in the density
-!  matrix. This makes life easier because you can construct them trivially from
-!  perturbed density matrices. If you use i.e. the square norm of the density
-!  gradient things get more complicated.
-
-
-
-!  now we extend the case to the spin polarized mode (8 variables)
-
-   order = 0
-   nr_variables = 8
-   ierr = xc_eval_setup(id, XC_N_S_NX_NY_NZ_SX_SY_SZ, XC_CONTRACTED, order)
-   if (ierr /= 0) then
-      print *, 'xc_eval_setup failed with error ', ierr
-      stop 1
-   endif
-
-   vector_length = 2**order
-!  allocate density and fill in some phantasy values
-   allocate(density(vector_length, nr_variables, NR_POINTS))
-   density = 0.0d0
-   do ipoint = 1, NR_POINTS
-      density(1, 1, ipoint) = 1.0d0 !        n
-      density(1, 2, ipoint) = 0.0d0 !        s
-      density(1, 3, ipoint) = 2.0d0 !nabla_x n
-      density(1, 4, ipoint) = 3.0d0 !nabla_y n
-      density(1, 5, ipoint) = 4.0d0 !nabla_z n
-      density(1, 6, ipoint) = 0.0d0 !nabla_x s
-      density(1, 7, ipoint) = 0.0d0 !nabla_y s
-      density(1, 8, ipoint) = 0.0d0 !nabla_z s
-   end do
-
-   allocate(input_array(nr_variables*vector_length, NR_POINTS))
-   allocate(output_array(vector_length, NR_POINTS))
-
-   do ipoint = 1, NR_POINTS
-      input_array(:, ipoint) = (/density(:, 1, ipoint), &
-                                 density(:, 2, ipoint), &
-                                 density(:, 3, ipoint), &
-                                 density(:, 4, ipoint), &
-                                 density(:, 5, ipoint), &
-                                 density(:, 6, ipoint), &
-                                 density(:, 7, ipoint), &
-                                 density(:, 8, ipoint)/)
-   end do
-   call xc_eval(id, NR_POINTS, input_array, output_array)
-   res = output_array(vector_length, 1)
-   print *, 'The XC energy density (spin polarized) is', res
-
-   deallocate(density)
-   deallocate(input_array)
-   deallocate(output_array)
-
-!  now let's test alpha and beta densities
-
-   order = 0
-   nr_variables = 8
-   ierr = xc_eval_setup(id, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_CONTRACTED, order)
-   if (ierr /= 0) then
-      print *, 'xc_eval_setup failed with error ', ierr
-      stop 1
-   endif
-
-   vector_length = 2**order
-!  allocate density and fill in some phantasy values
-   allocate(density(vector_length, nr_variables, NR_POINTS))
-   density = 0.0d0
-   do ipoint = 1, NR_POINTS
-      density(1, 1, ipoint) = 0.5d0 !        a
-      density(1, 2, ipoint) = 0.5d0 !        b
-      density(1, 3, ipoint) = 1.0d0 !nabla_x a
-      density(1, 4, ipoint) = 1.5d0 !nabla_y a
-      density(1, 5, ipoint) = 2.0d0 !nabla_z a
-      density(1, 6, ipoint) = 1.0d0 !nabla_x b
-      density(1, 7, ipoint) = 1.5d0 !nabla_y b
-      density(1, 8, ipoint) = 2.0d0 !nabla_z b
-   end do
-
-   allocate(input_array(nr_variables*vector_length, NR_POINTS))
-   allocate(output_array(vector_length, NR_POINTS))
-
-   do ipoint = 1, NR_POINTS
-      input_array(:, ipoint) = (/density(:, 1, ipoint), &
-                                 density(:, 2, ipoint), &
-                                 density(:, 3, ipoint), &
-                                 density(:, 4, ipoint), &
-                                 density(:, 5, ipoint), &
-                                 density(:, 6, ipoint), &
-                                 density(:, 7, ipoint), &
-                                 density(:, 8, ipoint)/)
-   end do
-   call xc_eval(id, NR_POINTS, input_array, output_array)
-   res = output_array(vector_length, 1)
-   print *, 'The XC energy density (a/b mode) is', res
-
-   deallocate(density)
-   deallocate(input_array)
-   deallocate(output_array)
+!     The computed second derivatives are now already contracted with the
+!  perturbed density! This works to any order.  In this example we put in ones and
+!  zeros, which you need to do to compute matrix elements. You can also put in a
+!  perturbed density instead of ones and zeros, then you generate a response
+!  contribution d^2E/dD1dD2. Typically this is what you want to do to high order,
+!  because by the 2N+1 rule you don't have to compute matrix elements to very high
+!  order. Then you need only one call of xc_eval, not one for each variable. This
+!  is very efficient, much better than computing all partial derivatives. For
+!  second derivatives it might be better to compute all partial derivatives and
+!  reuse them in the response solver.
+!
+!     In this example we use the variables that are linear in the density matrix.
+!  This makes life easier because you can construct them trivially from perturbed
+!  density matrices. If you use i.e. the square norm of the density gradient
+!  things get more complicated.
+!
+!     For the spin polarized cases (using density and spin density or up- and down
+!  densities) we would use 8 variables instead of 4.
 
 end program
