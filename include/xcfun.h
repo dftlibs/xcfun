@@ -1,7 +1,7 @@
 #ifndef XCFUN_H
 #define XCFUN_H
 
-#define XCFUN_API_VERSION 1
+#define XCFUN_API_VERSION 2
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +27,8 @@ enum xc_mode
   XC_NR_MODES
 };
   
-  enum xc_vars // Must be in sync with xcint_vars in xcint.cpp
+  // Must be in sync with xcint_vars in xcint.cpp and with the fortran module
+  enum xc_vars 
     {
       XC_VARS_UNSET=-1,
       // LDA
@@ -64,18 +65,14 @@ enum xc_mode
       XC_NR_VARS
     };
 
-  /* Define a checksum to check for header/library consistency when
-     using shared libraries. */ 
-#define XCFUN_CHECKSUM (XC_NR_MODES + 9091*XC_NR_VARS + 1723*XCFUN_API_VERSION)
-
   double xcfun_version(void);
   const char *xcfun_splash(void);
   int xcfun_test(void);
   
   typedef struct xc_functional_obj * xc_functional;
 
-  xc_functional xc_new_functional_not_macro(int checksum);
-#define xc_new_functional() xc_new_functional_not_macro(XCFUN_CHECKSUM)
+  xc_functional xc_new_functional_not_macro(int api_version);
+#define xc_new_functional() xc_new_functional_not_macro(XCFUN_API_VERSION)
 
   void xc_free_functional(xc_functional fun);
 

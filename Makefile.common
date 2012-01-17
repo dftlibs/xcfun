@@ -16,9 +16,6 @@ lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ)
 genfortran: src/genfortran.cpp lib/libxcfun.a
 	$(CXX) $(CXXFLAGS) $^ -o $@ -lxcfun -lm $(LIBS)
 
-fortran/xcfun_autogen.F90: genfortran include/xcfun.h
-	./genfortran
-
 # radovan: seems broken
 funeval: test/funeval.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) > cref
@@ -34,17 +31,14 @@ testall: test/testall.c lib/libxcfun.a
 test3: test/test3.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
-fortran/xcfun_autogen.o: fortran/xcfun_autogen.F90
-	$(FC) $(FFLAGS) -c -o $@ $^
-
-fortran/xcfun_module.o: fortran/xcfun_module.F90 fortran/xcfun_autogen.o fortran/xcfun_autogen.F90
+fortran/xcfun_module.o: fortran/xcfun_module.F90
 	$(FC) $(FFLAGS) -c -o $@ $<
 
-kernel_example: fortran/xcfun_autogen.o  fortran/xcfun_module.o  lib/libxcfun.a fortran/kernel_example.o
+kernel_example: fortran/xcfun_module.o  lib/libxcfun.a fortran/kernel_example.o
 	$(FC) $(FFLAGS) $(LIBS) -o $@ $^ -lxcfun -lm
 
 clean:
-	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.a include/xcfun_autogen.h fortran/xcfun_autogen.F90 example_fortran_ genfortran
+	rm -f `find . -name '*.o' -o -name '*~'` testall funeval lib/libxcfun.a fortran/xcfun_autogen.F90 example_fortran_ 
 
 .SUFFIXES: .f90 .F90
 

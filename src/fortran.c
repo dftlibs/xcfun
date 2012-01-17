@@ -34,14 +34,14 @@ double FSYM(xcfuve) FCSYM(XCFUVE)(void)
   return xcfun_version();
 }
 
-int FSYM(xcnewf) FCSYM(XCNEWF)(fortran_int_t *checksum)
+int FSYM(xcnewf) FCSYM(XCNEWF)(fortran_int_t *api_version)
 {
   int i;
   for (i=0;i<MAX_FORTRAN_FUNCTIONALS;i++)
     {
       if (fortran_functionals[i] == 0)
 	{
-	  fortran_functionals[i] = xc_new_functional_not_macro(*checksum);
+	  fortran_functionals[i] = xc_new_functional_not_macro(*api_version);
 	  return i;
 	}
     }
