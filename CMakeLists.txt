@@ -70,48 +70,22 @@ target_link_libraries(
     xcfun
     )
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fortran)
-add_custom_command(
-    OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
-    DEPENDS
-    genfortran
-    COMMAND
-    genfortran
-    )
-add_executable(
-    genfortran
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/genfortran.cpp
-    )
-target_link_libraries(
-    genfortran
-    xcfun
-    )
-set(GENERATED_FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
-    )
-add_custom_target(xcfun_interfaces
-    ALL
-    DEPENDS
-    ${GENERATED_FILES}
-)
-
 include(FortranCompilers)
 include(CCompilers)
 include(CXXCompilers)
 
 add_library(
     xcfun_f90_bindings
-    ${CMAKE_CURRENT_BINARY_DIR}/fortran/xcfun_autogen.F90
     ${CMAKE_CURRENT_SOURCE_DIR}/fortran/xcfun_module.F90
     )
+
 # Set .so version
 if(BUILD_SHARED_LIBS)
  set_target_properties(xcfun_f90_bindings PROPERTIES
   VERSION ${VERSION} SOVERSION ${SOVERSION} )
 endif(BUILD_SHARED_LIBS)
 install(TARGETS xcfun_f90_bindings DESTINATION lib${LIB_SUFFIX})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xcfun.mod ${CMAKE_CURRENT_BINARY_DIR}/xcfun_autogen.mod DESTINATION include)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xcfun.mod DESTINATION include)
 
 if(ENABLE_64BIT_INTEGERS)
     add_definitions(-DXCFUN_FORTRAN_INT='long long int')
