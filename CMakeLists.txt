@@ -83,7 +83,7 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake.in
 	        ${CMAKE_BINARY_DIR}/CTestCustom.cmake @ONLY)
 
 install(FILES include/xcfun.h DESTINATION include)
-install(FILES ${CMAKE_BINARY_DIR}/src/include/xcfun_autogen.h 
+install(FILES ${CMAKE_BINARY_DIR}/src/xcfun_autogen.h 
 	DESTINATION include)
 
 include(InstallRequiredSystemLibraries)
