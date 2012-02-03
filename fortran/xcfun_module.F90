@@ -221,15 +221,19 @@ contains
 
   subroutine xc_eval(funid, npoints, densities, results)
     XCFUN_INTEGER, intent(in) :: funid, npoints
-!radovan: trying to get it explicitly
-!         maybe later we go back to implicit
-!   XCFUN_INTEGER :: npoints
     double precision, intent(in) :: densities(:,:)
     double precision, intent(out) :: results(:,:)
-!   npoints = size(densities,2)
     call xceval(funid,npoints,densities(1,1),densities(1,2),&
          results(1,1),results(1,2))
   end subroutine xc_eval
+
+  subroutine xc_eval_star(funid, npoints, m, densities, results)
+    XCFUN_INTEGER, intent(in) :: funid, npoints, m
+    double precision, intent(in) :: densities(*)
+    double precision, intent(out) :: results(:,:)
+    call xceval(funid,npoints,densities(1),densities(m+1),&
+         results(1,1),results(1,2))
+  end subroutine xc_eval_star
 
 #if 0
   function xc_index(funid, exponents)
