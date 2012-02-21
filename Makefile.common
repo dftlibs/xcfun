@@ -16,19 +16,10 @@ lib/libxcfun.a: $(BASE_OBJ) $(FUN_OBJ)
 genfortran: src/genfortran.cpp lib/libxcfun.a
 	$(CXX) $(CXXFLAGS) $^ -o $@ -lxcfun -lm $(LIBS)
 
-# radovan: seems broken
-funeval: test/funeval.c lib/libxcfun.a
-	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS) > cref
-
-# radovan: seems broken
-testmain: src/testmain.o lib/libxcfun.a
-	$(CXX) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
-
 testall: test/testall.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
-# radovan: seems broken
-test3: test/test3.c lib/libxcfun.a
+example: test/example.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
 fortran/xcfun_module.o: fortran/xcfun_module.F90
