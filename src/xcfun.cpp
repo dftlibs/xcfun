@@ -421,7 +421,6 @@ int xc_eval_setup(xc_functional fun,
   // Check that vars are enough for the functional
   if ((fun->depends & xcint_vars[vars].provides) != fun->depends)
     {
-      printf("depends %i, provides %i\n",fun->depends,xcint_vars[vars].provides);
       return XC_EVARS;
     }
   if ((order < 0 || order > XC_MAX_ORDER) ||
