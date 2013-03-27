@@ -84,6 +84,10 @@ struct densvars
 	b = n - s;
 	regularize(b);
 	break;
+      case XC_N_GNN_TAUN:
+	taua = d[2]/2;
+	taub = d[2]/2;
+	tau = d[2];
       case XC_N_GNN:
 	gnn = d[1];
 	gss = 0;
