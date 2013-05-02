@@ -105,6 +105,10 @@ struct densvars
       case XC_N_2ND_TAYLOR: 
         lapa = 0.5*(d[4]+d[7]+d[9]);
         lapb = lapa;
+      case XC_N_NX_NY_NZ_TAUN:
+	taua = d[4]/2;
+	taub = d[4]/2;
+	tau = d[4];
       case XC_N_NX_NY_NZ:
         gnn = d[1]*d[1] + d[2]*d[2] + d[3]*d[3];
         gss = 0;
@@ -135,6 +139,10 @@ struct densvars
         n = a+b;
         s = a-b;
         break;
+      case XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB:
+	taua = d[8];
+	taub = d[9];
+	tau = d[8]+d[9];
       case XC_A_B_AX_AY_AZ_BX_BY_BZ:
 	//    0 1  2  3  4  5  6  7
         a = d[0];             
@@ -150,6 +158,10 @@ struct densvars
         n = a+b;
         s = a-b;
         break;
+      case XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS:
+	taua = 0.5*(d[8]+d[9]);
+	taub = 0.5*(d[8]-d[9]);
+	tau = d[8];
       case XC_N_S_NX_NY_NZ_SX_SY_SZ:
 	//    0 1  2  3  4  5  6  7
 	n = d[0];

@@ -54,6 +54,10 @@ enum xc_mode
       XC_A_B_AX_AY_AZ_BX_BY_BZ,
       XC_N_NX_NY_NZ,
       XC_N_S_NX_NY_NZ_SX_SY_SZ,
+      XC_A_AX_AY_AZ_TAUA,
+      XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB,
+      XC_N_NX_NY_NZ_TAUN,
+      XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS,
       /* 2:nd order Taylor coefficients of alpha density, 1+3+6=10
 	 numbers, rev gradlex order */	
       XC_A_2ND_TAYLOR, 
@@ -87,6 +91,8 @@ enum xc_mode
   int xc_get(xc_functional fun, const char *name, double *value);
   const char *xc_describe_short(const char *name);
   const char *xc_describe_long(const char *name);
+
+  int xc_set_fromstring(xc_functional fun, const char *str); // Defines a functional from a string on the form "fun[=value]"
 
   // Try to set the functional evaluation vars, mode and order
   // return some combination of XC_E* if an error occurs, else 0.
