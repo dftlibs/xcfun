@@ -8,7 +8,7 @@
 #include "config.hpp"
 #include "ctaylor.hpp"
 
-#define XC_MAX_ALIASES 10
+#define XC_MAX_ALIASES 20
 #define MAX_ALIAS_TERMS 5
 
 // Macros to iterate up to XC_MAX_ORDER
