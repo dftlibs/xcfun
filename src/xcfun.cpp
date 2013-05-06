@@ -225,6 +225,39 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  break;
 #endif
 #if XC_MAX_ORDER >= 2
+#if XC_MAX_ORDER >= 3
+	  // Do the third order derivatives here, then use the second order code. This is getting expensive..
+	case 3:
+	  {
+	    typedef ctaylor<ireal_t,3> ttype;
+	    int inlen = xcint_vars[f->vars].len;
+	    ttype in[inlen], out = 0;
+	    for (int i=0;i<inlen;i++)
+	      in[i] = input[i];
+	    int k = 1 + inlen + (inlen*(inlen+1))/2;
+	    for (int i=0;i<inlen;i++)
+	      {
+		in[i].set(VAR0,1);
+		for (int j=i;j<inlen;j++)
+		  {
+		    in[j].set(VAR1,1);
+		    for (int s=j;s<inlen;s++)
+		      {
+			in[s].set(VAR2,1);
+			densvars<ttype> d(f,in);
+			out = 0;
+			for (int n=0;n<f->nr_active_functionals;n++)
+			  out += f->settings[f->active_functionals[n]->id]
+			    * f->active_functionals[n]->fp3(d); 
+			output[k++] = out.get(VAR0|VAR1|VAR2); //Third derivative
+			in[s].set(VAR2,0); 
+		      }
+		    in[j].set(VAR1,0); 
+		  }
+		in[i] = input[i];
+	      }
+	  }
+#endif
 	case 2:
 	  {
 	    typedef ctaylor<ireal_t,2> ttype;
@@ -424,7 +457,7 @@ int xc_eval_setup(xc_functional fun,
       return XC_EVARS;
     }
   if ((order < 0 || order > XC_MAX_ORDER) ||
-      (mode == XC_PARTIAL_DERIVATIVES && order > 2))
+      (mode == XC_PARTIAL_DERIVATIVES && order > 4))
     return XC_EORDER;
   if (mode == XC_POTENTIAL)
     {
