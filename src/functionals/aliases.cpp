@@ -11,6 +11,7 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   // Hybrid Functionals
   {"pbe0","Perdew-Burke-Ernzerhof",{{"pbex",0.75},{"pbec",1.0},{"exx",0.25}} }, 
   {"b3lyp","Becke-3-paramater-LYP (VWN5 form)", {{"slaterx",0.80},{"beckecorrx",0.72},{"lypc",0.81},{"vwn5c",0.19},{"exx",0.20}} }, 
+  {"m06","M06", {{"m06c",0.80},{"m06x",1.0}} }, 
 };
 
 struct alias_data *xcint_aliases = aliases_array;
