@@ -37,7 +37,7 @@ static num becke_sr(parameter mu, const num &na, const num &gaa)
   num na43 = pow(na,4.0/3.0);
   num chi2 = gaa*pow(na,-8.0/3.0);
   num K = 2*(cparam + (d*chi2)/(1+6*d*sqrtx_asinh_sqrtx(chi2)));
-  num a = mu*sqrt(K)/(6*M_PI*pow(na,1.0/3.0));
+  num a = mu*sqrt(K)/(6*sqrt(M_PI)*pow(na,1.0/3.0));
   num b = expm1(-1/(4*a*a));
   num c = 2*a*a*b + 0.5;
   return -0.5*na43*K*(1-8.0/3.0*a*(sqrt(M_PI)*erf(1/(2*a))+2*a*(b-c)));
