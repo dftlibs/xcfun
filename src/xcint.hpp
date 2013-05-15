@@ -10,6 +10,8 @@
 
 #define XC_MAX_ALIASES 20
 #define MAX_ALIAS_TERMS 5
+#define XC_MAX_INVARS 20
+
 
 // Macros to iterate up to XC_MAX_ORDER
 #define REP0(F,E) F(0,E)

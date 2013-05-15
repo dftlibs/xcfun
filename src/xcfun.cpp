@@ -166,7 +166,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  {
 	    typedef ctaylor<ireal_t,0> ttype;
 	    int inlen = xcint_vars[f->vars].len;
-	    ttype in[inlen], out = 0;
+	    ttype in[XC_MAX_INVARS], out = 0;
 	    for (int i=0;i<inlen;i++)
 	      in[i] = input[i];
 	    densvars<ttype> d(f,in);
@@ -182,7 +182,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  int inlen = xcint_vars[f->vars].len;
 	  {
 	    typedef ctaylor<ireal_t,2> ttype2;
-	    ttype2 in2[inlen], out2 = 0;
+	    ttype2 in2[XC_MAX_INVARS], out2 = 0;
 	    for (int i=0;i<inlen;i++)
 	      in2[i] = input[i];
 	    for (int j=0;j<inlen/2;j++)
@@ -205,7 +205,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  {
 	    typedef ctaylor<ireal_t,1> ttype;
 	    int inlen = xcint_vars[f->vars].len;
-	    ttype in[inlen], out = 0;
+	    ttype in[XC_MAX_INVARS], out = 0;
 	    for (int i=0;i<inlen;i++)
 	      in[i] = input[i];
 	    int j = inlen-1;
@@ -231,7 +231,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  {
 	    typedef ctaylor<ireal_t,3> ttype;
 	    int inlen = xcint_vars[f->vars].len;
-	    ttype in[inlen], out = 0;
+	    ttype in[XC_MAX_INVARS], out = 0;
 	    for (int i=0;i<inlen;i++)
 	      in[i] = input[i];
 	    int k = 1 + inlen + (inlen*(inlen+1))/2;
@@ -262,7 +262,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	  {
 	    typedef ctaylor<ireal_t,2> ttype;
 	    int inlen = xcint_vars[f->vars].len;
-	    ttype in[inlen], out = 0;
+	    ttype in[XC_MAX_INVARS], out = 0;
 	    for (int i=0;i<inlen;i++)
 	      in[i] = input[i];
 	    int k = inlen+1;
@@ -296,7 +296,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 #define DOEVAL(N,E) if (f->order == N) {\
       typedef ctaylor<ireal_t,N> ttype; \
       int inlen = xcint_vars[f->vars].len; \
-      ttype in[inlen], out = 0; \
+      ttype in[XC_MAX_INVARS], out = 0; \
       int k = 0; \
       for (int i=0;i<inlen;i++) \
 	for (int j=0;j<(1 << f->order);j++) \
@@ -320,7 +320,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 
       {
 	typedef ctaylor<ireal_t,1> ttype;      
-	ttype in[inlen], out = 0;
+	ttype in[XC_MAX_INVARS], out = 0;
 	for (int i=0;i<inlen;i++)
 	  in[i] = input[i];
 	for (int j=0;j<npot;j++)
@@ -349,7 +349,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 	     v = dE/dn - nabla.dE/dg
 	   */
 	  typedef ctaylor<ireal_t,2> ttype;
-	  ttype in[inlen];
+	  ttype in[XC_MAX_INVARS];
 	  if (f->vars == XC_A_2ND_TAYLOR || f->vars == XC_N_2ND_TAYLOR)
 	    {
 	      // n gx gy gz xx xy xz yy yz zz

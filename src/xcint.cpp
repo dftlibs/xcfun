@@ -101,6 +101,13 @@ void xcint_assure_setup()
     {
       xcint_functional_setup_helper<0>();      
       xcint_parameter_setup_helper<XC_NR_FUNCTIONALS>();
+#ifndef NDEBUG
+      /* Verify that the variable definition is consistent. */
+      for (int i=0;i<XC_NR_VARS;i++)
+	{
+	  assert(xcint_vars[i].len <= XC_MAX_INVARS);
+	}
+#endif
       is_setup = true;
     }
 }
