@@ -33,10 +33,14 @@ module xcfun
   XCFUN_INTEGER, parameter :: XC_A_B_AX_AY_AZ_BX_BY_BZ = 17
   XCFUN_INTEGER, parameter :: XC_N_NX_NY_NZ = 18
   XCFUN_INTEGER, parameter :: XC_N_S_NX_NY_NZ_SX_SY_SZ = 19
-  XCFUN_INTEGER, parameter :: XC_A_2ND_TAYLOR = 20
-  XCFUN_INTEGER, parameter :: XC_A_B_2ND_TAYLOR = 21
-  XCFUN_INTEGER, parameter :: XC_N_2ND_TAYLOR = 22
-  XCFUN_INTEGER, parameter :: XC_N_S_2ND_TAYLOR = 23
+  XCFUN_INTEGER, parameter :: XC_A_AX_AY_AZ_TAUA = 20
+  XCFUN_INTEGER, parameter :: XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB = 21
+  XCFUN_INTEGER, parameter :: XC_N_NX_NY_NZ_TAUN = 22
+  XCFUN_INTEGER, parameter :: XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS = 23
+  XCFUN_INTEGER, parameter :: XC_A_2ND_TAYLOR = 24
+  XCFUN_INTEGER, parameter :: XC_A_B_2ND_TAYLOR = 25
+  XCFUN_INTEGER, parameter :: XC_N_2ND_TAYLOR = 26
+  XCFUN_INTEGER, parameter :: XC_N_S_2ND_TAYLOR = 27
 
 ! Indices into the output array of derivatives. Fortran numbering.
   XCFUN_INTEGER, parameter :: XC_D0 = 1

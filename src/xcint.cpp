@@ -84,6 +84,10 @@ vars_data xcint_vars[XC_NR_VARS] =
     {"XC_A_B_AX_AY_AZ_BX_BY_BZ", 8, XC_DENSITY | XC_GRADIENT},
     {"XC_N_NX_NY_NZ",4, XC_DENSITY | XC_GRADIENT},
     {"XC_N_S_NX_NY_NZ_SX_SY_SZ",8, XC_DENSITY | XC_GRADIENT},
+    {"XC_A_AX_AY_AZ_TAUA",5, XC_DENSITY | XC_GRADIENT | XC_KINETIC},
+    {"XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB", 10, XC_DENSITY | XC_GRADIENT | XC_KINETIC},
+    {"XC_N_NX_NY_NZ_TAUN",5, XC_DENSITY | XC_GRADIENT | XC_KINETIC},
+    {"XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS",10, XC_DENSITY | XC_GRADIENT | XC_KINETIC},
     {"XC_A_2ND_TAYLOR", 10, XC_DENSITY | XC_GRADIENT | XC_LAPLACIAN},
     {"XC_A_B_2ND_TAYLOR", 20, XC_DENSITY | XC_GRADIENT | XC_LAPLACIAN},
     {"XC_N_2ND_TAYLOR", 10, XC_DENSITY | XC_GRADIENT | XC_LAPLACIAN},
@@ -97,6 +101,13 @@ void xcint_assure_setup()
     {
       xcint_functional_setup_helper<0>();      
       xcint_parameter_setup_helper<XC_NR_FUNCTIONALS>();
+#ifndef NDEBUG
+      /* Verify that the variable definition is consistent. */
+      for (int i=0;i<XC_NR_VARS;i++)
+	{
+	  assert(xcint_vars[i].len <= XC_MAX_INVARS);
+	}
+#endif
       is_setup = true;
     }
 }
