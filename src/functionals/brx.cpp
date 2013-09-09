@@ -1,7 +1,8 @@
-#ifdef TODO
+
 /* Needs some work to work with ctaylor */
 #include "functional.hpp"
 #include "slater.hpp"
+#include "taylor.hpp"
 
 // This is the function we want to find roots for
 template<class T>
@@ -84,44 +85,50 @@ void BR_taylor(const T &y0, taylor<T,1,Ndeg> &t)
    Becke and Roussel, PRA 39, 1989. t is the right hand
    side value, x is returned.
  */ 
-template<class T,int Nvar, int Ndeg>
-static taylor<T,Nvar,Ndeg> BR(const taylor<T,Nvar,Ndeg> &t)
+template<class T,int Nvar>
+static ctaylor<T,Nvar> BR(const ctaylor<T,Nvar> &t)
 {
-  taylor<T,1,Ndeg> tmp;
-  BR_taylor(t[0],tmp);
+  taylor<T,1,Nvar> tmp;
+  BR_taylor(t.c[0],tmp);
+  printf("here x is %.15e\n",tmp[0]);
 
-  taylor<T,Nvar,Ndeg> res;
-  t.compose(res,tmp);
+  ctaylor<T,Nvar> res = tmp[0];
+  for (int i=1;i<=Nvar;i++)
+    res += tmp[i]*pow(t-t.c[0],i);
   return res;
 }
 
 template<class num>
-static num polarized(const num &na, 
+static num polarized(const num &na,
 		     const num &gaa,
-		     const num &lapa, 
+		     const num &lapa,
 		     const num &taua) // Becke tau here, no factor 1/2
 {
-  const parameter gam = 0.80;
-  num D = taua - 0.25*gaa/na;
-  num Q = 1.0/6.0*(lapa + 2*gam*D);
+  //  const parameter gam = 1.00; // like in the 96 paper
+  //  const parameter gam = 0.80;
+  printf("na %e, gaa %e, lapa %e, taua %e",na.c[0],gaa.c[0],lapa.c[0],taua.c[0]);
+  num Q = (lapa - 2*taua + 0.5*gaa/na)/6.0;
+  printf("Q[0] is %.15e\n",Q.c[0]);
   num x = BR(2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q);
+  printf("x[0] is %.15e\n",x.c[0]);
+  num BRarg = 2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q;
+  printf("br arg is %.15e\n",BRarg.c[0]);
   num b = cbrt(pow3(x)*exp(-x)/(8*M_PI*na));
   return -(1-(1+0.5*x)*exp(-x))/b; //FIXME: use expm1
 }
 
 template<class num>
-static num ENERGY_FUNCTION(XC_BRX)(const densvars<num> &d)
+static num brx(const densvars<num> &d)
 {
   return 0.5*(d.a*polarized(d.a,d.gaa,d.lapa,2*d.taua) +
 	      d.a*polarized(d.b,d.gbb,d.lapb,2*d.taub));
 }
 
 
-NEW_LTMGGA_FUNCTIONAL(XC_BRX);
-SHORT_DESCRIPTION(XC_BRX) = "BR exchange\n";
-LONG_DESCRIPTION(XC_BRX) =
-	     "Becke-Roussels exchange functional\n"
-	     "Implemented by Ulf Ekstrom\n";
-NO_TEST(XC_BRX);
-
-#endif
+FUNCTIONAL(XC_BRX) = {
+  "Becke-Roussells exchange",
+  "Add info here"
+  "Implemented by Ulf Ekstrom\n",
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN,
+  ENERGY_FUNCTION(brx)
+};

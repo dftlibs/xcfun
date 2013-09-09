@@ -8,6 +8,7 @@ enum xc_functional_id
     XC_BECKEX,
     XC_BECKECORRX,
     XC_BECKESRX,
+    XC_BRX,
     XC_LDAERFX,
     XC_LDAERFC,
     XC_LDAERFC_JT,

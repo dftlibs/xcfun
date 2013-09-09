@@ -42,7 +42,6 @@ void consistency_test(void)
   xc_set(fun,"pbe",1.0);
   xc_eval_setup(fun,XC_A_B_AX_AY_AZ_BX_BY_BZ,XC_PARTIAL_DERIVATIVES,1);
   nout = xc_output_length(fun);
-
   check("correct output length 1",nout == 9); // 1 + 8
   output = malloc(sizeof(*output)*nout);
   out2 = malloc(sizeof(*output)*nout);
