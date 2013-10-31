@@ -2,6 +2,7 @@ enum xc_functional_id
   {
     XC_SLATERX,
     XC_PW86X,
+    XC_VWN3C,
     XC_VWN5C,
     XC_PBEC,
     XC_PBEX,
