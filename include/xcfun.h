@@ -44,7 +44,7 @@ enum xc_mode
       // MetaGGA
       XC_A_GAA_LAPA,
       XC_A_GAA_TAUA,
-      XC_N_GNN_LAPN,
+      XC_N_GNN_LAPN, // 10
       XC_N_GNN_TAUN,
       XC_A_B_GAA_GAB_GBB_LAPA_LAPB,
       XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
@@ -54,7 +54,7 @@ enum xc_mode
       XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS,
       XC_A_AX_AY_AZ,
       XC_A_B_AX_AY_AZ_BX_BY_BZ,
-      XC_N_NX_NY_NZ,
+      XC_N_NX_NY_NZ, // 20
       XC_N_S_NX_NY_NZ_SX_SY_SZ,
       XC_A_AX_AY_AZ_TAUA,
       XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB,
