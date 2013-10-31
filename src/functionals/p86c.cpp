@@ -35,7 +35,8 @@ FUNCTIONAL(XC_P86C) = {
   "P86C GGA correlation",  
   "J.P. Density-functional approximation for the correlation energy\n"
   "of the inhomogeneous electron , Phys. Rev. B, 33(12):8822gasPerdew,\n" 
-  "Implemented by Ulf Ekstrom.\n",
+  "Implemented by Ulf Ekstrom.\n"
+  "Reference data from ftp://ftp.dl.ac.uk/qcg/dft_library/data_pt_c_p86.html",
   XC_DENSITY | XC_GRADIENT,
   ENERGY_FUNCTION(p86c)
   XC_A_B_GAA_GAB_GBB,
