@@ -15,7 +15,7 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"m06-2x","M06 2X", {{"m06x2c",1.0},{"m06x2x",1.0}} }, 
   {"m06L","M06 L", {{"m06lc",1.0},{"m06lx",1.0}} }, 
   // Aliases for DALTON GGAKEY
-  {"becke","Becke exchange",{{"beckexcorr",1.0}}},
+  {"becke","Becke exchange",{{"beckecorrx",1.0}}},
   {"slater","Slater exchange",{{"slaterx",1.0}}},
   {"lyp","LYP correlation",{{"lypc",1.0}}},
   {"vwn","VWN5 correlation",{{"vwn5c",1.0}}},
