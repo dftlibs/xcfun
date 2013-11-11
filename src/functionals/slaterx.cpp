@@ -6,7 +6,7 @@ FUNCTIONAL(XC_SLATERX) = {
   "LDA Exchange functional\n"
   "P.A.M. Dirac, Proceedings of the Cambridge Philosophical "
   "Society, 26 (1930) 376.\n"
-  "F. Bloch, Zeitschrift für Physik, 57 (1929) 545.\n\n"
+  "F. Bloch, Zeitschrift fuer Physik, 57 (1929) 545.\n\n"
   "Implemented by Ulf Ekstrom\n"
   "Test case from http://www.cse.scitech.ac.uk/ccg/dft/data_pt_x_lda.html\n",
   XC_DENSITY,
