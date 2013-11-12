@@ -32,6 +32,7 @@
 #define XC_GRADIENT  2
 #define XC_LAPLACIAN 4
 #define XC_KINETIC   8
+#define XC_JP       16
 
 typedef void (*evaluator)(struct xc_functional_obj *, const double *, double *);
 

@@ -102,12 +102,13 @@ template<class num>
 static num polarized(const num &na,
 		     const num &gaa,
 		     const num &lapa,
-		     const num &taua) // Becke tau here, no factor 1/2
+		     const num &taua,
+		     const num &jpaa) // Becke tau here, no factor 1/2
 {
   //  const parameter gam = 1.00; // like in the 96 paper
   //  const parameter gam = 0.80;
   printf("na %e, gaa %e, lapa %e, taua %e",na.c[0],gaa.c[0],lapa.c[0],taua.c[0]);
-  num Q = (lapa - 2*taua + 0.5*gaa/na)/6.0;
+  num Q = (lapa - 2*taua + (0.5*gaa + 2*jpaa)/na)/6.0;
   printf("Q[0] is %.15e\n",Q.c[0]);
   num x = BR(2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q);
   printf("x[0] is %.15e\n",x.c[0]);
@@ -120,8 +121,23 @@ static num polarized(const num &na,
 template<class num>
 static num brx(const densvars<num> &d)
 {
-  return 0.5*(d.a*polarized(d.a,d.gaa,d.lapa,2*d.taua) +
-	      d.a*polarized(d.b,d.gbb,d.lapb,2*d.taub));
+  return 0.5*(d.a*polarized(d.a,d.gaa,d.lapa,2*d.taua,d.jpaa) +
+	      d.a*polarized(d.b,d.gbb,d.lapb,2*d.taub,d.jpbb));
+}
+
+template<class num>
+static num brc(const densvars<num> &d)
+{
+  parameter cab = 0.63, caa = 0.88;
+  num UXa = polarized(d.a,d.gaa,d.lapa,2*d.taua,d.jpaa);
+  num UXb = polarized(d.b,d.gbb,d.lapb,2*d.taub,d.jpbb);
+  num zaa = abs(caa*(2/UXa));
+  num zbb = abs(caa*(2/UXb));
+  num zab = abs(cab*(1/UXa + 1/UXb));
+  num ECopp = -0.8*d.a*d.b*zab*zab*(1-log(1+zab)/zab);
+  num ECaa = -0.01*d.a*(d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
+  num ECbb = -0.01*d.b*(d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
+  return ECopp + ECaa + ECbb;
 }
 
 
@@ -129,6 +145,6 @@ FUNCTIONAL(XC_BRX) = {
   "Becke-Roussells exchange",
   "Add info here"
   "Implemented by Ulf Ekstrom\n",
-  XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN,
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN | XC_JP,
   ENERGY_FUNCTION(brx)
 };

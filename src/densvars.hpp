@@ -178,6 +178,9 @@ struct densvars
 	gab = 0.25*(gnn - gss);
 	gbb = 0.25*(gnn-2*gns+gss);
 	break;
+      case XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB:
+	jpaa = d[9];
+	jpbb = d[10];
       case XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB:
 	lapa = d[5];
 	lapb = d[6];
@@ -225,4 +228,6 @@ struct densvars
   T r_s; // (3/4pi)^1/3*n^(-1/3)
   T n_m13; // pow(n,-1.0/3.0)
   T a_43, b_43; // pow(a,4.0/3.0), pow(b,4.0/3.0)
+
+  T jpaa, jpbb; //square of the alpha and beta paramagnetic current vectors.
 };
