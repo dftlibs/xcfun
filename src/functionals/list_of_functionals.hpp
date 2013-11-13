@@ -10,6 +10,7 @@ enum xc_functional_id
     XC_BECKECORRX,
     XC_BECKESRX,
     XC_BRX,
+    XC_BRC,
     XC_LDAERFX,
     XC_LDAERFC,
     XC_LDAERFC_JT,
@@ -30,7 +31,6 @@ enum xc_functional_id
     XC_M06X2X,
     XC_M06LX,
     XC_M06HFX,
-    /*   XC_BRX, must fix this to work with ctaylor */
     XC_M05X2C,
     XC_M05C,
     XC_M06C,

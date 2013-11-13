@@ -131,9 +131,9 @@ static num brc(const densvars<num> &d)
   parameter cab = 0.63, caa = 0.88;
   num UXa = polarized(d.a,d.gaa,d.lapa,2*d.taua,d.jpaa);
   num UXb = polarized(d.b,d.gbb,d.lapb,2*d.taub,d.jpbb);
-  num zaa = abs(caa*(2/UXa));
-  num zbb = abs(caa*(2/UXb));
-  num zab = abs(cab*(1/UXa + 1/UXb));
+  num zaa = abs(caa*(2.0/UXa));
+  num zbb = abs(caa*(2.0/UXb));
+  num zab = abs(cab*(1.0/UXa + 1.0/UXb));
   num ECopp = -0.8*d.a*d.b*zab*zab*(1-log(1+zab)/zab);
   num ECaa = -0.01*d.a*(d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
   num ECbb = -0.01*d.b*(d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
@@ -142,9 +142,17 @@ static num brc(const densvars<num> &d)
 
 
 FUNCTIONAL(XC_BRX) = {
-  "Becke-Roussells exchange",
+  "Becke-Roussells exchange with jp dependence",
   "Add info here"
   "Implemented by Ulf Ekstrom\n",
   XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN | XC_JP,
   ENERGY_FUNCTION(brx)
+};
+
+FUNCTIONAL(XC_BRC) = {
+  "Becke-Roussells correlation with jp dependence",
+  "Add info here"
+  "Implemented by Ulf Ekstrom\n",
+  XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN | XC_JP,
+  ENERGY_FUNCTION(brc)
 };

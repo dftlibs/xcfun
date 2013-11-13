@@ -66,6 +66,15 @@ static ctaylor<T,Nvar> operator/(const ctaylor<T,Nvar>& t, const S &x)
 }
 
 template<class T,int Nvar>
+static ctaylor<T,Nvar> abs(const ctaylor<T,Nvar> &t)
+{
+  if (t.c[0] < 0)
+    return -t;
+  else
+    return t;
+}
+
+template<class T,int Nvar>
 static ctaylor<T,Nvar> exp(const ctaylor<T,Nvar> &t)
 {
 #ifdef CTAYLOR_SPARSE
