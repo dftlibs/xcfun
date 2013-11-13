@@ -44,6 +44,8 @@ enum xc_functional_id
     XC_P86C,
     XC_BTK,
     XC_VWK,
+    XC_B97X,
+    XC_B97C,
     XC_NR_FUNCTIONALS
   };
 
