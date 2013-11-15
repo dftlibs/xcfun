@@ -90,7 +90,6 @@ static ctaylor<T,Nvar> BR(const ctaylor<T,Nvar> &t)
 {
   taylor<T,1,Nvar> tmp;
   BR_taylor(t.c[0],tmp);
-  printf("here x is %.15e\n",tmp[0]);
 
   ctaylor<T,Nvar> res = tmp[0];
   for (int i=1;i<=Nvar;i++)
@@ -105,15 +104,10 @@ static num polarized(const num &na,
 		     const num &taua,
 		     const num &jpaa) // Becke tau here, no factor 1/2
 {
-  //  const parameter gam = 1.00; // like in the 96 paper
-  //  const parameter gam = 0.80;
-  printf("na %e, gaa %e, lapa %e, taua %e",na.c[0],gaa.c[0],lapa.c[0],taua.c[0]);
+  // The original BR article has a gamma constant, here this is put to 1.0
   num Q = (lapa - 2*taua + (0.5*gaa + 2*jpaa)/na)/6.0;
-  printf("Q[0] is %.15e\n",Q.c[0]);
   num x = BR(2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q);
-  printf("x[0] is %.15e\n",x.c[0]);
   num BRarg = 2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q;
-  printf("br arg is %.15e\n",BRarg.c[0]);
   num b = cbrt(pow3(x)*exp(-x)/(8*M_PI*na));
   return -(1-(1+0.5*x)*exp(-x))/b; //FIXME: use expm1
 }
@@ -122,7 +116,7 @@ template<class num>
 static num brx(const densvars<num> &d)
 {
   return 0.5*(d.a*polarized(d.a,d.gaa,d.lapa,2*d.taua,d.jpaa) +
-	      d.a*polarized(d.b,d.gbb,d.lapb,2*d.taub,d.jpbb));
+	      d.b*polarized(d.b,d.gbb,d.lapb,2*d.taub,d.jpbb));
 }
 
 template<class num>
@@ -143,7 +137,7 @@ static num brc(const densvars<num> &d)
 
 FUNCTIONAL(XC_BRX) = {
   "Becke-Roussells exchange with jp dependence",
-  "Add info here"
+  "See Becke, Canadian Journal of Chemistry, 1996, 74(6): 995-997"
   "Implemented by Ulf Ekstrom\n",
   XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN | XC_JP,
   ENERGY_FUNCTION(brx)
@@ -151,7 +145,7 @@ FUNCTIONAL(XC_BRX) = {
 
 FUNCTIONAL(XC_BRC) = {
   "Becke-Roussells correlation with jp dependence",
-  "Add info here"
+  "See Becke, Canadian Journal of Chemistry, 1996, 74(6): 995-997"
   "Implemented by Ulf Ekstrom\n",
   XC_DENSITY | XC_GRADIENT | XC_KINETIC | XC_LAPLACIAN | XC_JP,
   ENERGY_FUNCTION(brc)
