@@ -6,83 +6,58 @@
 
 // This is the function we want to find roots for
 template<class T>
-T BR_y(const T &x)
+T BR_z(const T &x)
 {
-  return x*exp(-2.0/3.0*x)/(x-2);
+  return (x-2)/x*exp(2.0/3.0*x);
 }
 
-
-// Determine x as a function of y = BR_y(x), using first 
-// a guess and then root polishing.
-// We need about 3-5 NR iterations depending on the y value.
-ireal_t BR(ireal_t y)
+static double NR_step(double x, double z)
 {
-  ireal_t d;
-  taylor<ireal_t,1,2> x(0,0),fx;
-  // More or less clever starting guesses
-  if (y < 0)
-    {
-      if (y > -0.65)
-	x[0] = -2*y;
-      else
-	x[0] = (6*exp(4.0/3.0)*y + 8)/(3*exp(4.0/3.0)*y+1);
-    }
+  return (x*(3*x*(exp(-2.0/3.0*x)*z-1)+6))/(x*(2*x-4)+6);
+}
+
+// Return an x satisfying BR_z(x) = z
+static double BR(double z)
+{
+  double x0;
+  if (z < -2)
+    x0 = (sqrt(9*z*z+6*z+49)+3*z+1)/4;
+  else if (z < 1)
+    x0 = 2*(z*exp(-4.0/3.0) + 1);
   else
+    x0 = 3.0/2.0*log(z) + 3.75/(1.5+log(z));
+  for (int i=0;i<20;i++)
     {
-      if (y > 0.1)
-	{
-	  x[0] = (6*exp(4.0/3.0)*y + 8)/(3*exp(4.0/3.0)*y+1); 
-	  if (y < 0.7)
-	    x[0] -= 0.7*exp(-5*y); // Pragmatic correction
-	}
-      else
-	{
-	  x[0] = -3.0/2.0*log(y) + y*(47 + y*(-850 + y*4800));
-	}
+      double xold = x0;
+      x0 += NR_step(x0,z);
+      if (fabs(xold - x0) < 1e-15*(1 + x0))
+	return x0;
     }
-  //Polish root with Newton-Raphson (or Halley's method)
-  int niter = 0;
-  do
-    {
-      fx = BR_y(x);
-      // Newton:
-      // d = (y-fx[0])/fx[1];
-      // Halley:
-      ireal_t yn = fx[0] - y;
-      d = -yn*fx[1]/(fx[1]*fx[1] - yn*fx[2]);
-      x[0] += d;
-      if (++niter > 100)
-	{
-	  assert(0 && "Newton not converging in BR"); 
-	  return 0;
-	}
-    }
-  while (fabs(d)>1e-12);
-  return x[0];
+  fprintf(stderr,"BR: Not converged for z = %e\n",z);
+  return x0;
 }
-
 
 // Obtain the Taylor expansion of x(y), which is the
 // inverse of BR_y. Use linear method for simplicity.
 template<class T, int Ndeg>
-void BR_taylor(const T &y0, taylor<T,1,Ndeg> &t)
+void BR_taylor(const T &z0, taylor<T,1,Ndeg> &t)
 {
   taylor<T,1,Ndeg> f,d;
   t = 0;
-  t[0] = BR(y0);
+  t[0] = BR(z0);
   t[1] = 1;
-  f = BR_y(t);
+  f = BR_z(t);
   t[1] = 1/f[1];
   // Linear method, for quadratic see i.e. Brent & Kung ~197x
   for (int i=2;i<=Ndeg;i++) 
     {
-      f = BR_y(t);
+      f = BR_z(t);
       t[i] = -f[i]*t[1];
     }
 }
 
 /* This is a fully differentiable solver for Eq.(21) in 
-   Becke and Roussel, PRA 39, 1989. t is the right hand
+   Becke and Roussel, PRA 39, 1989. t is the _reciprocal_ right hand
    side value, x is returned.
  */ 
 template<class T,int Nvar>
@@ -106,8 +81,7 @@ static num polarized(const num &na,
 {
   // The original BR article has a gamma constant, here this is put to 1.0
   num Q = (lapa - 2*taua + (0.5*gaa + 2*jpaa)/na)/6.0;
-  num x = BR(2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q);
-  num BRarg = 2.0/3.0*pow(M_PI,2.0/3.0)*pow(na,5.0/3.0)/Q;
+  num x = BR((1.0/(2.0/3.0*pow(M_PI,2.0/3.0)))*Q*pow(na,-5.0/3.0));
   num b = cbrt(pow3(x)*exp(-x)/(8*M_PI*na));
   return -(1-(1+0.5*x)*exp(-x))/b; //FIXME: use expm1
 }
