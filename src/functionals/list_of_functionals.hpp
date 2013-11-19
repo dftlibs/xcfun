@@ -11,6 +11,7 @@ enum xc_functional_id
     XC_BECKESRX,
     XC_BRX,
     XC_BRC,
+    XC_BRXC,
     XC_LDAERFX,
     XC_LDAERFC,
     XC_LDAERFC_JT,
@@ -55,5 +56,7 @@ enum xc_parameter
   {
     XC_RANGESEP_MU = XC_NR_FUNCTIONALS,
     XC_EXX,
+    XC_CAM_ALPHA,
+    XC_CAM_BETA,
     XC_NR_PARAMETERS_AND_FUNCTIONALS
   };

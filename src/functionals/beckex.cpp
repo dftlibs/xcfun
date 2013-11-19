@@ -154,3 +154,15 @@ FUNCTIONAL(XC_BECKESRX) = {
   XC_DENSITY|XC_GRADIENT,
   ENERGY_FUNCTION(beckesrx) };
 
+
+PARAMETER(XC_CAM_ALPHA) = 
+{
+  "Alpha parameter in CAMB3LYP",
+  0.16
+};
+
+PARAMETER(XC_CAM_BETA) = 
+{
+  "Alpha parameter in CAMB3LYP",
+  0.46
+};
