@@ -103,8 +103,8 @@ static num brc(const densvars<num> &d)
   num zbb = abs(caa*(2.0/UXb));
   num zab = abs(cab*(1.0/UXa + 1.0/UXb));
   num ECopp = -0.8*d.a*d.b*zab*zab*(1-log(1+zab)/zab);
-  num ECaa = -0.01*d.a*(d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
-  num ECbb = -0.01*d.b*(d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
+  num ECaa = -0.01*d.a*(2*d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
+  num ECbb = -0.01*d.b*(2*d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
   return ECopp + ECaa + ECbb;
 }
 
@@ -118,8 +118,8 @@ static num brxc(const densvars<num> &d)
   num zbb = abs(caa*(2.0/UXb));
   num zab = abs(cab*(1.0/UXa + 1.0/UXb));
   num ECopp = -0.8*d.a*d.b*zab*zab*(1-log(1+zab)/zab);
-  num ECaa = -0.01*d.a*(d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
-  num ECbb = -0.01*d.b*(d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
+  num ECaa = -0.01*d.a*(2*d.taua - (0.25*d.gaa + d.jpaa)/d.a)*pow(zaa,4)*(1-2/zaa*log(1+zaa/2));
+  num ECbb = -0.01*d.b*(2*d.taub - (0.25*d.gbb + d.jpbb)/d.b)*pow(zbb,4)*(1-2/zbb*log(1+zbb/2));
   return 0.5*(UXa*d.a + UXb*d.b) + ECopp + ECaa + ECbb;
 }
 
