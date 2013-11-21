@@ -20,7 +20,9 @@ static double NR_step(double x, double z)
 static double BR(double z)
 {
   double x0;
-  if (z < -2)
+  if (z < -1e4)
+    x0 = -2/z;
+  else if (z < -2)
     x0 = (sqrt(9*z*z+6*z+49)+3*z+1)/4;
   else if (z < 1)
     x0 = 2*(z*exp(-4.0/3.0) + 1);
