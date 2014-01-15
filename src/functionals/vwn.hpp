@@ -71,6 +71,24 @@ namespace vwn
 		vwn_f(s, inter)*(1 - zeta4)*(9.0/4.0*(pow(2,1.0/3.0)-1)));
     return (vwn_f(s, para) + dd);
   }
+
+template<class num>
+static num vwn3_eps(const densvars<num> &d)
+{
+  //ulfek: This table taken verbatim from Dalton
+  const parameter  para[] = { -0.4092860, 0.0621814, 13.0720, 42.7198 };
+  const parameter ferro[] = { -0.7432940, 0.0310907, 20.1231, 101.578 };
+  const parameter inter[] = { -0.0047584,-0.0337737, 1.13107, 13.0045 };
+  num s = sqrt(d.r_s);
+  // Constant is (2^1/3-1)^-1/2
+  num g = 1.92366105093154*(ufunc(d.zeta,4.0/3.0) - 2);
+  num zeta4 = pow(d.zeta,4);
+  // FIXME: 1 - zeta^4 has a cancellation free form (ask maxima)
+  num dd = g*((vwn_f(s, ferro) - vwn_f(s, para))*zeta4 +
+	      vwn_f(s, inter)*(1 - zeta4)*(9.0/4.0*(pow(2,1.0/3.0)-1)));
+  return (vwn_f(s, para) + dd);
+}
+
 }
 
 #endif

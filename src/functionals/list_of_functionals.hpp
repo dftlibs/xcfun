@@ -2,12 +2,16 @@ enum xc_functional_id
   {
     XC_SLATERX,
     XC_PW86X,
+    XC_VWN3C,
     XC_VWN5C,
     XC_PBEC,
     XC_PBEX,
     XC_BECKEX,
     XC_BECKECORRX,
     XC_BECKESRX,
+    XC_BRX,
+    XC_BRC,
+    XC_BRXC,
     XC_LDAERFX,
     XC_LDAERFC,
     XC_LDAERFC_JT,
@@ -28,7 +32,6 @@ enum xc_functional_id
     XC_M06X2X,
     XC_M06LX,
     XC_M06HFX,
-    /*   XC_BRX, must fix this to work with ctaylor */
     XC_M05X2C,
     XC_M05C,
     XC_M06C,
@@ -42,6 +45,10 @@ enum xc_functional_id
     XC_P86C,
     XC_BTK,
     XC_VWK,
+    XC_B97X,
+    XC_B97C,
+    XC_B97_2X,
+    XC_B97_2C,
     XC_NR_FUNCTIONALS
   };
 
@@ -49,5 +56,7 @@ enum xc_parameter
   {
     XC_RANGESEP_MU = XC_NR_FUNCTIONALS,
     XC_EXX,
+    XC_CAM_ALPHA,
+    XC_CAM_BETA,
     XC_NR_PARAMETERS_AND_FUNCTIONALS
   };

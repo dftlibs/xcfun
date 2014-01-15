@@ -178,6 +178,28 @@ struct densvars
 	gab = 0.25*(gnn - gss);
 	gbb = 0.25*(gnn-2*gns+gss);
 	break;
+      case XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB:
+	jpaa = d[9];
+	jpbb = d[10];
+      case XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB:
+	lapa = d[5];
+	lapb = d[6];
+	taua = d[7];
+	taub = d[8];
+	tau = taua + taub;
+	gaa = d[2];
+	gab = d[3];
+	gbb = d[4];
+	gnn  = gaa + 2*gab + gbb; 
+	gss  = gaa - 2*gab + gbb;
+	gns  = gaa - gbb;
+	a = d[0];
+	regularize(a);
+	b = d[1];
+	regularize(b);
+	n = a+b;
+	s = a-b;	
+	break;
       default:
 	xcint_die("Illegal/Not yet implemented vars value in densvars()",parent->vars);	
       }
@@ -206,4 +228,6 @@ struct densvars
   T r_s; // (3/4pi)^1/3*n^(-1/3)
   T n_m13; // pow(n,-1.0/3.0)
   T a_43, b_43; // pow(a,4.0/3.0), pow(b,4.0/3.0)
+
+  T jpaa, jpbb; //square of the alpha and beta paramagnetic current vectors.
 };

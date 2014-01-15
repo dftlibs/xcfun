@@ -6,9 +6,10 @@
 #include "xcfun.h"
 #include "list_of_functionals.hpp"
 #include "config.hpp"
+#include "taylor.hpp"
 #include "ctaylor.hpp"
 
-#define XC_MAX_ALIASES 20
+#define XC_MAX_ALIASES 30
 #define MAX_ALIAS_TERMS 5
 #define XC_MAX_INVARS 20
 
@@ -31,6 +32,7 @@
 #define XC_GRADIENT  2
 #define XC_LAPLACIAN 4
 #define XC_KINETIC   8
+#define XC_JP       16
 
 typedef void (*evaluator)(struct xc_functional_obj *, const double *, double *);
 
@@ -108,6 +110,7 @@ extern "C"
 void xcint_die(const char *message, int code);
 int xcint_write_fortran_module();
 
+#if 0
 static inline int taylorlen(int nvar, int ndeg)
 {
   int len = 1;
@@ -118,6 +121,7 @@ static inline int taylorlen(int nvar, int ndeg)
     }
   return len;
 }
+#endif
 
 // The lookup functions return -1 if not found
 // TODO: Case insensitive string comparison should be used
