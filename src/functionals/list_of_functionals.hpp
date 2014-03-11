@@ -49,6 +49,7 @@ enum xc_functional_id
     XC_B97C,
     XC_B97_2X,
     XC_B97_2C,
+    XC_CSC,
     XC_NR_FUNCTIONALS
   };
 
