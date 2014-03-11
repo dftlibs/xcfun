@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#define XC_MAX_ORDER 5
+#define XC_MAX_ORDER 6
 
 // Used for regularizing input
 #define XC_TINY_DENSITY 1e-14
