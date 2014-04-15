@@ -608,3 +608,12 @@ static taylor<T,Nvar,Ndeg> max(const taylor<T,Nvar,Ndeg> &a,
   else
     return b;
 }
+
+template<class T,int Nvar, int Ndeg>
+static taylor<T,Nvar,Ndeg> abs(const taylor<T,Nvar,Ndeg> &t)
+{
+  if (t[0] < 0)
+    return -t;
+  else
+    return t;
+}
