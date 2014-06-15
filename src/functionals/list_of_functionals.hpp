@@ -50,6 +50,16 @@ enum xc_functional_id
     XC_B97_2X,
     XC_B97_2C,
     XC_CSC,
+    XC_APBEC,
+    XC_APBEX,
+    XC_ZVPBESOLC,
+    XC_BLOCX,
+    XC_PBEINTC,
+    XC_PBEINTX,
+    XC_PBELOCC,
+    XC_PBESOLX,
+    XC_TPSSLOCC,
+    XC_ZVPBEINTC,
     XC_NR_FUNCTIONALS
   };
 
