@@ -6,17 +6,17 @@
 namespace vwn
 {
 
-  static parameter vwn_a(const parameter p[])
+  static inline parameter vwn_a(const parameter p[])
   {
     return p[0]*p[2]/(p[0]*p[0] + p[0]*p[2] + p[3]) - 1;
   }
   
-  static parameter vwn_b(const parameter p[])
+  static inline parameter vwn_b(const parameter p[])
   {
     return 2*(p[0]*p[2]/(p[0]*p[0] + p[0]*p[2] + p[3]) - 1) + 2;
   }
   
-  static parameter vwn_c(const parameter p[])
+  static inline parameter vwn_c(const parameter p[])
   {
     return 2*p[2]*(1/sqrt(4*p[3] - p[2]*p[2]) - p[0]/
 		   ((p[0]*p[0] + p[0]*p[2] + p[3])*
