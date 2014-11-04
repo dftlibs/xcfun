@@ -28,6 +28,28 @@ void xc_free_functional(xc_functional fun)
   free(fun);
 }
 
+// Fill the buf array with information to recreate an exact copy of fun (except the mode).
+// This is not stable between different xcfun "versions"
+// If buflen > 0 return the number of elements written or 0 if the buffer is too small.
+// else return the number of elements needed. buf is not accessed if buflen <= 0.
+int xc_serialize(xc_functional fun, int buflen, double *buf)
+{
+  int reqlen = XC_NR_PARAMETERS_AND_FUNCTIONALS;
+  if (buflen <= 0)
+    return reqlen;
+  else if (buflen < reqlen)
+    return 0;
+  else
+    for (int i=0;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+      buf[i] = fun->settings[i];
+  return reqlen;
+}
+  // make fun an exact copy of the functional used to fill buf (with xc_serialize)
+void xc_deserialize(xc_functional fun, const double *buf)
+{
+}
+
+
 void xc_eval_vec(xc_functional fun, int nr_points,
 		 const double *density,
 		 int density_pitch,
