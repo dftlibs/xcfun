@@ -12,7 +12,7 @@ from distutils.core import setup, Extension
 xcfun_swig_module = Extension('_xcfun_swig',
                               sources=['xcfun_swig_wrap.c'],
                               include_dirs=[numpy.get_include()],
-                              library_dirs=['/Users/andre/devel/git/ctcc_modules/xcfun/build_ng'],
+                              library_dirs=['../../build'],
                               libraries=['xcfun', 'stdc++']
                               )
 
