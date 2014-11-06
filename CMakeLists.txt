@@ -14,11 +14,15 @@ option(ENABLE_64BIT_INTEGERS "Enable 64-bit integers" OFF)
 # so we make it possible to disable it
 # by default we build the Fortran interface
 option(ENABLE_FORTRAN_INTERFACE "Enable Fortran interface" ON)
+option(ENABLE_PYTHON_INTERFACE "Enable Python interface" ON)
+
 if(ENABLE_FORTRAN_INTERFACE)
     enable_language(CXX C Fortran)
 else()
     enable_language(CXX C)
 endif()
+
+
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -32,6 +36,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
     ${CMAKE_CURRENT_SOURCE_DIR}/src/functionals
+    ${CMAKE_CURRENT_SOURCE_DIR}/python
     )
 
 set(BASE_SOURCES
@@ -99,6 +104,52 @@ if(ENABLE_FORTRAN_INTERFACE)
         xcfun
         )
     set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)
+endif()
+
+if (ENABLE_PYTHON_INTERFACE)
+
+    FIND_PACKAGE(SWIG REQUIRED)
+    INCLUDE(${SWIG_USE_FILE})
+
+    FIND_PACKAGE(PythonLibs)
+    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
+    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/python)
+
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
+
+    SET(CMAKE_SWIG_FLAGS "-v")
+    SET(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/python)
+
+    SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i PROPERTIES CPLUSPLUS OFF)
+
+    SWIG_ADD_MODULE(xcfun_swig python ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c)
+    SWIG_LINK_LIBRARIES(xcfun_swig ${PYTHON_LIBRARIES} xcfun)
+
+    FIND_PROGRAM(PYTHON "python" )
+# now for the part doing the python setup
+    if (PYTHON)
+
+        SET(PYTHON_DEST "${CMAKE_CURRENT_BINARY_DIR}/python")
+        INSTALL(TARGETS _xcfun_swig DESTINATION ${PYTHON_DEST})
+        INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun.py  DESTINATION ${PYTHON_DEST})
+
+        set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/python/setup.py.in")
+        set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/python/setup.py")
+        set(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}/python")
+
+        configure_file(${SETUP_PY_IN} ${SETUP_PY})
+
+        add_custom_command(OUTPUT ${OUTPUT}
+                           COMMAND ${PYTHON}
+                           ARGS "setup.py build_ext --inplace"
+                           DEPENDS ${DEPS})
+
+        add_custom_target(target ALL DEPENDS ${OUTPUT})
+
+        execute_process(COMMAND "${PYTHON} ${SETUP_PY}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/python")
+
+    endif()
+
 endif()
 
 include(Tests)
