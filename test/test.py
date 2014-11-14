@@ -38,7 +38,8 @@ def main():
 
     result = fun_xc.eval_potential_n(n)
 
-    (energy, potential, bla) = result[0]
+    energy    = result[0,0]
+    potential = result[0,1]
 
     print "Functional used: ",fun_xc_name," weight ",fun_xc_weigth
     print "        density: ",n 
