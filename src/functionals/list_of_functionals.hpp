@@ -9,6 +9,7 @@ enum xc_functional_id
     XC_BECKEX,
     XC_BECKECORRX,
     XC_BECKESRX,
+    XC_BECKECAMX,
     XC_BRX,
     XC_BRC,
     XC_BRXC,

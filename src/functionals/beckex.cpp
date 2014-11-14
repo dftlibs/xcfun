@@ -30,7 +30,7 @@ static num becke_corr(const num &na, const num &gaa)
 // regular beckex should be used.
 
 template<class num>
-static num becke_sr(parameter mu, parameter alpha, parameter beta, const num &na, const num &gaa)
+static num becke_sr(parameter mu, const num &na, const num &gaa)
 {
   const parameter cparam = pow(81/(4*M_PI),1.0/3.0)/2;
   const parameter d = 0.0042;
@@ -40,7 +40,21 @@ static num becke_sr(parameter mu, parameter alpha, parameter beta, const num &na
   num a = mu*sqrt(K)/(6*sqrt(M_PI)*pow(na,1.0/3.0));
   num b = expm1(-1/(4*a*a));
   num c = 2*a*a*b + 0.5;
-  return -0.5*na43*K*(1-alpha -beta*8.0/3.0*a*(sqrt(M_PI)*erf(1/(2*a))+2*a*(b-c)));
+  return -0.5*na43*K*(1-8.0/3.0*a*(sqrt(M_PI)*erf(1/(2*a))+2*a*(b-c)));
+}
+
+template<class num>
+static num becke_cam(parameter alpha, parameter beta, parameter mu, const num &na, const num &gaa)
+{
+  const parameter cparam = pow(81/(4*M_PI),1.0/3.0)/2;
+  const parameter d = 0.0042;
+  num na43 = pow(na,4.0/3.0);
+  num chi2 = gaa*pow(na,-8.0/3.0);
+  num K = 2*(cparam + (d*chi2)/(1+6*d*sqrtx_asinh_sqrtx(chi2)));
+  num a = mu*sqrt(K)/(6*sqrt(M_PI)*pow(na,1.0/3.0));
+  num b = expm1(-1/(4*a*a));
+  num c = 2*a*a*b + 0.5;
+  return -0.5*na43*K*(1-alpha-beta*8.0/3.0*a*(sqrt(M_PI)*erf(1/(2*a))+2*a*(b-c)));
 }
 
 template<class num>
@@ -59,9 +73,16 @@ template<class num>
 static num beckesrx(const densvars<num> &d)
 {
   parameter mu = d.get_param(XC_RANGESEP_MU);
+  return becke_sr(mu,d.a,d.gaa) + becke_sr(mu,d.b,d.gbb);
+}
+
+template<class num>
+static num beckecamx(const densvars<num> &d)
+{
+  parameter mu = d.get_param(XC_RANGESEP_MU);
   parameter alpha = d.get_param(XC_CAM_ALPHA);
   parameter beta = d.get_param(XC_CAM_BETA);
-  return becke_sr(mu,alpha,beta,d.a,d.gaa) + becke_sr(mu,alpha,beta,d.b,d.gbb);
+  return becke_cam(alpha,beta,mu,d.a,d.gaa) + becke_cam(alpha,beta,mu,d.b,d.gbb);
 }
 
 FUNCTIONAL(XC_BECKEX) = {
@@ -156,15 +177,10 @@ FUNCTIONAL(XC_BECKESRX) = {
   XC_DENSITY|XC_GRADIENT,
   ENERGY_FUNCTION(beckesrx) };
 
+FUNCTIONAL(XC_BECKECAMX) = {
+  "CAM Becke 88 exchange",
+  "CAM Becke 88 exchange, Implemented by Elisa Rebolini\n"
+  "Uses XC_RANGESEP_MU\n",
+  XC_DENSITY|XC_GRADIENT,
+  ENERGY_FUNCTION(beckecamx) };
 
-PARAMETER(XC_CAM_ALPHA) = 
-{
-  "Alpha parameter in CAMB3LYP",
-  0.19
-};
-
-PARAMETER(XC_CAM_BETA) = 
-{
-  "Alpha parameter in CAMB3LYP",
-  0.46
-};
