@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import re
 import math, numpy
 import xcfun
@@ -25,20 +26,34 @@ def main():
     print "\n\nXCFun version ",version
     print splash
 
-    fun_xc = xcfun.xc_new_functional()
-    fun_xc_name = "lda"
+    fun_xc_name   = 'LDA'
     fun_xc_weigth = 1.0
-    xcfun.xc_set(fun_xc, fun_xc_name, fun_xc_weigth);
+    fun_xc = xcfun.Functional({fun_xc_name : fun_xc_weigth})
 
     n_gn_gnn = numpy.zeros((1,10))
     n_gn_gnn[0,:] = [1.0, 0.2, 0.2, 0.2,  0, 0, 0, 0, 0, 0]
 
-    energy    = eval_xcfun_n(fun_xc, n_gn_gnn, order=0)
-    potential = eval_xcfun_n(fun_xc, n_gn_gnn, order=1)
+    n = numpy.zeros((1,1))
+    n[0,:] = [1.0]
+
+    result = fun_xc.eval_potential_n(n)
+
+    (energy, potential, bla) = result[0]
 
     print "Functional used: ",fun_xc_name," weight ",fun_xc_weigth
-    print "        density: ",n_gn_gnn  
+    print "        density: ",n 
     print "         energy: ",energy
     print "      potential: ",potential
+
+    resut_energy    = -0.8101513 
+    resut_potential = -1.06468341
+
+    tol = 1.0e-7
+    energy_diff    = energy    - resut_energy
+    potential_diff = potential - resut_potential 
+
+    if ((abs(energy_diff) > tol) or (abs(potential_diff) > tol)): 
+        sys.exit(EXIT_FAILURE)
+    sys.exit()
 
 main()
