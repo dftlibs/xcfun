@@ -14,7 +14,7 @@ option(ENABLE_64BIT_INTEGERS "Enable 64-bit integers" OFF)
 # so we make it possible to disable it
 # by default we build the Fortran interface
 option(ENABLE_FORTRAN_INTERFACE "Enable Fortran interface" ON)
-option(ENABLE_PYTHON_INTERFACE "Enable Python interface" ON)
+option(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FORTRAN_INTERFACE)
     enable_language(CXX C Fortran)
