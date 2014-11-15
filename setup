@@ -77,6 +77,11 @@ group.add_option('--int64',
                  dest='int64',
                  default=False,
                  help='build for 64bit integers [default: %default]')
+group.add_option('--python',
+                 action='store_true',
+                 dest='python',
+                 default=False,
+                 help='build Python interface [default: %default]')
 group.add_option('--show',
                  action='store_true',
                  dest='show',
@@ -198,6 +203,8 @@ def gen_cmake_command():
             options.mpi = True
     if options.mpi:
         command += ' -DENABLE_MPI=ON'
+    if options.python:
+        command += ' -DENABLE_PYTHON_INTERFACE=ON'
     
     if options.int64:
         command += ' -DENABLE_64BIT_INTEGERS=ON'

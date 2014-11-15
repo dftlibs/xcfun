@@ -15,23 +15,14 @@ option(ENABLE_64BIT_INTEGERS "Enable 64-bit integers" OFF)
 # by default we build the Fortran interface
 option(ENABLE_FORTRAN_INTERFACE "Enable Fortran interface" ON)
 
-# checking whether we have the components (swig, python) to build the python interface
-FIND_PACKAGE(SWIG REQUIRED)
-FIND_PROGRAM(PYTHON "python")
-if(SWIG_FOUND AND (NOT PYTHON-NOTFOUND))
-    option(ENABLE_PYTHON_INTERFACE "Enable Python interface" ON)
-else()
-    option(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
-endif()
-
+# Python interface is disabled by default, can be switched on with DENABLE_PYTHON_INTERFACE=On
+option(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FORTRAN_INTERFACE)
     enable_language(CXX C Fortran)
 else()
     enable_language(CXX C)
 endif()
-
-
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -45,7 +36,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
     ${CMAKE_CURRENT_SOURCE_DIR}/src/functionals
-    ${CMAKE_CURRENT_SOURCE_DIR}/python
     )
 
 set(BASE_SOURCES
@@ -116,45 +106,43 @@ if(ENABLE_FORTRAN_INTERFACE)
 endif()
 
 if (ENABLE_PYTHON_INTERFACE)
-    INCLUDE(${SWIG_USE_FILE})
-
-    FIND_PACKAGE(PythonLibs)
-    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
-    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/python)
+    FIND_PACKAGE(SWIG REQUIRED)
+    FIND_PACKAGE(PythonInterp REQUIRED)
+    FIND_PACKAGE(PythonLibs REQUIRED)
+    FIND_PACKAGE(NumPy REQUIRED)
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
 
-    SET(CMAKE_SWIG_FLAGS "-v")
-    SET(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR})
-    SET(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/python)
+    set(XCFUN_SWIG         "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i")
+    set(XCFUN_SWIG_WRAP    "${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c")
+    set(CMAKE_SWIG_OUTDIR   ${CMAKE_CURRENT_BINARY_DIR}/python)
 
-    SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i PROPERTIES CPLUSPLUS OFF)
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c
+                       COMMAND "${SWIG_EXECUTABLE}"
+                       ARGS "-python" "-I${CMAKE_CURRENT_SOURCE_DIR}/include" "-outdir" "${CMAKE_SWIG_OUTDIR}" "-o" ${XCFUN_SWIG_WRAP} ${XCFUN_SWIG}
+                       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i)
 
-    SWIG_ADD_MODULE(xcfun_swig python ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c)
-    SWIG_LINK_LIBRARIES(xcfun_swig ${PYTHON_LIBRARIES} xcfun)
-
-# now for the part doing the python setup
     set(XCFUN_PY       "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun.py")
     set(XCFUN_SWIG_PY  "${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swig.py")
+    set(XCFUN_PY_LIB   "${CMAKE_CURRENT_BINARY_DIR}/python/_xcfun_swig.so")
 
-    INSTALL(FILES "${XCFUN_PY}"           DESTINATION "python")
-    INSTALL(TARGETS _xcfun_swig LIBRARY   DESTINATION "python")
-    INSTALL(FILES "${XCFUN_SWIG_PY}"      DESTINATION "python")
-
-    set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/python/setup.py.in")
-    set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/python/setup.py")
-    set(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}/python")
+    set(SETUP_PY_IN  "${CMAKE_CURRENT_SOURCE_DIR}/python/setup.py.in")
+    set(SETUP_PY     "${CMAKE_CURRENT_BINARY_DIR}/python/setup.py")
 
     configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
-    add_custom_command(OUTPUT ${OUTPUT}
-                       COMMAND ${PYTHON}
-                       ARGS "setup.py build_ext --inplace"
-                       DEPENDS ${DEPS})
+    add_custom_command(OUTPUT ${XCFUN_PY_LIB}
+                       COMMAND ${PYTHON_EXECUTABLE}
+                       ARGS "setup.py" "build_ext" "--inplace"
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python
+                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/python/setup.py ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c)
 
-    add_custom_target(target ALL DEPENDS ${OUTPUT})
+    add_custom_target(target ALL DEPENDS ${XCFUN_PY_LIB})
 
-    execute_process(COMMAND "${PYTHON} ${SETUP_PY}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/python")
+    INSTALL(FILES "${XCFUN_PY}"           DESTINATION "python")
+    INSTALL(FILES "${XCFUN_SWIG_PY}"      DESTINATION "python")
+    INSTALL(FILES "${XCFUN_PY_LIB}"       DESTINATION "python")
+
 endif()
 
 include(Tests)
