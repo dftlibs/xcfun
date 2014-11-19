@@ -19,7 +19,7 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"b3lyp-g","Becke-3-paramater-LYP (VWN3 form)", {{"slaterx",0.80},{"beckecorrx",0.72},{"lypc",0.81},{"vwn3c",0.19},{"exx",0.20}} }, 
   {"b3p86","Becke-3-paramater-LYP (VWN5 form)", {{"slaterx",0.80},{"beckecorrx",0.72},{"p86c",0.81},{"vwn5c",1.0},{"exx",0.20}} }, 
   {"b3p86-g","Becke-3-paramater-LYP (VWN3 form)", {{"slaterx",0.80},{"beckecorrx",0.72},{"p86c",0.81},{"vwn3c",1.0},{"exx",0.20}} }, 
-  {"bpw91","Becke 88 exchange+PW91",{{"beckex",1.0},{"pw91c",1.0}} },
+  {"bpw91","Becke 88 exchange+PW91",{{"beckex",1.0},{"pw92c",1.0}} },
   {"b97","B97 exchange and correlation", {{"b97x",1.0},{"b97c",1.0},{"exx",0.1943}} },
   {"b97_2","B97-2 exchange and correlation", {{"b97_2x",1.0},{"b97_2c",1.0},{"exx",0.21}} },
   // Some of these are there to match the names used in Dalton
