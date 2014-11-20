@@ -18,6 +18,7 @@ enum xc_functional_id
     XC_LDAERFC_JT,
     XC_LYPC,
     XC_OPTX, 
+    XC_OPTXCORR,
     XC_REVPBEX,
     XC_RPBEX,
     XC_SPBEC,
