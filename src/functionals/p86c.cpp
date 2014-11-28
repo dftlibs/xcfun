@@ -36,6 +36,12 @@ static num p86c(const densvars<num> &d)
   return d.n*pz81eps::pz81eps(d) + exp(-Pg(d))*Cg(d.r_s)*d.gnn/(pow(d.n,4.0/3.0)*dz(d));
 }
 
+template<class num>
+static num p86c_corr(const densvars<num> &d)
+{ 
+  return exp(-Pg(d))*Cg(d.r_s)*d.gnn/(pow(d.n,4.0/3.0)*dz(d));
+}
+
 FUNCTIONAL(XC_P86C) = {
   "P86C GGA correlation",  
   "J.P. Density-functional approximation for the correlation energy\n"
@@ -147,4 +153,14 @@ FUNCTIONAL(XC_P86C) = {
   }
 #endif
 #endif
+};
+
+FUNCTIONAL(XC_P86CORRC) = {
+  "P86C GGA correlation",  
+  "J.P. Density-functional approximation for the correlation energy\n"
+  "of the inhomogeneous electron , Phys. Rev. B, 33(12):8822gasPerdew,\n" 
+  "Implemented by Ulf Ekstrom.\n"
+  "Reference data from ftp://ftp.dl.ac.uk/qcg/dft_library/data_pt_c_p86.html",
+  XC_DENSITY | XC_GRADIENT,
+  ENERGY_FUNCTION(p86c)
 };

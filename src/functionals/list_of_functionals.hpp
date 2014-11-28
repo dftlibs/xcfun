@@ -45,6 +45,7 @@ enum xc_functional_id
     XC_REVTPSSX,
     XC_PZ81C,
     XC_P86C,
+    XC_P86CORRC,
     XC_BTK,
     XC_VWK,
     XC_B97X,
