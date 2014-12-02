@@ -162,5 +162,5 @@ FUNCTIONAL(XC_P86CORRC) = {
   "Implemented by Ulf Ekstrom.\n"
   "Reference data from ftp://ftp.dl.ac.uk/qcg/dft_library/data_pt_c_p86.html",
   XC_DENSITY | XC_GRADIENT,
-  ENERGY_FUNCTION(p86c)
+  ENERGY_FUNCTION(p86c_corr)
 };
