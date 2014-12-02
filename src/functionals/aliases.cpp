@@ -32,6 +32,8 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"svwn3","Slater exchange and VWN3 correlation",{{"slaterx",1.0},{"vwn3c",1.0}} },
   {"becke","Becke exchange",{{"beckecorrx",1.0}}},
   {"slater","Slater exchange",{{"slaterx",1.0}}},
+  // ADMM exchange funtional corrections
+  {"B88X","Becke exchange",{{"beckecorrx",1.0}}},
 };
 
 // TODO: OLYP
