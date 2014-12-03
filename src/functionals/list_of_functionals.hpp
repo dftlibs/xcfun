@@ -65,6 +65,7 @@ enum xc_functional_id
     XC_PBESOLX,
     XC_TPSSLOCC,
     XC_ZVPBEINTC,
+    XC_PW91C,
     XC_NR_FUNCTIONALS
   };
 
