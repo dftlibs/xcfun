@@ -669,8 +669,19 @@ int xc_set(xc_functional fun, const char *name, double value)
   if ( (item = xcint_lookup_functional(name)) >= 0)
     {
       fun->settings[item] += value;
-      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
-      fun->depends |= xcint_funs[item].depends;
+      // Do not extend list if functional is active
+      bool found = false;
+      for (int i=0;i<fun->nr_active_functionals;i++)
+	if (fun->active_functionals[i] == &xcint_funs[item])
+	  {
+	    found = true;
+	    break;
+	  }
+      if (!found)
+	{
+	  fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
+	  fun->depends |= xcint_funs[item].depends;
+	}
       return 0;
     }
   else if ( (item = xcint_lookup_parameter(name)) >= 0)
@@ -684,6 +695,7 @@ int xc_set(xc_functional fun, const char *name, double value)
 	{
 	  if (!xcint_aliases[item].terms[i].name)
 	    break;
+	  // FIXME: Do not weight parameters with value for aliases, but what about EXX?
 	  if (xc_set(fun,xcint_aliases[item].terms[i].name,
 		     value*xcint_aliases[item].terms[i].weight) != 0)
 	    {
