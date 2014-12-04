@@ -200,6 +200,14 @@ contains
     double precision, intent(out) :: val
     xc_get = xcgets(funid,val,len_trim(param),param)
   end function xc_get
+
+  function xc_serialize(funid, buflen, buf)
+    double precision, intent(out) :: buf
+    XCFUN_INTEGER, intent(in) :: funid, buflen
+    XCFUN_INTEGER :: xc_serialize
+    xc_serialize = xcseri(funid, buflen, buf)
+  end function xc_serialize
+
 #ifdef XXX
   subroutine xc_short_description(param,description)
     XCFUN_INTEGER, intent(in) :: param

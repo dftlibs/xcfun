@@ -132,3 +132,8 @@ int FSYM(xcgets)FCSYM(XCGETS)(fortran_int_t *fun, double *value, fortran_int_t *
   buf[*namelen] = 0;
   return xc_get(fortran_functionals[*fun],buf,value);
 }
+
+int FSYM(xcseri)FCSYM(XCSERI)(fortran_int_t *fun, fortran_int_t *buflen, double *buf)
+{
+  return xc_serialize(fortran_functionals[*fun],*buflen,buf);
+}
