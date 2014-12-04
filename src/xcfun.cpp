@@ -668,7 +668,7 @@ int xc_set(xc_functional fun, const char *name, double value)
   int item;
   if ( (item = xcint_lookup_functional(name)) >= 0)
     {
-      fun->settings[item] = value;
+      fun->settings[item] += value;
       fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
       fun->depends |= xcint_funs[item].depends;
       return 0;
