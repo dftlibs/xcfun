@@ -204,7 +204,7 @@ contains
   function xc_serialize(funid, buflen, buf)
     double precision, intent(out) :: buf
     XCFUN_INTEGER, intent(in) :: funid, buflen
-    XCFUN_INTEGER :: xc_serialize
+    XCFUN_INTEGER :: xc_serialize, xcseri
     xc_serialize = xcseri(funid, buflen, buf)
   end function xc_serialize
 
