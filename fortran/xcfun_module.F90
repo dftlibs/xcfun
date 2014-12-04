@@ -202,7 +202,7 @@ contains
   end function xc_get
 
   function xc_serialize(funid, buflen, buf)
-    double precision, intent(out) :: buf
+    double precision, intent(out) :: buf(buflen)
     XCFUN_INTEGER, intent(in) :: funid, buflen
     XCFUN_INTEGER :: xc_serialize, xcseri
     xc_serialize = xcseri(funid, buflen, buf)
