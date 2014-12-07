@@ -59,7 +59,7 @@ class Functional(object) :
     def __del__ (self) :
         xc_free_functional(self._func)
 
-    def eval_potential_n (self, density, densgrad=None, denslapl=None) :
+    def eval_potential_n (self, density, densgrad=None, denshess=None) :
         """
         Evaluate the xc potential (spin-compensated case).
 
@@ -70,8 +70,8 @@ class Functional(object) :
                 density gradient at grid points (1st index), 
                 2nd index: 0 - x, 1 - y, 2 - z
                 - only required for GGA functionals
-            denslapl: 2D-numpy.array[0:nr_of_points, 0:6]
-                density laplacian at grid points (1st index), 
+            denshess: 2D-numpy.array[0:nr_of_points, 0:6]
+                density Hessian at grid points (1st index), 
                 2nd index: 0 - xx, 1 - xy, 2 - xz, 3 - yy, 4 - yz, 5 - zz
                 - only required for GGA functionals
         output:
@@ -82,7 +82,7 @@ class Functional(object) :
         if xc_is_metagga(self._func) :
             raise XcFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func) :
-            if (densgrad is None) or (denslapl is None) :
+            if (densgrad is None) or (denshess is None) :
                 raise XcFunException('Density gradient and Laplacian required for GGA xc potential')
 
             xc_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
@@ -94,13 +94,13 @@ class Functional(object) :
             if not (densgrad.shape == (nr_points, 3)) :
                 raise XcFunException('Wrong shape of densgrad argument in eval_potential_n')
 
-            if not (denslapl.shape == (nr_points, 6)) :
-                raise XcFunException('Wrong shape of denslapl argument in eval_potential_n')
+            if not (denshess.shape == (nr_points, 6)) :
+                raise XcFunException('Wrong shape of denshess argument in eval_potential_n')
 
             dens = numpy.zeros((density.size, 10))
             dens[:,0] = density[:]
             dens[:,1:4] = densgrad[:,0:3]
-            dens[:,4:10] = denslapl[:,0:6]
+            dens[:,4:10] = denshess[:,0:6]
 
         else :
             xc_eval_setup(self._func, XC_N, XC_POTENTIAL, 1)
@@ -109,7 +109,7 @@ class Functional(object) :
  
         return xc_eval(self._func, dens)
 
-    def eval_potential_ab (self, density, densgrad=None, denslapl=None) :
+    def eval_potential_ab (self, density, densgrad=None, denshess=None) :
         """
         Evaluate the xc potential (spin-resolved case).
 
@@ -122,10 +122,10 @@ class Functional(object) :
                 2nd index: 0 - x, 1 - y, 2 - z,
                 3rd index: 0 - alpha density gradien, 1 - beta density gradient,
                 - only required for GGA functionals
-            denslapl: 2D-numpy.array[0:nr_of_points, 0:6]
-                density laplacian at grid points (1st index), 
+            denshess: 2D-numpy.array[0:nr_of_points, 0:6]
+                density Hessian at grid points (1st index), 
                 2nd index: 0 - xx, 1 - xy, 2 - xz, 3 - yy, 4 - yz, 5 - zz,
-                3rd index, 0 - alpha density laplacian, 1 - beta density laplacian
+                3rd index, 0 - alpha density Hessian, 1 - beta density Hessian
                 - only required for GGA functionals
         output:
             return value: 2D-numpy array[0:nr_of_points,0:3]
@@ -135,7 +135,7 @@ class Functional(object) :
         if xc_is_metagga(self._func) :
             raise XcFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func) :
-            if (densgrad is None) or (denslapl is None) :
+            if (densgrad is None) or (denshess is None) :
                 raise XcFunException('Density gradient and Laplacian required for GGA xc potential')
 
             xc_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
@@ -150,16 +150,16 @@ class Functional(object) :
             if not (densgrad.shape == (nr_points, 3, 2)) :
                 raise XcFunException('Wrong shape of densgrad argument in eval_potential_n')
 
-            if not (denslapl.shape == (nr_points, 6, 2)) :
-                raise XcFunException('Wrong shape of denslapl argument in eval_potential_n')
+            if not (denshess.shape == (nr_points, 6, 2)) :
+                raise XcFunException('Wrong shape of denshess argument in eval_potential_n')
 
             dens = numpy.zeros((density.shape[0], 20))
             dens[:,0] = density[:,0]
             dens[:,1:4] = densgrad[:,0:3,0]
-            dens[:,4:10] = denslapl[:,0:6,0]
+            dens[:,4:10] = denshess[:,0:6,0]
             dens[:,10] = density[:,1]
             dens[:,11:14] = densgrad[:,0:3,1]
-            dens[:,14:20] = denslapl[:,0:6,1]
+            dens[:,14:20] = denshess[:,0:6,1]
 
         else :
             xc_eval_setup(self._func, XC_A_B, XC_POTENTIAL, 1)
