@@ -9,8 +9,8 @@ static num pw92c(const densvars<num> &d)
 
 FUNCTIONAL(XC_PW92C) = {
   "PW92 LDA correlation",
-  "Electron-gas correlation energy\n"
-  "J.P.Perdew,Y. Wang; Phys. Rev. B; 40, 13244, (1992)\n"
+  "Accurate and simple analytic representation of the electron-gas correlation energy\n"
+  "J.P.Perdew, Y. Wang; Phys. Rev. B; 45, 13244, (1992)\n"
   "Implemented by Ulf Ekstrom. Some parameters have higher\n"
   "accuracy than given in the paper.\n",
   XC_DENSITY,

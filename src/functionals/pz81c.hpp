@@ -16,7 +16,7 @@ static num fz(const densvars<num> &d)
 template<class num>
 static num Eld(const num &x, const parameter CB1B2[])
 {
-  return CB1B2[0]/(1 + CB1B2[1]*sqrt(x) + CB1B2[1]*x);
+  return CB1B2[0]/(1 + CB1B2[1]*sqrt(x) + CB1B2[2]*x);
 }
 
 template<class num>
