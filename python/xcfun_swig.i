@@ -2,7 +2,7 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include "../../include/xcfun.h"
+#include "xcfun.h"
 %}
 
 %include "numpy.i"
@@ -71,4 +71,4 @@ int xc_serialize_swig(xc_functional fun, int buflen, double *buf)
 %ignore xc_eval;
 %ignore xc_eval_vec;
 
-%include "../../include/xcfun.h"
+%include "xcfun.h"

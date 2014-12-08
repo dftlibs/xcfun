@@ -60,6 +60,11 @@ void xc_eval_vec(xc_functional fun, int nr_points,
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
 }
 
+int xc_input_length(xc_functional fun)
+{
+    return xcint_vars[fun->vars].len;
+}
+
 int xc_output_length(xc_functional fun)
 {
   if (fun->mode == XC_MODE_UNSET)
@@ -772,5 +777,15 @@ const char *xc_describe_long(const char *name)
     return xcint_aliases[k].description;
   else
     return 0;
+}
+
+int xc_is_gga(xc_functional fun)
+{
+    return (fun->depends & XC_GRADIENT);
+}
+
+int xc_is_metagga(xc_functional fun)
+{
+    return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 
