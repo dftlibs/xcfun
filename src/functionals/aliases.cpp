@@ -26,6 +26,7 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"b97_2","B97-2 exchange and correlation", {{"b97_2x",1.0},{"b97_2c",1.0},{"exx",0.21}} },
   // Some of these are there to match the names used in Dalton
   {"vwn","VWN5 correlation",{{"vwn5c",1.0}}},
+  {"vwn5","VWN5 correlation",{{"vwn5c",1.0}}},
   {"vwn3","VWN5 correlation",{{"vwn3c",1.0}}},
   {"svwn","Slater exchange and VWN5 correlation",{{"slaterx",1.0},{"vwn5c",1.0}} },
   {"svwn5","Slater exchange and VWN5 correlation",{{"slaterx",1.0},{"vwn5c",1.0}} },
@@ -33,12 +34,14 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"becke","Becke exchange",{{"beckecorrx",1.0}}},
   {"slater","Slater exchange",{{"slaterx",1.0}}},
   {"olyp","LYP correlation and OPTX exchange",{{"lypc",1.0},{"optx",1.0}}},
+  {"lyp","LYP correlation",{{"lypc",1.0}}},
   // ADMM exchange funtional corrections
   {"B88X","Becke exchange",{{"slaterx",1.},{"beckecorrx",1.0}} },
   {"LDAX","Slater exchange",{{"slaterx",1.}} },
   {"PBEX","PBE exchange",{{"pbex",1.0}} },
   {"KT3X","Keal-Tozer 3 exchange",{{"slaterx",1.092},{"ktx",-0.004},{"optxcorr",-0.925452}} },
   {"OPTX","OptX exchange",{{"slaterx",1.05151},{"optxcorr",-1.43169}} },
+  {"cam_compx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0}} },
 };
 
 // TODO: OLYP
