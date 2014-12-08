@@ -18,6 +18,7 @@ enum xc_functional_id
     XC_LDAERFC_JT,
     XC_LYPC,
     XC_OPTX, 
+    XC_OPTXCORR,
     XC_REVPBEX,
     XC_RPBEX,
     XC_SPBEC,
@@ -44,10 +45,13 @@ enum xc_functional_id
     XC_REVTPSSX,
     XC_PZ81C,
     XC_P86C,
+    XC_P86CORRC,
     XC_BTK,
     XC_VWK,
     XC_B97X,
     XC_B97C,
+    XC_B97_1X,
+    XC_B97_1C,
     XC_B97_2X,
     XC_B97_2C,
     XC_CSC,
@@ -61,6 +65,7 @@ enum xc_functional_id
     XC_PBESOLX,
     XC_TPSSLOCC,
     XC_ZVPBEINTC,
+    XC_PW91C,
     XC_NR_FUNCTIONALS
   };
 

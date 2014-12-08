@@ -25,17 +25,17 @@ namespace pw92eps
   static num omega(const num &z)
   {
     //return (pow(1+z,4.0/3.0)+pow(1-z,4.0/3.0)-2)/(2*pow(2,1.0/3.0)-2);
-#ifndef XCFUN_REF_PW92C
-    return (ufunc(z,4.0/3.0)-2)/(2*pow(2,1.0/3.0)-2); 
+#ifndef XCFUN_REF_PW92C // has effect of about 10^-11 in the testcase energy
+    return (ufunc(z,4.0/3.0)-2)/(2*pow(2,1.0/3.0)-2);
 #else
-    return (ufunc(z,4.0/3.0)-2)/0.5198421; 
+    return (ufunc(z,4.0/3.0)-2)/0.5198421;
 #endif
   }
 
 #define PW92C_PARAMS \
-  {{0.0310907, 0.21370, 7.5957 , 3.5876, 1.6382 ,0.49294,1},\
-   {0.01554535 , 0.20548, 14.1189, 6.1977, 3.3662 ,0.62517,1},\
-   {0.0168869, 0.11125, 10.357 , 3.6231, 0.88026,0.49671,1}};
+  {{0.03109070, 0.21370, 7.59570, 3.5876, 1.63820, 0.49294, 1},\
+   {0.01554535, 0.20548, 14.1189, 6.1977, 3.36620, 0.62517, 1},\
+   {0.01688690, 0.11125, 10.3570, 3.6231, 0.88026, 0.49671, 1}};
 
   // This is the pw92 epsilon using the most accuracte parameters,
   // and exact values for the exact constants.

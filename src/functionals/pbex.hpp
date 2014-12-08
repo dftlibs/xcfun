@@ -16,10 +16,13 @@ namespace pbex
 			 const num &grad)
   {
     using pw91_like_x_internal::S2;
-    
-    // parameter mu = 0.066725*M_PI*M_PI/3.0;
+   
+#ifdef XCFUN_REF_PBEX_MU
     // ulfek: mu from Daresbury implementation
     const parameter mu = 0.2195149727645171;
+#else
+    const parameter mu = 0.066725*M_PI*M_PI/3.0;
+#endif
     num st2 = S2(rho,grad);
     num t1 = 1 + mu*st2/R;   
     return 1 + R - R/t1; // Intel <= 11.1 miscompiles(?) this line with -fast

@@ -60,6 +60,11 @@ void xc_eval_vec(xc_functional fun, int nr_points,
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
 }
 
+int xc_input_length(xc_functional fun)
+{
+    return xcint_vars[fun->vars].len;
+}
+
 int xc_output_length(xc_functional fun)
 {
   if (fun->mode == XC_MODE_UNSET)
@@ -668,9 +673,20 @@ int xc_set(xc_functional fun, const char *name, double value)
   int item;
   if ( (item = xcint_lookup_functional(name)) >= 0)
     {
-      fun->settings[item] = value;
-      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
-      fun->depends |= xcint_funs[item].depends;
+      fun->settings[item] += value;
+      // Do not extend list if functional is active
+      bool found = false;
+      for (int i=0;i<fun->nr_active_functionals;i++)
+	if (fun->active_functionals[i] == &xcint_funs[item])
+	  {
+	    found = true;
+	    break;
+	  }
+      if (!found)
+	{
+	  fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
+	  fun->depends |= xcint_funs[item].depends;
+	}
       return 0;
     }
   else if ( (item = xcint_lookup_parameter(name)) >= 0)
@@ -684,6 +700,7 @@ int xc_set(xc_functional fun, const char *name, double value)
 	{
 	  if (!xcint_aliases[item].terms[i].name)
 	    break;
+	  // FIXME: Do not weight parameters with value for aliases, but what about EXX?
 	  if (xc_set(fun,xcint_aliases[item].terms[i].name,
 		     value*xcint_aliases[item].terms[i].weight) != 0)
 	    {
@@ -760,5 +777,15 @@ const char *xc_describe_long(const char *name)
     return xcint_aliases[k].description;
   else
     return 0;
+}
+
+int xc_is_gga(xc_functional fun)
+{
+    return (fun->depends & XC_GRADIENT);
+}
+
+int xc_is_metagga(xc_functional fun)
+{
+    return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 
