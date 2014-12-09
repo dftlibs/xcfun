@@ -44,7 +44,6 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"cam_compx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0}} },
 };
 
-// TODO: OLYP
 
 
 struct alias_data *xcint_aliases = aliases_array;
