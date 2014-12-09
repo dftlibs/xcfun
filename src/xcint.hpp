@@ -10,7 +10,7 @@
 #include "ctaylor.hpp"
 
 #define XC_MAX_ALIASES 60
-#define MAX_ALIAS_TERMS 5
+#define MAX_ALIAS_TERMS 10
 #define XC_MAX_INVARS 20
 
 
