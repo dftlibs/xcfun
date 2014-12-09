@@ -120,7 +120,7 @@ if (ENABLE_PYTHON_INTERFACE)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c
                        COMMAND "${SWIG_EXECUTABLE}"
                        ARGS "-python" "-I${CMAKE_CURRENT_SOURCE_DIR}/include" "-outdir" "${CMAKE_SWIG_OUTDIR}" "-o" ${XCFUN_SWIG_WRAP} ${XCFUN_SWIG}
-                       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i)
+                       DEPENDS xcfun ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i)
 
     set(XCFUN_PY       "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun.py")
     set(XCFUN_SWIG_PY  "${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swig.py")
