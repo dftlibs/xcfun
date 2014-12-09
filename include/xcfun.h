@@ -103,6 +103,9 @@ enum xc_mode
   const char *xc_describe_short(const char *name);
   const char *xc_describe_long(const char *name);
 
+  int xc_is_gga(xc_functional fun);
+  int xc_is_metagga(xc_functional fun);
+
   int xc_set_fromstring(xc_functional fun, const char *str); // Defines a functional from a string on the form "fun[=value]"
 
   // Try to set the functional evaluation vars, mode and order
@@ -111,6 +114,9 @@ enum xc_mode
 		    enum xc_vars vars,
 		    enum xc_mode mode,
 		    int order);
+
+  // Length of the density[] argument to eval()
+  int xc_input_length(xc_functional fun);
 
   // Length of the result[] argument to eval()
   int xc_output_length(xc_functional fun);
