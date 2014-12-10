@@ -66,7 +66,16 @@ class Functional(object):
     def __del__(self):
         xc_free_functional(self._func)
 
-    def eval_potential_n(self, density, densgrad=None, denshess=None):
+    @property
+    def type (self):
+        if xc_is_metagga(self._func):
+            return 2
+        elif xc_is_gga(self._func):
+            return 1
+        else :
+            return 0
+
+    def eval_potential_n(self, density, densgrad=None, denshess=None) :
         """
         Evaluate the xc potential (spin-compensated case).
 
