@@ -24,6 +24,7 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"b97","B97 exchange and correlation", {{"b97x",1.0},{"b97c",1.0},{"exx",0.1943}} },
   {"b97-1","B97-1 exchange and correlation", {{"b97_1x",1.0},{"b97_1c",1.0},{"exx",0.21}} },
   {"b97_2","B97-2 exchange and correlation", {{"b97_2x",1.0},{"b97_2c",1.0},{"exx",0.21}} },
+  {"camb3lyp","CAM-B3LYP",{{"cam_alpha",0.19},{"cam_beta",0.46},{"rangesep_mu",0.33},{"beckecamx",1.0},{"vwn5c",0.19},{"lypc",0.81},{"exx",1.0}} },
   // Some of these are there to match the names used in Dalton
   {"vwn","VWN5 correlation",{{"vwn5c",1.0}}},
   {"vwn5","VWN5 correlation",{{"vwn5c",1.0}}},
@@ -44,7 +45,6 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"cam_compx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0}} },
 };
 
-// TODO: OLYP
 
 
 struct alias_data *xcint_aliases = aliases_array;
