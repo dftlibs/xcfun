@@ -42,7 +42,8 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"PBEX","PBE exchange",{{"pbex",1.0}} },
   {"KT3X","Keal-Tozer 3 exchange",{{"slaterx",1.092},{"ktx",-0.004},{"optxcorr",-0.925452}} },
   {"OPTX","OptX exchange",{{"slaterx",1.05151},{"optxcorr",-1.43169}} },
-  {"camcompx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0}} },
+  {"camcompx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0},{"cam_alpha",0.19},
+						    {"cam_beta",0.46},{"rangesep_mu",0.33}}},
 };
 
 
