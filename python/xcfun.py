@@ -61,7 +61,9 @@ class Functional(object):
         """
         self._func = xc_new_functional()
         for (name, weight) in funcdict.iteritems():
-            xc_set(self._func, name, weight)
+            ret = xc_set(self._func, name, weight)
+            if not ret == 0:
+                raise XcFunException('unknown functional selected')
 
     def __del__(self):
         xc_free_functional(self._func)
