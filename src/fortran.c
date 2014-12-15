@@ -48,14 +48,14 @@ int FSYM(xcnewf) FCSYM(XCNEWF)(fortran_int_t *api_version)
   return -1;
 }
 
-void FSYM(xcfree)FCSYM(XCFREE)(fortran_int_t *fun)
+void FSYM(xcfree) FCSYM(XCFREE)(fortran_int_t *fun)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   xc_free_functional(fortran_functionals[*fun]);
   fortran_functionals[*fun] = 0;
 }
 
-void FSYM(xceval)FCSYM(XCEVAL)(fortran_int_t *fun, 
+void FSYM(xceval) FCSYM(XCEVAL)(fortran_int_t *fun, 
 		  fortran_int_t *nr_points, 
 		  double *first_density,
 		  double *second_density,
@@ -73,21 +73,21 @@ void FSYM(xceval)FCSYM(XCEVAL)(fortran_int_t *fun,
 	      first_result, rpitch);
 }
 
-fortran_int_t FSYM(xcoule)FCSYM(XCOULE)(fortran_int_t *fun, fortran_int_t *order)
+fortran_int_t FSYM(xcoule) FCSYM(XCOULE)(fortran_int_t *fun, fortran_int_t *order)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_output_length(fortran_functionals[*fun]);
 }
 
 #if 0
-int FSYM(xcdind)FCSYM(XCDIND)(fortran_int_t *fun, const fortran_int_t *derivative)
+int FSYM(xcdind) FCSYM(XCDIND)(fortran_int_t *fun, const fortran_int_t *derivative)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_derivative_index(fortran_functionals[*fun],derivative);
 }
 #endif
 
-fortran_int_t FSYM(xcevse)FCSYM(XCTRYV)(fortran_int_t *fun, const fortran_int_t *vars, const fortran_int_t *mode, const fortran_int_t *order)
+fortran_int_t FSYM(xcevse) FCSYM(XCTRYV)(fortran_int_t *fun, const fortran_int_t *vars, const fortran_int_t *mode, const fortran_int_t *order)
 {
   assert(*fun >= 0 && *fun < MAX_FORTRAN_FUNCTIONALS);
   return xc_eval_setup(fortran_functionals[*fun], *vars, *mode, *order);
@@ -104,12 +104,12 @@ static void str2ints(fortran_int_t ints[], fortran_int_t len, const char *s)
     ints[i] = 0;
 }
 
-void FSYM(xcspla)FCSYM(XCSPLA)(fortran_int_t *text, fortran_int_t *len)
+void FSYM(xcspla) FCSYM(XCSPLA)(fortran_int_t *text, fortran_int_t *len)
 {
   str2ints(text,*len,xcfun_splash());
 }
 
-int FSYM(xcsets)FCSYM(XCSETS)(fortran_int_t *fun,  double *value, fortran_int_t *namelen, const char *name)
+int FSYM(xcsets) FCSYM(XCSETS)(fortran_int_t *fun,  double *value, fortran_int_t *namelen, const char *name)
 {
   int i;
   char buf[257];
@@ -121,7 +121,7 @@ int FSYM(xcsets)FCSYM(XCSETS)(fortran_int_t *fun,  double *value, fortran_int_t 
   return xc_set(fortran_functionals[*fun],buf,*value);
 }
 
-int FSYM(xcgets)FCSYM(XCGETS)(fortran_int_t *fun, double *value, fortran_int_t *namelen, const char *name)
+int FSYM(xcgets) FCSYM(XCGETS)(fortran_int_t *fun, double *value, fortran_int_t *namelen, const char *name)
 {
   int i;
   char buf[257];
@@ -133,7 +133,7 @@ int FSYM(xcgets)FCSYM(XCGETS)(fortran_int_t *fun, double *value, fortran_int_t *
   return xc_get(fortran_functionals[*fun],buf,value);
 }
 
-int FSYM(xcseri)FCSYM(XCSERI)(fortran_int_t *fun, fortran_int_t *buflen, double *buf)
+int FSYM(xcseri) FCSYM(XCSERI)(fortran_int_t *fun, fortran_int_t *buflen, double *buf)
 {
   return xc_serialize(fortran_functionals[*fun],*buflen,buf);
 }
