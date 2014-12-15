@@ -90,7 +90,8 @@ if(ENABLE_FORTRAN_INTERFACE)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xcfun.mod DESTINATION include)
     
     if(ENABLE_64BIT_INTEGERS)
-        add_definitions(-DXCFUN_FORTRAN_INT='long long int')
+        add_definitions("-DXCFUN_INTEGER=integer*8")
+        add_definitions("-DXCFUN_FORTRAN_INT=long long int")
     endif()
 
     add_executable(
