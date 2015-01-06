@@ -19,3 +19,19 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
             )
     endif()
 endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
+
+    set(CMAKE_Fortran_FLAGS         "")
+    if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
+    endif()
+    set(CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -Mframe")
+    set(CMAKE_Fortran_FLAGS_RELEASE "-O3 -Mipa=fast")
+    if(ENABLE_64BIT_INTEGERS)
+        set(CMAKE_Fortran_FLAGS
+            "${CMAKE_Fortran_FLAGS} -i8 -i8storage"
+            )
+    endif()
+endif()
+
