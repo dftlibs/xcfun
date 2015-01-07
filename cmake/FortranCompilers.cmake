@@ -1,5 +1,3 @@
-if(NOT DEFINED DEFAULT_Fortran_FLAGS_SET)
-
 if(CMAKE_Fortran_COMPILER_ID MATCHES GNU) # this is gfortran
     set(CMAKE_Fortran_FLAGS         "-ffloat-store -fcray-pointer")
     if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i386")
@@ -194,21 +192,4 @@ if(DEFINED EXTRA_Fortran_FLAGS)
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${EXTRA_Fortran_FLAGS}")
 endif()
 
-save_compiler_flags(Fortran)
-endif()
-
-if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
-
-    set(CMAKE_Fortran_FLAGS         "")
-    if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
-    endif()
-    set(CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -Mframe")
-    set(CMAKE_Fortran_FLAGS_RELEASE "-O3 -Mipa=fast")
-    if(ENABLE_64BIT_INTEGERS)
-        set(CMAKE_Fortran_FLAGS
-            "${CMAKE_Fortran_FLAGS} -i8 -i8storage"
-            )
-    endif()
-endif()
 

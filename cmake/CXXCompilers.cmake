@@ -1,5 +1,3 @@
-f (NOT DEFINED DEFAULT_CXX_FLAGS_SET)
-
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     set(CMAKE_CXX_FLAGS         "-ffloat-store -fno-rtti -fno-exceptions")
     if(DEVELOPMENT_CODE)
@@ -95,7 +93,4 @@ endif()
 if(DEFINED EXTRA_CXX_FLAGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS}")
 endif()
-
-save_compiler_flags(CXX)
-endif ()
 
