@@ -8,7 +8,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     endif()
     if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i386")
         set(CMAKE_CXX_FLAGS
-            "${CMAKE_CXX_FLAGS} -m32"
+#            "${CMAKE_CXX_FLAGS} -m32"
+            "${CMAKE_CXX_FLAGS} -m64"
             )
     endif()
     if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
