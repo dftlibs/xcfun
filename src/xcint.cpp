@@ -49,6 +49,30 @@ void xcint_functional_setup_helper()
 
 template<> void xcint_functional_setup_helper<XC_NR_FUNCTIONALS>() {  }
 
+
+template<int FUN, int SPAN>
+struct retarded_helper
+{
+  static void doit()
+  {
+    retarded_helper<FUN,SPAN/2>::doit();
+    retarded_helper<FUN+SPAN/2,(SPAN+1)/2>::doit();
+  }
+};
+
+template<int FUN>
+struct retarded_helper<FUN, 1>
+{
+  static void doit() 
+  {
+    if (!(fundat_db<FUN>::symbol[0] == 'X' and fundat_db<FUN>::symbol[1] == 'C' and fundat_db<FUN>::symbol[2] == '_'))
+      xcint_die("Functional symbol does not start with XC_",FUN);
+    fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
+    fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
+    xcint_funs[FUN] = fundat_db<FUN>::d;
+  }
+};
+
 template<int P>
 void xcint_parameter_setup_helper()
 {
@@ -102,7 +126,8 @@ void xcint_assure_setup()
   static bool is_setup = false;
   if (!is_setup)
     {
-      xcint_functional_setup_helper<0>();      
+      retarded_helper<0,XC_NR_FUNCTIONALS>::doit();
+      //      xcint_functional_setup_helper<0>();            
       xcint_parameter_setup_helper<XC_NR_FUNCTIONALS>();
 #ifndef NDEBUG
       /* Verify that the variable definition is consistent. */

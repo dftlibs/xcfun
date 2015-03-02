@@ -18,6 +18,7 @@ FUNCTIONAL(XC_PBEX) = {
   "Implemented by Ulf Ekstrom and Andre Gomes.\n",
   XC_DENSITY|XC_GRADIENT,
   ENERGY_FUNCTION(pbex_en)
+#ifdef XCFUN_REF_PBEX_MU
   XC_A_B_GAA_GAB_GBB,
   XC_PARTIAL_DERIVATIVES,
   2,
@@ -46,4 +47,5 @@ FUNCTIONAL(XC_PBEX) = {
    0.000000000000E+00,
    0.000000000000E+00,
    0.786563034093E-11}
+#endif
 };

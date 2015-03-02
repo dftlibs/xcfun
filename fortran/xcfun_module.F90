@@ -200,6 +200,14 @@ contains
     double precision, intent(out) :: val
     xc_get = xcgets(funid,val,len_trim(param),param)
   end function xc_get
+
+  function xc_serialize(funid, buflen, buf)
+    XCFUN_INTEGER, intent(in) :: funid, buflen
+    double precision, intent(out) :: buf(buflen)
+    XCFUN_INTEGER :: xc_serialize, xcseri
+    xc_serialize = xcseri(funid, buflen, buf)
+  end function xc_serialize
+
 #ifdef XXX
   subroutine xc_short_description(param,description)
     XCFUN_INTEGER, intent(in) :: param
@@ -230,8 +238,14 @@ contains
     XCFUN_INTEGER, intent(in) :: funid, npoints
     double precision, intent(in) :: densities(:,:)
     double precision, intent(out) :: results(:,:)
-    call xceval(funid,npoints,densities(1,1),densities(1,2),&
-         results(1,1),results(1,2))
+
+    integer :: i2
+
+    i2 = 2
+    IF (npoints.EQ.1) i2=1
+    
+    call xceval(funid,npoints,densities(1,1),densities(1,i2),&
+         results(1,1),results(1,i2))
   end subroutine xc_eval
 
   subroutine xc_eval_star(funid, npoints, m, densities, results)

@@ -28,6 +28,28 @@ void xc_free_functional(xc_functional fun)
   free(fun);
 }
 
+// Fill the buf array with information to recreate an exact copy of fun (except the mode).
+// This is not stable between different xcfun "versions"
+// If buflen > 0 return the number of elements written or 0 if the buffer is too small.
+// else return the number of elements needed. buf is not accessed if buflen <= 0.
+int xc_serialize(xc_functional fun, int buflen, double *buf)
+{
+  int reqlen = XC_NR_PARAMETERS_AND_FUNCTIONALS;
+  if (buflen <= 0)
+    return reqlen;
+  else if (buflen < reqlen)
+    return 0;
+  else
+    for (int i=0;i<XC_NR_PARAMETERS_AND_FUNCTIONALS;i++)
+      buf[i] = fun->settings[i];
+  return reqlen;
+}
+  // make fun an exact copy of the functional used to fill buf (with xc_serialize)
+void xc_deserialize(xc_functional fun, const double *buf)
+{
+}
+
+
 void xc_eval_vec(xc_functional fun, int nr_points,
 		 const double *density,
 		 int density_pitch,
@@ -36,6 +58,11 @@ void xc_eval_vec(xc_functional fun, int nr_points,
 {
   for (int i=0;i<nr_points;i++)
     xc_eval(fun,density+i*density_pitch,result+i*result_pitch);
+}
+
+int xc_input_length(xc_functional fun)
+{
+    return xcint_vars[fun->vars].len;
 }
 
 int xc_output_length(xc_functional fun)
@@ -311,6 +338,166 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
     }
   else if (f->mode == XC_POTENTIAL)
     {
+      // TODO: We shouldn't need the second density derivatives internally
+      int inlen = xcint_vars[f->vars].len;
+      int npot; // One or two potentials
+      int inpos=0;
+      if (inlen == 1 || inlen == 10)
+	npot = 1;
+      else
+        {
+// nspin = 2 case. More complicated to find the
+// beta density as it depends on whether this is an lda or gga calculation.
+	   npot = 2;
+           if(inlen == 2)
+             inpos = 1;
+           else if (inlen == 20)
+             inpos = 10;
+        }
+      {
+	typedef ctaylor<ireal_t,1> ttype;      
+	ttype in[XC_MAX_INVARS], out = 0;
+	for (int i=0;i<inlen;i++)
+	  in[i] = input[i];
+	for (int j=0;j<npot;j++)
+	  {
+	    in[j*inpos].set(VAR0,1);
+	    densvars<ttype> d(f,in);
+	    out = 0;
+	    for (int i=0;i<f->nr_active_functionals;i++)
+	      out += f->settings[f->active_functionals[i]->id]
+		* f->active_functionals[i]->fp1(d);
+	    in[j*inpos] = input[j*inpos];
+	    output[j+1] = out.get(VAR0); // First derivatives
+	  }
+//            printf("Potentials 1 %f\n",output[1]);
+	output[0] = out.get(CNST); // Energy
+      }
+      if (f->depends & XC_GRADIENT) // GGA potential
+	{
+	  /*
+	     v = dE/dn - nabla.dE/dg
+	   */
+	  typedef ctaylor<ireal_t,2> ttype;
+	  ttype in[XC_MAX_INVARS];
+	  // n gx gy gz xx xy xz yy yz zz
+          // 0 1  2  3  4  5  6  7  8  9
+	  if (f->vars == XC_A_2ND_TAYLOR || f->vars == XC_N_2ND_TAYLOR)
+	    {
+	      ttype out = 0;
+	      // d/dx
+	      in[0] = ttype(input[0],VAR0,input[1]);
+	      for (int i=0;i<3;i++)
+		in[1+i] = ttype(input[1+i],VAR0,input[4+i]);
+	      for (int i=4;i<10;i++)
+		in[i] = 0; //TODO: remove these vars, fun does not depend on them
+	      in[1].set(VAR1,1); // d/dgx
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+
+	      // d/dy
+	      in[0] = ttype(input[0],VAR0,input[2]);
+	      in[1] = ttype(input[1],VAR0,input[5]);
+	      in[2] = ttype(input[2],VAR0,input[7]);
+	      in[3] = ttype(input[3],VAR0,input[8]);
+	      in[2].set(VAR1,1); // d/dgy
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+	      // d/dz
+	      in[0] = ttype(input[0],VAR0,input[3]);
+	      in[1] = ttype(input[1],VAR0,input[6]);
+	      in[2] = ttype(input[2],VAR0,input[8]);
+	      in[3] = ttype(input[3],VAR0,input[9]);
+	      in[3].set(VAR1,1); // d/dgz
+	      {
+		densvars<ttype> d(f,in);
+		for (int i=0;i<f->nr_active_functionals;i++)
+		  out += f->settings[f->active_functionals[i]->id]
+		    * f->active_functionals[i]->fp2(d);
+	      }
+	      output[1] -= out.get(VAR0|VAR1); // Subtract divergence of dE/dg from lda part of potential
+	    }
+	  else
+	    {
+          // M Seth July-August 2011
+          // Unrestricted GGA potential
+	  // a gx gy gz xx xy xz yy yz zz
+          // 0 1  2  3  4  5  6  7  8  9
+	  // b  gx  gy  gz  xx  xy  xz  yy  yz  zz
+          // 10 11  12  13  14  15  16  17  18  19
+	    {
+              // j = 0 alpha and j = 1 beta
+              for(int j=0;j<2;j++)
+              {
+	         ttype out=0;
+// Point to the correct set of values from the input
+                 int offset = 10;
+	      // d/dx
+	         in[0] = ttype(input[0],VAR0,input[1]);
+	         in[1] = ttype(input[1],VAR0,input[4]);
+	         in[2] = ttype(input[2],VAR0,input[5]);
+	         in[3] = ttype(input[3],VAR0,input[6]);
+	         in[0+offset] = ttype(input[0+offset],VAR0,input[1+offset]);
+	         in[1+offset] = ttype(input[1+offset],VAR0,input[4+offset]);
+	         in[2+offset] = ttype(input[2+offset],VAR0,input[5+offset]);
+	         in[3+offset] = ttype(input[3+offset],VAR0,input[6+offset]);
+	         for (int i=4;i<10;i++)
+	           in[i] = 0; //TODO: remove these vars, fun does not depend on them
+	         in[1+offset*j].set(VAR1,1); // d/dgx(a/b)
+	         {
+	           densvars<ttype> d(f,in);
+	           for (int i=0;i<f->nr_active_functionals;i++)
+	             out += f->settings[f->active_functionals[i]->id]
+	               * f->active_functionals[i]->fp2(d);
+	         }
+	      // d/dy
+	         in[0] = ttype(input[0],VAR0,input[2]);
+	         in[1] = ttype(input[1],VAR0,input[5]);
+	         in[2] = ttype(input[2],VAR0,input[7]);
+	         in[3] = ttype(input[3],VAR0,input[8]);
+	         in[0+offset] = ttype(input[0+offset],VAR0,input[2+offset]);
+	         in[1+offset] = ttype(input[1+offset],VAR0,input[5+offset]);
+	         in[2+offset] = ttype(input[2+offset],VAR0,input[7+offset]);
+	         in[3+offset] = ttype(input[3+offset],VAR0,input[8+offset]);
+	         in[2+offset*j].set(VAR1,1); // d/dgy(a/b)
+	         {
+	           densvars<ttype> d(f,in);
+	           for (int i=0;i<f->nr_active_functionals;i++)
+	             out += f->settings[f->active_functionals[i]->id]
+	               * f->active_functionals[i]->fp2(d);
+	         }
+	      // d/dz
+	         in[0] = ttype(input[0],VAR0,input[3]);
+	         in[1] = ttype(input[1],VAR0,input[6]);
+	         in[2] = ttype(input[2],VAR0,input[8]);
+	         in[3] = ttype(input[3],VAR0,input[9]);
+	         in[0+offset] = ttype(input[0+offset],VAR0,input[3+offset]);
+	         in[1+offset] = ttype(input[1+offset],VAR0,input[6+offset]);
+	         in[2+offset] = ttype(input[2+offset],VAR0,input[8+offset]);
+	         in[3+offset] = ttype(input[3+offset],VAR0,input[9+offset]);
+	         in[3+offset*j].set(VAR1,1); // d/dgy(a/b)
+	         {
+	           densvars<ttype> d(f,in);
+	           for (int i=0;i<f->nr_active_functionals;i++)
+	             out += f->settings[f->active_functionals[i]->id]
+	               * f->active_functionals[i]->fp2(d);
+	         }
+	        output[j+1] -= out.get(VAR0|VAR1); // Subtract divergence of dE/dg from lda part of potential
+              }
+             }
+//	      xcint_die("TODO: AB GGA potential",f->mode);
+	    }
+	}
+
+#if 0
       int inlen = xcint_vars[f->vars].len;
       int npot; // One or two potentials
       if (inlen == 1 || inlen == 10)
@@ -439,6 +626,7 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 		}
 	    }
 	}
+#endif
     }
   else 
     {
@@ -485,9 +673,20 @@ int xc_set(xc_functional fun, const char *name, double value)
   int item;
   if ( (item = xcint_lookup_functional(name)) >= 0)
     {
-      fun->settings[item] = value;
-      fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
-      fun->depends |= xcint_funs[item].depends;
+      fun->settings[item] += value;
+      // Do not extend list if functional is active
+      bool found = false;
+      for (int i=0;i<fun->nr_active_functionals;i++)
+	if (fun->active_functionals[i] == &xcint_funs[item])
+	  {
+	    found = true;
+	    break;
+	  }
+      if (!found)
+	{
+	  fun->active_functionals[fun->nr_active_functionals++] = &xcint_funs[item];
+	  fun->depends |= xcint_funs[item].depends;
+	}
       return 0;
     }
   else if ( (item = xcint_lookup_parameter(name)) >= 0)
@@ -501,6 +700,7 @@ int xc_set(xc_functional fun, const char *name, double value)
 	{
 	  if (!xcint_aliases[item].terms[i].name)
 	    break;
+	  // FIXME: Do not weight parameters with value for aliases, but what about EXX?
 	  if (xc_set(fun,xcint_aliases[item].terms[i].name,
 		     value*xcint_aliases[item].terms[i].weight) != 0)
 	    {
@@ -577,5 +777,15 @@ const char *xc_describe_long(const char *name)
     return xcint_aliases[k].description;
   else
     return 0;
+}
+
+int xc_is_gga(xc_functional fun)
+{
+    return (fun->depends & XC_GRADIENT);
+}
+
+int xc_is_metagga(xc_functional fun)
+{
+    return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 

@@ -83,6 +83,14 @@ enum xc_mode
 
   void xc_free_functional(xc_functional fun);
 
+  // Fill the data array with information to recreate an exact copy of fun.
+  // This is not stable between different xcfun "versions"
+  // If buflen > 0 return the number of elements written,
+  // else return the number of elements needed. buf is not accessed if buflen <= 0.
+  int xc_serialize(xc_functional fun, int buflen, double *buf);
+  // make fun an exact copy of the functional used to fill buf (with xc_serialize)
+  void xc_deserialize(xc_functional fun, double *buf);
+
   // Call with n >= 0, Returns a pointer to an internal string with the name
   // of parameter nr n. Return NULL when n is too large.
   const char *xc_enumerate_parameters(int n);
@@ -95,6 +103,9 @@ enum xc_mode
   const char *xc_describe_short(const char *name);
   const char *xc_describe_long(const char *name);
 
+  int xc_is_gga(xc_functional fun);
+  int xc_is_metagga(xc_functional fun);
+
   int xc_set_fromstring(xc_functional fun, const char *str); // Defines a functional from a string on the form "fun[=value]"
 
   // Try to set the functional evaluation vars, mode and order
@@ -103,6 +114,9 @@ enum xc_mode
 		    enum xc_vars vars,
 		    enum xc_mode mode,
 		    int order);
+
+  // Length of the density[] argument to eval()
+  int xc_input_length(xc_functional fun);
 
   // Length of the result[] argument to eval()
   int xc_output_length(xc_functional fun);
