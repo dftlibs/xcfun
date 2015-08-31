@@ -25,6 +25,7 @@ enum xc_functional_id
     XC_VWN_PBEC,
     XC_KTX,
     XC_TFK,
+    XC_TW,
     XC_PW91X,
     XC_PW91K,
     XC_PW92C,
