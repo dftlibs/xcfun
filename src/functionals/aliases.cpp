@@ -44,6 +44,9 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] =
   {"OPTX","OptX exchange",{{"slaterx",1.05151},{"optxcorr",-1.43169}} },
   {"camcompx","Complementary part of CAM exchange",{{"beckex",1.0},{"beckecamx",-1.0},{"cam_alpha",0.19},
 						    {"cam_beta",0.46},{"rangesep_mu",0.33}}},
+  //Kinetic energy corrections for orbital free DFT
+  {"tfk","Thomas-Fermi corraction to be put in effective potential.",{{"tfk",1.0}} },
+  {"tw","von Weizsacker corraction to be put in effective potential.",{{"tw",1.0}} },
 };
 
 
