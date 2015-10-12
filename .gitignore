@@ -1,3 +1,5 @@
 .gitignore
 geninterface
 *.o
+_build/
+build*/
