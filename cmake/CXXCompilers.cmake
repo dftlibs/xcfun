@@ -63,6 +63,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Intel)
             "${CMAKE_CXX_FLAGS} -openmp"
             )
     endif()
+    if(ENABLE_STATIC_LINKING)
+        set(CMAKE_CXX_FLAGS
+            "${CMAKE_CXX_FLAGS} -fPIC"
+            )
+    endif()
 endif ()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES PGI)
