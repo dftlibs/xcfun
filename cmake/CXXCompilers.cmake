@@ -66,7 +66,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Intel)
 endif ()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES PGI)
-    set(CMAKE_CXX_FLAGS         "-Mpreprocess")
+    set(CMAKE_CXX_FLAGS         "-Mpreprocess --diag_suppress 236 --diag_suppress 175") #236 suppress assert warnings and 175 suppress subscript out of range warning /SR
     set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -c9x")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fast -Munroll -Mvect=idiom -c9x")
     set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g -pg")
