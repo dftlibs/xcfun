@@ -71,6 +71,10 @@ int main(int argc, char *argv[])
 	    {
 	      mode = XC_N_GNN;
 	    }
+	  else if (strcmp(argv[i],"--ngnntaun") == 0)
+	    {
+	      mode = XC_N_GNN_TAUN;
+	    }
 	  else if (strcmp(argv[i],"--ab") == 0)
 	    {
 	      mode = XC_A_B;
@@ -140,7 +144,8 @@ int main(int argc, char *argv[])
       for (i=0;i<xc_input_length(fun);i++)
 	if (scanf("%lf",&inp[i]) != 1)
 	  {
-	    fprintf(stderr,"Error reading density value, quitting.\n");
+	    if (!quiet)
+	      fprintf(stderr,"Error reading density value, quitting.\n");
 	    return EXIT_FAILURE;
 	  }
       // Only one point, so pitch is unimportant
