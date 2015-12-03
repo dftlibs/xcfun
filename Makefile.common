@@ -22,6 +22,9 @@ testall: test/testall.c lib/libxcfun.a
 example: test/example.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
+funeval: test/funeval.c lib/libxcfun.a
+	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
+
 brtest: test/brtest.c lib/libxcfun.a
 	$(CC) $(CFLAGS) $< -o $@ -lxcfun -lm $(LIBS)
 
