@@ -10,6 +10,12 @@ set (XCFun_VERSION_MINOR 0)
 option(XCFUN_NO_STDC++ "Disable libsrdc++" OFF)
 option(XCFUN_ENABLE_TESTS "Enable tests" ON)
 
+
+# set maximum derivative order
+set(XC_MAX_ORDER "2" CACHE STRING "Maximum derivative order")
+add_definitions(-DXC_MAX_ORDER=${XC_MAX_ORDER})
+
+
 include(ConfigCompilerFlags)
 if (CMAKE_COMPILER_IS_GNUCXX)
 	set (CMAKE_CXX_FLAGS "-Wall -Wno-unknown-pragmas -Wno-sign-compare -fno-rtti -fno-exceptions ")
