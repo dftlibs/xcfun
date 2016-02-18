@@ -44,5 +44,4 @@ add_custom_command (
 	COMMAND geninterface
 	)
 
-install(TARGETS xcfun ARCHIVE DESTINATION lib)
-
+install(TARGETS xcfun DESTINATION lib)
