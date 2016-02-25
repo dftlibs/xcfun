@@ -38,6 +38,7 @@ enum xc_functional_id
     XC_M05X2C,
     XC_M05C,
     XC_M06C,
+    XC_M06HFC,
     XC_M06LC,
     XC_M06X2C,
     XC_TPSSC,
