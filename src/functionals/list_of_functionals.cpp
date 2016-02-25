@@ -42,6 +42,7 @@ void xcint_setup_functionals()
   SETUP(setup_m05x2c);
   SETUP(setup_m05c);
   SETUP(setup_m06c);
+  SETUP(setup_m06hfc);
   SETUP(setup_m06lc);
   SETUP(setup_m06x2c);
   SETUP(setup_tpssc);
