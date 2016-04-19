@@ -36,8 +36,8 @@ extern "C"
 const char *xcfun_splash(void)
 {
   return 
-    "XCFun DFT library Copyright 2009-2010 Ulf Ekstrom and contributors.\n"
-    "See http://admol.org/xcfun for more information. This is free soft-\n"
+    "XCFun DFT library Copyright 2009-2016 Ulf Ekstrom and contributors.\n"
+    "See http://dftlibs.org/xcfun/ for more information. This is free soft-\n"
     "ware; see the source code for copying conditions. There is ABSOLUTELY\n"
     "NO WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n"
     "PURPOSE. For details see the documentation. Scientific users of this \n"
