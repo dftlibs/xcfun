@@ -157,7 +157,7 @@ const char *xcfun_splash(void)
 {
   return 
     "XCFun DFT library Copyright 2009-2011 Ulf Ekstrom and contributors.\n"
-    "See http://admol.org/xcfun for more information.\n\n"
+    "See http://dftlibs.org/xcfun/ for more information.\n\n"
     "This is free software; see the source code for copying conditions.\n"
     "There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n"
     "FITNESS FOR A PARTICULAR PURPOSE. For details see the documentation.\n"

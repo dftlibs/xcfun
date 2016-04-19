@@ -3,7 +3,7 @@
 # Arbitrary order Exchange-Correlation functional library
 
 Copyright Ulf Ekstrom <uekstrom@gmail.com> and contributors 2009-2010.
-See http://admol.org/xcfun for more information.
+See http://dftlibs.org/xcfun/ for more information.
 
 The main interface is in `include/xcfun.h`
 (or `fortran/xc_fun_module.f90` for Fortran bindings).

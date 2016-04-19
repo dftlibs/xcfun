@@ -5,7 +5,7 @@
 XCFun
 *****
 
-XCFun is a library of DFT exchange-correlation (XC) functionals. It is based on automatic differentiation and can therefore generate arbitrary order derivatives of these functionals. For more information see the website `admol.org/xcfun <http://admol.org/xcfun>`_. This documentation refers to the development version of the XCFun library, make sure that you are up to date. 
+XCFun is a library of DFT exchange-correlation (XC) functionals. It is based on automatic differentiation and can therefore generate arbitrary order derivatives of these functionals. For more information see the website `http://dftlibs.org/xcfun/ <http://dftlibs.org/xcfun/>`_. This documentation refers to the development version of the XCFun library, make sure that you are up to date. 
 
 .. _installation:
 
