@@ -31,6 +31,10 @@ set(CMAKE_MODULE_PATH
 
 include(ConfigSafeGuards)
 
+# set maximum derivative order
+set(XC_MAX_ORDER "3" CACHE STRING "Maximum derivative order")
+add_definitions(-DXC_MAX_ORDER=${XC_MAX_ORDER})
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
