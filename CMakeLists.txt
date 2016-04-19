@@ -150,6 +150,11 @@ if (ENABLE_PYTHON_INTERFACE)
 
 endif()
 
-include(Tests)
+add_test(testall        ${CMAKE_CURRENT_BINARY_DIR}/testall)
+add_test(kernel_example ${CMAKE_CURRENT_BINARY_DIR}/kernel_example)
+if(ENABLE_PYTHON_INTERFACE)
+    add_test(NAME python-interface  COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test/test.py")
+endif()
+
 include(CTest)
 enable_testing()
