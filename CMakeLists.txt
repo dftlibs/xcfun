@@ -65,15 +65,6 @@ install(TARGETS xcfun DESTINATION lib${LIB_SUFFIX})
 file(GLOB headers "include/*.h")
 install(FILES ${headers} DESTINATION include)
 
-add_executable(
-    testall
-    test/testall.c
-    )
-target_link_libraries(
-    testall
-    xcfun
-    )
-
 if(ENABLE_FORTRAN_INTERFACE)
     include(FortranCompilers)
 endif()
@@ -150,7 +141,20 @@ if (ENABLE_PYTHON_INTERFACE)
 
 endif()
 
-add_test(testall        ${CMAKE_CURRENT_BINARY_DIR}/testall)
+
+option(ENABLE_TESTALL "Enable compilation of testall" ON)
+if(ENABLE_TESTALL)
+    add_executable(
+        testall
+        test/testall.c
+        )
+    target_link_libraries(
+        testall
+        xcfun
+        )
+    add_test(testall ${CMAKE_CURRENT_BINARY_DIR}/testall)
+endif()
+
 add_test(kernel_example ${CMAKE_CURRENT_BINARY_DIR}/kernel_example)
 if(ENABLE_PYTHON_INTERFACE)
     add_test(NAME python-interface  COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test/test.py")
