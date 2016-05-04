@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
   int nvar, mode = XC_A_B;
   int quiet = 0;
   int order = 1;
+  int rep_times = 1;
   if (argc > 1)
     {
       int i;
@@ -89,6 +90,20 @@ int main(int argc, char *argv[])
 	      if (sscanf(argv[i+1],"%i",&order) != 1)
 		{
 		  fprintf(stderr,"Error reading the order from '%s', quitting.\n",argv[i+1]);
+		  return EXIT_FAILURE;
+		}
+	      i++;
+	    }
+	  else if (strcmp(argv[i],"--rep") == 0)
+	    {
+	      if (!argv[i+1])
+		{
+		  fprintf(stderr,"Expected integer after --rep, quitting.\n");
+		  return EXIT_FAILURE;
+		}
+	      if (sscanf(argv[i+1],"%i",&rep_times) != 1)
+		{
+		  fprintf(stderr,"Error reading the number of repetitions from '%s', quitting.\n",argv[i+1]);
 		  return EXIT_FAILURE;
 		}
 	      i++;
@@ -144,12 +159,13 @@ int main(int argc, char *argv[])
       for (i=0;i<xc_input_length(fun);i++)
 	if (scanf("%lf",&inp[i]) != 1)
 	  {
-	    if (!quiet)
+	    if (!quiet && !feof(stdin))
 	      fprintf(stderr,"Error reading density value, quitting.\n");
 	    return EXIT_FAILURE;
 	  }
       // Only one point, so pitch is unimportant
-      xc_eval(fun,inp,out);
+      for (i=0;i<rep_times;i++)
+	xc_eval(fun,inp,out);
       for (i=0;i<nvar;i++)
 	m[i] = 0;
       if (!quiet) 
