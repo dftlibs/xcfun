@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/robertodr/xcfun.svg?branch=master)](https://travis-ci.org/robertodr/xcfun)
+[![Build status](https://ci.appveyor.com/api/projects/status/78xtl84v5gufjs9l?svg=true)](https://ci.appveyor.com/project/miroi/xcfun)
 
 # Arbitrary order Exchange-Correlation functional library
 
