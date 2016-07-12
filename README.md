@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/dftlibs/xcfun.svg?branch=master)](https://travis-ci.org/dftlibs/xcfun)
 
+
 # Arbitrary order Exchange-Correlation functional library
 
 Copyright Ulf Ekstrom <uekstrom@gmail.com> and contributors 2009-2010.
@@ -7,6 +8,7 @@ See http://dftlibs.org/xcfun/ for more information.
 
 The main interface is in `include/xcfun.h`
 (or `fortran/xc_fun_module.f90` for Fortran bindings).
+
 
 ## Copying
 
@@ -41,7 +43,6 @@ and add `-DNDEBUG` to the compiler flags. Add optimization
 compiler options. Make sure your compiler performs inlining
 (-O3 with gcc).
 
-# Primary test environments
 
 ## Continuous integration builds
 
