@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/robertodr/xcfun.svg?branch=master)](https://travis-ci.org/robertodr/xcfun)
+[![Build Status](https://travis-ci.org/dftlibs/xcfun.svg?branch=master)](https://travis-ci.org/dftlibs/xcfun)
 
 # Arbitrary order Exchange-Correlation functional library
 
