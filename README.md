@@ -70,3 +70,17 @@ The Travis CI builds are triggered only when pushing to the `master` branch.
   2. XCode 6.4 with GCC 5.2
   3. XCode 7.0 with Clang and GFortran 5.2
   4. XCode 7.0 with GCC 5.2
+
+
+## Contribution guide
+
+- All patches are contributed through fork-pull request mechanism.
+- We do not require any formal copyright assignment or contributor license
+  agreement. Any contributions intentionally sent upstream are presumed to be
+  offered under terms of the LGPL version 3.0.
+- Maintainers do not push directly to the repository.
+- Maintainers do not review their own patches.
+- Approval of one maintainer is sufficient for trivial patches.
+- Trivial patches are typos and trivial bugfixes.
+- For any patch that is not trivial, two maintainers need to sign off the patch.
+- **TODO**: We need to better define what "trivial" means.
