@@ -3,7 +3,7 @@
 
 # Arbitrary order Exchange-Correlation functional library
 
-Copyright Ulf Ekstrom <uekstrom@gmail.com> and contributors 2009-2017.
+Copyright Ulf Ekström <uekstrom@gmail.com> and [contributors](https://github.com/dftlibs/xcfun/blob/master/AUTHORS.md) 2009-2017.
 See http://dftlibs.org/xcfun/ for more information.
 
 The main interface is in `include/xcfun.h`
@@ -11,7 +11,7 @@ The main interface is in `include/xcfun.h`
 
 ## License
 
-The project license is specified in COPYING and COPYING.LESSER.
+The project license is specified in [COPYING.md] and [COPYING.LESSER.md]
 
 XCFun is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 In addition to the rights granted to you under the LGPL license
-(described in COPYING and COPYING.LESSER) you may distribute the
+(described in [COPYING.md] and [COPYING.LESSER.md]) you may distribute the
 compiled XCFun library statically linked to an application. It is
 understood that doing so will prevent the end user from relinking the
 application to a newer version of the XCFun library, but static
@@ -33,6 +33,9 @@ XCFun is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 License for more details.
+
+[COPYING.md]: https://github.com/dftlibs/xcfun/blob/master/COPYING.md 
+[COPYING.LESSER.md]: https://github.com/dftlibs/xcfun/blob/master/COPYING.LESSER.md
 
 ## Contribution guide
 
