@@ -18,7 +18,7 @@ namespace pw92eps
   template<class num>
   static num omega(const densvars<num> &d)
   {
-    return (cbrt(2)/(cbrt(2)-1))*(d.a_43+d.b_43)*d.n_m13/d.n - 1/(cbrt(2)-1);
+    return (cbrt(2.0)/(cbrt(2.0)-1))*(d.a_43+d.b_43)*d.n_m13/d.n - 1/(cbrt(2.0)-1);
   }
 
   template<class num>
