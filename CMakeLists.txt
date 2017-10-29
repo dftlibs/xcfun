@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
-project(XCFun)
+project(XCFun CXX C)
 
 # XCFun version
 set(VERSION 2.0.0)
@@ -19,9 +19,7 @@ option(ENABLE_FORTRAN_INTERFACE "Enable Fortran interface" ON)
 option(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FORTRAN_INTERFACE)
-    enable_language(CXX C Fortran)
-else()
-    enable_language(CXX C)
+    enable_language(Fortran)
 endif()
 
 set(CMAKE_MODULE_PATH
@@ -31,9 +29,13 @@ set(CMAKE_MODULE_PATH
 
 include(ConfigSafeGuards)
 
-# set maximum derivative order
-set(XC_MAX_ORDER "3" CACHE STRING "Maximum derivative order")
-add_definitions(-DXC_MAX_ORDER=${XC_MAX_ORDER})
+# XC_MAX_ORDER is the maximum order of derivatives of the exchange-correlation kernel
+# Minimum admissible value is 3
+if(XC_MAX_ORDER LESS 3)
+  message(STATUS "Resetting XC_MAX_ORDER to its minimum admissible value (3)")
+  set(XC_MAX_ORDER 3)
+endif()
+add_definitions("-DXC_MAX_ORDER=${XC_MAX_ORDER}")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -83,7 +85,7 @@ if(ENABLE_FORTRAN_INTERFACE)
     endif()
     install(TARGETS xcfun_f90_bindings DESTINATION lib${LIB_SUFFIX})
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xcfun.mod DESTINATION include)
-    
+
     if(ENABLE_64BIT_INTEGERS)
         add_definitions("-DXCFUN_INTEGER=integer*8")
         add_definitions("-DXCFUN_FORTRAN_INT=long long int")
