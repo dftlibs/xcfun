@@ -37,6 +37,12 @@ License for more details.
 [COPYING.md]: https://github.com/dftlibs/xcfun/blob/master/COPYING.md 
 [COPYING.LESSER.md]: https://github.com/dftlibs/xcfun/blob/master/COPYING.LESSER.md
 
+
+## Documentation
+
+- http://xcfun.readthedocs.io
+
+
 ## Contribution guide
 
 - All patches are contributed through fork-pull request mechanism.
