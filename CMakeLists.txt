@@ -30,10 +30,15 @@ set(CMAKE_MODULE_PATH
 include(ConfigSafeGuards)
 
 # XC_MAX_ORDER is the maximum order of derivatives of the exchange-correlation kernel
-# Minimum admissible value is 3
-if(XC_MAX_ORDER LESS 3)
-  message(STATUS "Resetting XC_MAX_ORDER to its minimum admissible value (3)")
-  set(XC_MAX_ORDER 3)
+if(DEFINED XC_MAX_ORDER)
+    if(XC_MAX_ORDER LESS 3)
+        # make sure it is larger than 2
+        message(STATUS "Resetting XC_MAX_ORDER to its minimum admissible value (3)")
+        set(XC_MAX_ORDER 3)
+    endif()
+else()
+    # make sure it is not undefined
+    set(XC_MAX_ORDER 3)
 endif()
 add_definitions("-DXC_MAX_ORDER=${XC_MAX_ORDER}")
 
