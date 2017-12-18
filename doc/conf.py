@@ -47,8 +47,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'XCFun'
-copyright = '2017, Andrea Debnarova & Ulf Ekström'
-author = 'Andrea Debnarova & Ulf Ekström'
+copyright = u'2017, Andrea Debnarova & Ulf Ekström'
+author = u'Andrea Debnarova & Ulf Ekström'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -144,7 +144,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'XCFun.tex', 'XCFun Documentation',
-     'Andrea Debnarova \\& Ulf Ekström', 'manual'),
+     u'Andrea Debnarova \\& Ulf Ekström', 'manual'),
 ]
 
 
