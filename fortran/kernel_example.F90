@@ -82,10 +82,10 @@ program xc_example
 
 !  reference values for self test
    allocate(res_reference(nr_variables))
-   res_reference(1) = -0.97182658347124051d0
-   res_reference(2) = -8.98025300594966838d-3
-   res_reference(3) = -1.34703795089245043d-2
-   res_reference(4) = -1.79605060118993368d-2
+   res_reference(1) = -0.97182634532897016d0
+   res_reference(2) = -8.9803044914016916d-3
+   res_reference(3) = -1.3470456737102541d-2
+   res_reference(4) = -1.7960608982803383d-2
 
 !  now let's compute the first derivatives ('potential')
 !  first set up xcfun for first derivatives
@@ -146,10 +146,10 @@ program xc_example
 
 !  reference values for self test
    allocate(res_reference(nr_variables))
-   res_reference(1) = -2.0795504461938754d0
-   res_reference(2) =  2.14893341430147031d-2
-   res_reference(3) =  4.12142542204717230d-2
-   res_reference(4) =  6.09391742979287290d-2
+   res_reference(1) = -2.0795476275887927d0
+   res_reference(2) =  2.1489169824673575d-2
+   res_reference(3) =  4.1214059228412030d-2
+   res_reference(4) =  6.0938948632150471d-2
 
 !  now second derivative of the "potential", contracted with one perturbed density.
 !  hopefully the strange input/output_array format will start to make sense
