@@ -40,15 +40,15 @@ matrix:
       compiler: clang
       env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
 
-    # 4/ OSX GCC5 Builds
+    # 4/ OSX GCC Builds
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
 
     # 5/ Linux GCC5 Coverage build
     - os: linux
@@ -65,7 +65,10 @@ install:
       mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake boost python gcc
+      brew update &> /dev/null
+      brew cask uninstall --force oclint
+      brew install gcc python pyenv-virtualenv
+      brew upgrade cmake
     fi
 
 before_script:
