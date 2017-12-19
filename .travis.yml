@@ -65,7 +65,10 @@ install:
       mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake boost python gcc
+      brew update &> /dev/null
+      brew cask uninstall --force oclint
+      brew install gcc python pyenv-virtualenv
+      brew upgrade cmake
     fi
 
 before_script:
