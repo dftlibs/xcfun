@@ -38,12 +38,12 @@ enum xc_mode
       XC_N,
       XC_A_B,
       XC_N_S,
-      // GGA 
+      // GGA with gradient squares
       XC_A_GAA,
       XC_N_GNN,
       XC_A_B_GAA_GAB_GBB,
       XC_N_S_GNN_GNS_GSS,
-      // MetaGGA
+      // Meta-GGA
       XC_A_GAA_LAPA,
       XC_A_GAA_TAUA,
       XC_N_GNN_LAPN, // 10
@@ -55,10 +55,12 @@ enum xc_mode
       XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB,
       XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB,
       XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS,
+      // GGA with individual gradient components
       XC_A_AX_AY_AZ,
       XC_A_B_AX_AY_AZ_BX_BY_BZ,
       XC_N_NX_NY_NZ, // 20
       XC_N_S_NX_NY_NZ_SX_SY_SZ,
+      // Meta-GGA with individual gradient components
       XC_A_AX_AY_AZ_TAUA,
       XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB,
       XC_N_NX_NY_NZ_TAUN,
