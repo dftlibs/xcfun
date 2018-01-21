@@ -23,9 +23,9 @@ extern "C" {
 enum xc_mode
 {
   XC_MODE_UNSET = 0, // Need to be zero for default initialized structs
-  XC_PARTIAL_DERIVATIVES,
-  XC_POTENTIAL,
-  XC_CONTRACTED,
+  XC_PARTIAL_DERIVATIVES, // XCFun returns partial derivatives of the functional (no contractions)
+  XC_POTENTIAL, // 
+  XC_CONTRACTED, // XC energy density and derivatives
   XC_NR_MODES
 };
   
@@ -40,7 +40,7 @@ enum xc_mode
       XC_N_S,
       // GGA 
       XC_A_GAA,
-      XC_N_GNN,
+      XC_N_GNN, /* GNN scalar product */
       XC_A_B_GAA_GAB_GBB,
       XC_N_S_GNN_GNS_GSS,
       // MetaGGA
@@ -109,6 +109,14 @@ enum xc_mode
   int xc_is_metagga(xc_functional fun);
 
   int xc_set_fromstring(xc_functional fun, const char *str); // Defines a functional from a string on the form "fun[=value]"
+
+    int xc_user_eval_setup(xc_functional fun,
+                           const int funct_type,
+                           const int dens_type,
+                           const int mode_type,
+                           const bool laplacian,
+                           const bool kinetic,
+                           const bool explicit);
 
   // Try to set the functional evaluation vars, mode and order
   // return some combination of XC_E* if an error occurs, else 0.
