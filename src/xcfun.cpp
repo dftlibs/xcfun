@@ -635,14 +635,20 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 }
 
 int xc_user_eval_setup(xc_functional fun,
-                       const int funct_type,
-                       const int dens_type,
-                       const int mode_type,
-                       const int laplacian,
-                       const int kinetic,
-                       const int current,
-                       const int expder) {
-    enum xc_vars var = XC_VARS_UNSET; 
+                       const unsigned int funct_type, //
+                       const unsigned int dens_type,
+                       const unsigned int mode_type,
+                       const unsigned int laplacian,
+                       const unsigned int kinetic,
+                       const unsigned int current,
+                       const unsigned int expder) {
+
+    if (func_type > 3 || dens_type > 3 || mode_type > 1 || laplaciam > 1 || kinetic > 1 || current > 1 || expder > 1) {
+        xcint_die("xc_user_eval_setup: invalid input",0);
+    }
+    
+
+    enum xc_vars vars = XC_VARS_UNSET; 
     enum xc_mode mode = XC_MODE_UNSET; 
     switch (mode_type){
     case(1):
@@ -654,114 +660,118 @@ int xc_user_eval_setup(xc_functional fun,
     case(3):
         mode = XC_CONTRACTED;
         break;
+    default:
+        xcint_die("xc_user_eval_setup: Invalid mode", mode_type);
     }
 
-    int bitwise_var = func_type;
-    bitwise_var << 2;
-    bitwise_var += dens_type;
-    bitwise_var << 2;
-    bitwise_var += laplacian;
-    bitwise_var << 1;
-    bitwise_var += kinetic;
-    bitwise_var << 1;
-    bitwise_var += current;
-    bitwise_var << 1;
-    bitwise_var += expder;
+    int bitwise_vars = func_type;
+    bitwise_vars << 2;
+    bitwise_vars += dens_type;
+    bitwise_vars << 2;
+    bitwise_vars += laplacian;
+    bitwise_vars << 1;
+    bitwise_vars += kinetic;
+    bitwise_vars << 1;
+    bitwise_vars += current;
+    bitwise_vars << 1;
+    bitwise_vars += expder;
     
-    switch(bitwise_var){
+    switch(bitwise_vars){
     case(0):
-        var = XC_A;
+        vars = XC_A;
         break;
     case(16):
-        var = XC_N;
+        vars = XC_N;
         break;
     case(32):
-        var = XC_A_B;
+        vars = XC_A_B;
         break;
     case(48):
-        var = XC_N_S;
+        vars = XC_N_S;
         break;
     case(64):
-        var = XC_A_GAA;
+        vars = XC_A_GAA;
         break;
     case(65):
-        var = XC_A_AX_AY_AZ;
+        vars = XC_A_AX_AY_AZ;
         break;
     case(80):
-        var = XC_N_GNN;
+        vars = XC_N_GNN;
         break;
     case(81):
-        var = XC_N_NX_NY_NZ;
+        vars = XC_N_NX_NY_NZ;
         break;
     case(96):
-        var = XC_A_B_GAA_GAB_GBB;
+        vars = XC_A_B_GAA_GAB_GBB;
         break;
     case(97):
-        var = XC_A_B_AX_AY_AZ_BX_BY_BZ;
+        vars = XC_A_B_AX_AY_AZ_BX_BY_BZ;
         break;
     case(112):
-        var = XC_N_S_GNN_GNS_GSS;
+        vars = XC_N_S_GNN_GNS_GSS;
         break;
     case(113):
-        var = XC_N_S_NX_NY_NZ_SX_SY_SZ;
+        vars = XC_N_S_NX_NY_NZ_SX_SY_SZ;
         break;
     case(132):
-        var = XC_A_GAA_TAUA;
+        vars = XC_A_GAA_TAUA;
         break;
     case(133):
-        var = XC_A_AX_AY_AZ_TAUA;
+        vars = XC_A_AX_AY_AZ_TAUA;
         break;
     case(136):
-        var = XC_A_GAA_LAPA;
+        vars = XC_A_GAA_LAPA;
         break;
     case(148):
-        var = XC_N_GNN_TAUN;
+        vars = XC_N_GNN_TAUN;
         break;
     case(149):
-        var = XC_N_NX_NY_NZ_TAUN;
+        vars = XC_N_NX_NY_NZ_TAUN;
         break;
     case(152):
-        var = XC_N_GNN_LAPN;
+        vars = XC_N_GNN_LAPN;
         break;
     case(164):
-        var = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
+        vars = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;
         break;
     case(165):
-        var = XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB;
+        vars = XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB;
         break;
     case(168):
-        var = XC_A_B_GAA_GAB_GBB_LAPA_LAPB;
+        vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB;
         break;
     case(172):
-        var = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB;
+        vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB;
         break;
     case(174):
-        var = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB;
+        vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB;
         break;
     case(180):
-        var = XC_N_S_GNN_GNS_GSS_TAUN_TAUS;
+        vars = XC_N_S_GNN_GNS_GSS_TAUN_TAUS;
         break;
     case(181):
-        var = XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS;
+        vars = XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS;
         break;
     case(184):
-        var = XC_N_S_GNN_GNS_GSS_LAPN_LAPS;
+        vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS;
         break;
     case(188):
-        var = XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS;
+        vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS;
         break;
     case(192):
-        var = XC_A_2ND_TAYLOR;
+        vars = XC_A_2ND_TAYLOR;
         break;
     case(208):
-        var = XC_N_2ND_TAYLOR;
+        vars = XC_N_2ND_TAYLOR;
         break;
     case(224):
-        var = XC_A_B_2ND_TAYLOR;
+        vars = XC_A_B_2ND_TAYLOR;
         break;
     case(240):
-        var = XC_N_S_2ND_TAYLOR;
+        vars = XC_N_S_2ND_TAYLOR;
         break;
+    default:
+        xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
     return xc_eval_setup(fun, vars, mode, order);
 }
