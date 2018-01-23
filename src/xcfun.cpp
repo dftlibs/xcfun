@@ -643,7 +643,7 @@ int xc_user_eval_setup(xc_functional fun,
                        const unsigned int current,    // 0/1 current density no/yes
                        const unsigned int explicit_derivatives) {   // 0/1 gamma vs explicit partial derivatives 
 
-    if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplaciam > 1 || kinetic > 1 || current > 1 || expder > 1) {
+    if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplaciam > 1 || kinetic > 1 || current > 1 || explicit_derivatives > 1) {
         xcint_die("xc_user_eval_setup: invalid input",-1);
     }
     
@@ -659,18 +659,41 @@ int xc_user_eval_setup(xc_functional fun,
         xcint_die("xc_user_eval_setup: Invalid mode", mode_type);
     }
 
-    int bitwise_vars = func_type;
-    bitwise_vars << 2;
-    bitwise_vars += dens_type;
-    bitwise_vars << 2;
-    bitwise_vars += laplacian;
-    bitwise_vars << 1;
-    bitwise_vars += kinetic;
-    bitwise_vars << 1;
-    bitwise_vars += current;
-    bitwise_vars << 1;
-    bitwise_vars += expder;
-    
+
+    /* Bit encoding of information 
+       7   6   5   4   3   2   1   0
+    ------------------------------------------------------------------
+       0   0                             LDA
+       0   1                             GGA
+       1   0                             metaGGA
+       1   1                             Taylor
+    ------------------------------------------------------------------
+               0   0                     alpha density
+               0   1                     n density
+               1   0                     anpha and beta densities
+               1   1                     n and s density
+    ------------------------------------------------------------------
+                       0                 no laplacian 
+                       1                 laplacian required
+    ------------------------------------------------------------------
+                           0             no kinetic energy
+                           1             kinetic energy required
+    ------------------------------------------------------------------
+                               0         no current density required
+                               1         current density required
+    ------------------------------------------------------------------
+                                   0     gamma-type partial derivatives
+                                   1     explicit partial derivatives
+     */
+
+    func_type << 6;
+    dens_type << 4;
+    laplacian << 3;
+    kinetic   << 2;
+    current   << 1;
+
+    int bitwise_vars = func_type + dens_type + laplacian + kinetic + current + explicit_derivatives;
+
     switch(bitwise_vars){
     case(0):    vars = XC_A;                                             break;
     case(16):   vars = XC_N;                                             break;
