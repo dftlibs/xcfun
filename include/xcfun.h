@@ -113,7 +113,8 @@ enum xc_mode
   int xc_set_fromstring(xc_functional fun, const char *str); // Defines a functional from a string on the form "fun[=value]"
 
     int xc_user_eval_setup(xc_functional fun,
-                           const unsigned int funct_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
+                           const int order, // order of the derivative requested (order=1 is the xc potential)
+                           const unsigned int func_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
                            const unsigned int dens_type,  // A (0), N (1), A_B (2), N_S (3)
                            const unsigned int mode_type,  // same as the enum list
                            const unsigned int laplacian,  // 0/1 laplacian no/yes 

@@ -635,7 +635,8 @@ void xc_eval(xc_functional_obj *f, const double *input, double *output)
 }
 
 int xc_user_eval_setup(xc_functional fun,
-                       const unsigned int funct_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
+                       const int order,
+                       const unsigned int func_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
                        const unsigned int dens_type,  // A (0), N (1), A_B (2), N_S (3)
                        const unsigned int mode_type,  // same as the enum list
                        const unsigned int laplacian,  // 0/1 laplacian no/yes 
@@ -643,7 +644,7 @@ int xc_user_eval_setup(xc_functional fun,
                        const unsigned int current,    // 0/1 current density no/yes
                        const unsigned int explicit_derivatives) {   // 0/1 gamma vs explicit partial derivatives 
 
-    if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplaciam > 1 || kinetic > 1 || current > 1 || explicit_derivatives > 1) {
+    if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplacian > 1 || kinetic > 1 || current > 1 || explicit_derivatives > 1) {
         xcint_die("xc_user_eval_setup: invalid input",-1);
     }
     
@@ -686,46 +687,46 @@ int xc_user_eval_setup(xc_functional fun,
                                    1     explicit partial derivatives
      */
 
-    func_type << 6;
-    dens_type << 4;
-    laplacian << 3;
-    kinetic   << 2;
-    current   << 1;
-
-    int bitwise_vars = func_type + dens_type + laplacian + kinetic + current + explicit_derivatives;
+    int bitwise_vars = 0;
+    bitwise_vars += func_type << 6;       // 0 64 128 192
+    bitwise_vars += dens_type << 4;       // 0 16  32  48
+    bitwise_vars += laplacian << 3;       // 0  8
+    bitwise_vars += kinetic   << 2;       // 0  4
+    bitwise_vars += current   << 1;       // 0  2
+    bitwise_vars += explicit_derivatives; // 0  1
 
     switch(bitwise_vars){
-    case(0):    vars = XC_A;                                             break;
-    case(16):   vars = XC_N;                                             break;
-    case(32):   vars = XC_A_B;                                           break;
-    case(48):   vars = XC_N_S;                                           break;
-    case(64):   vars = XC_A_GAA;                                         break;
-    case(65):   vars = XC_A_AX_AY_AZ;                                    break;
-    case(80):   vars = XC_N_GNN;                                         break;
-    case(81):   vars = XC_N_NX_NY_NZ;                                    break;
-    case(96):   vars = XC_A_B_GAA_GAB_GBB;                               break;
-    case(97):   vars = XC_A_B_AX_AY_AZ_BX_BY_BZ;                         break;
-    case(112):  vars = XC_N_S_GNN_GNS_GSS;                               break;
-    case(113):  vars = XC_N_S_NX_NY_NZ_SX_SY_SZ;                         break;
-    case(132):  vars = XC_A_GAA_TAUA;                                    break;
-    case(133):  vars = XC_A_AX_AY_AZ_TAUA;                               break;
-    case(136):  vars = XC_A_GAA_LAPA;                                    break;
-    case(148):  vars = XC_N_GNN_TAUN;                                    break;
-    case(149):  vars = XC_N_NX_NY_NZ_TAUN;                               break;
-    case(152):  vars = XC_N_GNN_LAPN;                                    break;
-    case(164):  vars = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;                     break;
-    case(165):  vars = XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB;               break;
-    case(168):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB;                     break;
-    case(172):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB;           break;
-    case(174):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB; break;
-    case(180):  vars = XC_N_S_GNN_GNS_GSS_TAUN_TAUS;                     break;
-    case(181):  vars = XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS;               break;
-    case(184):  vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS;                     break;
-    case(188):  vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS;           break;
-    case(192):  vars = XC_A_2ND_TAYLOR;                                  break;
-    case(208):  vars = XC_N_2ND_TAYLOR;                                  break;
-    case(224):  vars = XC_A_B_2ND_TAYLOR;                                break;
-    case(240):  vars = XC_N_S_2ND_TAYLOR;                                break;
+    case(0):    vars = XC_A;                                             break;  // 0  0  |  0  0  |  0  |  0  |  0  |  0
+    case(16):   vars = XC_N;                                             break;  // 0  0  |  0  1  |  0  |  0  |  0  |  0
+    case(32):   vars = XC_A_B;                                           break;  // 0  0  |  1  0  |  0  |  0  |  0  |  0
+    case(48):   vars = XC_N_S;                                           break;  // 0  0  |  1  0  |  0  |  0  |  0  |  0
+    case(64):   vars = XC_A_GAA;                                         break;  // 0  1  |  0  0  |  0  |  0  |  0  |  0
+    case(65):   vars = XC_A_AX_AY_AZ;                                    break;  // 0  1  |  0  0  |  0  |  0  |  0  |  1
+    case(80):   vars = XC_N_GNN;                                         break;  // 0  1  |  0  1  |  0  |  0  |  0  |  0
+    case(81):   vars = XC_N_NX_NY_NZ;                                    break;  // 0  1  |  0  1  |  0  |  0  |  0  |  1
+    case(96):   vars = XC_A_B_GAA_GAB_GBB;                               break;  // 0  1  |  1  0  |  0  |  0  |  0  |  0
+    case(97):   vars = XC_A_B_AX_AY_AZ_BX_BY_BZ;                         break;  // 0  1  |  1  0  |  0  |  0  |  0  |  1
+    case(112):  vars = XC_N_S_GNN_GNS_GSS;                               break;  // 0  1  |  1  1  |  0  |  0  |  0  |  0
+    case(113):  vars = XC_N_S_NX_NY_NZ_SX_SY_SZ;                         break;  // 0  1  |  1  1  |  0  |  0  |  0  |  1
+    case(132):  vars = XC_A_GAA_TAUA;                                    break;  // 1  0  |  0  0  |  0  |  1  |  0  |  0
+    case(133):  vars = XC_A_AX_AY_AZ_TAUA;                               break;  // 1  0  |  0  0  |  0  |  1  |  0  |  1
+    case(136):  vars = XC_A_GAA_LAPA;                                    break;  // 1  0  |  0  0  |  1  |  0  |  0  |  0
+    case(148):  vars = XC_N_GNN_TAUN;                                    break;  // 1  0  |  0  1  |  0  |  1  |  0  |  0
+    case(149):  vars = XC_N_NX_NY_NZ_TAUN;                               break;  // 1  0  |  0  1  |  0  |  1  |  0  |  1
+    case(152):  vars = XC_N_GNN_LAPN;                                    break;  // 1  0  |  0  1  |  1  |  0  |  0  |  0
+    case(164):  vars = XC_A_B_GAA_GAB_GBB_TAUA_TAUB;                     break;  // 1  0  |  1  0  |  0  |  1  |  0  |  0
+    case(165):  vars = XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB;               break;  // 1  0  |  1  0  |  0  |  1  |  0  |  1
+    case(168):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB;                     break;  // 1  0  |  1  0  |  1  |  0  |  0  |  0
+    case(172):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB;           break;  // 1  0  |  1  0  |  1  |  1  |  0  |  0
+    case(174):  vars = XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB; break;  // 1  0  |  1  0  |  1  |  1  |  1  |  0
+    case(180):  vars = XC_N_S_GNN_GNS_GSS_TAUN_TAUS;                     break;  // 1  0  |  1  1  |  0  |  1  |  0  |  0
+    case(181):  vars = XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS;               break;  // 1  0  |  1  1  |  0  |  1  |  0  |  1
+    case(184):  vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS;                     break;  // 1  0  |  1  1  |  1  |  0  |  0  |  0
+    case(188):  vars = XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS;           break;  // 1  0  |  1  1  |  1  |  1  |  0  |  0
+    case(192):  vars = XC_A_2ND_TAYLOR;                                  break;  // 1  1  |  0  0  |  0  |  0  |  0  |  0
+    case(208):  vars = XC_N_2ND_TAYLOR;                                  break;  // 1  1  |  0  1  |  0  |  0  |  0  |  0
+    case(224):  vars = XC_A_B_2ND_TAYLOR;                                break;  // 1  1  |  1  0  |  0  |  0  |  0  |  0
+    case(240):  vars = XC_N_S_2ND_TAYLOR;                                break;  // 1  1  |  1  1  |  0  |  0  |  0  |  0
     default:
         xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
@@ -888,3 +889,4 @@ int xc_is_metagga(xc_functional fun)
     return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 
+//int xc_needs_one_dens(xc_functional fun)
