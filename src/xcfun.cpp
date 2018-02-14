@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 #include "xcint.hpp"
 
 xc_functional xc_new_functional_not_macro(int api_version)
@@ -699,7 +700,7 @@ int xc_user_eval_setup(xc_functional fun,
     case(0):    vars = XC_A;                                             break;  // 0  0  |  0  0  |  0  |  0  |  0  |  0
     case(16):   vars = XC_N;                                             break;  // 0  0  |  0  1  |  0  |  0  |  0  |  0
     case(32):   vars = XC_A_B;                                           break;  // 0  0  |  1  0  |  0  |  0  |  0  |  0
-    case(48):   vars = XC_N_S;                                           break;  // 0  0  |  1  0  |  0  |  0  |  0  |  0
+    case(48):   vars = XC_N_S;                                           break;  // 0  0  |  1  1  |  0  |  0  |  0  |  0
     case(64):   vars = XC_A_GAA;                                         break;  // 0  1  |  0  0  |  0  |  0  |  0  |  0
     case(65):   vars = XC_A_AX_AY_AZ;                                    break;  // 0  1  |  0  0  |  0  |  0  |  0  |  1
     case(80):   vars = XC_N_GNN;                                         break;  // 0  1  |  0  1  |  0  |  0  |  0  |  0
@@ -730,6 +731,7 @@ int xc_user_eval_setup(xc_functional fun,
     default:
         xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
+    std::cout << "bitwise_vars " << bitwise_vars << " vars " << vars << std::endl;
     return xc_eval_setup(fun, vars, mode, order);
 }
     
