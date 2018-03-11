@@ -114,6 +114,8 @@ if (ENABLE_PYTHON_INTERFACE)
     FIND_PACKAGE(PythonLibs REQUIRED)
     FIND_PACKAGE(NumPy REQUIRED)
 
+    set_property(TARGET xcfun PROPERTY POSITION_INDEPENDENT_CODE ON)
+
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
 
     set(XCFUN_SWIG         "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i")
