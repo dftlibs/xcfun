@@ -12,25 +12,21 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#include "functional.hpp"
 #include "constants.hpp"
+#include "functional.hpp"
 
 //  von Weizsacker kinetic energy functional
 
-template<class num>
-static num tw(const densvars<num> &d)
-{
-    using xc_constants::CF;
+template <class num> static num tw(const densvars<num> & d) {
+  using xc_constants::CF;
 
-    return 1./8.*pow(d.gaa+d.gbb,2.0)/d.n;
+  return 1. / 8. * pow(d.gaa + d.gbb, 2.0) / d.n;
 }
 
 FUNCTIONAL(XC_TW) = {
-  "von Weizsacker Kinetic Energy Functional",
-  "von Weizsacker Kinetic Energy Functional\n"
-  "Implemented by AB and SR.\n",
-  XC_DENSITY | XC_GRADIENT,
-  ENERGY_FUNCTION(tw)
-  XC_A_B_GAA_GAB_GBB,
+    "von Weizsacker Kinetic Energy Functional",
+    "von Weizsacker Kinetic Energy Functional\n"
+    "Implemented by AB and SR.\n",
+    XC_DENSITY | XC_GRADIENT,
+    ENERGY_FUNCTION(tw) XC_A_B_GAA_GAB_GBB,
 };
-
