@@ -1,13 +1,16 @@
 ## Individual Contributors
 
-- Alex Borgoo
+- Ulf Ekström (@uekstrom)
+- Radovan Bast (@bast)
+- Simen Sommerfelt Reine (@simensr)
+- Christoph Jacob (@chjacob-tubs)
+- Jonas Juselius (@juselius)
+- Elisa Rebolini (@erebolini)
+- Roberto Di Remigio (@robertodr)
 - André Severo Pereira Gomes
-- Christoph Jacob
-- Elisa Rebolini
-- Jonas Juselius
-- Miroslav Ilias
-- Radovan Bast
-- Roberto Di Remigio
-- Sarah Reimann
-- Simen Sommerfelt Reine
-- Ulf Ekström
+- Sarah Reimann (@sarahr)
+- Alex Borgoo  (@ajborgoo)
+- Miroslav Ilias (@miroi)
+- @yurivict
+
+This list was obtained 2018-04-04 by running `git shortlog -sn`
