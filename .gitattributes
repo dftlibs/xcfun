@@ -1,0 +1,16 @@
+*.tar.gz binary
+*.npy binary
+*.zip binary
+*.png diff=exif
+
+include/xcfun.h licensefile=.githooks/LICENSE-C
+fortran/*.F90 licensefile=.githooks/LICENSE-Fortran
+
+src/*.hpp licensefile=.githooks/LICENSE-C++
+src/*.cpp licensefile=.githooks/LICENSE-C++
+
+src/functionals/*.hpp licensefile=.githooks/LICENSE-C++
+src/functionals/*.cpp licensefile=.githooks/LICENSE-C++
+
+src/taylor/*.hpp !licensefile
+src/taylor/*.cpp !licensefile
