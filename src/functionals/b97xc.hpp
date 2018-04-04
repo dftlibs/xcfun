@@ -15,6 +15,8 @@
 #ifndef B97XC_H
 #define B97XC_H
 
+#include "xcint.hpp"
+
 namespace b97xc {
 
 // square of spin-density gradient
@@ -38,6 +40,6 @@ static num enhancement(const parameter & Gamma,
 
   return c_params[0] + c_params[1] * ux + c_params[2] * ux * ux;
 }
-}
+} // namespace b97xc
 
 #endif
