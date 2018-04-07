@@ -95,18 +95,13 @@ endmacro()
 # included cmake modules
 include(autocmake_default_build_paths)
 include(autocmake_safeguards)
+include(autocmake_cxx)
+include(autocmake_cc)
+include(CXXFlags)
+include(CFlags)
 include(xcfun)
 include(api)
 include(test)
-
-# C++11
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# C99
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include

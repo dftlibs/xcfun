@@ -1,4 +1,6 @@
 enable_language(Fortran)
+include(FortranCInterface)
+FortranCInterface_VERIFY(CXX)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
 add_library(xcfun_f90_bindings
   xcfun_module.F90
