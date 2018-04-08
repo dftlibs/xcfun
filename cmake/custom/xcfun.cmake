@@ -1,13 +1,4 @@
 # List options
-option_with_print(
-  NAME
-    ENABLE_64BIT_INTEGERS
-  MESSAGE
-    "Enable 64-bit integers"
-  DEFAULT
-    OFF
-  )
-
 option_with_default(
   NAME
     XCFun_XC_MAX_ORDER

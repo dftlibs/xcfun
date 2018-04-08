@@ -97,8 +97,15 @@ include(autocmake_default_build_paths)
 include(autocmake_safeguards)
 include(autocmake_cxx)
 include(autocmake_cc)
+include(omp)
+include(int64)
+# FIXME
+#include(static_library)
+# FIXME
+#include(code_coverage)
 include(CXXFlags)
 include(CFlags)
+include(FortranFlags)
 include(xcfun)
 include(api)
 include(test)
@@ -123,6 +130,23 @@ add_library(
     ${BASE_SOURCES}
     ${FUNCTIONAL_SOURCES}
     )
+set_target_properties(xcfun
+  PROPERTIES
+    POSITION_INDEPEDENT_CODE 1
+  )
+# FIXME Check if the C flags are actually needed here
+target_compile_options(xcfun
+  PUBLIC
+    "${XCFun_CXX_FLAGS}"
+    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_CXX_FLAGS}>"
+    "${XCFun_C_FLAGS}"
+    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
+  PRIVATE
+    "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
+    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
+  )
 # Set .so version
 if(BUILD_SHARED_LIBS)
  set_target_properties(xcfun PROPERTIES

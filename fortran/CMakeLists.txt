@@ -5,6 +5,19 @@ set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
 add_library(xcfun_f90_bindings
   xcfun_module.F90
   )
+set_target_properties(xcfun_f90_bindings
+  PROPERTIES
+    POSITION_INDEPEDENT_CODE 1
+  )
+target_compile_options(xcfun_f90_bindings
+  PUBLIC
+    "${XCFun_Fortran_FLAGS}"
+    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_Fortran_FLAGS}>"
+  PRIVATE
+    "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
+    #"$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
+  )
 
 # Set .so version
 if(BUILD_SHARED_LIBS)
