@@ -13,10 +13,10 @@ target_compile_options(xcfun_f90_bindings
   PUBLIC
     "${XCFun_Fortran_FLAGS}"
     "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_Fortran_FLAGS}>"
+    #"$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
-    #"$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
   )
 
 # Set .so version
@@ -35,9 +35,13 @@ endif()
 add_executable(kernel_example
   kernel_example.F90
   )
-target_link_libraries(
-  kernel_example
+target_link_libraries(kernel_example
   xcfun_f90_bindings
   xcfun
+  )
+target_compile_options(kernel_example
+  PRIVATE
+    "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
   )
 set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)

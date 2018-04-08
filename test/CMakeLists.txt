@@ -5,10 +5,12 @@ target_link_libraries(
   testall
   xcfun
   )
-# FIXME
-target_include_directories(testall
+target_compile_options(testall
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
+    "${XCFun_C_FLAGS}"
+    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
+    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
   )
 add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 

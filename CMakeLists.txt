@@ -110,13 +110,6 @@ include(xcfun)
 include(api)
 include(test)
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/functionals
-    )
-
 set(BASE_SOURCES
     src/xcint.cpp
     src/xcfun.cpp
@@ -132,20 +125,28 @@ add_library(
     )
 set_target_properties(xcfun
   PROPERTIES
-    POSITION_INDEPEDENT_CODE 1
+    POSITION_INDEPENDENT_CODE 1
   )
-# FIXME Check if the C flags are actually needed here
 target_compile_options(xcfun
-  PUBLIC
+  # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
+  # understand...
+  PRIVATE
     "${XCFun_CXX_FLAGS}"
     "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_CXX_FLAGS}>"
-    "${XCFun_C_FLAGS}"
-    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
-    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
-    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
+  )
+target_include_directories(xcfun
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/functionals
+  )
+target_include_directories(xcfun
+  SYSTEM
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
   )
 # Set .so version
 if(BUILD_SHARED_LIBS)
@@ -156,10 +157,3 @@ endif()
 install(TARGETS xcfun DESTINATION lib${LIB_SUFFIX})
 file(GLOB headers "include/*.h")
 install(FILES ${headers} DESTINATION include)
-
-# FIXME We'll take care of compilers and compiler flags later
-#if(ENABLE_FORTRAN_INTERFACE)
-#    include(FortranCompilers)
-#endif()
-#include(CCompilers)
-#include(CXXCompilers)
