@@ -19,6 +19,9 @@ if(ENABLE_Fortran_INTERFACE)
 endif()
 
 if(ENABLE_PYTHON_INTERFACE)
-  add_test(NAME python-interface  COMMAND "${PYTHON_EXECUTABLE}"
-    "${PROJECT_SOURCE_DIR}/test/test.py")
+  add_test(
+    NAME python-interface
+    COMMAND "${PYTHON_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test/test.py"
+    ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/python:$ENV{PYTHONPATH}
+    )
 endif()

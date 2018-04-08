@@ -93,6 +93,7 @@ macro(option_with_default)
 endmacro()
 
 # included cmake modules
+include(autocmake_custom_color_messages)
 include(autocmake_default_build_paths)
 include(autocmake_safeguards)
 include(autocmake_cxx)

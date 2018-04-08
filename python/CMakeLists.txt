@@ -1,35 +1,36 @@
+set(Python_ADDITIONAL_VERSIONS 3.7 3.6 3.5)  # adjust with CMake minimum FindPythonInterp
+find_package(PythonLibsNew 2.7 REQUIRED)
 find_package(SWIG REQUIRED)
-find_package(PythonInterp REQUIRED)
-find_package(PythonLibs REQUIRED)
-find_package(NumPy REQUIRED)
 
-set_property(TARGET xcfun PROPERTY POSITION_INDEPENDENT_CODE ON)
+#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
+set(XCFUN_SWIG ${CMAKE_CURRENT_LIST_DIR}/xcfun_swig.i)
+set(XCFUN_SWIG_WRAP "xcfun_swigPYTHON_wrap.c")
 
-set(XCFUN_SWIG         "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i")
-set(XCFUN_SWIG_WRAP    "${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c")
-set(CMAKE_SWIG_OUTDIR   ${CMAKE_CURRENT_BINARY_DIR}/python)
+add_custom_command(
+  OUTPUT ${XCFUN_SWIG_WRAP}
+  COMMAND "${SWIG_EXECUTABLE}"
+  ARGS "-python" "-I${PROJECT_SOURCE_DIR}/include" "-outdir" "${CMAKE_CURRENT_BINARY_DIR}" "-o" ${XCFUN_SWIG_WRAP} ${XCFUN_SWIG}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  DEPENDS xcfun ${XCFUN_SWIG}
+  )
 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c
-                   COMMAND "${SWIG_EXECUTABLE}"
-                   ARGS "-python" "-I${CMAKE_CURRENT_SOURCE_DIR}/include" "-outdir" "${CMAKE_SWIG_OUTDIR}" "-o" ${XCFUN_SWIG_WRAP} ${XCFUN_SWIG}
-                   DEPENDS xcfun ${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun_swig.i)
+configure_file(
+  ${CMAKE_CURRENT_LIST_DIR}/setup.py.in
+  ${CMAKE_CURRENT_BINARY_DIR}/setup.py
+  )
 
-set(XCFUN_PY       "${CMAKE_CURRENT_SOURCE_DIR}/python/xcfun.py")
-set(XCFUN_SWIG_PY  "${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swig.py")
-set(XCFUN_PY_LIB   "${CMAKE_CURRENT_BINARY_DIR}/python/_xcfun_swig.so")
+set(XCFUN_PY "${CMAKE_CURRENT_LIST_DIR}/xcfun.py")
+set(XCFUN_SWIG_PY "${CMAKE_CURRENT_BINARY_DIR}/xcfun_swig.py")
+set(XCFUN_PY_LIB "${CMAKE_CURRENT_BINARY_DIR}/_xcfun_swig.so")
 
-set(SETUP_PY_IN  "${CMAKE_CURRENT_SOURCE_DIR}/python/setup.py.in")
-set(SETUP_PY     "${CMAKE_CURRENT_BINARY_DIR}/python/setup.py")
-
-configure_file(${SETUP_PY_IN} ${SETUP_PY})
-
-add_custom_command(OUTPUT ${XCFUN_PY_LIB}
-                   COMMAND ${PYTHON_EXECUTABLE}
-                   ARGS "setup.py" "build_ext" "--inplace"
-                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python
-                   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/python/setup.py ${CMAKE_CURRENT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c)
+add_custom_command(
+  OUTPUT ${XCFUN_PY_LIB}
+  COMMAND ${PYTHON_EXECUTABLE}
+  ARGS "setup.py" "build_ext" "--inplace"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/setup.py ${CMAKE_CURRENT_BINARY_DIR}/xcfun_swigPYTHON_wrap.c
+  )
 
 add_custom_target(target ALL DEPENDS ${XCFUN_PY_LIB})
 
