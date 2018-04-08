@@ -1,8 +1,7 @@
 set(Python_ADDITIONAL_VERSIONS 3.7 3.6 3.5)  # adjust with CMake minimum FindPythonInterp
 find_package(PythonLibsNew 2.7 REQUIRED)
 find_package(SWIG REQUIRED)
-
-#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/python")
+find_package(NumPy REQUIRED)
 
 set(XCFUN_SWIG ${CMAKE_CURRENT_LIST_DIR}/xcfun_swig.i)
 set(XCFUN_SWIG_WRAP "xcfun_swigPYTHON_wrap.c")
