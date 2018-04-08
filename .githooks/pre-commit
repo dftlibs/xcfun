@@ -13,8 +13,7 @@
 # pre-commit hooks to be executed. They should be in the same .git/hooks/ folder
 # as this script. Hooks should return 0 if successful and nonzero to cancel the
 # commit. They are executed in the order in which they are listed.
-HOOKS="pre-commit-license-maintainer"
-#HOOKS="pre-commit-license-maintainer pre-commit-clang-format pre-commit-yapf"
+HOOKS="pre-commit-license-maintainer pre-commit-clang-format pre-commit-yapf"
 ###########################################################
 # There should be no need to change anything below this line.
 

@@ -11,7 +11,7 @@ import subprocess
 from optparse import OptionParser, OptionGroup
 
 if sys.version < '2.4':
-    print 'setup requires python version >= 2.4'
+    print('setup requires python version >= 2.4')
     sys.exit(1)
 
 root_directory = os.path.realpath(__file__)[:-5]
@@ -29,152 +29,150 @@ parser = OptionParser(usage)
 # define options
 
 group = OptionGroup(parser, 'Basic options')
-group.add_option('--auto',
-                 action='store_true',
-                 dest='auto',
-                 default=False,
-                 help='try to configure --fc, --cc, --cpp, and --math automatically [default: %default]')
-group.add_option('--fc',
-                 type='string',
-                 action='store',
-                 dest='fc',
-                 default=None,
-                 help='set the Fortran compiler [default: pick automatically or based on FC=...]',
-                 metavar='STRING')
-group.add_option('--cc',
-                 type='string',
-                 action='store',
-                 dest='cc',
-                 default=None,
-                 help='set the C compiler [default: pick automatically or based on CC=...]',
-                 metavar='STRING')
-group.add_option('--cpp',
-                 type='string',
-                 action='store',
-                 dest='cpp',
-                 default=None,
-                 help='set the C++ compiler [default: pick automatically or based on CXX=...]',
-                 metavar='STRING')
-group.add_option('--math-dir',
-                 type='string',
-                 action='store',
-                 dest='mathdir',
-                 default=None,
-                 help='directory containing math libraries [default: pick automatically]',
-                 metavar='PATH')
-group.add_option('--internal-math',
-                 action='store_true',
-                 dest='nomath',
-                 default=False,
-                 help='force the use of internal math library [default: %default]')
-group.add_option('--mpi',
-                 action='store_true',
-                 dest='mpi',
-                 default=False,
-                 help='build using MPI parallelization [default: %default]')
-group.add_option('--int64',
-                 action='store_true',
-                 dest='int64',
-                 default=False,
-                 help='build for 64bit integers [default: %default]')
-group.add_option('--python',
-                 action='store_true',
-                 dest='python',
-                 default=False,
-                 help='build Python interface [default: %default]')
-group.add_option('--show',
-                 action='store_true',
-                 dest='show',
-                 default=False,
-                 help='show cmake command and exit [default: %default]')
+group.add_option(
+    '--auto',
+    action='store_true',
+    dest='auto',
+    default=False,
+    help='try to configure --fc, --cc, --cpp, and --math automatically [default: %default]')
+group.add_option(
+    '--fc',
+    type='string',
+    action='store',
+    dest='fc',
+    default=None,
+    help='set the Fortran compiler [default: pick automatically or based on FC=...]',
+    metavar='STRING')
+group.add_option(
+    '--cc',
+    type='string',
+    action='store',
+    dest='cc',
+    default=None,
+    help='set the C compiler [default: pick automatically or based on CC=...]',
+    metavar='STRING')
+group.add_option(
+    '--cpp',
+    type='string',
+    action='store',
+    dest='cpp',
+    default=None,
+    help='set the C++ compiler [default: pick automatically or based on CXX=...]',
+    metavar='STRING')
+group.add_option(
+    '--math-dir',
+    type='string',
+    action='store',
+    dest='mathdir',
+    default=None,
+    help='directory containing math libraries [default: pick automatically]',
+    metavar='PATH')
+group.add_option(
+    '--internal-math',
+    action='store_true',
+    dest='nomath',
+    default=False,
+    help='force the use of internal math library [default: %default]')
+group.add_option(
+    '--mpi',
+    action='store_true',
+    dest='mpi',
+    default=False,
+    help='build using MPI parallelization [default: %default]')
+group.add_option(
+    '--int64', action='store_true', dest='int64', default=False, help='build for 64bit integers [default: %default]')
+group.add_option(
+    '--python', action='store_true', dest='python', default=False, help='build Python interface [default: %default]')
+group.add_option(
+    '--show', action='store_true', dest='show', default=False, help='show cmake command and exit [default: %default]')
 parser.add_option_group(group)
 
 group = OptionGroup(parser, 'Change default paths')
-group.add_option('--build',
-                 type='string',
-                 action='store',
-                 dest='build',
-                 default=default_path,
-                 help='set the build path (you can build several binaries with the same source) [default: %default]',
-                 metavar='PATH')
-group.add_option('--install',
-                 type='string',
-                 action='store',
-                 dest='install',
-                 default=None,
-                 help='set the install path for make install [default: %default]',
-                 metavar='PATH')
-group.add_option('--cmake',
-                 type='string',
-                 action='store',
-                 dest='alternative_cmake',
-                 default=None,
-                 help='give full path to alternative cmake binary (use this if default cmake is too old)',
-                 metavar='PATH')
+group.add_option(
+    '--build',
+    type='string',
+    action='store',
+    dest='build',
+    default=default_path,
+    help='set the build path (you can build several binaries with the same source) [default: %default]',
+    metavar='PATH')
+group.add_option(
+    '--install',
+    type='string',
+    action='store',
+    dest='install',
+    default=None,
+    help='set the install path for make install [default: %default]',
+    metavar='PATH')
+group.add_option(
+    '--cmake',
+    type='string',
+    action='store',
+    dest='alternative_cmake',
+    default=None,
+    help='give full path to alternative cmake binary (use this if default cmake is too old)',
+    metavar='PATH')
 parser.add_option_group(group)
 
 group = OptionGroup(parser, 'Advanced options')
-group.add_option('--math',
-                 type='string',
-                 action='store',
-                 dest='math',
-                 default=None,
-                 help='explicit linker specification for math library',
-                 metavar='STRING')
-group.add_option('--debug',
-                 action='store_true',
-                 dest='debug',
-                 default=False,
-                 help='build in debug mode (no optimization) [default: %default]')
-group.add_option('--check',
-                 action='store_true',
-                 dest='check',
-                 default=False,
-                 help='enable bounds checking [default: %default]')
-group.add_option('--coverage',
-                 action='store_true',
-                 dest='coverage',
-                 default=False,
-                 help='enable code coverage [default: %default]')
-group.add_option('-D',
-                 action="append",
-                 dest='cmake',
-                 default=[],
-                 help='forward directly to cmake (example: -D ENABLE_THIS=1 -D ENABLE_THAT=1)',
-                 metavar='STRING')
-group.add_option('--host',
-                 type='string',
-                 action='store',
-                 dest='host',
-                 default=None,
-                 help="use predefined defaults for 'host'",
-                 metavar='STRING')
+group.add_option(
+    '--math',
+    type='string',
+    action='store',
+    dest='math',
+    default=None,
+    help='explicit linker specification for math library',
+    metavar='STRING')
+group.add_option(
+    '--debug',
+    action='store_true',
+    dest='debug',
+    default=False,
+    help='build in debug mode (no optimization) [default: %default]')
+group.add_option(
+    '--check', action='store_true', dest='check', default=False, help='enable bounds checking [default: %default]')
+group.add_option(
+    '--coverage', action='store_true', dest='coverage', default=False, help='enable code coverage [default: %default]')
+group.add_option(
+    '-D',
+    action="append",
+    dest='cmake',
+    default=[],
+    help='forward directly to cmake (example: -D ENABLE_THIS=1 -D ENABLE_THAT=1)',
+    metavar='STRING')
+group.add_option(
+    '--host',
+    type='string',
+    action='store',
+    dest='host',
+    default=None,
+    help="use predefined defaults for 'host'",
+    metavar='STRING')
 parser.add_option_group(group)
 
 # process input
 
 (options, args) = parser.parse_args()
 
+
 def check_cmake_exists():
-    p = subprocess.Popen('cmake --version',
-                         shell=True,
-                         stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE)
-    if not ('cmake version' in p.communicate()[0]):
-        print '   This code is built using CMake'
-        print
-        print '   CMake is not found'
-        print '   get CMake at http://www.cmake.org/'
-        print '   on many clusters CMake is installed'
-        print '   but you have to load it first:'
-        print '   $ module load cmake'
+    p = subprocess.Popen('cmake --version', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    if not ('cmake version' in p.communicate()[0].decode('utf-8')):
+        print('   This code is built using CMake')
+        print()
+        print('   CMake is not found')
+        print('   get CMake at http://www.cmake.org/')
+        print('   on many clusters CMake is installed')
+        print('   but you have to load it first:')
+        print('   $ module load cmake')
         sys.exit()
+
 
 def gen_cmake_command():
     # create cmake command from flags
 
     command = ''
-    
+
     if not options.auto:
         if options.fc:
             command += ' FC=%s' % options.fc
@@ -182,30 +180,30 @@ def gen_cmake_command():
             command += ' CC=%s' % options.cc
         if options.cpp:
             command += ' CXX=%s' % options.cpp
-   
-    if options.alternative_cmake: 
+
+    if options.alternative_cmake:
         command += ' %s' % options.alternative_cmake
     else:
         command += ' cmake'
-    
+
     if options.nomath:
         command += ' -DENABLE_INTERNAL_MATH=ON'
     elif options.math:
-            command += ' -DUSERDEFINED_MATH="%s"' % options.math
+        command += ' -DUSERDEFINED_MATH="%s"' % options.math
     elif options.mathdir:
-            if not os.path.exists(options.mathdir):
-                    print "Specified MATH directory does not exist!"
-                    sys.exit(1)
-            command += ' -DMATH_ROOT="%s"' % options.mathdir
+        if not os.path.exists(options.mathdir):
+            print("Specified MATH directory does not exist!")
+            sys.exit(1)
+        command += ' -DMATH_ROOT="%s"' % options.mathdir
 
     # if fc starts with 'mpi' turn on MPI
     if options.fc and (options.fc[:3] == 'mpi' or options.fc[:3] == 'MPI'):
-            options.mpi = True
+        options.mpi = True
     if options.mpi:
         command += ' -DENABLE_MPI=ON'
     if options.python:
         command += ' -DENABLE_PYTHON_INTERFACE=ON'
-    
+
     if options.int64:
         command += ' -DENABLE_64BIT_INTEGERS=ON'
     if options.check:
@@ -213,49 +211,52 @@ def gen_cmake_command():
     if options.coverage:
         command += ' -DENABLE_CODE_COVERAGE=ON'
     if options.install:
-            command += ' -DCMAKE_INSTALL_PREFIX=' + options.install
+        command += ' -DCMAKE_INSTALL_PREFIX=' + options.install
 
     if options.debug:
         command += ' -DCMAKE_BUILD_TYPE=Debug'
     else:
         command += ' -DCMAKE_BUILD_TYPE=Release'
-    
+
     if options.cmake:
         for definition in options.cmake:
             command += ' -D%s' % definition
 
     command += ' %s' % root_directory
-    
-    print '%s\n' % command
+
+    print('%s\n' % command)
     if options.show:
-            sys.exit()
+        sys.exit()
     return command
 
+
 def configure_host(host):
-        if host == 'stallo':
-                configure_stallo()
-        elif host == 'larry':
-                configure_larry()
-        elif host == 'titan':
-                configure_titan()
-        elif host == 'thor':
-                configure_thor()
-        else:
-                print "Unknown host/system: {0}".format(host)
-                sys.exit(1)
+    if host == 'stallo':
+        configure_stallo()
+    elif host == 'larry':
+        configure_larry()
+    elif host == 'titan':
+        configure_titan()
+    elif host == 'thor':
+        configure_thor()
+    else:
+        print("Unknown host/system: {0}".format(host))
+        sys.exit(1)
+
 
 def print_build_help(build_path):
-    print '   configure step is done'
-    print '   now you need to compile the sources'
-    print
-    print '   to compile with configured parameters (recommended):'
-    print '   $ cd ' + build_path
-    print '   $ make'
-    print
-    print '   to modify configured parameters and then compile:'
-    print '   $ cd ' + build_path
-    print '   $ ccmake ' + root_directory
-    print '   $ make'
+    print('   configure step is done')
+    print('   now you need to compile the sources')
+    print()
+    print('   to compile with configured parameters (recommended):')
+    print('   $ cd ' + build_path)
+    print('   $ make')
+    print()
+    print('   to modify configured parameters and then compile:')
+    print('   $ cd ' + build_path)
+    print('   $ ccmake ' + root_directory)
+    print('   $ make')
+
 
 def gen_reconfigure_script(command, build_path):
     file_name = os.path.join(build_path, 'reconfigure')
@@ -265,88 +266,98 @@ def gen_reconfigure_script(command, build_path):
     f.close()
     os.system('chmod 700 %s' % file_name)
 
+
 def save_setup_command(argv, build_path):
     file_name = os.path.join(build_path, 'setup_command')
     f = open(file_name, 'w')
     f.write(" ".join(sys.argv[:]))
     f.close()
 
+
 def setup_build_path(build_path, only_show_command):
     if os.path.isdir(build_path):
         if not only_show_command:
-            print 'aborting setup - build directory %s exists already' % build_path
-            print 'please first remove it and then rerun setup'
+            print('aborting setup - build directory %s exists already' % build_path)
+            print('please first remove it and then rerun setup')
             sys.exit()
     else:
-        os.makedirs(build_path, 0755)
+        os.makedirs(build_path, 0o755)
+
 
 def run_cmake(command, build_path):
-        topdir = os.getcwd()
-        os.chdir(build_path)
-        p = subprocess.Popen(command,
-                                                 shell=True,
-                                                 stdin=subprocess.PIPE,
-                                                 stdout=subprocess.PIPE)
-        s = p.communicate()[0]
-        print s
-        os.chdir(topdir)
-        return s
+    topdir = os.getcwd()
+    os.chdir(build_path)
+    p = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    s = p.communicate()[0]
+    print(s.decode('utf-8'))
+    os.chdir(topdir)
+    return s
+
 
 def main():
-        if len(sys.argv) == 1:
-                # user has given no arguments: print help and exit
-                print parser.format_help().strip()
-                sys.exit()
+    if len(sys.argv) == 1:
+        # user has given no arguments: print help and exit
+        print(parser.format_help().strip())
+        sys.exit()
 
-        check_cmake_exists()
-        build_path = options.build
-        setup_build_path(build_path, options.show)
-        if options.host:
-                configure_host(options.host)
-        command = gen_cmake_command()
-        status = run_cmake(command, build_path)
+    check_cmake_exists()
+    build_path = options.build
+    setup_build_path(build_path, options.show)
+    if options.host:
+        configure_host(options.host)
+    command = gen_cmake_command()
+    status = run_cmake(command, build_path)
 
-        if not 'Configuring incomplete' in status:
-                gen_reconfigure_script(command, build_path)
-                save_setup_command(sys.argv, build_path)
-                print_build_help(build_path)
+    if not 'Configuring incomplete' in status.decode('utf-8'):
+        gen_reconfigure_script(command, build_path)
+        save_setup_command(sys.argv, build_path)
+        print_build_help(build_path)
+
 
 # host/system specific configurations
 
+
 def configure_stallo():
-        if not options.fc:
-                options.fc = 'ifort'
-        if not options.cc:
-                options.cc = 'icc'
-        if options.mpi:
-                options.fc = 'mpif90'
-                options.cc = 'mpicc'
+    if not options.fc:
+        options.fc = 'ifort'
+    if not options.cc:
+        options.cc = 'icc'
+    if options.mpi:
+        options.fc = 'mpif90'
+        options.cc = 'mpicc'
+
+
 def configure_titan():
-        if not options.fc:
-                options.fc = 'ifort'
-        if not options.cc:
-                options.cc = 'icc'
-        if not options.math:
-                options.math = '-L/site/Goto-library/AuthenticAMD-x86_64/ifort/ -lblas -L/site/Goto-library/AuthenticAMD-x86_64/ifort/ -llapack'
-        if options.mpi:
-                options.fc = 'mpif90'
-                options.cc = 'mpicc'
+    if not options.fc:
+        options.fc = 'ifort'
+    if not options.cc:
+        options.cc = 'icc'
+    if not options.math:
+        options.math = '-L/site/Goto-library/AuthenticAMD-x86_64/ifort/ -lblas -L/site/Goto-library/AuthenticAMD-x86_64/ifort/ -llapack'
+    if options.mpi:
+        options.fc = 'mpif90'
+        options.cc = 'mpicc'
+
+
 def configure_larry():
-        if not options.fc:
-                options.fc = 'ifort'
-        if not options.cc:
-                options.cc = 'icc'
-        if options.mpi:
-                options.fc = 'mpif90'
-                options.cc = 'mpicc'
+    if not options.fc:
+        options.fc = 'ifort'
+    if not options.cc:
+        options.cc = 'icc'
+    if options.mpi:
+        options.fc = 'mpif90'
+        options.cc = 'mpicc'
+
+
 def configure_thor():
-        if not options.fc:
-                options.fc = 'gfortran'
-        if not options.cc:
-                options.cc = 'gcc'
-        if options.mpi:
-                options.fc = 'mpif90'
-                options.cc = 'mpicc'
+    if not options.fc:
+        options.fc = 'gfortran'
+    if not options.cc:
+        options.cc = 'gcc'
+    if options.mpi:
+        options.fc = 'mpif90'
+        options.cc = 'mpicc'
+
 
 if __name__ == '__main__':
-        main()
+    main()

@@ -28,9 +28,9 @@
 // #define XCFUN_ACCURATE_PBEX_MU
 
 // This is the internal scalar type of the library, can be
-// different from the external interface. 
+// different from the external interface.
 #ifndef WITH_QD
-typedef double ireal_t; 
+typedef double ireal_t;
 #define INNER_TO_OUTER(INNER) INNER
 #else
 #include <qd/qd_real.h>

@@ -14,8 +14,8 @@
 
 #if 0 // Does not work and should maybe not be here in the first place
 #include "functional.hpp"
-#include "vwn.hpp"
 #include "slater.hpp"
+#include "vwn.hpp"
 
 //Have to be a bit special here since lb94 is not a functional but 
 //a potential.
