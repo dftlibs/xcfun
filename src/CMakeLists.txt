@@ -1,18 +1,5 @@
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+add_library(xcfun "")
 
-set(BASE_SOURCES
-    xcint.cpp
-    xcfun.cpp
-    fortran.c
-    )
-
-file(GLOB FUNCTIONAL_SOURCES functionals/*.cpp)
-
-add_library(
-    xcfun
-    ${BASE_SOURCES}
-    ${FUNCTIONAL_SOURCES}
-    )
 set_target_properties(xcfun
   PROPERTIES
     POSITION_INDEPENDENT_CODE 1
@@ -39,11 +26,27 @@ target_include_directories(xcfun
   PRIVATE
     ${PROJECT_SOURCE_DIR}/external/upstream/taylor
   )
+
 # Set .so version
 if(BUILD_SHARED_LIBS)
  set_target_properties(xcfun PROPERTIES
    VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION} )
 endif()
+
+target_sources(xcfun
+  PRIVATE
+    fortran.c
+    xcfun.cpp
+    xcint.cpp
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/densvars.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functional.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/specmath.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xcint.hpp
+  )
+
+add_subdirectory(functionals)
 
 install(TARGETS xcfun DESTINATION lib${LIB_SUFFIX})
 file(GLOB headers "include/*.h")
