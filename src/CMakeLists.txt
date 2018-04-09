@@ -14,6 +14,11 @@ target_compile_options(xcfun
     "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
   )
+target_compile_definitions(xcfun
+  PUBLIC
+    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFUN_FORTRAN_INT=long long int>"
+    XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
+  )
 target_include_directories(xcfun
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
