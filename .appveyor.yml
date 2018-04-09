@@ -12,7 +12,7 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       GENERATOR: "MinGW Makefiles"
       BUILDFLAGS: "VERBOSE=1"
-      CMAKARGS: ""
+      CMAKARGS: "-DCMAKE_Fortran_COMPILER=gfortran"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       GENERATOR: "Visual Studio 14 2015"
       BUILDFLAGS: "/verbosity:normal"
