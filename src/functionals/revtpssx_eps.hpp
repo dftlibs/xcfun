@@ -63,6 +63,6 @@ template <class num> static num revtpssx_eps(const densvars<num> & d) {
   num epsxunif_b = epsx_unif(2 * d.b);
   return (epsxunif_a * Fxa * d.a + epsxunif_b * Fxb * d.b);
 }
-}
+} // namespace revtpssx_eps
 
 #endif

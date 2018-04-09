@@ -41,12 +41,10 @@ def add_header(filepath, header, YEAR, AUTHORS):
         output = []
 
         # Check if header is already present
-        present = re.compile(
-            'XCFun, an arbitrary order exchange-correlation library')
+        present = re.compile('XCFun, an arbitrary order exchange-correlation library')
         if list(filter(present.search, inpt)):
             # Check if year and authors in current file are up to date
-            toupdate = re.compile(r'{0} (?!{1} {2}).*\n'.format(
-                'Copyright \(C\)', YEAR, AUTHORS))
+            toupdate = re.compile(r'{0} (?!{1} {2}).*\n'.format('Copyright \(C\)', YEAR, AUTHORS))
             if list(filter(toupdate.search, inpt)):
                 print(('Updating header in {}'.format(filepath)))
                 # Check to preserve '#!' at the top of the file
@@ -71,8 +69,7 @@ def add_header(filepath, header, YEAR, AUTHORS):
                 f = open(filepath, 'w')
                 f.writelines(output)
             except IOError as err:
-                print(('Something went wrong trying to add header to {}: {}'.
-                       format(filepath, err)))
+                print(('Something went wrong trying to add header to {}: {}'.format(filepath, err)))
             finally:
                 f.close()
         os.remove(tmpfil)
@@ -106,21 +103,17 @@ def file_license(attributes):
         # Obtain list of files
         fil = [x for x in gitattributes if not 'licensefile' in x]
         # Remove licensefile= from strings
-        lic = [
-            re.sub(r'licensefile\=', '', x) for x in gitattributes
-            if 'licensefile' in x
-        ]
+        lic = [re.sub(r'licensefile\=', '', x) for x in gitattributes if 'licensefile' in x]
         # Create list of blacklisted files
         blacklist = [
-            fname for key, value in list(dict(list(zip(fil, lic))).items())
-            if value == '!licensefile' for fname in glob.glob(key)
+            fname for key, value in list(dict(list(zip(fil, lic))).items()) if value == '!licensefile'
+            for fname in glob.glob(key)
         ]
         # Now create a dictionary with the files to be considered for
         # license header manipulation
         file_license = {
             key: value
-            for k, value in list(dict(list(zip(fil, lic))).items())
-            for key in glob.glob(k) if key not in blacklist
+            for k, value in list(dict(list(zip(fil, lic))).items()) for key in glob.glob(k) if key not in blacklist
         }
     return file_license
 
@@ -139,8 +132,7 @@ def license_maintainer():
 
     for fname, license in list(headerize.items()):
         # Prepare header
-        header = prepare_header(
-            os.path.join(project_root_dir, license), YEAR, AUTHORS)
+        header = prepare_header(os.path.join(project_root_dir, license), YEAR, AUTHORS)
         add_header(fname, header, YEAR, AUTHORS)
 
 

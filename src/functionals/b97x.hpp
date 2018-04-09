@@ -41,6 +41,6 @@ static num energy_b97x_ab(const parameter & Gamma,
   num s2_ab = b97xc::spin_dens_gradient_ab2(gaa, a_43);
   return e_x_LSDA_ab(a_43) * b97xc::enhancement(Gamma, c_params, s2_ab);
 }
-}
+} // namespace b97x
 
 #endif

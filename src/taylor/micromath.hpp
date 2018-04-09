@@ -16,10 +16,10 @@ inline double asinh(double x) { return log(x + sqrt(x * x + 1)); }
 */
 
 /***************************
-*   erf.cpp
-*   author:  Steve Strand
-*   written: 29-Jan-04
-***************************/
+ *   erf.cpp
+ *   author:  Steve Strand
+ *   written: 29-Jan-04
+ ***************************/
 
 static const double erf_rel_error = 1E-12; // calculate 12 significant figures
 // you can adjust rel_error to trade off between accuracy and speed

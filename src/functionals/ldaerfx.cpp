@@ -37,9 +37,8 @@ template <class num> static num esrx_ldaerfspin(const num & na, parameter mu) {
   else if (a < 100)
     // Intermediate values of a
     return -(rhoa * pow(24.0 * rhoa / M_PI, 1.0 / 3.0)) *
-           (3.0 / 8.0 -
-            a * (sqrt(M_PI) * erf(0.5 / a) + (2 * a - 4 * a3) * exp(-0.25 / a2) -
-                 3.0 * a + 4 * a3));
+           (3.0 / 8.0 - a * (sqrt(M_PI) * erf(0.5 / a) +
+                             (2 * a - 4 * a3) * exp(-0.25 / a2) - 3.0 * a + 4 * a3));
   else if (a < 1e9)
     // Expansion for large a
     return -(rhoa * pow(24.0 * rhoa / M_PI, 1.0 / 3.0)) / (96.0 * a2);

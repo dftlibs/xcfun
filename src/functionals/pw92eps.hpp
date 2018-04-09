@@ -20,10 +20,9 @@
 namespace pw92eps {
 template <class num> static num eopt(const num & sqrtr, const parameter t[6]) {
   return -2 * t[0] * (1 + t[1] * sqrtr * sqrtr) *
-         log(1 +
-             0.5 /
-                 (t[0] * (sqrtr *
-                          (t[2] + sqrtr * (t[3] + sqrtr * (t[4] + t[5] * sqrtr))))));
+         log(1 + 0.5 / (t[0] *
+                        (sqrtr *
+                         (t[2] + sqrtr * (t[3] + sqrtr * (t[4] + t[5] * sqrtr))))));
 }
 
 template <class num> static num omega(const densvars<num> & d) {
@@ -67,6 +66,6 @@ template <class num> static num pw92eps_polarized(const num & a) {
   num sqrt_r_s = pow(3 / (4 * M_PI * a), 1.0 / 6.0);
   return eopt(sqrt_r_s, TUVWXYP[1]);
 }
-}
+} // namespace pw92eps
 
 #endif

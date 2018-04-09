@@ -19,11 +19,11 @@
 // M06 exchange functional. to be used with HF exchange factor of .27
 
 template <class num> static num m06x(const densvars<num> & d) {
-  using pw91_like_x_internal::chi2;
-  using m0xy_metagga_xc_internal::zet;
+  using m0xy_metagga_xc_internal::alpha_x;
   using m0xy_metagga_xc_internal::fw;
   using m0xy_metagga_xc_internal::h;
-  using m0xy_metagga_xc_internal::alpha_x;
+  using m0xy_metagga_xc_internal::zet;
+  using pw91_like_x_internal::chi2;
 
   const parameter param_a[12] = {5.877943e-01,
                                  -1.371776e-01,

@@ -74,10 +74,10 @@ template <class num> static num C(const densvars<num> & d) {
   num xi2 = gzeta2 / (4 * pow(3 * pow2(M_PI) * d.n, 2.0 / 3.0)); // xi^2
   num C0 = 0.59 + 0.9269 * pow2(d.zeta) + 0.6225 * pow(d.zeta, 4) +
            2.1540 * pow(d.zeta, 6); // C(zeta,0)
-  return C0 / pow(1 +
-                      0.5 * xi2 * (pow(1 + d.zeta, -4.0 / 3.0) +
-                                   pow(1 - d.zeta, -4.0 / 3.0)),
-                  4);
+  return C0 /
+         pow(1 + 0.5 * xi2 *
+                     (pow(1 + d.zeta, -4.0 / 3.0) + pow(1 - d.zeta, -4.0 / 3.0)),
+             4);
 }
 
 template <class num>
@@ -109,6 +109,6 @@ template <class num> static num revtpssc_eps(const densvars<num> & d) {
   parameter dd = 2.8;
   return eps_pkzb * (1 + dd * eps_pkzb * tauwtau2);
 }
-}
+} // namespace revtpssc_eps
 
 #endif

@@ -42,4 +42,4 @@ template <class num> static num pz81eps(const densvars<num> & d) {
   else
     return Eld(d.r_s, c[0]) + (Eld(d.r_s, c[1]) - Eld(d.r_s, c[0])) * fz(d);
 }
-};
+}; // namespace pz81eps

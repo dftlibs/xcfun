@@ -19,9 +19,8 @@
 template <class num> static num Cg(const num & r) {
   parameter Cx = 0.001667;
   parameter Bg = 0.000007389;
-  return Cx +
-         (0.002568 + r * (0.023266 + Bg * r)) /
-             (1 + r * (8.723 + r * (0.472 + 10000 * Bg * r)));
+  return Cx + (0.002568 + r * (0.023266 + Bg * r)) /
+                  (1 + r * (8.723 + r * (0.472 + 10000 * Bg * r)));
 }
 
 template <class num> static num Pg(const densvars<num> & d) {

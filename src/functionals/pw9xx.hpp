@@ -92,6 +92,6 @@ static num pw91xk_enhancement(const parameter param_AB[6],
 
   return numerator / denominator;
 }
-}
+} // namespace pw91_like_x_internal
 
 #endif

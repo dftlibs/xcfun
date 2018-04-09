@@ -26,9 +26,8 @@ static num Gc(const num & r,
               const parameter p) {
   num sqrtr = sqrt(r);
   return -2 * A * (1 + a1 * r) *
-         log(1 +
-             0.5 / (A * (sqrtr * (b1 + sqrtr * (b2 + sqrtr * b3)) +
-                         b4 * pow(r, p + 1))));
+         log(1 + 0.5 / (A * (sqrtr * (b1 + sqrtr * (b2 + sqrtr * b3)) +
+                             b4 * pow(r, p + 1))));
 }
 
 // (1+(a-b)/(a+b))^p + (1-(a-b)/(a+b))^p =
@@ -75,14 +74,13 @@ template <class num> static num pw91c(const densvars<num> & d) {
   const parameter nu = 16 * cbrt(3 * M_PI * M_PI) / M_PI;
   const parameter beta = nu * Cc0;
   num A = 2 * alpha / beta / expm1(-2 * (alpha * Ec) / (pow(gs, 3) * beta * beta));
-  num Cc =
-      1.0 / 1000 * ((2.568 + d.r_s * (23.266 + 0.007389 * d.r_s)) /
-                    (1 + d.r_s * (8.723 + d.r_s * (0.472 + d.r_s * 0.073890)))) -
-      Cx;
-  num H0 =
-      0.5 * pow(gs, 3) * beta * beta / alpha *
-      log((1 +
-           2 * (alpha * (T2 + A * T2 * T2)) / (beta * (1 + A * T2 * (1 + A * T2)))));
+  num Cc = 1.0 / 1000 *
+               ((2.568 + d.r_s * (23.266 + 0.007389 * d.r_s)) /
+                (1 + d.r_s * (8.723 + d.r_s * (0.472 + d.r_s * 0.073890)))) -
+           Cx;
+  num H0 = 0.5 * pow(gs, 3) * beta * beta / alpha *
+           log((1 + 2 * (alpha * (T2 + A * T2 * T2)) /
+                        (beta * (1 + A * T2 * (1 + A * T2)))));
   num H1 = nu * (Cc - Cc0 - 3.0 / 7.0 * Cx) * pow(gs, 3) * T2 *
            exp(-100 * pow(gs, 4) * pow(ks, 2) * T2 / pow(kF, 2));
   return d.n * (Ec + H0 + H1);

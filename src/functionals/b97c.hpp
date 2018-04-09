@@ -58,6 +58,6 @@ static num energy_b97c_antipar(const parameter & Gamma,
 
   return e_LSDA * b97xc::enhancement(Gamma, c_params, s2_ab);
 }
-}
+} // namespace b97c
 
 #endif

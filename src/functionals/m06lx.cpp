@@ -19,11 +19,11 @@
 // M06-L exchange functional. does not use HF exchange
 
 template <class num> static num m06lx(const densvars<num> & d) {
-  using pw91_like_x_internal::chi2;
-  using m0xy_metagga_xc_internal::zet;
+  using m0xy_metagga_xc_internal::alpha_x;
   using m0xy_metagga_xc_internal::fw;
   using m0xy_metagga_xc_internal::h;
-  using m0xy_metagga_xc_internal::alpha_x;
+  using m0xy_metagga_xc_internal::zet;
+  using pw91_like_x_internal::chi2;
 
   const parameter param_a[12] = {3.987756e-01,
                                  2.548219e-01,

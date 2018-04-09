@@ -49,6 +49,6 @@ static num energy_pbe_ab(const parameter & R, const num & rho, const num & grad)
   using pw91_like_x_internal::prefactor;
   return prefactor(rho) * enhancement(R, rho, grad);
 }
-}
+} // namespace pbex
 
 #endif

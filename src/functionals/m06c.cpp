@@ -18,12 +18,12 @@
 // M06 correlation functional
 
 template <class num> static num m06c(const densvars<num> & d) {
-  using pw91_like_x_internal::chi2;
-  using m0xy_metagga_xc_internal::zet;
   using m0xy_metagga_xc_internal::m06_c_anti;
-  using m0xy_metagga_xc_internal::ueg_c_anti;
   using m0xy_metagga_xc_internal::m06_c_para;
+  using m0xy_metagga_xc_internal::ueg_c_anti;
   using m0xy_metagga_xc_internal::ueg_c_para;
+  using m0xy_metagga_xc_internal::zet;
+  using pw91_like_x_internal::chi2;
 
   // parameters for anti-parallel spin contributions
   const parameter param_c_anti[5] = {

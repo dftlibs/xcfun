@@ -58,6 +58,6 @@ static num F_x(const num & d_n, const num & d_gnn, const num & d_tau) {
   num xpz = x(d_n, d_gnn, d_tau);
   return 1 + kappa - kappa / (1 + xpz / kappa);
 }
-}
+} // namespace tpssx_eps
 
 #endif

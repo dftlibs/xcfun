@@ -254,7 +254,7 @@ template <class num> static num ueg_c_para(const num & rho) {
 template <class num> static num ueg_c_anti(const densvars<num> & d) {
   return (pw92eps::pw92eps(d) * d.n) - ueg_c_para(d.a) - ueg_c_para(d.b);
 }
-}
+} // namespace m0xy_metagga_xc_internal
 
 // local spin density approximation for the exchange
 template <class num> static num lsda_x(const num & rho) {

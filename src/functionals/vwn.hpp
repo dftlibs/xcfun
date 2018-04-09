@@ -28,9 +28,10 @@ static inline parameter vwn_b(const parameter p[]) {
 }
 
 static inline parameter vwn_c(const parameter p[]) {
-  return 2 * p[2] * (1 / sqrt(4 * p[3] - p[2] * p[2]) -
-                     p[0] / ((p[0] * p[0] + p[0] * p[2] + p[3]) *
-                             sqrt(4 * p[3] - p[2] * p[2]) / (p[2] + 2 * p[0])));
+  return 2 * p[2] *
+         (1 / sqrt(4 * p[3] - p[2] * p[2]) -
+          p[0] / ((p[0] * p[0] + p[0] * p[2] + p[3]) * sqrt(4 * p[3] - p[2] * p[2]) /
+                  (p[2] + 2 * p[0])));
 }
 
 template <class num> static num vwn_x(const num & s, const parameter p[]) {
@@ -46,8 +47,9 @@ template <class num> static num vwn_z(const num & s, const parameter p[]) {
 }
 
 template <class num> static num vwn_f(const num & s, const parameter p[]) {
-  return 0.5 * p[1] * (2 * log(s) + vwn_a(p) * log(vwn_x(s, p)) -
-                       vwn_b(p) * log(vwn_y(s, p)) + vwn_c(p) * atan(vwn_z(s, p)));
+  return 0.5 * p[1] *
+         (2 * log(s) + vwn_a(p) * log(vwn_x(s, p)) - vwn_b(p) * log(vwn_y(s, p)) +
+          vwn_c(p) * atan(vwn_z(s, p)));
 }
 
 template <class num> static num vwn5_eps(const densvars<num> & d) {
@@ -91,6 +93,6 @@ template <class num> static num vwn3_eps(const densvars<num> & d) {
            vwn_f(s, inter) * (1 - zeta4) * (9.0 / 4.0 * (pow(2, 1.0 / 3.0) - 1)));
   return (vwn_f(s, para) + dd);
 }
-}
+} // namespace vwn
 
 #endif

@@ -30,8 +30,8 @@ template <class num, class T> static num A(const num & eps, const T & u3) {
 template <class num, class T>
 static num H(const num & d2, const num & eps, const T & u3) {
   num d2A = d2 * A(eps, u3);
-  using xc_constants::param_gamma;
   using xc_constants::param_beta_gamma;
+  using xc_constants::param_gamma;
   return param_gamma * u3 *
          log(1 + param_beta_gamma * d2 * (1 + d2A) / (1 + d2A * (1 + d2A)));
 }
@@ -59,6 +59,6 @@ template <class num> static num pbec_eps_polarized(const num & a, const num & ga
            (u * u * pow(a, 7.0 / 3.0));
   return (eps + H(d2, eps, pow3(u)));
 }
-}
+} // namespace pbec_eps
 
 #endif

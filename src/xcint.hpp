@@ -67,8 +67,7 @@ struct functional_data {
   const char * short_description;
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
-#define FP(N, E)                                                                    \
-  ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N> > &);
+#define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
   FOR_EACH(XC_MAX_ORDER, FP, )
   enum xc_vars test_vars;
   enum xc_mode test_mode;
