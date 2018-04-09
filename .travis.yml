@@ -1,35 +1,33 @@
 language: cpp
 sudo: false
+dist: trusty
 
 matrix:
   include:
-
     # 1/ Linux Clang Builds
     - os: linux
       compiler: clang
       addons: &clang38
         apt:
           sources: ['llvm-toolchain-precise', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8', 'gfortran']
+          packages: ['clang-3.8', 'cmake3', 'gfortran']
       env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
     - os: linux
       compiler: clang
       addons: *clang38
       env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
-
     # 2/ Linux GCC Builds
     - os: linux
       compiler: gcc
       addons: &gcc5
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'gcc-5', 'gfortran-5']
+          packages: ['cmake3', 'g++-5', 'gcc-5', 'gfortran-5']
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Release'
     - os: linux
       compiler: gcc
       addons: *gcc5
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug'
-
     # 3/ OSX Clang Builds
     - os: osx
       osx_image: xcode7
@@ -39,7 +37,6 @@ matrix:
       osx_image: xcode7
       compiler: clang
       env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
-
     # 4/ OSX GCC Builds
     - os: osx
       osx_image: xcode7
@@ -49,22 +46,22 @@ matrix:
       osx_image: xcode7
       compiler: gcc
       env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
-
     # 5/ Linux GCC5 Coverage build
     - os: linux
       compiler: gcc
       addons: *gcc5
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=true
 
+before_install:
+  - test -n $CC && unset CC
+  - test -n $CXX && unset CXX
+  - test -n $FC && unset FC
+
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew update &> /dev/null
       brew cask uninstall --force oclint
       brew install gcc python pyenv-virtualenv
@@ -79,10 +76,13 @@ before_script:
   - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
   - git submodule init
   - git submodule update --init --recursive
-  - mkdir build
-  - cd build
-  - CXX=${CXX_COMPILER} CC=${C_COMPILER} FC=${Fortran_COMPILER} cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+  - cmake -H. -Bbuild \
+              -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+              -DCMAKE_C_COMPILER=${C_COMPILER} \
+              -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER} \
+              -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
+  - cd build
   - make -j 2
   - ctest -V -j 2
