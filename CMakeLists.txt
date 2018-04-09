@@ -147,7 +147,7 @@ target_include_directories(xcfun
 target_include_directories(xcfun
   SYSTEM
   PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/taylor
+    ${PROJECT_SOURCE_DIR}/external/upstream/taylor
   )
 # Set .so version
 if(BUILD_SHARED_LIBS)
