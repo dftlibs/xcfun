@@ -49,7 +49,10 @@ matrix:
     # 5/ Linux GCC5 Coverage build
     - os: linux
       compiler: gcc
-      addons: *gcc5
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['cmake3', 'g++-5', 'gcc-5', 'gfortran-5', 'lcov']
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=ON
 
 before_install:
