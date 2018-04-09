@@ -100,3 +100,21 @@ if(CMAKE_C_COMPILER_ID MATCHES PGI)
     "-c9x"
     )
 endif()
+
+if(CMAKE_C_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+  if(CMAKE_C_COMPILER_VERSION VERSION_LESS 3)
+    message(FATAL_ERROR "Code coverage analysis on Mac OS X requires Clang version 3.0.0 or greater!")
+  else()
+    list(APPEND XCFun_C_FLAGS_DEBUG
+      "-fprofile-arcs"
+      "-ftest-coverage"
+      )
+  endif()
+elseif(CMAKE_C_COMPILER_ID MATCHES GNU)
+    list(APPEND XCFun_C_FLAGS_DEBUG
+      "-fprofile-arcs"
+      "-ftest-coverage"
+      )
+else()
+  message(FATAL_ERROR "Code coverage analysis requires the GNU C compiler!")
+endif()

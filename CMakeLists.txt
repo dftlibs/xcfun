@@ -101,10 +101,9 @@ include(autocmake_cc)
 include(omp)
 # FIXME
 #include(static_library)
-# FIXME
-#include(code_coverage)
 include(CXXFlags)
 include(CFlags)
+include(code_coverage)
 include(xcfun)
 include(api)
 include(autocmake_src)

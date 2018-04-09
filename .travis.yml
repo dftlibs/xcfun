@@ -11,11 +11,11 @@ matrix:
         apt:
           sources: ['llvm-toolchain-precise', 'ubuntu-toolchain-r-test']
           packages: ['clang-3.8', 'cmake3', 'gfortran']
-      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
+      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
     - os: linux
       compiler: clang
       addons: *clang38
-      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
+      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
     # 2/ Linux GCC Builds
     - os: linux
       compiler: gcc
@@ -23,34 +23,34 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['cmake3', 'g++-5', 'gcc-5', 'gfortran-5']
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Release'
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Release' COVERAGE=OFF
     - os: linux
       compiler: gcc
       addons: *gcc5
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug'
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=OFF
     # 3/ OSX Clang Builds
     - os: osx
       osx_image: xcode7
       compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
     - os: osx
       osx_image: xcode7
       compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
     # 4/ OSX GCC Builds
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Release'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
     # 5/ Linux GCC5 Coverage build
     - os: linux
       compiler: gcc
       addons: *gcc5
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=true
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=ON
 
 before_install:
   - test -n $CC && unset CC
@@ -82,8 +82,22 @@ before_script:
      -DCMAKE_C_COMPILER=${C_COMPILER}
      -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+     -DENABLE_CODE_COVERAGE=${COVERAGE}
 
 script:
   - cmake --build build -- --jobs=2 VERBOSE=1
   - cd build
   - ctest --output-on-failure --verbose --parallel 2
+
+after_success:
+  - |
+    if [[ "$COVERAGE" = "ON" ]]; then
+      cd $TRAVIS_BUILD_DIR
+      lcov --version
+      lcov --directory . --capture --output-file coverage.info
+      lcov --remove coverage.info '/usr/*' --output-file coverage.info
+      lcov --remove coverage.info 'external/*' --output-file coverage.info
+      lcov --remove coverage.info 'test/*' --output-file coverage.info
+      lcov --list coverage.info
+      bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
+    fi
