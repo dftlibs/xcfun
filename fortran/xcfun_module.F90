@@ -18,7 +18,7 @@
 
 module xcfun
   implicit none
-! 
+!
   XCFUN_INTEGER, parameter :: XCFUN_API_VERSION = 2
 
 ! Evaluation modes
@@ -65,15 +65,15 @@ module xcfun
   XCFUN_INTEGER, parameter :: XC_D2 = 3
 
 ! all lda derivatives up to order 4
-  XCFUN_INTEGER, parameter :: XC_D00 =  1
-  XCFUN_INTEGER, parameter :: XC_D10 =  2
-  XCFUN_INTEGER, parameter :: XC_D01 =  3
-  XCFUN_INTEGER, parameter :: XC_D20 =  4
-  XCFUN_INTEGER, parameter :: XC_D11 =  5
-  XCFUN_INTEGER, parameter :: XC_D02 =  6
-  XCFUN_INTEGER, parameter :: XC_D30 =  7
-  XCFUN_INTEGER, parameter :: XC_D21 =  8
-  XCFUN_INTEGER, parameter :: XC_D12 =  9
+  XCFUN_INTEGER, parameter :: XC_D00 = 1
+  XCFUN_INTEGER, parameter :: XC_D10 = 2
+  XCFUN_INTEGER, parameter :: XC_D01 = 3
+  XCFUN_INTEGER, parameter :: XC_D20 = 4
+  XCFUN_INTEGER, parameter :: XC_D11 = 5
+  XCFUN_INTEGER, parameter :: XC_D02 = 6
+  XCFUN_INTEGER, parameter :: XC_D30 = 7
+  XCFUN_INTEGER, parameter :: XC_D21 = 8
+  XCFUN_INTEGER, parameter :: XC_D12 = 9
   XCFUN_INTEGER, parameter :: XC_D03 = 10
   XCFUN_INTEGER, parameter :: XC_D40 = 11
   XCFUN_INTEGER, parameter :: XC_D31 = 12
@@ -110,13 +110,13 @@ module xcfun
 ! tau mgga
 ! so far only linear response
 ! list under construction ...
-  XCFUN_INTEGER, parameter :: XC_D0000000 =  1
-  XCFUN_INTEGER, parameter :: XC_D1000000 =  2
-  XCFUN_INTEGER, parameter :: XC_D0010000 =  4
-  XCFUN_INTEGER, parameter :: XC_D0000100 =  6
-  XCFUN_INTEGER, parameter :: XC_D0000010 =  7
-  XCFUN_INTEGER, parameter :: XC_D0000001 =  8
-  XCFUN_INTEGER, parameter :: XC_D2000000 =  9
+  XCFUN_INTEGER, parameter :: XC_D0000000 = 1
+  XCFUN_INTEGER, parameter :: XC_D1000000 = 2
+  XCFUN_INTEGER, parameter :: XC_D0010000 = 4
+  XCFUN_INTEGER, parameter :: XC_D0000100 = 6
+  XCFUN_INTEGER, parameter :: XC_D0000010 = 7
+  XCFUN_INTEGER, parameter :: XC_D0000001 = 8
+  XCFUN_INTEGER, parameter :: XC_D2000000 = 9
   XCFUN_INTEGER, parameter :: XC_D1010000 = 11
   XCFUN_INTEGER, parameter :: XC_D1000010 = 14
   XCFUN_INTEGER, parameter :: XC_D1000001 = 15
@@ -139,31 +139,30 @@ module xcfun
 contains
   ! We pass strings as null terminated XCFUN_INTEGER arrays to C, this
   ! should be portable if C and Fortran uses the same character set.
-  subroutine str2ints(str,ints)
+  subroutine str2ints(str, ints)
 ! ints must have length at least len(str)+1
     character, intent(in) :: str*(*)
     XCFUN_INTEGER, intent(out) :: ints(*)
     XCFUN_INTEGER i
-    do i=1,len_trim(str)
-       ints(i) = ichar(str(i:i))
+    do i = 1, len_trim(str)
+      ints(i) = ichar(str(i:i))
     enddo
-    ints(len(str)+1) = 0
+    ints(len(str) + 1) = 0
   end subroutine str2ints
 
-  subroutine ints2str(ints,str)
+  subroutine ints2str(ints, str)
     character, intent(out) :: str*(*)
     XCFUN_INTEGER, intent(in) :: ints(*)
-    XCFUN_INTEGER i,j
+    XCFUN_INTEGER i, j
     i = 1
-    do while (ints(i).ne.0)
-       str(i:i) = char(ints(i))
-       i = i + 1
+    do while (ints(i) .ne. 0)
+      str(i:i) = char(ints(i))
+      i = i + 1
     enddo
-    do j=i,len(str)
-       str(j:j) = ' '
+    do j = i, len(str)
+      str(j:j) = ' '
     enddo
   end subroutine ints2str
-
 
   function xcfun_version()
     double precision xcfun_version, xcfuve
@@ -172,19 +171,19 @@ contains
 
   subroutine xcfun_splash(text)
     character, intent(out) :: text*(*)
-    XCFUN_INTEGER :: ibuf(len(text)+1)
+    XCFUN_INTEGER :: ibuf(len(text) + 1)
     XCFUN_INTEGER le
     le = len(text)
-    call xcspla(ibuf,le)
-    call ints2str(ibuf,text)
+    call xcspla(ibuf, le)
+    call ints2str(ibuf, text)
   end subroutine xcfun_splash
 
   function xcfun_sizeof_int()
     XCFUN_INTEGER :: i, xcfun_sizeof_int
-    if (huge(i).eq.2147483647) then
-       xcfun_sizeof_int = 4
+    if (huge(i) .eq. 2147483647) then
+      xcfun_sizeof_int = 4
     else
-       xcfun_sizeof_int = 8
+      xcfun_sizeof_int = 8
     endif
   end function xcfun_sizeof_int
 
@@ -204,7 +203,7 @@ contains
     XCFUN_INTEGER, intent(in) :: funid
     XCFUN_INTEGER :: xc_set, xcsets
     double precision, intent(in) :: val
-    xc_set = xcsets(funid,val,len_trim(param),param)
+    xc_set = xcsets(funid, val, len_trim(param), param)
   end function xc_set
 
   function xc_get(funid, param, val)
@@ -212,7 +211,7 @@ contains
     XCFUN_INTEGER, intent(in) :: funid
     XCFUN_INTEGER :: xcgets, xc_get
     double precision, intent(out) :: val
-    xc_get = xcgets(funid,val,len_trim(param),param)
+    xc_get = xcgets(funid, val, len_trim(param), param)
   end function xc_get
 
   function xc_serialize(funid, buflen, buf)
@@ -223,81 +222,81 @@ contains
   end function xc_serialize
 
 #ifdef XXX
-  subroutine xc_short_description(param,description)
+  subroutine xc_short_description(param, description)
     XCFUN_INTEGER, intent(in) :: param
     character, intent(out) :: description*(*)
-    XCFUN_INTEGER :: idescr(len(description)+1)
+    XCFUN_INTEGER :: idescr(len(description) + 1)
     XCFUN_INTEGER :: le
-    le = len(description)+1
-    call xcssho(idescr,le,param)
-    call ints2str(idescr,description)
+    le = len(description) + 1
+    call xcssho(idescr, le, param)
+    call ints2str(idescr, description)
   end subroutine
 
-  subroutine xc_long_description(param,description)
+  subroutine xc_long_description(param, description)
     XCFUN_INTEGER, intent(in) :: param
     character, intent(out) :: description*(*)
-    XCFUN_INTEGER :: idescr(len(description)+1)
+    XCFUN_INTEGER :: idescr(len(description) + 1)
     XCFUN_INTEGER :: le
-    le = len(description)+1
-    call xcslon(idescr,le,param)
-    call ints2str(idescr,description)
+    le = len(description) + 1
+    call xcslon(idescr, le, param)
+    call ints2str(idescr, description)
   end subroutine xc_long_description
 #endif
   function xc_eval_setup(funid, vars, mode, order)
     XCFUN_INTEGER :: funid, vars, mode, order, xc_eval_setup, xcevse
-    xc_eval_setup = xcevse(funid,vars,mode,order)
+    xc_eval_setup = xcevse(funid, vars, mode, order)
   end function xc_eval_setup
 
   subroutine xc_eval(funid, npoints, densities, results)
     XCFUN_INTEGER, intent(in) :: funid, npoints
-    double precision, intent(in) :: densities(:,:)
-    double precision, intent(out) :: results(:,:)
+    double precision, intent(in) :: densities(:, :)
+    double precision, intent(out) :: results(:, :)
 
     integer :: i2
 
     i2 = 2
-    IF (npoints.EQ.1) i2=1
-    
-    call xceval(funid,npoints,densities(1,1),densities(1,i2),&
-         results(1,1),results(1,i2))
+    IF (npoints .EQ. 1) i2 = 1
+
+    call xceval(funid, npoints, densities(1, 1), densities(1, i2), &
+                results(1, 1), results(1, i2))
   end subroutine xc_eval
 
   subroutine xc_eval_star(funid, npoints, m, densities, results)
     XCFUN_INTEGER, intent(in) :: funid, npoints, m
     double precision, intent(in) :: densities(*)
-    double precision, intent(out) :: results(:,:)
-    call xceval(funid,npoints,densities(1),densities(m+1),&
-         results(1,1),results(1,2))
+    double precision, intent(out) :: results(:, :)
+    call xceval(funid, npoints, densities(1), densities(m + 1), &
+                results(1, 1), results(1, 2))
   end subroutine xc_eval_star
 
 #if 0
   function xc_index(funid, exponents)
     XCFUN_INTEGER, intent(in) :: exponents(*)
-    XCFUN_INTEGER funid,xc_index, xcdind
+    XCFUN_INTEGER funid, xc_index, xcdind
 !radovan: it's easier to start in fortran with 1
 !         it would be possible to start with 0
 !         but then we would allocate 0:length-1
 !         instead of 1:length
 !         i find 0:length-1 allocations error-prone
 !   xc_index = xcdind(funid,exponents)
-    xc_index = xcdind(funid,exponents) + 1
+    xc_index = xcdind(funid, exponents) + 1
   end function xc_index
 #endif
 
   function xc_output_length(funid, order)
     XCFUN_INTEGER, intent(in) :: funid, order
     XCFUN_INTEGER xc_output_length, xcoule
-    xc_output_length = xcoule(funid,order)
+    xc_output_length = xcoule(funid, order)
   end function xc_output_length
 #if 0
   subroutine xc_param_name(setting_nr, name)
     XCFUN_INTEGER, intent(in) :: setting_nr
     character, intent(out) :: name*(*)
-    XCFUN_INTEGER :: ibuf(len(name)+1)
+    XCFUN_INTEGER :: ibuf(len(name) + 1)
     XCFUN_INTEGER :: le
-    le = len(name)+1
-    call xcsnam(ibuf,le,setting_nr)
-    call ints2str(ibuf,name)
+    le = len(name) + 1
+    call xcsnam(ibuf, le, setting_nr)
+    call ints2str(ibuf, name)
   end subroutine xc_param_name
 #endif
 end module

@@ -36,7 +36,7 @@ install(TARGETS xcfun_f90_bindings DESTINATION lib${LIB_SUFFIX})
 install(FILES ${CMAKE_Fortran_MODULE_DIRECTORY}/xcfun.mod DESTINATION include)
 
 add_executable(kernel_example
-  kernel_example.F90
+  kernel_example.f90
   )
 target_link_libraries(kernel_example
   xcfun_f90_bindings

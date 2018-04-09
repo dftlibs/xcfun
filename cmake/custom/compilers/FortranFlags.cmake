@@ -13,7 +13,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
     )
   list(APPEND XCFun_Fortran_FLAGS_DEBUG
     "-Wall"
-    "-Wunitialized"
+    "-Wuninitialized"
     "-O0"
     "-g3"
     "-fbacktrace"
