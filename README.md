@@ -19,18 +19,6 @@ Fortran bindings).
 XCFun is licensed under version 2.0 of the Mozilla Public License ([MPLv2.0]),
 see [LICENSE.md].
 
-## Contribution guide
-
-- All patches are contributed through fork-pull request mechanism.
-- We do not require any formal copyright assignment or contributor license
-  agreement. Any contributions intentionally sent upstream are presumed to be
-  offered under terms of the [MPLv2.0].
-- Maintainers do not push directly to the repository.
-- Maintainers do not review their own patches.
-- Approval of one maintainer is sufficient for trivial patches.
-  Trivial patches are typos and trivial bugfixes.
-- For any patch that is not trivial, two maintainers need to sign off the patch.
-
 ## Configuration
 
 Check that `XC_MAX_ORDER` is defined to the highest order derivatives you need

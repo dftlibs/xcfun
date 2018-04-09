@@ -83,6 +83,6 @@ before_script:
               -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
+  - cmake --build build -- --jobs=2 VERBOSE=1
   - cd build
-  - make -j 2
-  - ctest -V -j 2
+  - ctest --output-on-failure --verbose --parallel 2
