@@ -76,11 +76,12 @@ before_script:
   - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
   - git submodule init
   - git submodule update --init --recursive
-  - cmake -H. -Bbuild \
-              -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-              -DCMAKE_C_COMPILER=${C_COMPILER} \
-              -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER} \
-              -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+  - |
+    cmake -H. -Bbuild
+      -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+      -DCMAKE_C_COMPILER=${C_COMPILER}
+      -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
+      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
   - cmake --build build -- --jobs=2 VERBOSE=1
