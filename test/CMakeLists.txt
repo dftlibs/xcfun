@@ -16,6 +16,22 @@ target_compile_options(testall
 add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 
 if(ENABLE_Fortran_INTERFACE)
+  add_executable(kernel_example
+    kernel_example.f90
+    ${PROJECT_BINARY_DIR}/include/xcfun.F90
+    )
+  target_link_libraries(kernel_example
+    XCFun
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
+    )
+  target_compile_options(kernel_example
+    PRIVATE
+      "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
+      "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
+      "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
+      "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
+    )
+  set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)
   add_test(kernel_example ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/kernel_example)
 endif()
 
@@ -26,3 +42,4 @@ if(ENABLE_PYTHON_INTERFACE)
     ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/python:$ENV{PYTHONPATH}
     )
 endif()
+

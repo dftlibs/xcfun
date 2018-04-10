@@ -10,7 +10,7 @@
 #   XCFun_VERSION - XCFun version in format Major.Minor.Release
 #   XCFun_INCLUDE_DIRS - Directory where XCFun/xcfun.h header is located.
 #   XCFun_INCLUDE_DIR - same as DIRS
-#   XCFun_Fortran_MODULE_DIRS - Directory where XCFun/xcfun.f90 module source file is located.
+#   XCFun_Fortran_MODULE_DIRS - Directory where XCFun/xcfun.F90 module source file is located.
 #   XCFun_Fortran_MODULE_DIR - same as DIRS
 #   XCFun_DEFINITIONS: Definitions necessary to use XCFun, namely USING_XCFun.
 #   XCFun_LIBRARIES - XCFun library to link against.
@@ -80,18 +80,18 @@ else()
 endif()
 
 # find Fortran 90 source file
-unset(_temp_f90 CACHE)
-find_path(_temp_f90
-  NAMES XCFun/xcfun.f90
+unset(_temp_F90 CACHE)
+find_path(_temp_F90
+  NAMES XCFun/xcfun.F90
   PATHS ${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@
   NO_DEFAULT_PATH)
-if(_temp_f90)
-  set(${PN}_Fortran_MODULE_DIR "${_temp_f90}")
+if(_temp_F90)
+  set(${PN}_Fortran_MODULE_DIR "${_temp_F90}")
   set(${PN}_Fortran_MODULE_DIRS ${${PN}_Fortran_MODULE_DIR})
 else()
   set(${PN}_FOUND 0)
   if(NOT CMAKE_REQUIRED_QUIET)
-    message(STATUS "${PN}Config missing component: Fortran 90 module source (${PN}: ${_temp_f90})")
+    message(STATUS "${PN}Config missing component: Fortran 90 module source (${PN}: ${_temp_F90})")
   endif()
 endif()
 

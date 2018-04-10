@@ -6,10 +6,10 @@
 /*
   Functions used by the Fortran interface. Do _not_ put underscores in the names!
  */
-#ifndef XCFUN_FORTRAN_INT
+#ifndef XCFun_FORTRAN_INT
 typedef int fortran_int_t;
 #else
-typedef XCFUN_FORTRAN_INT fortran_int_t;
+typedef XCFun_FORTRAN_INT fortran_int_t;
 #endif
 
 #ifdef FTN_UPPERCASE

@@ -100,7 +100,6 @@ include(autocmake_cxx)
 include(autocmake_cc)
 include(code_coverage)
 include(omp)
-# FIXME
 include(CXXFlags)
 include(CFlags)
 include(xcfun)

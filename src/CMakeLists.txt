@@ -18,7 +18,7 @@ target_compile_options(xcfun-objlib
 target_compile_definitions(xcfun-objlib
   PUBLIC
     XCFun_EXPORTS
-    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFUN_FORTRAN_INT=long long int>"
+    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFun_FORTRAN_INT=long long int>"
     XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
   )
 target_include_directories(xcfun-objlib

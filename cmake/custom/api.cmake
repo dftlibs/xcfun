@@ -7,6 +7,10 @@ option_with_print(
     ON
   )
 if(ENABLE_Fortran_INTERFACE)
+  enable_language(Fortran)
+  include(FortranCInterface)
+  FortranCInterface_VERIFY(CXX)
+  set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
   add_subdirectory(fortran)
 endif()
 
