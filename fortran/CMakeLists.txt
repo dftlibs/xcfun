@@ -41,7 +41,7 @@ add_executable(kernel_example
   )
 target_link_libraries(kernel_example
   xcfun_f90_bindings
-  xcfun
+  XCFun
   "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
   )
 target_compile_options(kernel_example

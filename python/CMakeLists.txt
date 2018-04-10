@@ -11,7 +11,7 @@ add_custom_command(
   COMMAND "${SWIG_EXECUTABLE}"
   ARGS "-python" "-I${PROJECT_SOURCE_DIR}/include" "-outdir" "${CMAKE_CURRENT_BINARY_DIR}" "-o" ${XCFUN_SWIG_WRAP} ${XCFUN_SWIG}
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  DEPENDS xcfun ${XCFUN_SWIG}
+  DEPENDS XCFun ${XCFUN_SWIG}
   )
 
 configure_file(

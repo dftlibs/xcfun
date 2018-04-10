@@ -3,7 +3,7 @@ add_executable(testall
   )
 target_link_libraries(
   testall
-  xcfun
+  XCFun
   )
 target_compile_options(testall
   PRIVATE
