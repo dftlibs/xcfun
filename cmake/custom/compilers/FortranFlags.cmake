@@ -1,6 +1,7 @@
 set(XCFun_Fortran_FLAGS)
 set(XCFun_Fortran_FLAGS_DEBUG)
 set(XCFun_Fortran_FLAGS_RELEASE)
+set(XCFun_Fortran_FLAGS_COVERAGE)
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_Fortran_FLAGS
@@ -23,6 +24,9 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
     "-ffast-math"
     "-funroll-loops"
     "-ftree-vectorize"
+    )
+  list(APPEND XCFun_Fortran_FLAGS_COVERAGE
+    "${CODE_COVERAGE_FLAGS}"
     )
 endif()
 

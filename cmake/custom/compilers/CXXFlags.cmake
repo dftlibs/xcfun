@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(XCFun_CXX_FLAGS)
 set(XCFun_CXX_FLAGS_DEBUG)
 set(XCFun_CXX_FLAGS_RELEASE)
+set(XCFun_CXX_FLAGS_COVERAGE)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_CXX_FLAGS
@@ -33,6 +34,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     "-funroll-loops"
     "-ftree-vectorize"
     "-Wno-unused"
+    )
+  list(APPEND XCFun_CXX_FLAGS_COVERAGE
+    "${CODE_COVERAGE_FLAGS}"
     )
 endif()
 
@@ -108,24 +112,4 @@ if(CMAKE_CXX_COMPILER_ID MATCHES PGI)
     "-Mvect=idiom"
     "-c9x"
     )
-endif()
-
-if(ENABLE_CODE_COVERAGE)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3)
-      message(FATAL_ERROR "Code coverage analysis on Mac OS X requires Clang version 3.0.0 or greater!")
-    else()
-      list(APPEND XCFun_CXX_FLAGS_DEBUG
-        "-fprofile-arcs"
-        "-ftest-coverage"
-        )
-    endif()
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    list(APPEND XCFun_CXX_FLAGS_DEBUG
-      "-fprofile-arcs"
-      "-ftest-coverage"
-      )
-  else()
-    message(FATAL_ERROR "Code coverage analysis requires the GNU C++ compiler!")
-  endif()
 endif()

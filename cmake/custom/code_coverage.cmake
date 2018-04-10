@@ -3,7 +3,8 @@
 
 #.rst:
 #
-# Enables code coverage by appending corresponding compiler flags.
+# Enables code coverage and defines the list of appropriate flags for the GNU
+# compiler.
 #
 # autocmake.yml configuration::
 #
@@ -20,12 +21,21 @@ option_with_print(
   )
 
 if(ENABLE_CODE_COVERAGE)
-  if(NOT CMAKE_BUILD_TYPE STREQUAL "debug")
+  if(NOT CMAKE_BUILD_TYPE MATCHES "[Dd]ebug")
     message(WARNING "Code coverage analysis results with an optimized (non-Debug) build may be misleading")
+  endif()
+
+  if(NOT CMAKE_C_COMPILER_ID MATCHES GNU)
+    message(FATAL_ERROR "Code coverage analysis only allowed with the GNU compiler collection!")
   endif()
 
   find_program(GCOV_PATH gcov)
   if(NOT GCOV_PATH)
     message(FATAL_ERROR "Code coverage analysis requires gcov!")
   endif()
+
+  list(APPEND CODE_COVERAGE_FLAGS
+    "-fprofile-arcs"
+    "-ftest-coverage"
+    )
 endif()

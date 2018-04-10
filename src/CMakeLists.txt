@@ -13,6 +13,7 @@ target_compile_options(xcfun
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_CXX_FLAGS_COVERAGE}>"
   )
 target_compile_definitions(xcfun
   PUBLIC

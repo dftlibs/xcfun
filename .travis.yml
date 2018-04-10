@@ -7,53 +7,150 @@ matrix:
     # 1/ Linux Clang Builds
     - os: linux
       compiler: clang
-      addons: &clang38
+      addons: &clang34
         apt:
-          sources: ['llvm-toolchain-precise', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8', 'cmake3', 'gfortran']
-      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
+          packages:
+            - clang
+            - cmake3
+            - gfortran
+      env:
+        - CXX_COMPILER='clang++'
+        - C_COMPILER='clang'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     - os: linux
       compiler: clang
-      addons: *clang38
-      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
+      addons: &clang35
+        apt:
+          packages:
+            - clang-3.5
+            - cmake3
+            - gfortran
+      env:
+        - CXX_COMPILER='clang++-3.5'
+        - C_COMPILER='clang-3.5'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
+    - os: linux
+      compiler: clang
+      addons: &clang38
+        apt:
+          packages:
+            - clang-3.8
+            - cmake3
+            - gfortran
+      env:
+        - CXX_COMPILER='clang++-3.8'
+        - C_COMPILER='clang-3.8'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     # 2/ Linux GCC Builds
+    - os: linux
+      compiler: gcc
+      addons: &gcc48
+        apt:
+          packages:
+            - cmake3
+            - g++
+            - gcc
+            - gfortran
+      env:
+        - CXX_COMPILER='g++'
+        - C_COMPILER='gcc'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     - os: linux
       compiler: gcc
       addons: &gcc5
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['cmake3', 'g++-5', 'gcc-5', 'gfortran-5']
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Release' COVERAGE=OFF
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake3
+            - g++-5
+            - gcc-5
+            - gfortran-5
+      env:
+        - CXX_COMPILER='g++-5'
+        - C_COMPILER='gcc-5'
+        - Fortran_COMPILER='gfortran-5'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     - os: linux
       compiler: gcc
-      addons: *gcc5
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=OFF
+      addons: &gcc6
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake3
+            - g++-6
+            - gcc-6
+            - gfortran-6
+      env:
+        - CXX_COMPILER='g++-6'
+        - C_COMPILER='gcc-6'
+        - Fortran_COMPILER='gfortran-6'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
+    - os: linux
+      compiler: gcc
+      addons: &gcc7
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake3
+            - g++-7
+            - gcc-7
+            - gfortran-7
+      env:
+        - CXX_COMPILER='g++-7'
+        - C_COMPILER='gcc-7'
+        - Fortran_COMPILER='gfortran-7'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     # 3/ OSX Clang Builds
     - os: osx
-      osx_image: xcode7
       compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
+      env:
+        - CXX_COMPILER='clang++'
+        - C_COMPILER='clang'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
     # 4/ OSX GCC Builds
     - os: osx
-      osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Debug' COVERAGE=OFF
-    - os: osx
-      osx_image: xcode7
-      compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='Release' COVERAGE=OFF
-    # 5/ Linux GCC5 Coverage build
+      env:
+        - CXX_COMPILER='g++'
+        - C_COMPILER='gcc'
+        - Fortran_COMPILER='gfortran'
+        - BUILD_TYPE='Release'
+        - COVERAGE=OFF
+    # 5/ Linux GCC7 Coverage build
     - os: linux
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['cmake3', 'g++-5', 'gcc-5', 'gfortran-5', 'lcov']
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='Debug' COVERAGE=ON
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake3
+            - g++-7
+            - gcc-7
+            - gfortran-7
+            - lcov
+      env:
+        - CXX_COMPILER='g++-7'
+        - C_COMPILER='gcc-7'
+        - Fortran_COMPILER='gfortran-7'
+        - BUILD_TYPE='Debug'
+        - COVERAGE=ON
 
 before_install:
   - test -n $CC && unset CC

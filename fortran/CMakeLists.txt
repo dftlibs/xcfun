@@ -21,6 +21,7 @@ target_compile_options(xcfun_f90_bindings
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
   )
 target_compile_definitions(xcfun_f90_bindings
   PUBLIC
@@ -41,10 +42,12 @@ add_executable(kernel_example
 target_link_libraries(kernel_example
   xcfun_f90_bindings
   xcfun
+  "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
   )
 target_compile_options(kernel_example
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
   )
 set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)
