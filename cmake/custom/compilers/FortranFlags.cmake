@@ -63,11 +63,13 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
     )
 endif()
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-  list(APPEND XCFun_Fortran_FLAGS_DEBUG
-    "-fprofile-arcs"
-    "-ftest-coverage"
-    )
-else()
-  message(FATAL_ERROR "Code coverage analysis requires the GNU Fortran compiler!")
+if(ENABLE_CODE_COVERAGE)
+  if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
+    list(APPEND XCFun_Fortran_FLAGS_DEBUG
+      "-fprofile-arcs"
+      "-ftest-coverage"
+      )
+  else()
+    message(FATAL_ERROR "Code coverage analysis requires the GNU Fortran compiler!")
+  endif()
 endif()
