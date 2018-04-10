@@ -66,9 +66,8 @@ if(NOT STATIC_LIBRARY_ONLY)
     PROPERTIES
       VERSION ${PROJECT_VERSION_MAJOR}
       SOVERSION ${PROJECT_VERSION_MAJOR}
-      # FIXME visibility
-     #CXX_VISIBILITY_PRESET hidden
-     #VISIBILITY_INLINES_HIDDEN 1
+      CXX_VISIBILITY_PRESET hidden
+      VISIBILITY_INLINES_HIDDEN 1
       MACOSX_RPATH ON
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
@@ -119,65 +118,75 @@ else()
   add_library(XCFun ALIAS xcfun-shared)
 endif()
 
-# FIXME
-#include(GenerateExportHeader)
-#generate_export_header(XCFun
-#  BASE_NAME "XCFun"
-#  EXPORT_MACRO_NAME "XCFun_EXPORT"
-#  EXPORT_FILE_NAME "XCFunExport.h"
-#  DEPRECATED_MACRO_NAME "XCFun_DEPRECATED"
-#  NO_EXPORT_MACRO_NAME "XCFun_NO_EXPORT"
-#  STATIC_DEFINE "XCFun_STATIC_DEFINE"
-#  NO_DEPRECATED_MACRO_NAME "XCFun_NO_DEPRECATED"
-#  DEFINE_NO_DEPRECATED)
-#file(
-#  COPY ${CMAKE_CURRENT_BINARY_DIR}/XCFunExport.h
-#  DESTINATION ${PROJECT_BINARY_DIR}/include
-#  )
-#install(
-#  FILES ${PROJECT_BINARY_DIR}/include/XCFunExport.h
-#  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
-#  )
-#
-# <<<  Export Config  >>>
-#include(CMakePackageConfigHelpers)
-#configure_package_config_file(
-#  ${PROJECT_SOURCE_DIR}/cmake/XCFunConfig.cmake.in
-#  ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
-#  INSTALL_DESTINATION
-#    ${CMAKECONFIG_INSTALL_DIR}
-#  )
-#install(
-#  FILES
-#    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
-#    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfigVersion.cmake
-#  DESTINATION
-#    ${CMAKECONFIG_INSTALL_DIR}
-#  )
-#
-#if(NOT STATIC_LIBRARY_ONLY)
-#  install(
-#    EXPORT
-#      "XCFunTargets-shared"
-#    NAMESPACE
-#      "XCFun::"
-#    DESTINATION
-#      ${CMAKECONFIG_INSTALL_DIR}
-#    )
-#endif()
-#
-#if(NOT SHARED_LIBRARY_ONLY)
-#  install(
-#    EXPORT
-#      "XCFunTargets-static"
-#    NAMESPACE
-#      "XCFun::"
-#    DESTINATION
-#      ${CMAKECONFIG_INSTALL_DIR}
-#    )
-#endif()
+include(GenerateExportHeader)
+generate_export_header(XCFun
+  BASE_NAME "XCFun"
+  EXPORT_MACRO_NAME "XCFun_EXPORT"
+  EXPORT_FILE_NAME "XCFunExport.h"
+  DEPRECATED_MACRO_NAME "XCFun_DEPRECATED"
+  NO_EXPORT_MACRO_NAME "XCFun_NO_EXPORT"
+  STATIC_DEFINE "XCFun_STATIC_DEFINE"
+  NO_DEPRECATED_MACRO_NAME "XCFun_NO_DEPRECATED"
+  DEFINE_NO_DEPRECATED)
+file(
+  COPY ${CMAKE_CURRENT_BINARY_DIR}/XCFunExport.h
+  DESTINATION ${PROJECT_BINARY_DIR}/include
+  )
+install(
+  FILES ${PROJECT_BINARY_DIR}/include/XCFunExport.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
+  )
 
-# FIXME
-#install(TARGETS xcfun DESTINATION lib${LIB_SUFFIX})
-#file(GLOB headers "include/*.h")
-#install(FILES ${headers} DESTINATION include)
+# <<<  Export Config  >>>
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+  )
+configure_package_config_file(
+  ${PROJECT_SOURCE_DIR}/cmake/XCFunConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
+  INSTALL_DESTINATION
+    ${CMAKECONFIG_INSTALL_DIR}
+  )
+install(
+  FILES
+    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
+    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfigVersion.cmake
+  DESTINATION
+    ${CMAKECONFIG_INSTALL_DIR}
+  )
+
+if(NOT STATIC_LIBRARY_ONLY)
+  install(
+    EXPORT
+      "XCFunTargets-shared"
+    NAMESPACE
+      "XCFun::"
+    DESTINATION
+      ${CMAKECONFIG_INSTALL_DIR}
+    )
+endif()
+
+if(NOT SHARED_LIBRARY_ONLY)
+  install(
+    EXPORT
+      "XCFunTargets-static"
+    NAMESPACE
+      "XCFun::"
+    DESTINATION
+      ${CMAKECONFIG_INSTALL_DIR}
+    )
+endif()
+
+install(
+  FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/densvars.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functional.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/specmath.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xcint.hpp
+  DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
+  )
