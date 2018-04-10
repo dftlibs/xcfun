@@ -3,7 +3,6 @@ add_executable(testall
   )
 target_link_libraries(testall
   XCFun
-  "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:gcov>"
   )
 target_compile_options(testall
   PRIVATE
@@ -22,7 +21,6 @@ if(TEST_Fortran_BINDINGS)
     )
   target_link_libraries(kernel_example
     XCFun
-    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:gcov>"
     )
   target_compile_options(kernel_example
     PRIVATE

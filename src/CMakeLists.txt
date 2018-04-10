@@ -62,6 +62,10 @@ if(NOT STATIC_LIBRARY_ONLY)
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
+  target_link_libraries(xcfun-shared
+    PUBLIC
+      "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:gcov>"
+    )
   set_target_properties(xcfun-shared
     PROPERTIES
       VERSION ${PROJECT_VERSION_MAJOR}
@@ -96,6 +100,10 @@ if(NOT SHARED_LIBRARY_ONLY)
     INTERFACE
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+  target_link_libraries(xcfun-static
+    PUBLIC
+      "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:gcov>"
     )
   set_target_properties(xcfun-static
     PROPERTIES
