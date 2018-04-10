@@ -15,7 +15,7 @@ target_compile_options(testall
   )
 add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 
-if(ENABLE_Fortran_INTERFACE)
+if(TEST_Fortran_BINDINGS)
   add_executable(kernel_example
     kernel_example.f90
     ${PROJECT_BINARY_DIR}/include/xcfun.F90

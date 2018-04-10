@@ -5,10 +5,7 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 # project name
-project(XCFun
-  LANGUAGES CXX C
-  VERSION 2.0.0
-  )
+project(XCFun LANGUAGES CXX C)
 
 # do not rebuild if rules (compiler flags) change
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
@@ -17,14 +14,6 @@ set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
-message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}")
-
-# directories which hold included cmake modules
-list(APPEND CMAKE_MODULE_PATH
-  ${PROJECT_SOURCE_DIR}/cmake/custom
-  ${PROJECT_SOURCE_DIR}/cmake/custom/compilers
-  ${PROJECT_SOURCE_DIR}/cmake/downloaded
-  )
 
 # Options handling utilities
 include(CMakeParseArguments)
@@ -48,6 +37,7 @@ macro(print_option)
     message(STATUS "Setting option ${print_option_NAME}: ${print_option_DEFAULT}")
   endif()
 endmacro()
+
 # Wraps an option with default ON/OFF. Adds nice messaging to option()
 # Written by Lori A. Burns (@loriab) and Ryan M. Richard (@ryanmrichard)
 # Syntax: option_with_print(NAME <option name> MESSAGE <description> DEFAULT <default value>)
@@ -67,9 +57,10 @@ macro(option_with_print)
     )
   option(${option_with_print_NAME} ${option_with_print_MESSAGE} ${option_with_print_DEFAULT})
 endmacro()
+
 # Wraps an option with a default other than ON/OFF and prints it
 # Written by Lori A. Burns (@loriab) and Ryan M. Richard (@ryanmrichard)
-# NOTE: Can\'t combine with above b/c CMake handles ON/OFF options specially
+# NOTE: Can't combine with above b/c CMake handles ON/OFF options specially
 # NOTE2: CMake variables are always defined so need to further check for if
 #       they are the NULL string. This is also why we need the force
 # Syntax: option_with_default(NAME <option name> MESSAGE <description> DEFAULT <default value>)
@@ -91,6 +82,11 @@ macro(option_with_default)
     set(${option_with_default_NAME} "${option_with_default_DEFAULT}" CACHE STRING ${option_with_default_MESSAGE} FORCE)
   endif()
 endmacro()
+
+# directories which hold included cmake modules
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/custom)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/custom/compilers)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/downloaded)
 
 # included cmake modules
 include(autocmake_custom_color_messages)

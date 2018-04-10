@@ -1,0 +1,38 @@
+# CMakeLists.txt and setup script will be generated from this file
+# see: http://autocmake.readthedocs.io/en/latest/developers/configuration.html
+# adapt the following lines and expand
+
+name: XCFun
+min_cmake_version: 3.5
+setup_script: setup
+url_root: https://github.com/coderefinery/autocmake/raw/master/
+default_build_type: Debug
+language:
+  - CXX
+  - C
+modules:
+  - plugins:
+    - source:
+      - '%(url_root)modules/custom_color_messages.cmake'
+      - '%(url_root)modules/default_build_paths.cmake'
+      - '%(url_root)modules/safeguards.cmake'
+  - compilers:
+    - source:
+      - '%(url_root)modules/cxx.cmake'
+      - '%(url_root)modules/cc.cmake'
+  - flags:
+    - source:
+      - 'custom/code_coverage.cmake'
+      - 'custom/omp.cmake'
+      - 'custom/compilers/CXXFlags.cmake'
+      - 'custom/compilers/CFlags.cmake'
+  - general:
+    - source:
+      - 'custom/xcfun.cmake'
+      - 'custom/api.cmake'
+      - 'custom/static_library.cmake'
+  - src:
+    - source: '%(url_root)modules/src.cmake'
+  - testing:
+    - source:
+      - 'custom/test.cmake'

@@ -1,3 +1,17 @@
+#.rst:
+#
+# Sets maximum order of derivatives of the exchange-correlation kernel
+#
+# Variables modified::
+#
+#   XCFun_XC_MAX_ORDER
+#
+# autocmake.yml configuration::
+#
+#   docopt:
+#     - "--xcmaxorder=<XCFun_XC_MAX_ORDER> An integer greater than 3 [default: 3]."
+#   define: "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
+
 option_with_default(
   NAME
     XCFun_XC_MAX_ORDER
@@ -11,6 +25,11 @@ if(DEFINED XCFun_XC_MAX_ORDER AND XCFun_XC_MAX_ORDER LESS 3)
   message(STATUS "${XCFun_XC_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 3")
   set(XCFun_XC_MAX_ORDER 3 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
 endif()
+
+set(PROJECT_VERSION 2.0.0)
+set(PROJECT_VERSION_MAJOR 2)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
 
 # Hardcode to share, rather than use CMAKE_INSTALL_DATAROOTDIR as the latter
 # might resolve to a place not recognized by CMake

@@ -1,5 +1,6 @@
 # (c) https://github.com/coderefinery/autocmake/blob/master/AUTHORS.md
 # licensed under BSD-3: https://github.com/coderefinery/autocmake/blob/master/LICENSE
+# Simplified and adapted by Roberto Di Remigio
 
 #.rst:
 #
