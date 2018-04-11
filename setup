@@ -24,10 +24,10 @@ Options:
   --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
   --coverage                             Enable code coverage [default: OFF].
   --omp                                  Enable OpenMP parallelization [default: False].
+  --static                               Create only the static library [default: False].
   --xcmaxorder=<XCFun_XC_MAX_ORDER>      An integer greater than 3 [default: 3].
   --f90bindings=<F90BINDINGS>            Test Fortran 90 bindings [default: ON].
   --pybindings                           Enable Python interface [default: OFF].
-  --static                               Create only the static library [default: False].
   --type=<TYPE>                          Set the CMake build type (debug, release, relwithdebinfo, minsizerel) [default: debug].
   --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
   --show                                 Show CMake command and exit.
@@ -49,10 +49,10 @@ def gen_cmake_command(options, arguments):
     command.append('-DCMAKE_C_COMPILER={0} -DEXTRA_CFLAGS="{1}"'.format(arguments['--cc'], arguments['--extra-cc-flags']))
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
     command.append('-DENABLE_OPENMP={0}'.format(arguments['--omp']))
+    command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DXCFun_XC_MAX_ORDER="{0}"'.format(arguments['--xcmaxorder']))
     command.append('-DTEST_Fortran_BINDINGS={0}'.format(arguments['--f90bindings']))
     command.append('-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings']))
-    command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DCMAKE_BUILD_TYPE={0}'.format(arguments['--type']))
     command.append('-G"{0}"'.format(arguments['--generator']))
     if arguments['--cmake-options'] != "''":

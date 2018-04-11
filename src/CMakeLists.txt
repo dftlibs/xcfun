@@ -25,7 +25,7 @@ target_compile_definitions(xcfun-objlib
   )
 target_include_directories(xcfun-objlib
   PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/api
     ${PROJECT_BINARY_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/functionals
   PRIVATE
@@ -62,7 +62,7 @@ if(NOT STATIC_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-shared
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )

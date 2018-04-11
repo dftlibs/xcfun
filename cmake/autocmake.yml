@@ -26,13 +26,11 @@ modules:
       - 'custom/omp.cmake'
       - 'custom/compilers/CXXFlags.cmake'
       - 'custom/compilers/CFlags.cmake'
-  - general:
-    - source:
-      - 'custom/xcfun.cmake'
-      - 'custom/api.cmake'
       - 'custom/static_library.cmake'
   - src:
-    - source: '%(url_root)modules/src.cmake'
+    - source:
+      - 'custom/xcfun.cmake'
+      - '%(url_root)modules/src.cmake'
   - testing:
     - source:
       - 'custom/test.cmake'

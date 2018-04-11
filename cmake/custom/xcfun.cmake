@@ -1,16 +1,23 @@
 #.rst:
 #
-# Sets maximum order of derivatives of the exchange-correlation kernel
+# Sets general XCFun options
 #
 # Variables modified::
 #
-#   XCFun_XC_MAX_ORDER
+#   XCFun_XC_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
+#   TEST_Fortran_BINDINGS -- Whether to test the Fortran 90 bindings
+#   ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
 #
 # autocmake.yml configuration::
 #
 #   docopt:
 #     - "--xcmaxorder=<XCFun_XC_MAX_ORDER> An integer greater than 3 [default: 3]."
-#   define: "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
+#     - "--f90bindings=<F90BINDINGS> Test Fortran 90 bindings [default: ON]."
+#     - "--pybindings Enable Python interface [default: OFF]."
+#   define:
+#     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
+#     - "'-DTEST_Fortran_BINDINGS={0}'.format(arguments['--f90bindings'])"
+#     - "'-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
 option_with_default(
   NAME
@@ -43,3 +50,36 @@ else()
   set(PYMOD_INSTALL_LIBDIR "${PYMOD_INSTALL_LIBDIR}" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
 endif()
 file(TO_NATIVE_PATH "${CMAKE_INSTALL_LIBDIR}/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
+
+option_with_print(
+  NAME
+    TEST_Fortran_BINDINGS
+  MESSAGE
+    "Test Fortran 90 bindings"
+  DEFAULT
+    ON
+  )
+
+option_with_print(
+  NAME
+    ENABLE_PYTHON_INTERFACE
+  MESSAGE
+    "Enable Python interface"
+  DEFAULT
+    OFF
+  )
+
+if(TEST_Fortran_BINDINGS)
+  enable_language(Fortran)
+  include(FortranCInterface)
+  FortranCInterface_VERIFY(CXX)
+  set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
+  include(FortranFlags)
+  include(int64)
+endif()
+
+if(ENABLE_PYTHON_INTERFACE)
+  add_subdirectory(python)
+endif()
+
+add_subdirectory(api)
