@@ -3,6 +3,8 @@ add_library(xcfun-objlib OBJECT "")
 set_target_properties(xcfun-objlib
   PROPERTIES
     POSITION_INDEPENDENT_CODE 1
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN 1
   )
 target_compile_options(xcfun-objlib
   # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
@@ -24,6 +26,7 @@ target_compile_definitions(xcfun-objlib
 target_include_directories(xcfun-objlib
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_BINARY_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/functionals
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -60,6 +63,7 @@ if(NOT STATIC_LIBRARY_ONLY)
   target_include_directories(xcfun-shared
     INTERFACE
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-shared
@@ -99,6 +103,7 @@ if(NOT SHARED_LIBRARY_ONLY)
   target_include_directories(xcfun-static
     INTERFACE
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-static

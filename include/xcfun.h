@@ -15,6 +15,10 @@
 #ifndef XCFUN_H
 #define XCFUN_H
 
+#include "XCFunExport.h"
+
+#define XCFun_API XCFun_EXPORT
+
 #define XCFUN_API_VERSION 2
 
 #ifdef __cplusplus
@@ -88,16 +92,16 @@ enum xc_vars {
   XC_NR_VARS
 };
 
-double xcfun_version(void);
-const char * xcfun_splash(void);
-int xcfun_test(void);
+XCFun_API double xcfun_version(void);
+XCFun_API const char * xcfun_splash(void);
+XCFun_API int xcfun_test(void);
 
 typedef struct xc_functional_obj * xc_functional;
 
-xc_functional xc_new_functional_not_macro(int api_version);
+XCFun_API xc_functional xc_new_functional_not_macro(int api_version);
 #define xc_new_functional() xc_new_functional_not_macro(XCFUN_API_VERSION)
 
-void xc_free_functional(xc_functional fun);
+XCFun_API void xc_free_functional(xc_functional fun);
 
 // Fill the data array with information to recreate an exact copy of fun.
 // This is not stable between different xcfun "versions"
@@ -109,14 +113,14 @@ void xc_deserialize(xc_functional fun, double * buf);
 
 // Call with n >= 0, Returns a pointer to an internal string with the name
 // of parameter nr n. Return NULL when n is too large.
-const char * xc_enumerate_parameters(int n);
+XCFun_API const char * xc_enumerate_parameters(int n);
 // Like xc_enumerate_parameters, but over aliases
-const char * xc_enumerate_aliases(int n);
+XCFun_API const char * xc_enumerate_aliases(int n);
 // Try to either set or get a parameter. Return 0 if all was well,
 // otherwise the name was invalid.
-int xc_set(xc_functional fun, const char * name, double value);
+XCFun_API int xc_set(xc_functional fun, const char * name, double value);
 int xc_get(xc_functional fun, const char * name, double * value);
-const char * xc_describe_short(const char * name);
+XCFun_API const char * xc_describe_short(const char * name);
 const char * xc_describe_long(const char * name);
 
 int xc_is_gga(xc_functional fun);
@@ -128,20 +132,20 @@ int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functio
 
 // Try to set the functional evaluation vars, mode and order
 // return some combination of XC_E* if an error occurs, else 0.
-int xc_eval_setup(xc_functional fun,
-                  enum xc_vars vars,
-                  enum xc_mode mode,
-                  int order);
+XCFun_API int xc_eval_setup(xc_functional fun,
+                            enum xc_vars vars,
+                            enum xc_mode mode,
+                            int order);
 
 // Length of the density[] argument to eval()
 int xc_input_length(xc_functional fun);
 
 // Length of the result[] argument to eval()
-int xc_output_length(xc_functional fun);
+XCFun_API int xc_output_length(xc_functional fun);
 
 // Evaluate the functional at density
 // In contracted mode density is of dimension 2^porder*Nvars
-void xc_eval(xc_functional fun, const double * density, double * result);
+XCFun_API void xc_eval(xc_functional fun, const double * density, double * result);
 /* Vector version of xc_eval.
    density_pitch = density[start_of_second_point] - density[start_of_first_point],
    likewise for result_pitch. */
