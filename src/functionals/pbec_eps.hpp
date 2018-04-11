@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef PBEC_EPS_H
-#define PBEC_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
@@ -60,5 +59,3 @@ template <class num> static num pbec_eps_polarized(const num & a, const num & ga
   return (eps + H(d2, eps, pow3(u)));
 }
 } // namespace pbec_eps
-
-#endif

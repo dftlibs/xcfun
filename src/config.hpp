@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 // Use #define XC_NO_REGULARIZATION to turn off
 // checks and balances for physical densities.
@@ -37,6 +36,4 @@ typedef double ireal_t;
 typedef qd_real ireal_t;
 #define XCFUN_NUM_CONVERT // Must convert real types at i/o
 #define INNER_TO_OUTER(INNER) to_double(INNER)
-#endif
-
 #endif

@@ -12,8 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef PW9xx_H
-#define PW9xx_H
+#pragma once
+
 #include "constants.hpp"
 #include "functional.hpp"
 
@@ -93,5 +93,3 @@ static num pw91xk_enhancement(const parameter param_AB[6],
   return numerator / denominator;
 }
 } // namespace pw91_like_x_internal
-
-#endif

@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef VWN_H
-#define VWN_H
+#pragma once
 
 #include "functional.hpp"
 
@@ -94,5 +93,3 @@ template <class num> static num vwn3_eps(const densvars<num> & d) {
   return (vwn_f(s, para) + dd);
 }
 } // namespace vwn
-
-#endif

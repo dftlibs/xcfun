@@ -12,6 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
+#pragma once
+
 enum xc_functional_id {
   XC_SLATERX,
   XC_PW86X,

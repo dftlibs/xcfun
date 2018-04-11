@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef SPECMATH_H
-#define SPECMATH_H
+#pragma once
 
 #ifdef XCFUN_NO_ERF
 void xcint_die(const char * message, int code);
@@ -44,5 +43,3 @@ static T poly(const T & x, int ndeg, const T2 coeffs[]) {
 template <class T, class S> static T ufunc(const T & x, S a) {
   return pow(1 + x, a) + pow(1 - x, a);
 }
-
-#endif

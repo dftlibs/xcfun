@@ -12,6 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
+#pragma once
+
 #ifndef XC_NO_REGULARIZATION
 #error Implement regularization properly, what about the non-constant terms when setting something to 0?
 #endif

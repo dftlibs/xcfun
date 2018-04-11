@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef TPSSX_EPS_H
-#define TPSSX_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
@@ -59,5 +58,3 @@ static num F_x(const num & d_n, const num & d_gnn, const num & d_tau) {
   return 1 + kappa - kappa / (1 + xpz / kappa);
 }
 } // namespace tpssx_eps
-
-#endif

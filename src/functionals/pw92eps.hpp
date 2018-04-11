@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef PW92EPS_H
-#define PW92EPS_H
+#pragma once
 
 #include "constants.hpp"
 
@@ -67,5 +66,3 @@ template <class num> static num pw92eps_polarized(const num & a) {
   return eopt(sqrt_r_s, TUVWXYP[1]);
 }
 } // namespace pw92eps
-
-#endif

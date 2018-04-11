@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef B97X_H
-#define B97X_H
+#pragma once
 
 #include "b97xc.hpp"
 #define PREFACTOR 0.9305257363491002 // 1.5*pow(3/(4*PI),1.0/3.0)
@@ -42,5 +41,3 @@ static num energy_b97x_ab(const parameter & Gamma,
   return e_x_LSDA_ab(a_43) * b97xc::enhancement(Gamma, c_params, s2_ab);
 }
 } // namespace b97x
-
-#endif

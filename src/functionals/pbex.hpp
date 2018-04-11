@@ -12,8 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef PBEX_H
-#define PBEX_H
+#pragma once
+
 #include "pw9xx.hpp"
 
 namespace pbex {
@@ -50,5 +50,3 @@ static num energy_pbe_ab(const parameter & R, const num & rho, const num & grad)
   return prefactor(rho) * enhancement(R, rho, grad);
 }
 } // namespace pbex
-
-#endif

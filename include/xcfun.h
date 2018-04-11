@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef XCFUN_H
-#define XCFUN_H
+#pragma once
 
 #include "XCFunExport.h"
 
@@ -197,5 +196,3 @@ int xc_derivative_index(xc_functional fun, const int derivative[]);
 #define XC_D00020 18
 #define XC_D00011 19
 #define XC_D00002 20
-
-#endif

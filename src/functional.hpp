@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef FUNCTIONAL_H
-#define FUNCTIONAL_H
+#pragma once
 
 #include "config.hpp"
 #include "ctaylor.hpp"
@@ -28,5 +27,3 @@
 #define PARAMETER(P)                                                                \
   template <> const char * pardat_db<P>::symbol = #P;                               \
   template <> parameter_data pardat_db<P>::d
-
-#endif

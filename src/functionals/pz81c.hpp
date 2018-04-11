@@ -12,6 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
+#pragma once
+
 #include "constants.hpp"
 #include "functional.hpp"
 

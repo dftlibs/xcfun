@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef B97XC_H
-#define B97XC_H
+#pragma once
 
 #include "xcint.hpp"
 
@@ -41,5 +40,3 @@ static num enhancement(const parameter & Gamma,
   return c_params[0] + c_params[1] * ux + c_params[2] * ux * ux;
 }
 } // namespace b97xc
-
-#endif

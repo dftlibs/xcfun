@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef M0xy_H
-#define M0xy_H
+#pragma once
 
 #include "pw92eps.hpp"
 #include "pw9xx.hpp"
@@ -260,5 +259,3 @@ template <class num> static num ueg_c_anti(const densvars<num> & d) {
 template <class num> static num lsda_x(const num & rho) {
   return -(3.0 / 2.0) * pow(3.0 / (4.0 * M_PI), 1.0 / 3.0) * pow(rho, 4.0 / 3.0);
 }
-
-#endif

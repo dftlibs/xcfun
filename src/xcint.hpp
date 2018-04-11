@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef XCINT_H
-#define XCINT_H
+#pragma once
 
 #include <cstdio>
 
@@ -146,5 +145,3 @@ template <int FUN> struct pardat_db {
   static const char * symbol;
   static parameter_data d;
 };
-
-#endif

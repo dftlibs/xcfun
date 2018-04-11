@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef TPSSC_EPS_H
-#define TPSSC_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
@@ -61,5 +60,3 @@ template <class num> static num tpssc_eps(const densvars<num> & d) {
   return eps_pkzb * (1 + dd * eps_pkzb * tauwtau3);
 }
 } // namespace tpssc_eps
-
-#endif

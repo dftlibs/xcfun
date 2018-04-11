@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 
 #include "functional.hpp"
 
@@ -39,5 +38,3 @@ const parameter param_beta_pbe_paper = 0.066725;
 const parameter param_beta_accurate = 0.06672455060314922;
 const parameter param_beta_gamma = param_beta_accurate / param_gamma;
 } // namespace xc_constants
-
-#endif

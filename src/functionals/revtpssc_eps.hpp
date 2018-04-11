@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef REVTPSSC_EPS_H
-#define REVTPSSC_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
@@ -110,5 +109,3 @@ template <class num> static num revtpssc_eps(const densvars<num> & d) {
   return eps_pkzb * (1 + dd * eps_pkzb * tauwtau2);
 }
 } // namespace revtpssc_eps
-
-#endif
