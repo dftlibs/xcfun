@@ -125,10 +125,10 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] = {
       {"rangesep_mu", 0.33}}},
     // Kinetic energy corrections for orbital free DFT
     {"tfk",
-     "Thomas-Fermi corraction to be put in effective potential.",
+     "Thomas-Fermi correction to be put in effective potential.",
      {{"tfk", 1.0}}},
     {"tw",
-     "von Weizsacker corraction to be put in effective potential.",
+     "von Weizsacker correction to be put in effective potential.",
      {{"tw", 1.0}}},
 };
 
