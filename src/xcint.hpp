@@ -18,7 +18,7 @@
 
 #include "config.hpp"
 #include "ctaylor.hpp"
-#include "list_of_functionals.hpp"
+#include "functionals/list_of_functionals.hpp"
 #include "taylor.hpp"
 #include "xcfun.h"
 

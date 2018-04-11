@@ -17,7 +17,7 @@ add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 if(TEST_Fortran_BINDINGS)
   add_executable(kernel_example
     kernel_example.f90
-    ${PROJECT_BINARY_DIR}/api/xcfun.F90
+    ${PROJECT_SOURCE_DIR}/api/xcfun.F90
     )
   target_link_libraries(kernel_example
     XCFun

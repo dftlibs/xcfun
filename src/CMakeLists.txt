@@ -27,7 +27,6 @@ target_include_directories(xcfun-objlib
   PUBLIC
     ${PROJECT_SOURCE_DIR}/api
     ${PROJECT_BINARY_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/functionals
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
   )

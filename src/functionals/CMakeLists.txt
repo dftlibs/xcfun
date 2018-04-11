@@ -1,3 +1,5 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 target_sources(xcfun-objlib
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/aliases.cpp
@@ -61,22 +63,32 @@ target_sources(xcfun-objlib
     ${CMAKE_CURRENT_SOURCE_DIR}/vwn5c.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/zvpbeint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/zvpbesolc.cpp
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/b97c.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/b97x.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/b97xc.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/constants.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/list_of_functionals.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/m0xy_fun.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pbec_eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pbex.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pw92eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pw9xx.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pz81c.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/revtpssc_eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/revtpssx_eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/slater.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tpssc_eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tpssx_eps.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/vwn.hpp
   )
+
+list(APPEND functionals_headers
+    b97c.hpp
+    b97x.hpp
+    b97xc.hpp
+    constants.hpp
+    list_of_functionals.hpp
+    m0xy_fun.hpp
+    pbec_eps.hpp
+    pbex.hpp
+    pw92eps.hpp
+    pw9xx.hpp
+    pz81c.hpp
+    revtpssc_eps.hpp
+    revtpssx_eps.hpp
+    slater.hpp
+    tpssc_eps.hpp
+    tpssx_eps.hpp
+    vwn.hpp
+  )
+foreach(header IN LISTS functionals_headers)
+  install(
+    FILES
+      ${header}
+    DESTINATION
+      ${CMAKE_INSTALL_INCLUDEDIR}/XCFun/functionals
+    )
+endforeach()
