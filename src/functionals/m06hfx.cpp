@@ -18,7 +18,7 @@
 
 // M06-HF exchange functional. to be used with HF exchange factor of 1.00
 
-template <class num> static num m06hfx(const densvars<num> & d) {
+template <typename num> static num m06hfx(const densvars<num> & d) {
   using m0xy_metagga_xc_internal::alpha_x;
   using m0xy_metagga_xc_internal::fw;
   using m0xy_metagga_xc_internal::h;

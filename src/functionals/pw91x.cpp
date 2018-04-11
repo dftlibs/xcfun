@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "pw9xx.hpp"
 
-template <class num> static num pw91x(const densvars<num> & d) {
+template <typename num> static num pw91x(const densvars<num> & d) {
   const parameter param_AB[6] = {0.19645, 7.7956, 0.2743, 0.15084, 100.0, 0.004};
   using pw91_like_x_internal::prefactor;
   using pw91_like_x_internal::pw91xk_enhancement;

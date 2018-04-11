@@ -23,7 +23,7 @@ const parameter R_pbe = 0.804;
 const parameter R_revpbe = 1.245;
 
 // enhancement factor F(S), common to PBEx and REVPBEx
-template <class num>
+template <typename num>
 static num enhancement(const parameter & R, const num & rho, const num & grad) {
   using pw91_like_x_internal::S2;
 
@@ -38,13 +38,14 @@ static num enhancement(const parameter & R, const num & rho, const num & grad) {
   return 1 + R - R / t1; // Intel <= 11.1 miscompiles(?) this line with -fast
 }
 
-template <class num> static num enhancement_RPBE(const num & rho, const num & grad) {
+template <typename num>
+static num enhancement_RPBE(const num & rho, const num & grad) {
   using pw91_like_x_internal::S2;
   const parameter mu = 0.2195149727645171;
   return 1 - R_pbe * expm1((-mu / R_pbe) * S2(rho, grad));
 }
 
-template <class num>
+template <typename num>
 static num energy_pbe_ab(const parameter & R, const num & rho, const num & grad) {
   using pw91_like_x_internal::prefactor;
   return prefactor(rho) * enhancement(R, rho, grad);

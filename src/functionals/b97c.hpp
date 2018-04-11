@@ -33,7 +33,7 @@ const parameter c_b97_2[2][3] = {{0.999849, 1.40626, -7.44060},
 const parameter Gamma_par = 0.2;
 const parameter Gamma_antipar = 0.006;
 
-template <class num>
+template <typename num>
 static num energy_b97c_par(const parameter & Gamma,
                            const parameter c_params[],
                            const num & a,
@@ -45,7 +45,7 @@ static num energy_b97c_par(const parameter & Gamma,
   return e_LSDA * b97xc::enhancement(Gamma, c_params, s2_ab2);
 }
 
-template <class num>
+template <typename num>
 static num energy_b97c_antipar(const parameter & Gamma,
                                const parameter c_params[],
                                const densvars<num> & d,

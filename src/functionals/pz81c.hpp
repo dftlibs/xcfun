@@ -20,21 +20,21 @@
 namespace pz81eps {
 
 // (1+zeta)^4/3 + (1-zeta)^(4/3) reorganized, plus constants.
-template <class num> static num fz(const densvars<num> & d) {
+template <typename num> static num fz(const densvars<num> & d) {
   const parameter p = pow(2.0, 4.0 / 3.0);
   const parameter q = (2 * pow(2.0, 1.0 / 3.0) - 2);
   return (p * (d.a_43 + d.b_43) * d.n_m13 / d.n - 2) / q;
 }
 
-template <class num> static num Eld(const num & x, const parameter CB1B2[]) {
+template <typename num> static num Eld(const num & x, const parameter CB1B2[]) {
   return CB1B2[0] / (1 + CB1B2[1] * sqrt(x) + CB1B2[2] * x);
 }
 
-template <class num> static num Ehd(const num & x, const parameter c[]) {
+template <typename num> static num Ehd(const num & x, const parameter c[]) {
   return c[1] + log(x) * (c[0] + x * c[2]) + c[3] * x;
 }
 
-template <class num> static num pz81eps(const densvars<num> & d) {
+template <typename num> static num pz81eps(const densvars<num> & d) {
   parameter c[4][4] = {{-0.1423, 1.0529, 0.3334, 0},
                        {-0.0843, 1.3981, 0.2611, 0},
                        {0.0311, -0.048, 0.0020, -0.0116},

@@ -15,7 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num>
+template <typename num>
 static num Gc(const num & r,
               const parameter A,
               const parameter a1,
@@ -32,11 +32,11 @@ static num Gc(const num & r,
 
 // (1+(a-b)/(a+b))^p + (1-(a-b)/(a+b))^p =
 // ((b^p+a^p)*2^p)/(b+a)^p
-template <class num> static num uf(const densvars<num> & d, const parameter p) {
+template <typename num> static num uf(const densvars<num> & d, const parameter p) {
   return (pow(d.a, p) + pow(d.b, p)) * pow(2 / d.n, p);
 }
 
-template <class num> static num pw91c(const densvars<num> & d) {
+template <typename num> static num pw91c(const densvars<num> & d) {
   const parameter pa = 1.0;
   const parameter Aa = 0.016887; // ok
   const parameter a1a = 0.11125; // ok

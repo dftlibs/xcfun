@@ -21,7 +21,7 @@ namespace b97x {
 
 // LSDA factor, for alpha and beta spin
 
-template <class num> static num e_x_LSDA_ab(const num & a_43) {
+template <typename num> static num e_x_LSDA_ab(const num & a_43) {
   return -PREFACTOR * a_43;
 }
 
@@ -32,7 +32,7 @@ const parameter c_b97_1[3] = {0.789518, 0.573805, 0.660975};
 const parameter c_b97_2[3] = {0.827642, 0.047840, 1.76125};
 const parameter Gamma = 0.004;
 
-template <class num>
+template <typename num>
 static num energy_b97x_ab(const parameter & Gamma,
                           const parameter c_params[],
                           const num & a_43,

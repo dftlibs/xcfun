@@ -60,7 +60,7 @@ struct xc_functional_obj {
   int depends; // XC_DENSITY, gradient etc
 };
 
-template <class T> struct densvars;
+template <typename T> struct densvars;
 
 struct functional_data {
   const char * short_description;

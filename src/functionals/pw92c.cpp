@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "pw92eps.hpp"
 
-template <class num> static num pw92c(const densvars<num> & d) {
+template <typename num> static num pw92c(const densvars<num> & d) {
   return pw92eps::pw92eps(d) * d.n;
 }
 

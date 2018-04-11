@@ -18,7 +18,7 @@
 
 // M06-L exchange functional. does not use HF exchange
 
-template <class num> static num m06lx(const densvars<num> & d) {
+template <typename num> static num m06lx(const densvars<num> & d) {
   using m0xy_metagga_xc_internal::alpha_x;
   using m0xy_metagga_xc_internal::fw;
   using m0xy_metagga_xc_internal::h;

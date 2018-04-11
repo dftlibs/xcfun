@@ -15,7 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num> static num ktx(const densvars<num> & d) {
+template <typename num> static num ktx(const densvars<num> & d) {
   const parameter DELTA = 0.1;
 
   num ea = d.gaa / (DELTA + pow(d.a, 4.0 / 3.0));

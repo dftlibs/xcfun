@@ -20,7 +20,7 @@
 //Have to be a bit special here since lb94 is not a functional but 
 //a potential.
 
-template<class T, int Nvar, int Ndeg>
+template<typename T, int Nvar, int Ndeg>
 static taylor<T,Nvar,Ndeg> lb94(const densvars<taylor<T,Nvar,Ndeg> > &d)
 {
   const parameter beta = 0.05;

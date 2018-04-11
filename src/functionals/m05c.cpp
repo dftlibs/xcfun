@@ -17,7 +17,7 @@
 
 // M05 correlation functional
 
-template <class num> static num m05c(const densvars<num> & d) {
+template <typename num> static num m05c(const densvars<num> & d) {
   using m0xy_metagga_xc_internal::m05_c_anti;
   using m0xy_metagga_xc_internal::m05_c_para;
   using m0xy_metagga_xc_internal::ueg_c_anti;

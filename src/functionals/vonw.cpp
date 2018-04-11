@@ -14,11 +14,11 @@
 
 #include "functional.hpp"
 
-template <class num> static num vW_alpha(const num & na, const num & gaa) {
+template <typename num> static num vW_alpha(const num & na, const num & gaa) {
   return gaa / (8 * na);
 }
 
-template <class num> static num vW(const densvars<num> & d) {
+template <typename num> static num vW(const densvars<num> & d) {
   return vW_alpha(d.a, d.gaa) + vW_alpha(d.b, d.gbb);
 }
 

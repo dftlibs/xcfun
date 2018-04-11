@@ -18,7 +18,7 @@
 
 // M05 exchange functional. to be used with HF exchange factor of .28
 
-template <class num> static num m05x(const densvars<num> & d) {
+template <typename num> static num m05x(const densvars<num> & d) {
   using m0xy_metagga_xc_internal::fw;
 
   const parameter param_a[12] = {1.000000e+00,

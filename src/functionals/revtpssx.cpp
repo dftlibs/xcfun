@@ -16,7 +16,7 @@
 #include "functional.hpp"
 #include "revtpssx_eps.hpp"
 
-template <class num> static num revtpssx(const densvars<num> & d) {
+template <typename num> static num revtpssx(const densvars<num> & d) {
   return revtpssx_eps::revtpssx_eps(d);
 }
 

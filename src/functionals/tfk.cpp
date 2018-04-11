@@ -17,7 +17,7 @@
 
 //  Thomas-Fermi kinetic energy functional
 
-template <class num> static num tfk(const densvars<num> & d) {
+template <typename num> static num tfk(const densvars<num> & d) {
   using xc_constants::CF;
 
   return CF * pow(d.n, 5.0 / 3.0);

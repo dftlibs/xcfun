@@ -20,7 +20,7 @@
   by Paola Gori-Giorgi.
  */
 
-template <class num> static num Qrpa(const num & x) {
+template <typename num> static num Qrpa(const num & x) {
   const parameter Acoul = 2.0 * (log(2.0) - 1.0) / (M_PI * M_PI);
   const parameter a2 = 5.84605;
   const parameter c2 = 3.91744;
@@ -30,7 +30,7 @@ template <class num> static num Qrpa(const num & x) {
   return Acoul * log((1 + x * (a2 + x * (b2 + c2 * x))) / (1 + x * (a2 + d2 * x)));
 }
 
-template <class num> static num dpol(const num & rs) {
+template <typename num> static num dpol(const num & rs) {
   const parameter cf = pow(9.0 * M_PI / 4.0, 1.0 / 3.0);
   const parameter p2p = 0.04;
   const parameter p3p = 0.4319;
@@ -43,7 +43,7 @@ template <class num> static num dpol(const num & rs) {
  Gori-Giorgi and Perdew, PRB 64, 155102 (2001)
  x -> rs
 */
-template <class num> static num g0f(const num & x) {
+template <typename num> static num g0f(const num & x) {
   const parameter C0f = 0.0819306;
   const parameter D0f = 0.752411;
   const parameter E0f = -0.0127713;
@@ -52,7 +52,7 @@ template <class num> static num g0f(const num & x) {
          2.0;
 }
 
-template <class num>
+template <typename num>
 static num ecorrlr(const densvars<num> & d, parameter mu, const num & ec) {
   const parameter alpha = pow(4.0 / 9.0 / M_PI, 1.0 / 3.0);
   const parameter cf = 1 / alpha; // TODO: The normal CF?
@@ -103,7 +103,7 @@ static num ecorrlr(const densvars<num> & d, parameter mu, const num & ec) {
           pow(b0 * mu, 8) * ec) /
          pow(1 + pow(b0 * mu, 2), 4);
 }
-template <class num> static num ldaerfc(const densvars<num> & d) {
+template <typename num> static num ldaerfc(const densvars<num> & d) {
   double mu = d.get_param(XC_RANGESEP_MU);
   num eps = pw92eps::pw92eps(d);
   return d.n * (eps - ecorrlr(d, mu, eps));

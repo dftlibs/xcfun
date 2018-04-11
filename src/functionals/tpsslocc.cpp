@@ -17,11 +17,11 @@
 #include "pw92eps.hpp"
 
 // This is [(1+zeta)^(2/3) + (1-zeta)^(2/3)]/2, reorganized.
-template <class num> static num phi(const densvars<num> & d) {
+template <typename num> static num phi(const densvars<num> & d) {
   return pow(2.0, -1.0 / 3.0) * d.n_m13 * d.n_m13 * (sqrt(d.a_43) + sqrt(d.b_43));
 }
 
-template <class num> static num pbeloc_eps(const densvars<num> & d) {
+template <typename num> static num pbeloc_eps(const densvars<num> & d) {
   using xc_constants::param_gamma;
   const parameter beta0 = 0.0375;
   const parameter aa = 0.08;
@@ -40,7 +40,7 @@ template <class num> static num pbeloc_eps(const densvars<num> & d) {
   return (eps + H);
 }
 
-template <class num> static num pbeloc_eps_pola(const num & a, const num & gaa) {
+template <typename num> static num pbeloc_eps_pola(const num & a, const num & gaa) {
   using xc_constants::param_gamma;
   const parameter beta0 = 0.0375;
   const parameter aa = 0.08;
@@ -60,7 +60,7 @@ template <class num> static num pbeloc_eps_pola(const num & a, const num & gaa) 
   return (eps + H);
 }
 
-template <class num> static num C(const densvars<num> & d) {
+template <typename num> static num C(const densvars<num> & d) {
   num gzeta2 = (pow2(d.n) * d.gss - 2 * d.n * d.s * d.gns + pow2(d.s) * d.gnn) /
                pow(d.n, 4);                                      // (grad zeta)^2
   num xi2 = gzeta2 / (4 * pow(3 * pow2(M_PI) * d.n, 2.0 / 3.0)); // xi^2
@@ -69,7 +69,7 @@ template <class num> static num C(const densvars<num> & d) {
   return C0 * pow(1 + 0.5 * xi2 * (ufunc(d.zeta, -4.0 / 3.0)), -4);
 }
 
-template <class num>
+template <typename num>
 static num epsc_summax(const densvars<num> & d)
 // sum of mmax between fully and partially polarized PBEloc energies per particle
 {
@@ -81,7 +81,7 @@ static num epsc_summax(const densvars<num> & d)
          d.n;
 }
 
-template <class num> static num epsc_revpkzb(const densvars<num> & d) {
+template <typename num> static num epsc_revpkzb(const densvars<num> & d) {
   num tauwtau2 = pow2(d.gnn / (8.0 * d.n * d.tau));
   num epsc_sum = epsc_summax(d);
   num epsc_pbeloc = pbeloc_eps(d);
@@ -89,7 +89,7 @@ template <class num> static num epsc_revpkzb(const densvars<num> & d) {
   return epsc_pbeloc * (1 + CC * tauwtau2) - (1 + CC) * tauwtau2 * epsc_sum;
 }
 
-template <class num> static num energy(const densvars<num> & d) {
+template <typename num> static num energy(const densvars<num> & d) {
   num eps_pkzb = epsc_revpkzb(d);
   num tauwtau3 = pow3(d.gnn / (8.0 * d.n * d.tau));
   const parameter dd = 4.5;

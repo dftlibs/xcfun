@@ -14,7 +14,7 @@
 
 #include "functional.hpp"
 
-template <class num> static num becke_alpha(const num & na, const num & gaa) {
+template <typename num> static num becke_alpha(const num & na, const num & gaa) {
   const parameter c = pow(81 / (4 * M_PI), 1.0 / 3.0) / 2;
   const parameter d = 0.0042;
   num na43 = pow(na, 4.0 / 3.0);
@@ -24,7 +24,7 @@ template <class num> static num becke_alpha(const num & na, const num & gaa) {
   return lda + b88;
 }
 
-template <class num> static num becke_corr(const num & na, const num & gaa) {
+template <typename num> static num becke_corr(const num & na, const num & gaa) {
   const parameter d = 0.0042;
   num na43 = pow(na, 4.0 / 3.0);
   num chi2 = gaa * pow(na, -8.0 / 3.0);
@@ -39,7 +39,7 @@ template <class num> static num becke_corr(const num & na, const num & gaa) {
 // As coded here the code will fail if mu = 0, in which case the
 // regular beckex should be used.
 
-template <class num>
+template <typename num>
 static num becke_sr(parameter mu, const num & na, const num & gaa) {
   const parameter cparam = pow(81 / (4 * M_PI), 1.0 / 3.0) / 2;
   const parameter d = 0.0042;
@@ -53,7 +53,7 @@ static num becke_sr(parameter mu, const num & na, const num & gaa) {
          (1 - 8.0 / 3.0 * a * (sqrt(M_PI) * erf(1 / (2 * a)) + 2 * a * (b - c)));
 }
 
-template <class num>
+template <typename num>
 static num becke_cam(parameter alpha,
                      parameter beta,
                      parameter mu,
@@ -72,20 +72,20 @@ static num becke_cam(parameter alpha,
           beta * 8.0 / 3.0 * a * (sqrt(M_PI) * erf(1 / (2 * a)) + 2 * a * (b - c)));
 }
 
-template <class num> static num beckex(const densvars<num> & d) {
+template <typename num> static num beckex(const densvars<num> & d) {
   return becke_alpha(d.a, d.gaa) + becke_alpha(d.b, d.gbb);
 }
 
-template <class num> static num beckexcorr(const densvars<num> & d) {
+template <typename num> static num beckexcorr(const densvars<num> & d) {
   return becke_corr(d.a, d.gaa) + becke_corr(d.b, d.gbb);
 }
 
-template <class num> static num beckesrx(const densvars<num> & d) {
+template <typename num> static num beckesrx(const densvars<num> & d) {
   parameter mu = d.get_param(XC_RANGESEP_MU);
   return becke_sr(mu, d.a, d.gaa) + becke_sr(mu, d.b, d.gbb);
 }
 
-template <class num> static num beckecamx(const densvars<num> & d) {
+template <typename num> static num beckecamx(const densvars<num> & d) {
   parameter mu = d.get_param(XC_RANGESEP_MU);
   parameter alpha = d.get_param(XC_CAM_ALPHA);
   parameter beta = d.get_param(XC_CAM_BETA);

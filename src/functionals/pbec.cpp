@@ -17,13 +17,14 @@
 #include "pw92eps.hpp"
 #include "vwn.hpp"
 
-template <class num> static num A(const num & eps, const num & u3) {
+template <typename num> static num A(const num & eps, const num & u3) {
   using xc_constants::param_beta_gamma;
   using xc_constants::param_gamma;
   return param_beta_gamma / expm1(-eps / (param_gamma * u3));
 }
 
-template <class num> static num H(const num & d2, const num & eps, const num & u3) {
+template <typename num>
+static num H(const num & d2, const num & eps, const num & u3) {
   num d2A = d2 * A(eps, u3);
   using xc_constants::param_beta_gamma;
   using xc_constants::param_gamma;
@@ -32,11 +33,11 @@ template <class num> static num H(const num & d2, const num & eps, const num & u
 }
 
 // This is [(1+zeta)^(2/3) + (1-zeta)^(2/3)]/2, reorganized.
-template <class num> static num phi(const densvars<num> & d) {
+template <typename num> static num phi(const densvars<num> & d) {
   return pow(2.0, -1.0 / 3.0) * d.n_m13 * d.n_m13 * (sqrt(d.a_43) + sqrt(d.b_43));
 }
 
-template <class num> static num pbec(const densvars<num> & d) {
+template <typename num> static num pbec(const densvars<num> & d) {
   num eps = pw92eps::pw92eps(d);
   num u = phi(d);
   // Avoiding the square root of d.gnn here
@@ -45,7 +46,7 @@ template <class num> static num pbec(const densvars<num> & d) {
   return d.n * (eps + H(d2, eps, pow3(u)));
 }
 
-template <class num> static num vwn_pbec(const densvars<num> & d) {
+template <typename num> static num vwn_pbec(const densvars<num> & d) {
   num eps = vwn::vwn5_eps(d);
   num u = phi(d);
   // Avoiding the square root of d.gnn here

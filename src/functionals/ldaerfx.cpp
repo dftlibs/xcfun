@@ -21,7 +21,7 @@
    subroutine adapted from Molpro
    Created: 17-08-09, J. Toulouse, C++ by Ulf Ekstrom */
 
-template <class num> static num esrx_ldaerfspin(const num & na, parameter mu) {
+template <typename num> static num esrx_ldaerfspin(const num & na, parameter mu) {
 
   const parameter ckf = 3.093667726280136;
   const num & rhoa = 2 * na; // spin-scaling
@@ -46,7 +46,7 @@ template <class num> static num esrx_ldaerfspin(const num & na, parameter mu) {
     // Limit for large a
     return 0;
 }
-template <class num> static num lda_erfx(const densvars<num> & d) {
+template <typename num> static num lda_erfx(const densvars<num> & d) {
   double mu = d.get_param(XC_RANGESEP_MU);
   return 0.5 * (esrx_ldaerfspin(d.a, mu) + esrx_ldaerfspin(d.b, mu));
 }

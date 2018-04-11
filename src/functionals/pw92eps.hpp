@@ -17,19 +17,19 @@
 #include "constants.hpp"
 
 namespace pw92eps {
-template <class num> static num eopt(const num & sqrtr, const parameter t[6]) {
+template <typename num> static num eopt(const num & sqrtr, const parameter t[6]) {
   return -2 * t[0] * (1 + t[1] * sqrtr * sqrtr) *
          log(1 + 0.5 / (t[0] *
                         (sqrtr *
                          (t[2] + sqrtr * (t[3] + sqrtr * (t[4] + t[5] * sqrtr))))));
 }
 
-template <class num> static num omega(const densvars<num> & d) {
+template <typename num> static num omega(const densvars<num> & d) {
   return (cbrt(2.0) / (cbrt(2.0) - 1)) * (d.a_43 + d.b_43) * d.n_m13 / d.n -
          1 / (cbrt(2.0) - 1);
 }
 
-template <class num> static num omega(const num & z) {
+template <typename num> static num omega(const num & z) {
 // return (pow(1+z,4.0/3.0)+pow(1-z,4.0/3.0)-2)/(2*pow(2,1.0/3.0)-2);
 #ifndef XCFUN_REF_PW92C // has effect of about 10^-11 in the testcase energy
   return (ufunc(z, 4.0 / 3.0) - 2) / (2 * pow(2, 1.0 / 3.0) - 2);
@@ -45,7 +45,7 @@ template <class num> static num omega(const num & z) {
 
 // This is the pw92 epsilon using the most accuracte parameters,
 // and exact values for the exact constants.
-template <class num> static num pw92eps(const densvars<num> & d) {
+template <typename num> static num pw92eps(const densvars<num> & d) {
   const parameter TUVWXYP[3][7] = PW92C_PARAMS;
 #ifndef XCFUN_REF_PW92C
   const parameter c = 8.0 / (9.0 * (2 * pow(2, 1.0 / 3.0) - 2));
@@ -60,7 +60,7 @@ template <class num> static num pw92eps(const densvars<num> & d) {
          (eopt(sqrtr, TUVWXYP[1]) - e0) * omegaval * zeta4;
 }
 
-template <class num> static num pw92eps_polarized(const num & a) {
+template <typename num> static num pw92eps_polarized(const num & a) {
   const parameter TUVWXYP[3][7] = PW92C_PARAMS;
   num sqrt_r_s = pow(3 / (4 * M_PI * a), 1.0 / 6.0);
   return eopt(sqrt_r_s, TUVWXYP[1]);

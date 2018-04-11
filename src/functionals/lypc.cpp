@@ -15,7 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num> static num lypc(const densvars<num> & d) {
+template <typename num> static num lypc(const densvars<num> & d) {
   const parameter A = 0.04918;
   const parameter B = 0.132;
   const parameter C = 0.2533;

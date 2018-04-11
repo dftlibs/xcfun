@@ -18,7 +18,9 @@
 #include "taylor.hpp"
 
 // This is the function we want to find roots for
-template <class T> T BR_z(const T & x) { return (x - 2) / x * exp(2.0 / 3.0 * x); }
+template <typename T> T BR_z(const T & x) {
+  return (x - 2) / x * exp(2.0 / 3.0 * x);
+}
 
 static double NR_step(double x, double z) {
   return (x * (3 * x * (exp(-2.0 / 3.0 * x) * z - 1) + 6)) / (x * (2 * x - 4) + 6);
@@ -47,7 +49,8 @@ static double BR(double z) {
 
 // Obtain the Taylor expansion of x(y), which is the
 // inverse of BR_y. Use linear method for simplicity.
-template <class T, int Ndeg> void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
+template <typename T, int Ndeg>
+void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
   taylor<T, 1, Ndeg> f, d;
   t = 0;
   t[0] = BR(z0);
@@ -65,7 +68,8 @@ template <class T, int Ndeg> void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t
    Becke and Roussel, PRA 39, 1989. t is the _reciprocal_ right hand
    side value, x is returned.
  */
-template <class T, int Nvar> static ctaylor<T, Nvar> BR(const ctaylor<T, Nvar> & t) {
+template <typename T, int Nvar>
+static ctaylor<T, Nvar> BR(const ctaylor<T, Nvar> & t) {
   taylor<T, 1, Nvar> tmp;
   BR_taylor(t.c[0], tmp);
 
@@ -75,7 +79,7 @@ template <class T, int Nvar> static ctaylor<T, Nvar> BR(const ctaylor<T, Nvar> &
   return res;
 }
 
-template <class num>
+template <typename num>
 static num polarized(const num & na,
                      const num & gaa,
                      const num & lapa,
@@ -89,12 +93,12 @@ static num polarized(const num & na,
   return -(1 - (1 + 0.5 * x) * exp(-x)) / b; // FIXME: use expm1
 }
 
-template <class num> static num brx(const densvars<num> & d) {
+template <typename num> static num brx(const densvars<num> & d) {
   return 0.5 * (d.a * polarized(d.a, d.gaa, d.lapa, 2 * d.taua, d.jpaa) +
                 d.b * polarized(d.b, d.gbb, d.lapb, 2 * d.taub, d.jpbb));
 }
 
-template <class num> static num brc(const densvars<num> & d) {
+template <typename num> static num brc(const densvars<num> & d) {
   parameter cab = 0.63, caa = 0.88;
   num UXa = polarized(d.a, d.gaa, d.lapa, 2 * d.taua, d.jpaa);
   num UXb = polarized(d.b, d.gbb, d.lapb, 2 * d.taub, d.jpbb);
@@ -109,7 +113,7 @@ template <class num> static num brc(const densvars<num> & d) {
   return ECopp + ECaa + ECbb;
 }
 
-template <class num> static num brxc(const densvars<num> & d) {
+template <typename num> static num brxc(const densvars<num> & d) {
   parameter cab = 0.63, caa = 0.88;
   num UXa = polarized(d.a, d.gaa, d.lapa, 2 * d.taua, d.jpaa);
   num UXb = polarized(d.b, d.gbb, d.lapb, 2 * d.taub, d.jpbb);

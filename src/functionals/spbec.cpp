@@ -23,21 +23,21 @@ static const parameter gamm = 0.066725;
 static const parameter beta = 0.031091;
 static const parameter beta_gamma = beta / gamm;
 
-template <class num> static num G(const num & eps, const num & phi3) {
+template <typename num> static num G(const num & eps, const num & phi3) {
   return beta_gamma / expm1(-eps / (beta_gamma * phi3));
 }
 
-template <class num>
+template <typename num>
 static num H_spbe(const num & t2, const num & eps, const num & phi3) {
   return gamm * phi3 * log(1 + beta_gamma * t2 / (1 + t2 * G(eps, phi3)));
 }
 
 // This is [(1+zeta)^(2/3) + (1-zeta)^(2/3)]/2, reorganized.
-template <class num> static num phi(const densvars<num> & d) {
+template <typename num> static num phi(const densvars<num> & d) {
   return pow(2.0, -1.0 / 3.0) * d.n_m13 * d.n_m13 * (sqrt(d.a_43) + sqrt(d.b_43));
 }
 
-template <class num> static num spbec(const densvars<num> & d) {
+template <typename num> static num spbec(const densvars<num> & d) {
   num eps = vwn::vwn5_eps(d);
   num p = phi(d);
   num t2 = (cbrt(M_PI / 3) / 16) * d.gnn * d.n_m13 / pow2(p * d.n);

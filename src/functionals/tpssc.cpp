@@ -16,7 +16,7 @@
 #include "functional.hpp"
 #include "tpssc_eps.hpp"
 
-template <class num> static num tpssc(const densvars<num> & d) {
+template <typename num> static num tpssc(const densvars<num> & d) {
   num eps = tpssc_eps::tpssc_eps(d);
   return d.n * eps;
 }
