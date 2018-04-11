@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef TPSSX_EPS_H
-#define TPSSX_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
@@ -21,11 +20,11 @@
 
 namespace tpssx_eps {
 
-template <class num> static num fx_unif(const num & d) {
+template <typename num> static num fx_unif(const num & d) {
   return (-0.75 * pow(3 / PI, 1.0 / 3.0)) * pow(d, 4.0 / 3.0);
 }
 
-template <class num>
+template <typename num>
 static num x(const num & d_n, const num & d_gnn, const num & d_tau) {
   const parameter kappa = 0.804;
   const parameter mu = 0.21951;
@@ -52,12 +51,10 @@ static num x(const num & d_n, const num & d_gnn, const num & d_tau) {
   return x_a / pow2(1 + sqrt(e) * p);
 }
 
-template <class num>
+template <typename num>
 static num F_x(const num & d_n, const num & d_gnn, const num & d_tau) {
   const parameter kappa = 0.804;
   num xpz = x(d_n, d_gnn, d_tau);
   return 1 + kappa - kappa / (1 + xpz / kappa);
 }
-}
-
-#endif
+} // namespace tpssx_eps

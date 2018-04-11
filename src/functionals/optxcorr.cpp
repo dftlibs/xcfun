@@ -15,7 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num> static num optxcorr(const densvars<num> & d) {
+template <typename num> static num optxcorr(const densvars<num> & d) {
 
   /*AMT Note this implements just the correction part of optx without the weighting
      parameters

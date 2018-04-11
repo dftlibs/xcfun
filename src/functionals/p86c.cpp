@@ -16,15 +16,14 @@
 #include "functional.hpp"
 #include "pz81c.hpp"
 
-template <class num> static num Cg(const num & r) {
+template <typename num> static num Cg(const num & r) {
   parameter Cx = 0.001667;
   parameter Bg = 0.000007389;
-  return Cx +
-         (0.002568 + r * (0.023266 + Bg * r)) /
-             (1 + r * (8.723 + r * (0.472 + 10000 * Bg * r)));
+  return Cx + (0.002568 + r * (0.023266 + Bg * r)) /
+                  (1 + r * (8.723 + r * (0.472 + 10000 * Bg * r)));
 }
 
-template <class num> static num Pg(const densvars<num> & d) {
+template <typename num> static num Pg(const densvars<num> & d) {
   parameter Fg = 0.11;
   parameter Cinf = 0.004235;
   parameter fudge = 1e-12; // Avoid instability at d.gnn = 0
@@ -37,17 +36,17 @@ template <class num> static num Pg(const densvars<num> & d) {
          (Cg(d.r_s) * pow(d.n, 7.0 / 6.0));
 }
 
-template <class num> static num dz(const densvars<num> & d) {
+template <typename num> static num dz(const densvars<num> & d) {
   return cbrt(2.0) * sqrt(pow(d.a, 5.0 / 3.0) + pow(d.b, 5.0 / 3.0)) *
          pow(d.n, -5.0 / 6.0);
 }
 
-template <class num> static num p86c(const densvars<num> & d) {
+template <typename num> static num p86c(const densvars<num> & d) {
   return d.n * pz81eps::pz81eps(d) +
          exp(-Pg(d)) * Cg(d.r_s) * d.gnn / (pow(d.n, 4.0 / 3.0) * dz(d));
 }
 
-template <class num> static num p86c_corr(const densvars<num> & d) {
+template <typename num> static num p86c_corr(const densvars<num> & d) {
   return exp(-Pg(d)) * Cg(d.r_s) * d.gnn / (pow(d.n, 4.0 / 3.0) * dz(d));
 }
 

@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef M0xy_H
-#define M0xy_H
+#pragma once
 
 #include "pw92eps.hpp"
 #include "pw9xx.hpp"
@@ -61,7 +60,7 @@ const parameter scalefactorTFconst = 3.17480210393640;
 // of the minnesota functional module 1.2 (MFM1.2) and the actual MFM code,
 // which was used as benchmark here for energy and first derivatives.
 
-template <class num> static num zet(const num & rho, const num & tau) {
+template <typename num> static num zet(const num & rho, const num & tau) {
   using xc_constants::CF;
 
   return 2 * tau / pow(rho, 5.0 / 3.0) - CF * scalefactorTFconst;
@@ -70,7 +69,7 @@ template <class num> static num zet(const num & rho, const num & tau) {
 // gamma calculates the quantity of TCA (2008) 120:215 eq 4, but we supply it with
 // chi^2 as parameter
 
-template <class num>
+template <typename num>
 static num gamma(const parameter alpha, const num & chi2, const num & zet) {
   return 1 + alpha * (chi2 + zet);
 }
@@ -81,7 +80,7 @@ static num gamma(const parameter alpha, const num & chi2, const num & zet) {
 // should be
 // of dimension 6..
 
-template <class num>
+template <typename num>
 static num h(const parameter d[6],
              const parameter alpha,
              const num & chi2,
@@ -103,7 +102,7 @@ static num h(const parameter d[6],
 // here the number of parameters is hardcoded since all M05/M06 functionals
 // described at the time of coding (feb 2010) use 12 of them.
 
-template <class num>
+template <typename num>
 static num fw(const parameter a[12], const num & rho, const num & tau) {
   using pw91_like_x_internal::pw91k_prefactor;
 
@@ -137,7 +136,7 @@ static num fw(const parameter a[12], const num & rho, const num & tau) {
 // chi2 is chi*chi
 //
 
-template <class num>
+template <typename num>
 static num Dsigma(const num & na, const num & gaa, const num & taua)
 //  static num Dsigma(const num &chi2, const num &zet)
 {
@@ -161,7 +160,7 @@ static num Dsigma(const num & na, const num & gaa, const num & taua)
 // here the number of parameters is hardcoded since all M05/M06 functionals
 // described at the time of coding (feb 2010) use 5 of them.
 
-template <class num>
+template <typename num>
 static num g(const parameter param_c[5], const num & gamma_chi_squared) {
   num b = gamma_chi_squared / (1.0 + gamma_chi_squared);
   num g = poly(b, 5, param_c);
@@ -183,7 +182,7 @@ static num g(const parameter param_c[5], const num & gamma_chi_squared) {
 // correlationg
 // functionals, for parallel spins
 
-template <class num>
+template <typename num>
 static num m06_c_anti(const parameter param_c[5],
                       const parameter param_d[5],
                       const num & chi_a2,
@@ -199,7 +198,7 @@ static num m06_c_anti(const parameter param_c[5],
          h(param_d, alpha_c_antiparallel, chi_ab2, zet_ab);
 }
 
-template <class num>
+template <typename num>
 static num m06_c_para(const parameter param_c[5],
                       const parameter param_d[5],
                       const num & chi2,
@@ -219,7 +218,7 @@ static num m06_c_para(const parameter param_c[5],
 // m05_c_para calculates the  gD part of the integrand, for the M05y correlationg
 // functionals, for parallel spins
 
-template <class num>
+template <typename num>
 static num m05_c_anti(const parameter param_c[5],
                       const num & chi_a2,
                       const num & chi_b2) {
@@ -231,7 +230,7 @@ static num m05_c_anti(const parameter param_c[5],
   return g(param_c, gamma_c_anti * chi_ab2);
 }
 
-template <class num>
+template <typename num>
 static num m05_c_para(const parameter param_c[5],
                       const num & chi2,
                       const num & zet,
@@ -247,18 +246,16 @@ static num m05_c_para(const parameter param_c[5],
 //
 // Zhao, Schultz, Truhlar, J. Chem. Theory Comput. 2006, 2, 264   equations 7,8
 //
-template <class num> static num ueg_c_para(const num & rho) {
+template <typename num> static num ueg_c_para(const num & rho) {
   return pw92eps::pw92eps_polarized(rho) * rho;
 }
 
-template <class num> static num ueg_c_anti(const densvars<num> & d) {
+template <typename num> static num ueg_c_anti(const densvars<num> & d) {
   return (pw92eps::pw92eps(d) * d.n) - ueg_c_para(d.a) - ueg_c_para(d.b);
 }
-}
+} // namespace m0xy_metagga_xc_internal
 
 // local spin density approximation for the exchange
-template <class num> static num lsda_x(const num & rho) {
+template <typename num> static num lsda_x(const num & rho) {
   return -(3.0 / 2.0) * pow(3.0 / (4.0 * M_PI), 1.0 / 3.0) * pow(rho, 4.0 / 3.0);
 }
-
-#endif

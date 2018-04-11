@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "pbex.hpp"
 
-template <class num> static num revpbex(const densvars<num> & d) {
+template <typename num> static num revpbex(const densvars<num> & d) {
   return pbex::energy_pbe_ab(pbex::R_revpbe, d.a, d.gaa) +
          pbex::energy_pbe_ab(pbex::R_revpbe, d.b, d.gbb);
 }

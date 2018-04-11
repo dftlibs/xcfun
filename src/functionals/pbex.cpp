@@ -17,7 +17,7 @@
 
 // original PBE exchange functional
 
-template <class num> static num pbex_en(const densvars<num> & d) {
+template <typename num> static num pbex_en(const densvars<num> & d) {
   return pbex::energy_pbe_ab(pbex::R_pbe, d.a, d.gaa) +
          pbex::energy_pbe_ab(pbex::R_pbe, d.b, d.gbb);
 }

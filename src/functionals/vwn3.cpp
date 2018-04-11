@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "vwn.hpp"
 
-template <class num> static num vwn3c(const densvars<num> & d) {
+template <typename num> static num vwn3c(const densvars<num> & d) {
   return d.n * vwn::vwn3_eps(d);
 }
 

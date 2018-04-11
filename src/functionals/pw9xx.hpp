@@ -12,8 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef PW9xx_H
-#define PW9xx_H
+#pragma once
+
 #include "constants.hpp"
 #include "functional.hpp"
 
@@ -36,11 +36,11 @@ namespace pw91_like_x_internal {
   physical, so the square root can always(?) be avoided. A special
   sqrt(x)asinh(sqrt(x)) function is implemented for use in this context.
  */
-template <class num> static num chi2(const num & rho, const num & grad) {
+template <typename num> static num chi2(const num & rho, const num & grad) {
   return grad / pow(rho, 8.0 / 3.0);
 }
 
-template <class num> static num S2(const num & rho, const num & grad) {
+template <typename num> static num S2(const num & rho, const num & grad) {
   return grad / pow(rho, 8.0 / 3.0) *
          pow(pow(6.0, 2.0 / 3.0) / (12 * pow(M_PI, 2.0 / 3.0)), 2.0);
 }
@@ -48,7 +48,7 @@ template <class num> static num S2(const num & rho, const num & grad) {
 // prefactor multiples the enhancement factor F(S), which is then different
 // for the different functionals
 
-template <class num> static num prefactor(const num & rho) {
+template <typename num> static num prefactor(const num & rho) {
   // aspg: the 2^.333 factor here i can't see in the molpro formula, will have to
   // double-check this - but as it is it matches the results for the database
   // e.g
@@ -63,14 +63,14 @@ template <class num> static num prefactor(const num & rho) {
 }
 
 // prefactor for the pw91k functional
-template <class num> static num pw91k_prefactor(const num & rho) {
+template <typename num> static num pw91k_prefactor(const num & rho) {
   using xc_constants::CF;
 
   return CF * pow(2.0, 2.0 / 3.0) * pow(rho, 5.0 / 3.0);
 }
 
 // enhancement factor F(S), common to PW91x and PW91k
-template <class num>
+template <typename num>
 static num pw91xk_enhancement(const parameter param_AB[6],
                               const num & rho,
                               const num & grad) {
@@ -92,6 +92,4 @@ static num pw91xk_enhancement(const parameter param_AB[6],
 
   return numerator / denominator;
 }
-}
-
-#endif
+} // namespace pw91_like_x_internal

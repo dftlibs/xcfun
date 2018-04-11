@@ -17,12 +17,12 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num> static num b97x_en(const densvars<num> & d) {
+template <typename num> static num b97x_en(const densvars<num> & d) {
   return b97x::energy_b97x_ab(b97x::Gamma, b97x::c_b97, d.a_43, d.gaa) +
          b97x::energy_b97x_ab(b97x::Gamma, b97x::c_b97, d.b_43, d.gbb);
 }
 
-template <class num> static num b97c_en(const densvars<num> & d) {
+template <typename num> static num b97c_en(const densvars<num> & d) {
   num e_LSDA_a, e_LSDA_b, tmp;
   tmp = b97c::energy_b97c_par(
             b97c::Gamma_par, b97c::c_b97[1], d.a, d.a_43, d.gaa, e_LSDA_a) +

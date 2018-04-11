@@ -12,8 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef VWN_H
-#define VWN_H
+#pragma once
 
 #include "functional.hpp"
 
@@ -28,29 +27,31 @@ static inline parameter vwn_b(const parameter p[]) {
 }
 
 static inline parameter vwn_c(const parameter p[]) {
-  return 2 * p[2] * (1 / sqrt(4 * p[3] - p[2] * p[2]) -
-                     p[0] / ((p[0] * p[0] + p[0] * p[2] + p[3]) *
-                             sqrt(4 * p[3] - p[2] * p[2]) / (p[2] + 2 * p[0])));
+  return 2 * p[2] *
+         (1 / sqrt(4 * p[3] - p[2] * p[2]) -
+          p[0] / ((p[0] * p[0] + p[0] * p[2] + p[3]) * sqrt(4 * p[3] - p[2] * p[2]) /
+                  (p[2] + 2 * p[0])));
 }
 
-template <class num> static num vwn_x(const num & s, const parameter p[]) {
+template <typename num> static num vwn_x(const num & s, const parameter p[]) {
   return s * s + p[2] * s + p[3];
 }
 
-template <class num> static num vwn_y(const num & s, const parameter p[]) {
+template <typename num> static num vwn_y(const num & s, const parameter p[]) {
   return s - p[0];
 }
 
-template <class num> static num vwn_z(const num & s, const parameter p[]) {
+template <typename num> static num vwn_z(const num & s, const parameter p[]) {
   return sqrt(4 * p[3] - p[2] * p[2]) / (2 * s + p[2]);
 }
 
-template <class num> static num vwn_f(const num & s, const parameter p[]) {
-  return 0.5 * p[1] * (2 * log(s) + vwn_a(p) * log(vwn_x(s, p)) -
-                       vwn_b(p) * log(vwn_y(s, p)) + vwn_c(p) * atan(vwn_z(s, p)));
+template <typename num> static num vwn_f(const num & s, const parameter p[]) {
+  return 0.5 * p[1] *
+         (2 * log(s) + vwn_a(p) * log(vwn_x(s, p)) - vwn_b(p) * log(vwn_y(s, p)) +
+          vwn_c(p) * atan(vwn_z(s, p)));
 }
 
-template <class num> static num vwn5_eps(const densvars<num> & d) {
+template <typename num> static num vwn5_eps(const densvars<num> & d) {
 // ulfek: second elements are multiplied by 2 wrt molpro manual
 #ifndef XCFUN_VWN5_REF
   const parameter para[] = {-0.10498, 0.0621814, 3.72744, 12.9352};
@@ -76,7 +77,7 @@ template <class num> static num vwn5_eps(const densvars<num> & d) {
   return (vwn_f(s, para) + dd);
 }
 
-template <class num> static num vwn3_eps(const densvars<num> & d) {
+template <typename num> static num vwn3_eps(const densvars<num> & d) {
   // ulfek: This table taken verbatim from Dalton
   const parameter para[] = {-0.4092860, 0.0621814, 13.0720, 42.7198};
   const parameter ferro[] = {-0.7432940, 0.0310907, 20.1231, 101.578};
@@ -91,6 +92,4 @@ template <class num> static num vwn3_eps(const densvars<num> & d) {
            vwn_f(s, inter) * (1 - zeta4) * (9.0 / 4.0 * (pow(2, 1.0 / 3.0) - 1)));
   return (vwn_f(s, para) + dd);
 }
-}
-
-#endif
+} // namespace vwn

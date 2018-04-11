@@ -12,14 +12,13 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef XCINT_H
-#define XCINT_H
+#pragma once
 
 #include <cstdio>
 
 #include "config.hpp"
 #include "ctaylor.hpp"
-#include "list_of_functionals.hpp"
+#include "functionals/list_of_functionals.hpp"
 #include "taylor.hpp"
 #include "xcfun.h"
 
@@ -61,14 +60,13 @@ struct xc_functional_obj {
   int depends; // XC_DENSITY, gradient etc
 };
 
-template <class T> struct densvars;
+template <typename T> struct densvars;
 
 struct functional_data {
   const char * short_description;
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
-#define FP(N, E)                                                                    \
-  ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N> > &);
+#define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
   FOR_EACH(XC_MAX_ORDER, FP, )
   enum xc_vars test_vars;
   enum xc_mode test_mode;
@@ -147,5 +145,3 @@ template <int FUN> struct pardat_db {
   static const char * symbol;
   static parameter_data d;
 };
-
-#endif

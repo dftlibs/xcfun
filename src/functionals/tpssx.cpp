@@ -18,7 +18,7 @@
 
 using namespace tpssx_eps;
 
-template <class num> static num tpssx(const densvars<num> & d) {
+template <typename num> static num tpssx(const densvars<num> & d) {
   num Fxa = F_x(2 * d.a, 4 * d.gaa, 2 * d.taua);
   num epsxunif_a = fx_unif(2 * d.a);
   num Fxb = F_x(2 * d.b, 4 * d.gbb, 2 * d.taub);

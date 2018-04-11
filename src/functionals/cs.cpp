@@ -14,7 +14,7 @@
 
 #include "functional.hpp"
 
-template <class num> static num csc(const densvars<num> & d) {
+template <typename num> static num csc(const densvars<num> & d) {
   parameter a = 1.0;
   parameter b = 1.0;
   parameter c = 1.0;

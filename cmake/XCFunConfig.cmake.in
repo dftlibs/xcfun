@@ -1,0 +1,154 @@
+# XCFunConfig.cmake
+# ---------------------
+#
+# XCFun cmake module.
+# This module sets the following variables in your project:
+#
+# ::
+#
+#   XCFun_FOUND - true if XCFun and all required components found on the system
+#   XCFun_VERSION - XCFun version in format Major.Minor.Release
+#   XCFun_INCLUDE_DIRS - Directory where XCFun/xcfun.h header is located.
+#   XCFun_INCLUDE_DIR - same as DIRS
+#   XCFun_Fortran_MODULE_DIRS - Directory where XCFun/xcfun.F90 module source file is located.
+#   XCFun_Fortran_MODULE_DIR - same as DIRS
+#   XCFun_DEFINITIONS: Definitions necessary to use XCFun, namely USING_XCFun.
+#   XCFun_LIBRARIES - XCFun library to link against.
+#   XCFun_LIBRARY - same as LIBRARIES
+#   XCFun_PYMOD - path to XCFun python modules
+#
+#
+# Available components: shared static exe
+#
+# ::
+#
+#   shared - search for only shared library
+#   static - search for only static library
+#   exe - search for executable as well as library
+#
+#
+# Exported targets:
+#
+# ::
+#
+# If XCFun is found, this module defines the following :prop_tgt:`IMPORTED`
+# target. ::
+#
+#   XCFun::xcfun - the main XCFun library with header & defs attached.
+#
+#
+# Suggested usage:
+#
+# ::
+#
+#   find_package(XCFun)
+#   find_package(XCFun 1.1.7 CONFIG REQUIRED COMPONENTS shared)
+#
+#
+# The following variables can be set to guide the search for this package:
+#
+# ::
+#
+#   XCFun_DIR - CMake variable, set to directory containing this Config file
+#   CMAKE_PREFIX_PATH - CMake variable, set to root directory of this package
+#   PATH - environment variable, set to bin directory of this package
+#   CMAKE_DISABLE_FIND_PACKAGE_XCFun - CMake variable, disables
+#       find_package(XCFun) perhaps to force internal build
+
+@PACKAGE_INIT@
+
+set(PN XCFun)
+set (_valid_components
+  static
+  shared
+)
+
+# find includes
+unset(_temp_h CACHE)
+find_path(_temp_h
+  NAMES XCFun/xcfun.h
+  PATHS ${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@
+  NO_DEFAULT_PATH)
+if(_temp_h)
+  set(${PN}_INCLUDE_DIR "${_temp_h}")
+  set(${PN}_INCLUDE_DIRS ${${PN}_INCLUDE_DIR})
+else()
+  set(${PN}_FOUND 0)
+  if(NOT CMAKE_REQUIRED_QUIET)
+    message(STATUS "${PN}Config missing component: header (${PN}: ${_temp_h})")
+  endif()
+endif()
+
+# find Fortran 90 source file
+unset(_temp_F90 CACHE)
+find_path(_temp_F90
+  NAMES XCFun/xcfun.F90
+  PATHS ${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@
+  NO_DEFAULT_PATH)
+if(_temp_F90)
+  set(${PN}_Fortran_MODULE_DIR "${_temp_F90}")
+  set(${PN}_Fortran_MODULE_DIRS ${${PN}_Fortran_MODULE_DIR})
+else()
+  set(${PN}_FOUND 0)
+  if(NOT CMAKE_REQUIRED_QUIET)
+    message(STATUS "${PN}Config missing component: Fortran 90 module source (${PN}: ${_temp_F90})")
+  endif()
+endif()
+
+# find library: shared, static, or whichever
+set(_hold_library_suffixes ${CMAKE_FIND_LIBRARY_SUFFIXES})
+list(FIND ${PN}_FIND_COMPONENTS "shared" _seek_shared)
+list(FIND ${PN}_FIND_COMPONENTS "static" _seek_static)
+if(_seek_shared GREATER -1)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX})
+elseif(_seek_static GREATER -1)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+endif()
+unset(_temp CACHE)
+find_library(_temp
+  NAMES xcfun
+  PATHS ${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@
+  NO_DEFAULT_PATH)
+if(_temp)
+  set(${PN}_LIBRARY "${_temp}")
+  if(_seek_shared GREATER -1)
+    set(${PN}_shared_FOUND 1)
+  elseif(_seek_static GREATER -1)
+    set(${PN}_static_FOUND 1)
+  endif()
+else()
+  if(_seek_shared GREATER -1)
+    if(NOT CMAKE_REQUIRED_QUIET)
+      message(STATUS "${PN}Config missing component: shared library (${PN}: ${_temp})")
+    endif()
+  elseif(_seek_static GREATER -1)
+    if(NOT CMAKE_REQUIRED_QUIET)
+      message(STATUS "${PN}Config missing component: static library (${PN}: ${_temp})")
+    endif()
+  else()
+    set(${PN}_FOUND 0)
+    if(NOT CMAKE_REQUIRED_QUIET)
+      message(STATUS "${PN}Config missing component: library (${PN}: ${_temp})")
+    endif()
+  endif()
+endif()
+set(CMAKE_FIND_LIBRARY_SUFFIXES ${_hold_library_suffixes})
+set(${PN}_LIBRARIES ${${PN}_LIBRARY})
+set(${PN}_DEFINITIONS USING_${PN})
+set(${PN}_PYMOD ${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@/@PYMOD_INSTALL_LIBDIR@)
+
+check_required_components(${PN})
+
+#-----------------------------------------------------------------------------
+# Don't include targets if this file is being picked up by another
+# project which has already built this as a subproject
+#-----------------------------------------------------------------------------
+if(NOT TARGET ${PN}::xcfun)
+  get_filename_component(_fext ${${PN}_LIBRARY} EXT)
+  if(${_fext} STREQUAL ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets-shared.cmake")
+  else()
+    include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets-static.cmake")
+  endif()
+endif()
+

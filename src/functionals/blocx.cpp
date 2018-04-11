@@ -15,7 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 
-template <class num>
+template <typename num>
 static num energy_blocx(const num & d_n, const num & d_gnn, const num & d_tau) {
   const parameter kappa = 0.804;
   const parameter mu = 0.21951;
@@ -46,7 +46,7 @@ static num energy_blocx(const num & d_n, const num & d_gnn, const num & d_tau) {
   return lda * Fx;
 }
 
-template <class num> static num energy(const densvars<num> & d) {
+template <typename num> static num energy(const densvars<num> & d) {
   num enea = energy_blocx(2 * d.a, 4 * d.gaa, 2 * d.taua);
   num eneb = energy_blocx(2 * d.b, 4 * d.gbb, 2 * d.taub);
   return (enea + eneb) / 2;

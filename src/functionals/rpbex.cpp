@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "pbex.hpp"
 
-template <class num> static num rpbex(const densvars<num> & d) {
+template <typename num> static num rpbex(const densvars<num> & d) {
   using namespace pbex;
   using pw91_like_x_internal::prefactor;
   return prefactor(d.a) * enhancement_RPBE(d.a, d.gaa) +

@@ -15,7 +15,7 @@
 #include "pz81c.hpp"
 #include "functional.hpp"
 
-template <class num> static num pz81c(const densvars<num> & d) {
+template <typename num> static num pz81c(const densvars<num> & d) {
   return pz81eps::pz81eps(d) * d.n;
 }
 

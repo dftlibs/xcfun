@@ -18,7 +18,7 @@
 // PW91 kinetic energy functional
 // reduces to TF kinetic energy functional for zero gradient
 
-template <class num> static num pw91k(const densvars<num> & d) {
+template <typename num> static num pw91k(const densvars<num> & d) {
   const parameter param_AB[6] = {
       0.093907, 76.320, 0.26608, 0.0809615, 100.0, 0.57767e-4};
   using pw91_like_x_internal::pw91k_prefactor;

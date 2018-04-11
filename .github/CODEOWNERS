@@ -1,0 +1,23 @@
+# Each line is a file pattern followed by one or more owners.
+# Global owners will be the default owners for everything in the repo. Unless a
+# later match takes precedence, these will be requested for review when someone
+# opens a pull request.
+# Order is important; the last matching pattern takes the most precedence.
+
+# Global owners
+@uekstrom @bast
+
+# When someone opens a pull request that only modifies certain matches the
+# following will be requested for a review, not the global owner(s).
+
+# C/C++ stuff owners
+*.cpp *.hpp *.c *.h  @uekstrom @bast @robertodr
+
+# Fortran 90 stuff owners
+*.f90 *.F90 @uekstrom @simensr @bast
+
+# Python stuff owners
+*.py @chjacob-tubs @aspgomes @bast @uekstrom
+
+# CMake stuff owners
+cmake/* CMakeLists.txt @robertodr @bast

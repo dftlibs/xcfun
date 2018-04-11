@@ -17,11 +17,11 @@
 #include "pw92eps.hpp"
 
 // This is [(1+zeta)^(2/3) + (1-zeta)^(2/3)]/2, reorganized.
-template <class num> static num phi(const densvars<num> & d) {
+template <typename num> static num phi(const densvars<num> & d) {
   return pow(2.0, -1.0 / 3.0) * d.n_m13 * d.n_m13 * (sqrt(d.a_43) + sqrt(d.b_43));
 }
 
-template <class num> static num energy(const densvars<num> & d) {
+template <typename num> static num energy(const densvars<num> & d) {
   using xc_constants::param_gamma;
   const parameter beta = 0.079030523241;
   num bg = beta / param_gamma;

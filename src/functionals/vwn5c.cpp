@@ -15,7 +15,7 @@
 #include "functional.hpp"
 #include "vwn.hpp"
 
-template <class num> static num vwn5c(const densvars<num> & d) {
+template <typename num> static num vwn5c(const densvars<num> & d) {
   return d.n * vwn::vwn5_eps(d);
 }
 

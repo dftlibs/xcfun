@@ -12,19 +12,18 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef REVTPSSX_EPS_H
-#define REVTPSSX_EPS_H
+#pragma once
 
 #include "constants.hpp"
 #include "functional.hpp"
 
 namespace revtpssx_eps {
 
-template <class num> static num epsx_unif(const num & d_n) {
+template <typename num> static num epsx_unif(const num & d_n) {
   return -3 * cbrt(3 * PI2 * d_n) / (4 * PI);
 }
 
-template <class num>
+template <typename num>
 static num x(const num & d_n, const num & d_gnn, const num & d_tau) {
   parameter kapa = 0.804;
   parameter mu = 0.14;
@@ -49,20 +48,18 @@ static num x(const num & d_n, const num & d_gnn, const num & d_tau) {
   return x_a / (1 + sqrt(e) * p);
 }
 
-template <class num>
+template <typename num>
 static num F_x(const num & d_n, const num & d_gnn, const num & d_tau) {
   parameter kapa = 0.804;
   num xpz = x(d_n, d_gnn, d_tau);
   return 1 + kapa - kapa / (1 + xpz / kapa);
 }
 
-template <class num> static num revtpssx_eps(const densvars<num> & d) {
+template <typename num> static num revtpssx_eps(const densvars<num> & d) {
   num Fxa = F_x(2 * d.a, 4 * d.gaa, 2 * d.taua);
   num epsxunif_a = epsx_unif(2 * d.a);
   num Fxb = F_x(2 * d.b, 4 * d.gbb, 2 * d.taub);
   num epsxunif_b = epsx_unif(2 * d.b);
   return (epsxunif_a * Fxa * d.a + epsxunif_b * Fxb * d.b);
 }
-}
-
-#endif
+} // namespace revtpssx_eps

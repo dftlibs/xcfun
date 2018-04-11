@@ -12,18 +12,20 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
+#pragma once
+
 #ifndef XC_NO_REGULARIZATION
 #error Implement regularization properly, what about the non-constant terms when setting something to 0?
 #endif
 
 // When regularizing we shouldn't touch the higher order
 // parts of the density, so we need this.
-template <class T, int N> void regularize(ctaylor<T, N> & x) {
+template <typename T, int N> void regularize(ctaylor<T, N> & x) {
   if (x < XC_TINY_DENSITY)
     x.set(0, XC_TINY_DENSITY);
 }
 
-template <class T> static void regularize(T & x) {
+template <typename T> static void regularize(T & x) {
   if (x < XC_TINY_DENSITY)
     x = XC_TINY_DENSITY;
 }

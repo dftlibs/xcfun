@@ -1,9 +1,0 @@
-#radovan: this is file is here because
-#         i am tracking the repository with git
-#         and this directory would be otherwise
-#         empty at checkout (or git svn clone)
-#         git does not track empty directories
-#         and then xcfun compilation would stop
-#         because the directory lib would not be present
-*
-!.gitignore

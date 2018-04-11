@@ -12,13 +12,10 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#ifndef SLATER_H
-#define SLATER_H
+#pragma once
 
 #include "constants.hpp"
 
-template <class num> static num slaterx(const densvars<num> & d) {
+template <typename num> static num slaterx(const densvars<num> & d) {
   return (-xc_constants::c_slater) * (d.a_43 + d.b_43);
 }
-
-#endif

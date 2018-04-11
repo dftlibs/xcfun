@@ -5,7 +5,6 @@ from xcfun_swig import *
 
 
 class XcFunException(Exception):
-
     def __init__(self, msg, code=1):
         Exception.__init__(self, msg)
         self.error_code = code
@@ -45,7 +44,6 @@ def xc_eval(fun, density):
 
 
 class Functional(object):
-
     """
     Python class representing an XCFun functional.
     """
@@ -69,15 +67,15 @@ class Functional(object):
         xc_free_functional(self._func)
 
     @property
-    def type (self):
+    def type(self):
         if xc_is_metagga(self._func):
             return 2
         elif xc_is_gga(self._func):
             return 1
-        else :
+        else:
             return 0
 
-    def eval_potential_n(self, density, densgrad=None, denshess=None) :
+    def eval_potential_n(self, density, densgrad=None, denshess=None):
         """
         Evaluate the xc potential (spin-compensated case).
 

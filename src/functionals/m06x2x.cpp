@@ -20,7 +20,7 @@
 // because the param_d[5] array is all zero, it is not included here, and
 // therefore the lsda_x() * h() terms (see e.g M06x) drop out, as h()=0
 
-template <class num> static num m06x2x(const densvars<num> & d) {
+template <typename num> static num m06x2x(const densvars<num> & d) {
   using m0xy_metagga_xc_internal::fw;
 
   const parameter param_a[12] = {4.600000e-01,

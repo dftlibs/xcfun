@@ -14,7 +14,7 @@
 
 #include "functional.hpp"
 
-template <class num> static num pw86x(const num & na, const num & gaa) {
+template <typename num> static num pw86x(const num & na, const num & gaa) {
   const parameter a = 1.0;
   const parameter b = 1.296;
   const parameter c = 14.0;
@@ -27,7 +27,7 @@ template <class num> static num pw86x(const num & na, const num & gaa) {
   return Ax * pow(rho, 4.0 / 3.0) * F;
 }
 
-template <class num> static num pw86xtot(const densvars<num> & d) {
+template <typename num> static num pw86xtot(const densvars<num> & d) {
   return 0.5 * (pw86x(d.a, d.gaa) + pw86x(d.b, d.gbb));
 }
 

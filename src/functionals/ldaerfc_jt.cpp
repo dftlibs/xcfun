@@ -21,7 +21,7 @@
 // functional
 // by Julien Toulouse.
 
-template <class num> static num c1(const num & rs) {
+template <typename num> static num c1(const num & rs) {
   const parameter u1 = 1.0270741452992294;
   const parameter u2 = -0.230160617208092;
   const parameter v1 = 0.6196884832404359;
@@ -31,7 +31,7 @@ template <class num> static num c1(const num & rs) {
   return (u1 * rs + u2 * rs2) / (1.0 + v1 * rs);
 }
 
-template <class num> static num c2(const densvars<num> & d) {
+template <typename num> static num c2(const densvars<num> & d) {
   const parameter a = 3.2581;
   const parameter f = 3.39530545262710070631;
   const parameter bet = 163.44;
@@ -44,7 +44,7 @@ template <class num> static num c2(const densvars<num> & d) {
   return result;
 }
 
-template <class num> static num ldaerfc_jt(const densvars<num> & d) {
+template <typename num> static num ldaerfc_jt(const densvars<num> & d) {
   double mu = d.get_param(XC_RANGESEP_MU);
   num denominator = 1.0 + c1(d.r_s) * mu + c2(d) * mu * mu;
   num result = d.n * vwn::vwn5_eps(d) / denominator;
