@@ -22,6 +22,8 @@ Options:
   --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
   --cc=<CC>                              C compiler [default: gcc].
   --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
+  --fc=<FC>                              Fortran compiler [default: gfortran].
+  --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
   --coverage                             Enable code coverage [default: OFF].
   --omp                                  Enable OpenMP parallelization [default: False].
   --static                               Create only the static library [default: False].
@@ -47,6 +49,7 @@ def gen_cmake_command(options, arguments):
     command.append(arguments['--cmake-executable'])
     command.append('-DCMAKE_CXX_COMPILER={0} -DEXTRA_CXXFLAGS="{1}"'.format(arguments['--cxx'], arguments['--extra-cxx-flags']))
     command.append('-DCMAKE_C_COMPILER={0} -DEXTRA_CFLAGS="{1}"'.format(arguments['--cc'], arguments['--extra-cc-flags']))
+    command.append('-DCMAKE_Fortran_COMPILER={0} -DEXTRA_FCFLAGS="{1}"'.format(arguments['--fc'], arguments['--extra-fc-flags']))
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
     command.append('-DENABLE_OPENMP={0}'.format(arguments['--omp']))
     command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
