@@ -1,8 +1,0 @@
-#!/bin/sh
-
-mkdir -p python_wrapper && cd python_wrapper
-
-cp ../../python/{numpy.i,xcfun_swig.i,xcfun.py,setup.py} .
-swig -python xcfun_swig.i
-python setup.py build_ext --inplace
-

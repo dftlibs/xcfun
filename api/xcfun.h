@@ -14,9 +14,12 @@
 
 #pragma once
 
+#ifndef SWIG
 #include "XCFunExport.h"
-
 #define XCFun_API XCFun_EXPORT
+#else
+#define XCFun_API
+#endif
 
 #define XCFUN_API_VERSION 2
 

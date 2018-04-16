@@ -11,7 +11,7 @@ from distutils.core import setup, Extension
 xcfun_swig_module = Extension(
     '_xcfun_swig',
     sources=['${PROJECT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c'],
-    include_dirs=['${PROJECT_SOURCE_DIR}/include',
+    include_dirs=['${PROJECT_BINARY_DIR}/include', '${PROJECT_SOURCE_DIR}/api',
                   numpy.get_include()],
     library_dirs=['${CMAKE_LIBRARY_OUTPUT_DIRECTORY}'],
     libraries=['xcfun', 'stdc++'])
