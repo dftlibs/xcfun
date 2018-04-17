@@ -20,9 +20,9 @@ modules:
     - source:
       - '%(url_root)modules/cxx.cmake'
       - '%(url_root)modules/cc.cmake'
-      - '%(url_root)modules/fc_optional.cmake'
   - flags:
     - source:
+      - 'custom/fc_optional.cmake'
       - 'custom/code_coverage.cmake'
       - 'custom/omp.cmake'
       - 'custom/compilers/CXXFlags.cmake'

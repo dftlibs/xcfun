@@ -24,7 +24,7 @@ Options:
   --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
   --fc=<FC>                              Fortran compiler [default: gfortran].
   --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
-  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: ON].
+  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: OFF].
   --coverage                             Enable code coverage [default: OFF].
   --omp                                  Enable OpenMP parallelization [default: False].
   --static                               Create only the static library [default: False].
