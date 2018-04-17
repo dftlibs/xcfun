@@ -5,18 +5,15 @@
 # Variables modified::
 #
 #   XCFun_XC_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
-#   TEST_Fortran_BINDINGS -- Whether to test the Fortran 90 bindings
 #   ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
 #
 # autocmake.yml configuration::
 #
 #   docopt:
 #     - "--xcmaxorder=<XCFun_XC_MAX_ORDER> An integer greater than 3 [default: 3]."
-#     - "--f90bindings=<F90BINDINGS> Test Fortran 90 bindings [default: ON]."
 #     - "--pybindings Enable Python interface [default: OFF]."
 #   define:
 #     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
-#     - "'-DTEST_Fortran_BINDINGS={0}'.format(arguments['--f90bindings'])"
 #     - "'-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
 option_with_default(
@@ -53,15 +50,6 @@ file(TO_NATIVE_PATH "${CMAKE_INSTALL_LIBDIR}/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMO
 
 option_with_print(
   NAME
-    TEST_Fortran_BINDINGS
-  MESSAGE
-    "Test Fortran 90 bindings"
-  DEFAULT
-    ON
-  )
-
-option_with_print(
-  NAME
     ENABLE_PYTHON_INTERFACE
   MESSAGE
     "Enable Python interface"
@@ -69,7 +57,7 @@ option_with_print(
     OFF
   )
 
-if(TEST_Fortran_BINDINGS)
+if(ENABLE_FC_SUPPORT)
   enable_language(Fortran)
   include(FortranCInterface)
   FortranCInterface_VERIFY(CXX)

@@ -20,6 +20,7 @@ modules:
     - source:
       - '%(url_root)modules/cxx.cmake'
       - '%(url_root)modules/cc.cmake'
+      - '%(url_root)modules/fc_optional.cmake'
   - flags:
     - source:
       - 'custom/code_coverage.cmake'

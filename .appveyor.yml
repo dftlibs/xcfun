@@ -12,15 +12,15 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       GENERATOR: "MinGW Makefiles"
       BUILDFLAGS: "VERBOSE=1"
-      CMAKARGS: "-DCMAKE_Fortran_COMPILER=gfortran"
+      CMAKARGS: "-DENABLE_FC_SUPPORT=ON -DCMAKE_Fortran_COMPILER=gfortran"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       GENERATOR: "Visual Studio 14 2015"
       BUILDFLAGS: "/verbosity:normal"
-      CMAKEARGS: "-DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DTEST_Fortran_BINDINGS=OFF"
+      CMAKEARGS: "-DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       GENERATOR: "Visual Studio 15 2017"
       BUILDFLAGS: "/verbosity:normal"
-      CMAKEARGS: "-DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DTEST_Fortran_BINDINGS=OFF"
+      CMAKEARGS: "-DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
 init:
   # Workaround for CMake not wanting sh.exe on PATH for MinGW
