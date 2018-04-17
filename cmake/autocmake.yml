@@ -22,6 +22,7 @@ modules:
       - '%(url_root)modules/cc.cmake'
   - flags:
     - source:
+      - 'custom/fc_optional.cmake'
       - 'custom/code_coverage.cmake'
       - 'custom/omp.cmake'
       - 'custom/compilers/CXXFlags.cmake'
