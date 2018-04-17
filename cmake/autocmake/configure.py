@@ -18,7 +18,11 @@ def check_cmake_exists(cmake_command):
     """
     from subprocess import Popen, PIPE
 
-    p = Popen('{0} --version'.format(cmake_command), shell=True, stdin=PIPE, stdout=PIPE)
+    p = Popen(
+        '{0} --version'.format(cmake_command),
+        shell=True,
+        stdin=PIPE,
+        stdout=PIPE)
     if not ('cmake version' in p.communicate()[0].decode('UTF-8')):
         sys.stderr.write('   This code is built using CMake\n\n')
         sys.stderr.write('   CMake is not found\n')
@@ -38,8 +42,11 @@ def setup_build_path(build_path):
         fname = os.path.join(build_path, 'CMakeCache.txt')
         if os.path.exists(fname):
             sys.stderr.write('aborting setup\n')
-            sys.stderr.write('build directory {0} which contains CMakeCache.txt already exists\n'.format(build_path))
-            sys.stderr.write('remove the build directory and then rerun setup\n')
+            sys.stderr.write(
+                'build directory {0} which contains CMakeCache.txt already exists\n'.
+                format(build_path))
+            sys.stderr.write(
+                'remove the build directory and then rerun setup\n')
             sys.exit(1)
     else:
         os.makedirs(build_path, 0o755)

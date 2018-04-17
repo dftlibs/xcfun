@@ -8,7 +8,8 @@ def replace(s, d):
 
 
 def test_replace():
-    assert replace('hey %(foo) ho %(bar)', {'foo': 'hey', 'bar': 'ho'}) == 'hey hey ho ho'
+    assert replace('hey %(foo) ho %(bar)',
+                   {'foo': 'hey', 'bar': 'ho'}) == 'hey hey ho ho'
 
 
 def interpolate(d, d_map):
@@ -32,41 +33,34 @@ def interpolate(d, d_map):
 
 
 def test_interpolate():
-    d = {
-        'foo': 'hey',
-        'bar': 'ho',
-        'one': 'hey %(foo) ho %(bar)',
-        'two': {
-            'one': 'hey %(foo) ho %(bar)',
-            'two': 'raboof'
-        }
-    }
-    d_interpolated = {
-        'foo': 'hey',
-        'bar': 'ho',
-        'one': 'hey hey ho ho',
-        'two': {
-            'one': 'hey hey ho ho',
-            'two': 'raboof'
-        }
-    }
+    d = {'foo': 'hey',
+         'bar': 'ho',
+         'one': 'hey %(foo) ho %(bar)',
+         'two': {'one': 'hey %(foo) ho %(bar)',
+                 'two': 'raboof'}}
+    d_interpolated = {'foo': 'hey',
+                      'bar': 'ho',
+                      'one': 'hey hey ho ho',
+                      'two': {'one': 'hey hey ho ho',
+                              'two': 'raboof'}}
     assert interpolate(d, d) == d_interpolated
 
 
 def test_interpolate_int():
-    d = {'foo': 1, 'bar': 2, 'one': 'hey %(foo) ho %(bar)', 'two': {'one': 'hey %(foo) ho %(bar)', 'two': 'raboof'}}
-    d_interpolated = {'foo': 1, 'bar': 2, 'one': 'hey 1 ho 2', 'two': {'one': 'hey 1 ho 2', 'two': 'raboof'}}
+    d = {'foo': 1,
+         'bar': 2,
+         'one': 'hey %(foo) ho %(bar)',
+         'two': {'one': 'hey %(foo) ho %(bar)',
+                 'two': 'raboof'}}
+    d_interpolated = {'foo': 1,
+                      'bar': 2,
+                      'one': 'hey 1 ho 2',
+                      'two': {'one': 'hey 1 ho 2',
+                              'two': 'raboof'}}
     assert interpolate(d, d) == d_interpolated
 
 
 def test_interpolate_nested():
     d2 = {'modules': [{'fc': [{'source': '%(url_root)fc_optional.cmake'}]}], 'url_root': 'downloaded/downloaded_'}
-    d2_interpolated = {
-        'modules': [{
-            'fc': [{
-                'source': 'downloaded/downloaded_fc_optional.cmake'
-            }]
-        }],
-        'url_root': 'downloaded/downloaded_'
-    }
+    d2_interpolated = {'modules': [{'fc': [{'source': 'downloaded/downloaded_fc_optional.cmake'}]}], 'url_root': 'downloaded/downloaded_'}
     assert interpolate(d2, d2) == d2_interpolated

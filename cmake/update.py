@@ -3,9 +3,11 @@
 import os
 import sys
 
+
 if sys.version_info[0] == 2 and sys.version_info[1] < 7:
     sys.stderr.write("ERROR: update.py requires at least Python 2.7\n")
     sys.exit(-1)
+
 
 AUTOCMAKE_GITHUB_URL = 'https://github.com/coderefinery/autocmake/raw/master/'
 
@@ -65,7 +67,10 @@ def fetch_modules(config, relative_path, download_directory):
 
     num_sources = len(extract_list(config, 'source'))
 
-    print_progress_bar(text='- assembling modules:', done=0, total=num_sources, width=30)
+    print_progress_bar(text='- assembling modules:',
+                       done=0,
+                       total=num_sources,
+                       width=30)
 
     if 'modules' in config:
         i = 0
@@ -113,7 +118,10 @@ def fetch_modules(config, relative_path, download_directory):
                                     cleaned_config[_k2] = flat_add(cleaned_config[_k2], _v2)
 
                         modules.append(Module(path=path, name=name))
-                        print_progress_bar(text='- assembling modules:', done=i, total=num_sources, width=30)
+                        print_progress_bar(text='- assembling modules:',
+                                           done=i,
+                                           total=num_sources,
+                                           width=30)
         print('')
 
     return modules, cleaned_config
@@ -161,9 +169,7 @@ def process_yaml(argv):
         default_build_type = config['default_build_type'].lower()
     else:
         sys.stderr.write("ERROR: you have to specify default_build_type in autocmake.yml\n\n")
-        sys.stderr.write(
-            "# for instance like this (debug, release, relwithdebinfo, or minsizerel):\ndefault_build_type: release\n\n"
-        )
+        sys.stderr.write("# for instance like this (debug, release, relwithdebinfo, or minsizerel):\ndefault_build_type: release\n\n")
         sys.exit(-1)
 
     if 'setup_script' in config:
@@ -229,7 +235,8 @@ def main(argv):
                       'Update this script and fetch or update infrastructure files under autocmake/.'),
                      ('python update.py <builddir>',
                       '(Re)generate CMakeLists.txt and setup script and fetch or update CMake modules.'),
-                     ('python update.py (-h | --help)', 'Show this help text.')]:
+                     ('python update.py (-h | --help)',
+                      'Show this help text.')]:
             print('  {0:30} {1}'.format(t, h))
         sys.exit(0)
 
@@ -237,18 +244,29 @@ def main(argv):
         # update self
         if not os.path.isfile('autocmake.yml'):
             print('- fetching example autocmake.yml')
-            fetch_url(src='{0}example/autocmake.yml'.format(AUTOCMAKE_GITHUB_URL), dst='autocmake.yml')
+            fetch_url(
+                src='{0}example/autocmake.yml'.format(AUTOCMAKE_GITHUB_URL),
+                dst='autocmake.yml'
+            )
         if not os.path.isfile('.gitignore'):
             print('- creating .gitignore')
             with open('.gitignore', 'w') as f:
                 f.write('*.pyc\n')
-        for f in [
-                'autocmake/configure.py', 'autocmake/__init__.py', 'autocmake/external/docopt.py',
-                'autocmake/external/__init__.py', 'autocmake/generate.py', 'autocmake/extract.py',
-                'autocmake/interpolate.py', 'autocmake/parse_rst.py', 'autocmake/parse_yaml.py', 'update.py'
-        ]:
+        for f in ['autocmake/configure.py',
+                  'autocmake/__init__.py',
+                  'autocmake/external/docopt.py',
+                  'autocmake/external/__init__.py',
+                  'autocmake/generate.py',
+                  'autocmake/extract.py',
+                  'autocmake/interpolate.py',
+                  'autocmake/parse_rst.py',
+                  'autocmake/parse_yaml.py',
+                  'update.py']:
             print('- fetching {0}'.format(f))
-            fetch_url(src='{0}{1}'.format(AUTOCMAKE_GITHUB_URL, f), dst='{0}'.format(f))
+            fetch_url(
+                src='{0}{1}'.format(AUTOCMAKE_GITHUB_URL, f),
+                dst='{0}'.format(f)
+            )
         # finally create a README.md with licensing information
         with open('README.md', 'w') as f:
             print('- generating licensing information')
@@ -261,7 +279,7 @@ def main(argv):
 def make_executable(path):
     # http://stackoverflow.com/a/30463972
     mode = os.stat(path).st_mode
-    mode |= (mode & 0o444) >> 2  # copy R bits to X
+    mode |= (mode & 0o444) >> 2    # copy R bits to X
     os.chmod(path, mode)
 
 
