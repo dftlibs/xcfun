@@ -26,15 +26,5 @@ list:
   - b: '%(foo)'
   - c: '%(foo)'"""
 
-    assert parse_yaml(text) == {
-        'foo': 'bar',
-        'this': 'that',
-        'var': 'bar',
-        'list': [{
-            'a': 'bar'
-        }, {
-            'b': 'bar'
-        }, {
-            'c': 'bar'
-        }]
-    }
+    assert parse_yaml(text) == {'foo': 'bar', 'this': 'that', 'var': 'bar',
+                                'list': [{'a': 'bar'}, {'b': 'bar'}, {'c': 'bar'}]}

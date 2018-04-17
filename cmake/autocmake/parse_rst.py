@@ -65,10 +65,7 @@ if(NOT DEFINED CMAKE_C_COMPILER_ID)
 endif()'''
 
     parsed_config = parse_cmake_module(s)
-    assert parsed_config['docopt'] == [
-        "--cxx=<CXX> C++ compiler [default: g++].",
-        "--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
-    ]
+    assert parsed_config['docopt'] == ["--cxx=<CXX> C++ compiler [default: g++].", "--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."]
 
 
 def test_parse_cmake_module_no_key():
