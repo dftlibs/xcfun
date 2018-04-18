@@ -53,16 +53,6 @@ char* xcfun_splash_swig(void)
     }
 %}
 
-%apply (int DIM1, double* INPLACE_ARRAY1 ) {(int buflen, double *buf)}
-
-%inline %{
-int xc_serialize_swig(xc_functional fun, int buflen, double *buf)
-    {
-        return xc_serialize(fun, buflen, buf);
-    }
-%}
-
-
 %ignore xc_deserialize;
 %ignore xc_derivative_index;
 %ignore xc_set_fromstring;
@@ -70,5 +60,10 @@ int xc_serialize_swig(xc_functional fun, int buflen, double *buf)
 %ignore xc_eval_setup;
 %ignore xc_eval;
 %ignore xc_eval_vec;
+
+%ignore xc_get;
+%ignore xc_describe_long;
+%ignore xc_serialize;
+%ignore xc_deserialize;
 
 %include "xcfun.h"

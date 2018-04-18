@@ -28,7 +28,7 @@ add_custom_command(
   COMMAND ${PYTHON_EXECUTABLE}
   ARGS "setup.py" "build_ext" "--inplace"
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/setup.py ${CMAKE_CURRENT_BINARY_DIR}/xcfun_swigPYTHON_wrap.c
+  DEPENDS xcfun-static ${CMAKE_CURRENT_BINARY_DIR}/setup.py ${CMAKE_CURRENT_BINARY_DIR}/xcfun_swigPYTHON_wrap.c
   )
 
 add_custom_target(target ALL DEPENDS ${XCFUN_PY_LIB})
