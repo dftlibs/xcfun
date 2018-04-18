@@ -13,8 +13,8 @@ xcfun_swig_module = Extension(
     sources=['${PROJECT_BINARY_DIR}/python/xcfun_swigPYTHON_wrap.c'],
     include_dirs=['${PROJECT_BINARY_DIR}/include', '${PROJECT_SOURCE_DIR}/api',
                   numpy.get_include()],
-    library_dirs=['${CMAKE_LIBRARY_OUTPUT_DIRECTORY}'],
-    libraries=['xcfun', 'stdc++'])
+    extra_objects=['${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libxcfun.a'],
+    libraries=['stdc++'])
 
 setup(
     name='example',

@@ -125,8 +125,8 @@ int xc_get(xc_functional fun, const char * name, double * value);
 XCFun_API const char * xc_describe_short(const char * name);
 const char * xc_describe_long(const char * name);
 
-int xc_is_gga(xc_functional fun);
-int xc_is_metagga(xc_functional fun);
+XCFun_API int xc_is_gga(xc_functional fun);
+XCFun_API int xc_is_metagga(xc_functional fun);
 
 int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functional
                                                             // from a string on the
@@ -140,7 +140,7 @@ XCFun_API int xc_eval_setup(xc_functional fun,
                             int order);
 
 // Length of the density[] argument to eval()
-int xc_input_length(xc_functional fun);
+XCFun_API int xc_input_length(xc_functional fun);
 
 // Length of the result[] argument to eval()
 XCFun_API int xc_output_length(xc_functional fun);
@@ -151,7 +151,7 @@ XCFun_API void xc_eval(xc_functional fun, const double * density, double * resul
 /* Vector version of xc_eval.
    density_pitch = density[start_of_second_point] - density[start_of_first_point],
    likewise for result_pitch. */
-void xc_eval_vec(xc_functional fun,
+XCFun_API void xc_eval_vec(xc_functional fun,
                  int nr_points,
                  const double * density,
                  int density_pitch,
