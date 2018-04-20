@@ -11,7 +11,9 @@ set_property(SOURCE "${XCFUN_SWIG}" PROPERTY SWIG_FLAGS "-I${CMAKE_BINARY_DIR}/i
                                                         "-I${PROJECT_SOURCE_DIR}/api")
 set_property(SOURCE "${XCFUN_SWIG}" PROPERTY SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR})
 
-swig_add_library(xcfun_swig LANGUAGE python SOURCES "${XCFUN_SWIG}")
+# requires CMake 3.8
+#swig_add_library(xcfun_swig LANGUAGE python SOURCES "${XCFUN_SWIG}")
+swig_add_module(xcfun_swig python "${XCFUN_SWIG}")
 
 target_include_directories(${SWIG_MODULE_xcfun_swig_REAL_NAME} 
                            PRIVATE ${PYTHON_INCLUDE_DIRS}
