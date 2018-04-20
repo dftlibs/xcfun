@@ -20,6 +20,8 @@ configure_file(
   )
 
 set(XCFUN_PY "${CMAKE_CURRENT_LIST_DIR}/xcfun.py")
+file(COPY "${XCFUN_PY}" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 set(XCFUN_SWIG_PY "${CMAKE_CURRENT_BINARY_DIR}/xcfun_swig.py")
 set(XCFUN_PY_LIB "${CMAKE_CURRENT_BINARY_DIR}/_xcfun_swig.so")
 
