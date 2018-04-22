@@ -20,14 +20,12 @@ target_compile_options(xcfun-objlib
 target_compile_definitions(xcfun-objlib
   PUBLIC
     XCFun_EXPORTS
-    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFun_FORTRAN_INT=long long int>"
     XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
   )
 target_include_directories(xcfun-objlib
-  PUBLIC
+  PRIVATE
     ${PROJECT_SOURCE_DIR}/api
     ${PROJECT_BINARY_DIR}/include
-  PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
   )
 target_include_directories(xcfun-objlib
@@ -38,21 +36,46 @@ target_include_directories(xcfun-objlib
 
 target_sources(xcfun-objlib
   PRIVATE
-    fortran.c
     xcfun.cpp
     xcint.cpp
+  )
+
+add_library(xcfun-c-objlib OBJECT fortran.c)
+set_target_properties(xcfun-c-objlib
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE 1
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN 1
+  )
+target_compile_options(xcfun-c-objlib
+  # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
+  # understand...
+  PRIVATE
+    "${XCFun_C_FLAGS}"
+    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
+  PRIVATE
+    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_C_FLAGS_COVERAGE}>"
+  )
+target_compile_definitions(xcfun-c-objlib
   PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/densvars.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/functional.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/specmath.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/xcint.hpp
+    XCFun_EXPORTS
+    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFun_FORTRAN_INT=long long int>"
+  )
+target_include_directories(xcfun-c-objlib
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/api
+    ${PROJECT_BINARY_DIR}/include
   )
 
 add_subdirectory(functionals)
 
 if(NOT STATIC_LIBRARY_ONLY)
-  add_library(xcfun-shared SHARED $<TARGET_OBJECTS:xcfun-objlib>)
+  add_library(xcfun-shared SHARED
+    $<TARGET_OBJECTS:xcfun-objlib>
+    $<TARGET_OBJECTS:xcfun-c-objlib>
+    )
   target_compile_definitions(xcfun-shared
     PUBLIC
       XCFun_EXPORTS
@@ -73,8 +96,6 @@ if(NOT STATIC_LIBRARY_ONLY)
     PROPERTIES
       VERSION ${PROJECT_VERSION_MAJOR}
       SOVERSION ${PROJECT_VERSION_MAJOR}
-      CXX_VISIBILITY_PRESET hidden
-      VISIBILITY_INLINES_HIDDEN 1
       MACOSX_RPATH ON
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
@@ -92,7 +113,10 @@ if(NOT STATIC_LIBRARY_ONLY)
 endif()
 
 if(NOT SHARED_LIBRARY_ONLY)
-  add_library(xcfun-static STATIC $<TARGET_OBJECTS:xcfun-objlib>)
+  add_library(xcfun-static STATIC
+    $<TARGET_OBJECTS:xcfun-objlib>
+    $<TARGET_OBJECTS:xcfun-c-objlib>
+    )
   target_compile_definitions(xcfun-static
     PUBLIC
       XCFun_STATIC_DEFINE
@@ -101,7 +125,7 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-static
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
       $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
