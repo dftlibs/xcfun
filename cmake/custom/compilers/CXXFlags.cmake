@@ -77,7 +77,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
     "-wd981"
     "-wd279"
     "-wd383"
-    "-vec-report0"
     "-wd1572"
     "-wd177"
     "-fno-rtti"

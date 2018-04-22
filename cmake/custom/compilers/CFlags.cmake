@@ -68,7 +68,6 @@ if(CMAKE_C_COMPILER_ID MATCHES Intel)
     "-wd981"
     "-wd279"
     "-wd383"
-    "-vec-report0"
     "-wd1572"
     "-wd1777"
     "-restrict"
