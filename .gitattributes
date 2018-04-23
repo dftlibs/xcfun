@@ -14,3 +14,6 @@ src/functionals/*.cpp licensefile=.githooks/LICENSE-C++
 
 src/taylor/*.hpp !licensefile
 src/taylor/*.cpp !licensefile
+
+python/init.py licensefile=.githooks/LICENSE-Python
+python/xcfun.py licensefile=.githooks/LICENSE-Python
