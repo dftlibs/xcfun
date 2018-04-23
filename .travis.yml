@@ -13,6 +13,8 @@ matrix:
             - clang
             - cmake3
             - gfortran
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
@@ -27,6 +29,8 @@ matrix:
             - clang-3.5
             - cmake3
             - gfortran
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='clang++-3.5'
         - C_COMPILER='clang-3.5'
@@ -41,6 +45,8 @@ matrix:
             - clang-3.8
             - cmake3
             - gfortran
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='clang++-3.8'
         - C_COMPILER='clang-3.8'
@@ -57,6 +63,8 @@ matrix:
             - g++
             - gcc
             - gfortran
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
@@ -74,6 +82,8 @@ matrix:
             - g++-5
             - gcc-5
             - gfortran-5
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='g++-5'
         - C_COMPILER='gcc-5'
@@ -91,6 +101,8 @@ matrix:
             - g++-6
             - gcc-6
             - gfortran-6
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='g++-6'
         - C_COMPILER='gcc-6'
@@ -108,6 +120,8 @@ matrix:
             - g++-7
             - gcc-7
             - gfortran-7
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
@@ -145,6 +159,8 @@ matrix:
             - gcc-7
             - gfortran-7
             - lcov
+            - python-dev
+            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
@@ -164,11 +180,15 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew update &> /dev/null
       brew cask uninstall --force oclint
-      brew install gcc python pyenv-virtualenv
-      brew upgrade cmake
+      brew upgrade cmake python
+      brew install gcc pipenv swig
     fi
+  - pip install --user pipenv --upgrade
+  - pipenv --three install
 
 before_script:
+  - source $(pipenv --venv)/bin/activate
+  - python --version
   - cd ${TRAVIS_BUILD_DIR}
   - export CXX=${CXX_COMPILER}
   - export CC=${C_COMPILER}
@@ -183,6 +203,8 @@ before_script:
      -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
+     -DENABLE_PYTHON_INTERFACE=ON
+     -DPYTHON_EXECUTABLE=$(type -P python)
 
 script:
   - cmake --build build -- --jobs=2 VERBOSE=1

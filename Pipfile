@@ -7,9 +7,11 @@ name = "pypi"
 
 [packages]
 
-sphinx = "*"
-sphinx-rtd-theme = "*"
+Sphinx = "*"
+sphinx_rtd_theme = "*"
 fprettify = "*"
+numpy = "*"
+matplotlib = "*"
 
 
 [dev-packages]
