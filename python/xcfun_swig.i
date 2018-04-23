@@ -47,7 +47,7 @@ double xcfun_version_swig(void)
 %}
 
 %inline %{
-char* xcfun_splash_swig(void)
+const char* xcfun_splash_swig(void)
     {
        return xcfun_splash();
     }
