@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # XCFun, an arbitrary order exchange-correlation library
 # Copyright (C) 2018 Ulf Ekström and contributors.
