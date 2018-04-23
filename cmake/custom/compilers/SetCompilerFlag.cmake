@@ -30,45 +30,36 @@ function(set_compiler_flag)
     ${ARGN}
   )
 
-  # build a list of flags from the arguments
-  set(_list_of_flags)
-  # also figure out whether the function is required to find a flag
-  set(_flag_is_required FALSE)
-  foreach(_arg ${ARGN})
-    string(TOUPPER "${_arg}" _arg_uppercase)
-    if(_arg_uppercase STREQUAL "REQUIRED")
-      set(_flag_is_required TRUE)
-    else()
-      list(APPEND _list_of_flags "${_arg}")
-    endif()
-  endforeach()
-
+  # Silently check compiler flags
+  set(restore_CMAKE_REQUIRED_QUIET ${CMAKE_REQUIRED_QUIET})
+  set(CMAKE_REQUIRED_QUIET TRUE)
   set(_flag_found FALSE)
   # loop over all flags, try to find the first which works
-  foreach(flag ${_list_of_flags})
-
+  foreach(flag IN LISTS set_compiler_flag_FLAGS)
     unset(_flag_works CACHE)
-    if(_lang STREQUAL "C")
+    if(${set_compiler_flag_LANGUAGE} STREQUAL "C")
       check_c_compiler_flag("${flag}" _flag_works)
-    elseif(_lang STREQUAL "CXX")
+    elseif(${set_compiler_flag_LANGUAGE} STREQUAL "CXX")
       check_cxx_compiler_flag("${flag}" _flag_works)
-    elseif(_lang STREQUAL "Fortran")
+    elseif(${set_compiler_flag_LANGUAGE} STREQUAL "Fortran")
       check_Fortran_compiler_flag("${flag}" _flag_works)
     else()
-      message(FATAL_ERROR "Unknown language in set_compiler_flag: ${_lang}")
+      message(FATAL_ERROR "Unknown language in set_compiler_flag: ${set_compiler_flag_LANGUAGE}")
     endif()
 
-    # if the flag works, use it, and exit
+    # if the flag works, use it, and exit loop
     # otherwise try next flag
     if(_flag_works)
-      set(${_result} "${flag}" PARENT_SCOPE)
+      set(${set_compiler_flag_RESULT} "${flag}" PARENT_SCOPE)
       set(_flag_found TRUE)
       break()
     endif()
   endforeach()
 
   # raise an error if no flag was found
-  if(_flag_is_required AND NOT _flag_found)
+  if(${set_compiler_flag_REQUIRED} AND NOT _flag_found)
     message(FATAL_ERROR "None of the required flags were supported")
   endif()
+  # Restore CMAKE_REQUIRED_QUIET
+  set(CMAKE_REQUIRED_QUIET ${restore_CMAKE_REQUIRED_QUIET})
 endfunction()

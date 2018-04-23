@@ -63,7 +63,6 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
     "-Mipa=fast"
     "-Munroll"
     "-Mvect=idiom"
-    "-c9x"
     )
 endif()
 
@@ -77,3 +76,5 @@ if(ENABLE_CODE_COVERAGE)
     message(FATAL_ERROR "Code coverage analysis requires the GNU Fortran compiler!")
   endif()
 endif()
+
+message(STATUS "Fortran compiler flags : ${CMAKE_Fortran_FLAGS} ${XCFun_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${XCFun_Fortran_FLAGS_${CMAKE_BUILD_TYPE}}")
