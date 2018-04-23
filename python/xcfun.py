@@ -1,13 +1,35 @@
 #!/usr/bin/env python
 
+#
+# XCFun, an arbitrary order exchange-correlation library
+# Copyright (C) 2018 Ulf Ekström and contributors.
+#
+# This file is part of XCFun.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# For information on the complete list of contributors to the
+# XCFun library, see: <https://xcfun.readthedocs.io/>
+#
+
 import numpy
-from xcfun_swig import *
+from .xcfun_swig import *
 
 
-class XcFunException(Exception):
+class XCFunException(Exception):
     def __init__(self, msg, code=1):
         Exception.__init__(self, msg)
         self.error_code = code
+
+
+def xcfun_version():
+    return xcfun_version_swig()
+
+
+def xcfun_splash():
+    return xcfun_splash_swig()
 
 
 def xc_new_functional():
@@ -17,7 +39,7 @@ def xc_new_functional():
 def xc_eval_setup(fun, var, mode, order):
     code = xc_eval_setup_swig(fun, var, mode, order)
     if code > 0:
-        raise XcFunException("Invalid options in xc_eval_setup", code)
+        raise XCFunException("Invalid options in xc_eval_setup", code)
 
 
 def xc_eval(fun, density):
@@ -26,7 +48,7 @@ def xc_eval(fun, density):
     output_len = xc_output_length(fun)
 
     if not ((density.shape[-1] == dens_len)):
-        raise XcFunException('wrong dimension of density argument')
+        raise XCFunException('wrong dimension of density argument')
 
     if len(density.shape) == 1:
         output = numpy.zeros(output_len)
@@ -38,7 +60,7 @@ def xc_eval(fun, density):
         xc_eval_vec_swig(fun, density, output)
 
     else:
-        raise XcFunException('wrong shape of density argument')
+        raise XCFunException('wrong shape of density argument')
 
     return output
 
@@ -58,10 +80,10 @@ class Functional(object):
             blyp_func = Functional({'BeckeX': 1.0, 'LYPC': 1.0})
         """
         self._func = xc_new_functional()
-        for (name, weight) in funcdict.iteritems():
+        for name, weight in funcdict.items():
             ret = xc_set(self._func, name, weight)
             if not ret == 0:
-                raise XcFunException('unknown functional selected')
+                raise XCFunException('unknown functional selected')
 
     def __del__(self):
         xc_free_functional(self._func)
@@ -96,22 +118,22 @@ class Functional(object):
         """
 
         if xc_is_metagga(self._func):
-            raise XcFunException('xc potential not supported for meta-GGAs')
+            raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
-                raise XcFunException('Density gradient and Laplacian required for GGA potential')
+                raise XCFunException('Density gradient and Laplacian required for GGA potential')
 
             xc_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
 
             if not (len(density.shape) == 1):
-                raise XcFunException('Wrong shape of density argument in eval_potential_n')
+                raise XCFunException('Wrong shape of density argument in eval_potential_n')
             nr_points = density.size
 
             if not (densgrad.shape == (nr_points, 3)):
-                raise XcFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
 
             if not (denshess.shape == (nr_points, 6)):
-                raise XcFunException('Wrong shape of denshess argument in eval_potential_n')
+                raise XCFunException('Wrong shape of denshess argument in eval_potential_n')
 
             dens = numpy.zeros((density.size, 10))
             dens[:, 0] = density[:]
@@ -149,25 +171,25 @@ class Functional(object):
         """
 
         if xc_is_metagga(self._func):
-            raise XcFunException('xc potential not supported for meta-GGAs')
+            raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
-                raise XcFunException('Density gradient and Laplacian required for GGA potential')
+                raise XCFunException('Density gradient and Laplacian required for GGA potential')
 
             xc_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
 
             if not (len(density.shape) == 2):
-                raise XcFunException('Wrong shape of density argument in eval_potential_ab')
+                raise XCFunException('Wrong shape of density argument in eval_potential_ab')
             nr_points = density.shape[0]
 
             if not (density.shape == (nr_points, 2)):
-                raise XcFunException('Wrong shape of density argument in eval_potential_n')
+                raise XCFunException('Wrong shape of density argument in eval_potential_n')
 
             if not (densgrad.shape == (nr_points, 3, 2)):
-                raise XcFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
 
             if not (denshess.shape == (nr_points, 6, 2)):
-                raise XcFunException('Wrong shape of denshess argument in eval_potential_n')
+                raise XCFunException('Wrong shape of denshess argument in eval_potential_n')
 
             dens = numpy.zeros((density.shape[0], 20))
             dens[:, 0] = density[:, 0]
