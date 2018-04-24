@@ -192,12 +192,6 @@ before_script:
   - source $(pipenv --venv)/bin/activate
   - python --version
   - cd ${TRAVIS_BUILD_DIR}
-  - export CXX=${CXX_COMPILER}
-  - export CC=${C_COMPILER}
-  - export FC=${Fortran_COMPILER}
-  - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-  - git submodule init
-  - git submodule update --init --recursive
   - >
      cmake -Bbuild -H.
      -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
