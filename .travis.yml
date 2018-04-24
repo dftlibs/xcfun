@@ -6,7 +6,6 @@ matrix:
   include:
     # 1/ Linux Clang Builds
     - os: linux
-      python: 3.6
       compiler: clang
       addons: &clang34
         apt:
@@ -20,9 +19,9 @@ matrix:
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     - os: linux
-      python: 3.6
       compiler: clang
       addons: &clang35
         apt:
@@ -36,9 +35,9 @@ matrix:
         - C_COMPILER='clang-3.5'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
-      python: 3.6
       compiler: clang
       addons: &clang38
         apt:
@@ -52,10 +51,10 @@ matrix:
         - C_COMPILER='clang-3.8'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 2/ Linux GCC Builds
     - os: linux
-      python: 3.6
       compiler: gcc
       addons: &gcc48
         apt:
@@ -70,6 +69,7 @@ matrix:
         - C_COMPILER='gcc'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
       python: 3.6
@@ -89,9 +89,9 @@ matrix:
         - C_COMPILER='gcc-5'
         - Fortran_COMPILER='gfortran-5'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     - os: linux
-      python: 3.6
       compiler: gcc
       addons: &gcc6
         apt:
@@ -108,9 +108,9 @@ matrix:
         - C_COMPILER='gcc-6'
         - Fortran_COMPILER='gfortran-6'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
-      python: 3.6
       compiler: gcc
       addons: &gcc7
         apt:
@@ -127,30 +127,30 @@ matrix:
         - C_COMPILER='gcc-7'
         - Fortran_COMPILER='gfortran-7'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 3/ OSX Clang Builds
     - os: osx
-      python: 3.6
       compiler: clang
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     # 4/ OSX GCC Builds
     - os: osx
-      python: 3.6
       compiler: gcc
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 5/ Linux GCC7 Coverage build
     - os: linux
-      python: 3.6
       compiler: gcc
       addons:
         apt:
@@ -168,6 +168,7 @@ matrix:
         - C_COMPILER='gcc-7'
         - Fortran_COMPILER='gfortran-7'
         - BUILD_TYPE='Debug'
+        - PYTHON='--three'
         - COVERAGE=ON
 
 before_install:
@@ -184,9 +185,10 @@ install:
       brew cask uninstall --force oclint
       brew upgrade cmake python
       brew install gcc pipenv swig
+    elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      pip install --user pipenv --upgrade
     fi
-  - pip install --user pipenv --upgrade
-  - pipenv --three install
+  - pipenv $PYTHON install
 
 before_script:
   - source $(pipenv --venv)/bin/activate
