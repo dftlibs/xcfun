@@ -6,6 +6,7 @@ matrix:
   include:
     # 1/ Linux Clang Builds
     - os: linux
+      python: 3.6
       compiler: clang
       addons: &clang34
         apt:
@@ -13,7 +14,6 @@ matrix:
             - clang
             - cmake3
             - gfortran
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='clang++'
@@ -22,6 +22,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: clang
       addons: &clang35
         apt:
@@ -29,7 +30,6 @@ matrix:
             - clang-3.5
             - cmake3
             - gfortran
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='clang++-3.5'
@@ -38,6 +38,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: clang
       addons: &clang38
         apt:
@@ -45,7 +46,6 @@ matrix:
             - clang-3.8
             - cmake3
             - gfortran
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='clang++-3.8'
@@ -55,6 +55,7 @@ matrix:
         - COVERAGE=OFF
     # 2/ Linux GCC Builds
     - os: linux
+      python: 3.6
       compiler: gcc
       addons: &gcc48
         apt:
@@ -63,7 +64,6 @@ matrix:
             - g++
             - gcc
             - gfortran
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='g++'
@@ -72,6 +72,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: gcc
       addons: &gcc5
         apt:
@@ -82,7 +83,6 @@ matrix:
             - g++-5
             - gcc-5
             - gfortran-5
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='g++-5'
@@ -91,6 +91,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: gcc
       addons: &gcc6
         apt:
@@ -101,7 +102,6 @@ matrix:
             - g++-6
             - gcc-6
             - gfortran-6
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='g++-6'
@@ -110,6 +110,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: gcc
       addons: &gcc7
         apt:
@@ -120,7 +121,6 @@ matrix:
             - g++-7
             - gcc-7
             - gfortran-7
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='g++-7'
@@ -130,6 +130,7 @@ matrix:
         - COVERAGE=OFF
     # 3/ OSX Clang Builds
     - os: osx
+      python: 3.6
       compiler: clang
       env:
         - CXX_COMPILER='clang++'
@@ -139,6 +140,7 @@ matrix:
         - COVERAGE=OFF
     # 4/ OSX GCC Builds
     - os: osx
+      python: 3.6
       compiler: gcc
       env:
         - CXX_COMPILER='g++'
@@ -148,6 +150,7 @@ matrix:
         - COVERAGE=OFF
     # 5/ Linux GCC7 Coverage build
     - os: linux
+      python: 3.6
       compiler: gcc
       addons:
         apt:
@@ -159,7 +162,6 @@ matrix:
             - gcc-7
             - gfortran-7
             - lcov
-            - python-dev
             - swig
       env:
         - CXX_COMPILER='g++-7'
@@ -204,7 +206,7 @@ before_script:
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
      -DENABLE_PYTHON_INTERFACE=ON
-     -DPYTHON_EXECUTABLE=$(type -P python)
+     -DPYTHON_EXECUTABLE=$(which python)
 
 script:
   - cmake --build build -- --jobs=2 VERBOSE=1
