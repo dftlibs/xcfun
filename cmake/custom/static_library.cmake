@@ -14,31 +14,9 @@
 #   docopt: "--static Create only the static library [default: False]."
 #   define: "'-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static'])"
 
-
-option_with_print(
-  NAME
-    STATIC_LIBRARY_ONLY
-  MESSAGE
-    "Create the static library only"
-  DEFAULT
-    OFF
-  )
-option_with_print(
-  NAME
-    SHARED_LIBRARY_ONLY
-  MESSAGE
-    "Create the shared library only"
-  DEFAULT
-    OFF
-  )
-option_with_print(
-  NAME
-    ENABLE_GENERIC
-  MESSAGE
-    "Enable mostly static linking in shared library"
-  DEFAULT
-    OFF
-  )
+option_with_print(STATIC_LIBRARY_ONLY "Create the static library only" OFF)
+option_with_print(SHARED_LIBRARY_ONLY "Create the shared library only" OFF)
+option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 
 if(ENABLE_GENERIC)
   if(DEFINED CMAKE_Fortran_COMPILER_ID)

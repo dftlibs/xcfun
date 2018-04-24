@@ -16,14 +16,7 @@
 #     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
 #     - "'-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
-option_with_default(
-  NAME
-    XCFun_XC_MAX_ORDER
-  MESSAGE
-    "Maximum order of derivatives of the exchange-correlation kernel"
-  DEFAULT
-    3
-  )
+option_with_default(XCFun_XC_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 3)
 # Make sure user selected a valuer larger than 2
 if(DEFINED XCFun_XC_MAX_ORDER AND XCFun_XC_MAX_ORDER LESS 3)
   message(STATUS "${XCFun_XC_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 3")
@@ -48,14 +41,7 @@ else()
 endif()
 file(TO_NATIVE_PATH "${CMAKE_INSTALL_LIBDIR}/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
 
-option_with_print(
-  NAME
-    ENABLE_PYTHON_INTERFACE
-  MESSAGE
-    "Enable Python interface"
-  DEFAULT
-    OFF
-  )
+option_with_print(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FC_SUPPORT)
   enable_language(Fortran)
