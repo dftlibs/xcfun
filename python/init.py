@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # XCFun, an arbitrary order exchange-correlation library
 # Copyright (C) 2018 Ulf Ekström and contributors.
@@ -12,6 +13,6 @@
 # XCFun library, see: <https://xcfun.readthedocs.io/>
 #
 
-from .xcfun import xcfun_version, xcfun_splash, xc_new_functional, xc_eval_setup, xc_eval, Functional
+from .xcfun import (Functional, xc_eval, xc_eval_setup, xc_new_functional, xcfun_splash, xcfun_version)
 
 __all__ = ['xcfun_version', 'xcfun_splash', 'xc_new_functional', 'xc_eval_setup', 'xc_eval', 'Functional']

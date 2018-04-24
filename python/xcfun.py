@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # XCFun, an arbitrary order exchange-correlation library
 # Copyright (C) 2018 Ulf Ekström and contributors.
@@ -13,6 +14,7 @@
 #
 
 import numpy
+
 from .xcfun_swig import *
 
 
