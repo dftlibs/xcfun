@@ -29,12 +29,19 @@ target_include_directories(${SWIG_MODULE_xcfun_swig_REAL_NAME}
     ${PYTHON_INCLUDE_DIRS}
     ${NUMPY_INCLUDE_DIRS}
   )
+file(RELATIVE_PATH _rel ${CMAKE_INSTALL_PREFIX}/${PYMOD_INSTALL_FULLDIR}
+                        ${CMAKE_INSTALL_PREFIX})
+if(APPLE)
+  set(XCFun_RPATH "@loader_path/${_rel}")
+else()
+  set(XCFun_RPATH "\$ORIGIN/${_rel}")
+endif()
 set_target_properties(${SWIG_MODULE_xcfun_swig_REAL_NAME}
   PROPERTIES
     MACOSX_RPATH ON
     SKIP_BUILD_RPATH OFF
     BUILD_WITH_INSTALL_RPATH OFF
-    INSTALL_RPATH "$ORIGIN/../../../${CMAKE_INSTALL_LIBDIR}"
+    INSTALL_RPATH "${XCFun_RPATH}${CMAKE_INSTALL_LIBDIR}"
     INSTALL_RPATH_USE_LINK_PATH ON
   )
 set_target_properties(${SWIG_MODULE_xcfun_swig_REAL_NAME}

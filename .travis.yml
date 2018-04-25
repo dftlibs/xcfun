@@ -203,11 +203,16 @@ before_script:
      -DENABLE_CODE_COVERAGE=${COVERAGE}
      -DENABLE_PYTHON_INTERFACE=ON
      -DPYTHON_EXECUTABLE=$(which python)
+     -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
 
 script:
-  - cmake --build build -- --jobs=2 VERBOSE=1
+  # Build and install
+  - cmake --build build --target install -- --jobs=2 VERBOSE=1
   - cd build
+  # Test
   - ctest --output-on-failure --verbose --parallel 2
+  # Check that Python bindings are usable from install prefix
+  - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
 
 after_success:
   - |
