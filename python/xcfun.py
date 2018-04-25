@@ -24,14 +24,6 @@ class XCFunException(Exception):
         self.error_code = code
 
 
-def xcfun_version():
-    return xcfun_version_swig()
-
-
-def xcfun_splash():
-    return xcfun_splash_swig()
-
-
 def xc_new_functional():
     return xc_new_functional_not_macro(XCFUN_API_VERSION)
 
