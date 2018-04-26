@@ -7,14 +7,7 @@
 #   docopt: "--int64 Enable 64bit integers [default: False]."
 #   define: "'-DENABLE_64BIT_INTEGERS={0}'.format(arguments['--int64'])"
 
-option_with_print(
-  NAME
-    ENABLE_64BIT_INTEGERS
-  MESSAGE
-    "Enable 64-bit integers"
-  DEFAULT
-    OFF
-  )
+option_with_print(ENABLE_64BIT_INTEGERS "Enable 64-bit integers" OFF)
 
 if(ENABLE_64BIT_INTEGERS)
   if(DEFINED CMAKE_Fortran_COMPILER_ID)

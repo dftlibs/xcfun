@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # XCFun, an arbitrary order exchange-correlation library
-# Copyright (C) YEAR AUTHORS
+# Copyright (C) 2018 Ulf Ekström and contributors.
 #
 # This file is part of XCFun.
 #
@@ -13,3 +13,4 @@
 # XCFun library, see: <https://xcfun.readthedocs.io/>
 #
 
+from .xcfun import *

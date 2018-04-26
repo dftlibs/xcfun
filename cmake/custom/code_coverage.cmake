@@ -12,14 +12,7 @@
 #   docopt: "--coverage Enable code coverage [default: OFF]."
 #   define: "'-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage'])"
 
-option_with_print(
-  NAME
-    ENABLE_CODE_COVERAGE
-  MESSAGE
-    "Enable code coverage"
-  DEFAULT
-    OFF
-  )
+option_with_print(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
 
 if(ENABLE_CODE_COVERAGE)
   if(NOT CMAKE_BUILD_TYPE MATCHES "[Dd]ebug")

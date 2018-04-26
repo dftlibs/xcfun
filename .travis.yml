@@ -13,11 +13,13 @@ matrix:
             - clang
             - cmake3
             - gfortran
+            - swig
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     - os: linux
       compiler: clang
@@ -27,11 +29,13 @@ matrix:
             - clang-3.5
             - cmake3
             - gfortran
+            - swig
       env:
         - CXX_COMPILER='clang++-3.5'
         - C_COMPILER='clang-3.5'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
       compiler: clang
@@ -41,11 +45,13 @@ matrix:
             - clang-3.8
             - cmake3
             - gfortran
+            - swig
       env:
         - CXX_COMPILER='clang++-3.8'
         - C_COMPILER='clang-3.8'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 2/ Linux GCC Builds
     - os: linux
@@ -57,13 +63,16 @@ matrix:
             - g++
             - gcc
             - gfortran
+            - swig
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
+      python: 3.6
       compiler: gcc
       addons: &gcc5
         apt:
@@ -74,11 +83,13 @@ matrix:
             - g++-5
             - gcc-5
             - gfortran-5
+            - swig
       env:
         - CXX_COMPILER='g++-5'
         - C_COMPILER='gcc-5'
         - Fortran_COMPILER='gfortran-5'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     - os: linux
       compiler: gcc
@@ -91,11 +102,13 @@ matrix:
             - g++-6
             - gcc-6
             - gfortran-6
+            - swig
       env:
         - CXX_COMPILER='g++-6'
         - C_COMPILER='gcc-6'
         - Fortran_COMPILER='gfortran-6'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     - os: linux
       compiler: gcc
@@ -108,11 +121,13 @@ matrix:
             - g++-7
             - gcc-7
             - gfortran-7
+            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
         - Fortran_COMPILER='gfortran-7'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 3/ OSX Clang Builds
     - os: osx
@@ -122,6 +137,7 @@ matrix:
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--two'
         - COVERAGE=OFF
     # 4/ OSX GCC Builds
     - os: osx
@@ -131,6 +147,7 @@ matrix:
         - C_COMPILER='gcc'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
+        - PYTHON='--three'
         - COVERAGE=OFF
     # 5/ Linux GCC7 Coverage build
     - os: linux
@@ -145,11 +162,13 @@ matrix:
             - gcc-7
             - gfortran-7
             - lcov
+            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
         - Fortran_COMPILER='gfortran-7'
         - BUILD_TYPE='Debug'
+        - PYTHON='--three'
         - COVERAGE=ON
 
 before_install:
@@ -164,18 +183,17 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew update &> /dev/null
       brew cask uninstall --force oclint
-      brew install gcc python pyenv-virtualenv
-      brew upgrade cmake
+      brew upgrade cmake python
+      brew install gcc pipenv swig
+    elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      pip install --user pipenv --upgrade
     fi
+  - pipenv $PYTHON install
 
 before_script:
+  - source $(pipenv --venv)/bin/activate
+  - python --version
   - cd ${TRAVIS_BUILD_DIR}
-  - export CXX=${CXX_COMPILER}
-  - export CC=${C_COMPILER}
-  - export FC=${Fortran_COMPILER}
-  - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-  - git submodule init
-  - git submodule update --init --recursive
   - >
      cmake -Bbuild -H.
      -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
@@ -183,11 +201,18 @@ before_script:
      -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
+     -DENABLE_PYTHON_INTERFACE=ON
+     -DPYTHON_EXECUTABLE=$(which python)
+     -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
 
 script:
-  - cmake --build build -- --jobs=2 VERBOSE=1
+  # Build and install
+  - cmake --build build --target install -- --jobs=2 VERBOSE=1
   - cd build
+  # Test
   - ctest --output-on-failure --verbose --parallel 2
+  # Check that Python bindings are usable from install prefix
+  - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
 
 after_success:
   - |

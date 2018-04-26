@@ -16,14 +16,7 @@
 #   docopt: "--omp Enable OpenMP parallelization [default: False]."
 #   define: "'-DENABLE_OPENMP={0}'.format(arguments['--omp'])"
 
-option_with_print(
-  NAME
-    ENABLE_OPENMP
-  MESSAGE
-    "Enable OpenMP parallelization"
-  DEFAULT
-    OFF
-  )
+option_with_print(ENABLE_OPENMP "Enable OpenMP parallelization" OFF)
 
 if(ENABLE_OPENMP)
   if(NOT OPENMP_FOUND)

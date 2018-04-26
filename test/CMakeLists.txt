@@ -29,15 +29,18 @@ if(ENABLE_FC_SUPPORT)
       "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
       "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
     )
-  set_property(TARGET kernel_example PROPERTY LINKER_LANGUAGE Fortran)
+  set_target_properties(kernel_example PROPERTIES LINKER_LANGUAGE Fortran)
   add_test(kernel_example ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/kernel_example)
 endif()
 
 if(ENABLE_PYTHON_INTERFACE)
   add_test(
     NAME python-interface
-    COMMAND "${PYTHON_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/test/test.py"
-    ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/python:$ENV{PYTHONPATH}
+    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/test/test.py
+    )
+  set_tests_properties(python-interface
+    PROPERTIES
+    ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/${PYMOD_INSTALL_LIBDIR}:$ENV{PYTHONPATH}
     )
 endif()
 
