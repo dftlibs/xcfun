@@ -731,7 +731,6 @@ int xc_user_eval_setup(xc_functional fun,
     default:
         xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
-    std::cout << "bitwise_vars " << bitwise_vars << " vars " << vars << std::endl;
     return xc_eval_setup(fun, vars, mode, order);
 }
     
