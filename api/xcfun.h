@@ -128,7 +128,7 @@ const char * xc_describe_long(const char * name);
 XCFun_API int xc_is_gga(xc_functional fun);
 XCFun_API int xc_is_metagga(xc_functional fun);
 
-int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functional
+XCFun_API int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functional
                                                             // from a string on the
                                                             // form "fun[=value]"
 
