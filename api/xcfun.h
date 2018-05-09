@@ -132,6 +132,16 @@ int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functio
                                                             // from a string on the
                                                             // form "fun[=value]"
 
+int xc_user_eval_setup(xc_functional fun,
+                       const int order, // order of the derivative requested (order=1 is the xc potential)
+                       const unsigned int func_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
+                       const unsigned int dens_type,  // A (0), N (1), A_B (2), N_S (3)
+                       const unsigned int mode_type,  // same as the enum list
+                       const unsigned int laplacian,  // 0/1 laplacian no/yes 
+                       const unsigned int kinetic,    // 0/1 kinetic energy no/yes
+                       const unsigned int current,    // 0/1 current density no/yes
+                       const unsigned int explicit_derivatives);   // 0/1 gamma vs explicit partial derivatives 
+
 // Try to set the functional evaluation vars, mode and order
 // return some combination of XC_E* if an error occurs, else 0.
 XCFun_API int xc_eval_setup(xc_functional fun,
