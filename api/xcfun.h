@@ -49,48 +49,45 @@ enum xc_mode {
 };
 
 // Must be in sync with xcint_vars in xcint.cpp and with the fortran module
+/*! \enum xc_vars
+ *  \brief functional type
+ */
 enum xc_vars {
-  XC_VARS_UNSET = -1,
-  // LDA
-  XC_A,
-  XC_N,
-  XC_A_B,
-  XC_N_S,
-  // GGA with gradient squares
-  XC_A_GAA,
-  XC_N_GNN,
-  XC_A_B_GAA_GAB_GBB,
-  XC_N_S_GNN_GNS_GSS,
-  // Meta-GGA
-  XC_A_GAA_LAPA,
-  XC_A_GAA_TAUA,
-  XC_N_GNN_LAPN, // 10
-  XC_N_GNN_TAUN,
-  XC_A_B_GAA_GAB_GBB_LAPA_LAPB,
-  XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
-  XC_N_S_GNN_GNS_GSS_LAPN_LAPS,
-  XC_N_S_GNN_GNS_GSS_TAUN_TAUS,
-  XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB,
-  XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB,
-  XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS,
-  // GGA with individual gradient components
-  XC_A_AX_AY_AZ,
-  XC_A_B_AX_AY_AZ_BX_BY_BZ,
-  XC_N_NX_NY_NZ, // 20
-  XC_N_S_NX_NY_NZ_SX_SY_SZ,
-  // Meta-GGA with individual gradient components
-  XC_A_AX_AY_AZ_TAUA,
-  XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB,
-  XC_N_NX_NY_NZ_TAUN,
-  XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS,
-  /* 2:nd order Taylor coefficients of alpha density, 1+3+6=10
-     numbers, rev gradlex order */
-  XC_A_2ND_TAYLOR,
-  /* 2:nd order Taylor expansion of alpha and beta densities
-     (first alpha, then beta) 20 numbers */
-  XC_A_B_2ND_TAYLOR,
-  XC_N_2ND_TAYLOR,
-  XC_N_S_2ND_TAYLOR,
+  XC_VARS_UNSET = -1, /*!< Not defined */
+  XC_A,               /*! LDA alpha */
+  XC_N,               /*! LDA rho*/
+  XC_A_B,             /*! LDA alpha & beta */
+  XC_N_S,             /*! LDA rho and spin */
+
+  XC_A_GAA,             /*! GGA with grad^2 alpha        */       
+  XC_N_GNN,             /*! GGA with grad^2 rho          */          
+  XC_A_B_GAA_GAB_GBB,   /*! GGA with grad^2 alpha & beta */
+  XC_N_S_GNN_GNS_GSS,   /*! GGA with grad^2 rho and spin */
+  XC_A_GAA_LAPA,                                    /*! metaGGA with grad^2 alpha        laplacian */        
+  XC_A_GAA_TAUA,                                    /*! metaGGA with grad^2 alpha        kinetic   */       
+  XC_N_GNN_LAPN,                                    /*! metaGGA with grad^2 rho          laplacian */ // 10
+  XC_N_GNN_TAUN,                                    /*! metaGGA with grad^2 rho          kinetic   */          
+  XC_A_B_GAA_GAB_GBB_LAPA_LAPB,                     /*! metaGGA with grad^2 alpha & beta laplacian */
+  XC_A_B_GAA_GAB_GBB_TAUA_TAUB,                     /*! metaGGA with grad^2 alpha & beta kinetic   */
+  XC_N_S_GNN_GNS_GSS_LAPN_LAPS,                     /*! metaGGA with grad^2 rho and spin laplacian */
+  XC_N_S_GNN_GNS_GSS_TAUN_TAUS,                     /*! metaGGA with grad^2 rho and spin kinetic   */
+  XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB,           /*! metaGGA with grad^2 alpha & beta laplacian kinetic */
+  XC_A_B_GAA_GAB_GBB_LAPA_LAPB_TAUA_TAUB_JPAA_JPBB, /*! metaGGA with grad^2 alpha & beta laplacian kinetic current */
+  XC_N_S_GNN_GNS_GSS_LAPN_LAPS_TAUN_TAUS,           /*! metaGGA with grad^2 rho and spin laplacian kinetic */
+  XC_A_AX_AY_AZ,             /*! GGA with gradient components alpha        */           
+  XC_A_B_AX_AY_AZ_BX_BY_BZ,  /*! GGA with gradient components alpha & beta */
+  XC_N_NX_NY_NZ,             /*! GGA with gradient components rho          */ // 20
+  XC_N_S_NX_NY_NZ_SX_SY_SZ,  /*! GGA with gradient components rho and spin */
+  XC_A_AX_AY_AZ_TAUA,                 /*! metaGGA with gradient components alpha        */
+  XC_A_B_AX_AY_AZ_BX_BY_BZ_TAUA_TAUB, /*! metaGGA with gradient components alpha & beta */
+  XC_N_NX_NY_NZ_TAUN,                 /*! metaGGA with gradient components rho          */
+  XC_N_S_NX_NY_NZ_SX_SY_SZ_TAUN_TAUS, /*! metaGGA with gradient components rho and spin */
+  /* 2:nd order Taylor coefficients of alpha density, 1+3+6=10 numbers, rev gradlex order */
+  XC_A_2ND_TAYLOR,    /*! 2:nd order Taylor alpha        */ 
+  /* 2:nd order Taylor expansion of alpha and beta densities (first alpha, then beta) 20 numbers */
+  XC_A_B_2ND_TAYLOR,  /*! 2:nd order Taylor alpha & beta */
+  XC_N_2ND_TAYLOR,    /*! 2:nd order Taylor rho          */
+  XC_N_S_2ND_TAYLOR,  /*! 2:nd order Taylor rho and spin */
   XC_NR_VARS
 };
 
@@ -128,9 +125,19 @@ const char * xc_describe_long(const char * name);
 XCFun_API int xc_is_gga(xc_functional fun);
 XCFun_API int xc_is_metagga(xc_functional fun);
 
-int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functional
+XCFun_API int xc_set_fromstring(xc_functional fun, const char * str); // Defines a functional
                                                             // from a string on the
                                                             // form "fun[=value]"
+
+XCFun_API int xc_user_eval_setup(xc_functional fun,
+                       const int order, // order of the derivative requested (order=1 is the xc potential)
+                       const unsigned int func_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
+                       const unsigned int dens_type,  // A (0), N (1), A_B (2), N_S (3)
+                       const unsigned int mode_type,  // same as the enum list
+                       const unsigned int laplacian,  // 0/1 laplacian no/yes 
+                       const unsigned int kinetic,    // 0/1 kinetic energy no/yes
+                       const unsigned int current,    // 0/1 current density no/yes
+                       const unsigned int explicit_derivatives);   // 0/1 gamma vs explicit partial derivatives 
 
 // Try to set the functional evaluation vars, mode and order
 // return some combination of XC_E* if an error occurs, else 0.
