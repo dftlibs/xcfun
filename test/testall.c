@@ -126,11 +126,20 @@ void gradient_forms_test(void) {
   xc_free_functional(fun);
 }
 
+void user_setup_test() {
+    xc_functional fun = xc_new_functional();
+    xc_set(fun, "pbe", 1.0);
+    int rval = xc_user_eval_setup(fun, 1, 1, 2, 1, 0, 0, 0, 1);
+    check("Functional correctly set up",  rval == 0);
+    xc_free_functional(fun);
+}
+
 int main(void) {
   int i = 0;
   const char *n, *s;
   consistency_test();
   gradient_forms_test();
+  user_setup_test();
   printf("%s", xcfun_splash());
   printf("XCFun version: %g\n", xcfun_version());
   printf("\nAvailable functionals and other settings:\n");
