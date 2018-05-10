@@ -730,21 +730,37 @@ int xc_is_metagga(xc_functional fun) {
   return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 
+/*! brief host program-friendly setup of the functional
+ * 
+ * param[in] fun the functional object 
+ * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
+ * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin (N_S,3)
+ * param[in] mode_type Parital derivatives (1), Potential (2), Contracted (3)
+ * param[in] laplacian (0 not required / 1 required)
+ * param[in] kinentic  (0 not required / 1 required)
+ * param[in] current   (0 not required / 1 required)
+ * param[in] explict_derivatives  (0 not required / 1 required)
+ *
+ * This routine encodes the different options bitwise. Each legitimate
+ * combination is then converted to the corresponding enum value.
+ *
+ */
+
 int xc_user_eval_setup(xc_functional fun,
                        const int order,
-                       const unsigned int func_type, // LDA (0), GGA (1), metaGGA (2), taylor (3)
-                       const unsigned int dens_type,  // A (0), N (1), A_B (2), N_S (3)
-                       const unsigned int mode_type,  // same as the enum list
-                       const unsigned int laplacian,  // 0/1 laplacian no/yes 
-                       const unsigned int kinetic,    // 0/1 kinetic energy no/yes
-                       const unsigned int current,    // 0/1 current density no/yes
-                       const unsigned int explicit_derivatives) {   // 0/1 gamma vs explicit partial derivatives 
+                       const unsigned int func_type,  
+                       const unsigned int dens_type,  
+                       const unsigned int mode_type,  
+                       const unsigned int laplacian,  
+                       const unsigned int kinetic,    
+                       const unsigned int current,    
+                       const unsigned int explicit_derivatives) {   
 
     if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplacian > 1 || kinetic > 1 || current > 1 || explicit_derivatives > 1) {
         xcint_die("xc_user_eval_setup: invalid input",-1);
     }
     
-
+    
     enum xc_vars vars = XC_VARS_UNSET; 
     enum xc_mode mode = XC_MODE_UNSET;
     
@@ -827,4 +843,5 @@ int xc_user_eval_setup(xc_functional fun,
         xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
     return xc_eval_setup(fun, vars, mode, order);
+    // clang-format on
 }
