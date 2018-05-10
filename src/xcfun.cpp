@@ -731,8 +731,8 @@ int xc_is_metagga(xc_functional fun) {
 }
 
 /*! brief host program-friendly setup of the functional
- * 
- * param[in] fun the functional object 
+ *
+ * param[in] fun the functional object
  * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
  * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin (N_S,3)
  * param[in] mode_type Parital derivatives (1), Potential (2), Contracted (3)
@@ -748,22 +748,23 @@ int xc_is_metagga(xc_functional fun) {
 
 int xc_user_eval_setup(xc_functional fun,
                        const int order,
-                       const unsigned int func_type,  
-                       const unsigned int dens_type,  
-                       const unsigned int mode_type,  
-                       const unsigned int laplacian,  
-                       const unsigned int kinetic,    
-                       const unsigned int current,    
-                       const unsigned int explicit_derivatives) {   
+                       const unsigned int func_type,
+                       const unsigned int dens_type,
+                       const unsigned int mode_type,
+                       const unsigned int laplacian,
+                       const unsigned int kinetic,
+                       const unsigned int current,
+                       const unsigned int explicit_derivatives) {
 
-    if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplacian > 1 || kinetic > 1 || current > 1 || explicit_derivatives > 1) {
-        xcint_die("xc_user_eval_setup: invalid input",-1);
-    }
-    
-    
-    enum xc_vars vars = XC_VARS_UNSET; 
-    enum xc_mode mode = XC_MODE_UNSET;
-    
+  if (func_type > 3 || dens_type > 3 || mode_type > 3 || laplacian > 1 ||
+      kinetic > 1 || current > 1 || explicit_derivatives > 1) {
+    xcint_die("xc_user_eval_setup: invalid input", -1);
+  }
+
+  enum xc_vars vars = XC_VARS_UNSET;
+  enum xc_mode mode = XC_MODE_UNSET;
+
+  // clang-format off
     switch (mode_type){
     case(1): mode = XC_PARTIAL_DERIVATIVES; break;
     case(2): mode = XC_POTENTIAL;           break;
@@ -843,5 +844,5 @@ int xc_user_eval_setup(xc_functional fun,
         xcint_die("xc_user_eval_setup: Invalid vars", bitwise_vars);
     }
     return xc_eval_setup(fun, vars, mode, order);
-    // clang-format on
+  // clang-format on
 }
