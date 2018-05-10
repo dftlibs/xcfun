@@ -127,11 +127,21 @@ void gradient_forms_test(void) {
 }
 
 void user_setup_test() {
-    xc_functional fun = xc_new_functional();
-    xc_set(fun, "pbe", 1.0);
-    int rval = xc_user_eval_setup(fun, 1, 1, 2, 1, 0, 0, 0, 1);
-    check("Functional correctly set up",  rval == 0);
-    xc_free_functional(fun);
+    xc_functional fun1 = xc_new_functional();
+    xc_functional fun2 = xc_new_functional();
+    xc_functional fun3 = xc_new_functional();
+    xc_set(fun1, "lda",  1.0);
+    xc_set(fun2, "pbe",  1.0);
+    xc_set(fun3, "m06l", 1.0);
+    int rval1 = xc_user_eval_setup(fun1, 0, 0, 0, 1, 0, 0, 0, 0);
+    int rval2 = xc_user_eval_setup(fun2, 1, 1, 1, 1, 0, 0, 0, 1);
+    int rval3 = xc_user_eval_setup(fun3, 2, 2, 2, 1, 0, 1, 0, 1);
+    check("Functional 1 correctly set up", rval1 == 0);
+    check("Functional 2 correctly set up", rval2 == 0);
+    check("Functional 3 correctly set up", rval3 == 0);
+    xc_free_functional(fun1);
+    xc_free_functional(fun2);
+    xc_free_functional(fun3);
 }
 
 int main(void) {

@@ -733,6 +733,7 @@ int xc_is_metagga(xc_functional fun) {
 /*! brief host program-friendly setup of the functional
  *
  * param[in] fun the functional object
+ * param[in] order 0 (functional), 1 (potential), 2 (hessian), ....
  * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
  * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin (N_S,3)
  * param[in] mode_type Parital derivatives (1), Potential (2), Contracted (3)
