@@ -24,7 +24,7 @@
 // PW92C. This matches the reference implementation.
 
 // Use inaccurate mu value in pbe exchange.
-// #define XCFUN_ACCURATE_PBEX_MU
+// #define XCFUN_REF_PBEX_MU
 
 // This is the internal scalar type of the library, can be
 // different from the external interface.
