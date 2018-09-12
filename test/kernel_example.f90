@@ -67,7 +67,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some phantasy values
+!  allocate density and fill in some fantasy values
   allocate (density(vector_length, nr_variables, NR_POINTS))
   density = 0.0d0
   do ipoint = 1, NR_POINTS
@@ -106,7 +106,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some phantasy values
+!  allocate density and fill in some fantasy values
   allocate (density(vector_length, nr_variables, NR_POINTS))
   density = 0.0d0
   do ipoint = 1, NR_POINTS
@@ -159,7 +159,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some phantasy values
+!  allocate density and fill in some fantasy values
   allocate (density(vector_length, nr_variables, NR_POINTS))
   density = 0.0d0
   do ipoint = 1, NR_POINTS
@@ -225,7 +225,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some phantasy values
+!  allocate density and fill in some fantasy values
   allocate (density(vector_length, nr_variables, NR_POINTS))
   density = 0.0d0
   do ipoint = 1, NR_POINTS
@@ -305,7 +305,7 @@ program xc_example
   
   
   ! Now contract the 2nd derivative completely
-  !  allocate density and fill in some phantasy values
+  !  allocate density and fill in some fantasy values
   !  Now the shape of zdensity is different from the last example.
   !  Typically, we want to contract the first kernel with e.g.
   !  first and/or second-order perturbed densities and again, we have
@@ -368,7 +368,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some phantasy values
+!  allocate density and fill in some fantasy values
   allocate (density(vector_length, nr_variables, NR_POINTS))
   density = 0.0d0
   do ipoint = 1, NR_POINTS
