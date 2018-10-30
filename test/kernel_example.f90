@@ -422,6 +422,10 @@ program xc_example
   deallocate (density)
   deallocate (input_array)
   deallocate (output_array) 
+
+  !Release the functional
+  call xc_free_functional(id)
+
   
   write(*,*)'Kernel test has ended properly!'
   
