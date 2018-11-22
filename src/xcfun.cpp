@@ -666,7 +666,16 @@ int xc_set(xc_functional fun, const char * name, double value) {
   return -1;
 }
 
-// Getting aliases is not supported
+/*! @brief get weight of given functional in the current setup
+ *
+ * param[in] fun the functional object
+ * param[in] name functional name to test, aliases not supported
+ * param[out] value weight of functional
+ *
+ * Returns 0 if name is a valid functional, -1 if not.
+ * See list_of_functionals.hpp for valid functional names.
+ */
+
 int xc_get(xc_functional fun, const char * name, double * value) {
   xcint_assure_setup();
   int item;
