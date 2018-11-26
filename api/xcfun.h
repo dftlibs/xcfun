@@ -118,7 +118,7 @@ XCFun_API const char * xc_enumerate_aliases(int n);
 // Try to either set or get a parameter. Return 0 if all was well,
 // otherwise the name was invalid.
 XCFun_API int xc_set(xc_functional fun, const char * name, double value);
-int xc_get(xc_functional fun, const char * name, double * value);
+XCFun_API int xc_get(xc_functional fun, const char * name, double * value);
 XCFun_API const char * xc_describe_short(const char * name);
 const char * xc_describe_long(const char * name);
 

@@ -144,12 +144,36 @@ void user_setup_test() {
     xc_free_functional(fun3);
 }
 
+void xc_get_test() {
+    xc_functional fun = xc_new_functional();
+    xc_set(fun, "B3LYP", 1.0);
+
+    double s, b, lyp, vwn, exx, kt, foo;
+    check("SLATERX is a valid functional"   , xc_get(fun, "SLATERX", &s) == 0);
+    check("BECKECORRX is a valid functional", xc_get(fun, "BECKECORRX", &b) == 0);
+    check("LYPC is a valid functional"      , xc_get(fun, "LYPC", &lyp) == 0);
+    check("VWN5C is a valid functional"     , xc_get(fun, "VWN5C", &vwn) == 0);
+    check("EXX is a valid functional"       , xc_get(fun, "EXX", &exx) == 0);
+    check("KTX is a valid functional"       , xc_get(fun, "KTX", &kt) == 0);
+    check("FOO is NOT a valid functional"   , xc_get(fun, "FOO", &foo) != 0);
+
+    checknum("B3LYP contains 80% SLATERX"   , s  , 0.80, 1.0e-14, 1.0e-12);
+    checknum("B3LYP contains 72% BECKECORRX", b  , 0.72, 1.0e-14, 1.0e-12);
+    checknum("B3LYP contains 81% LYPC"      , lyp, 0.81, 1.0e-14, 1.0e-12);
+    checknum("B3LYP contains 19% VWN5C"     , vwn, 0.19, 1.0e-14, 1.0e-12);
+    checknum("B3LYP contains 20% EXX"       , exx, 0.20, 1.0e-14, 1.0e-12);
+    checknum("B3LYP contains  0% KTX"       , kt , 0.00, 1.0e-14, 1.0);
+
+    xc_free_functional(fun);
+}
+
 int main(void) {
   int i = 0;
   const char *n, *s;
   consistency_test();
   gradient_forms_test();
   user_setup_test();
+  xc_get_test();
   printf("%s", xcfun_splash());
   printf("XCFun version: %g\n", xcfun_version());
   printf("\nAvailable functionals and other settings:\n");
