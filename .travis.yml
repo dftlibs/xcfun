@@ -186,7 +186,9 @@ install:
       brew upgrade cmake python
       brew install gcc pipenv swig
     elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      pip install --user pipenv --upgrade
+      # pip install --user pipenv --upgrade
+      # https://github.com/pypa/pipenv/issues/3224
+      pip install --user --upgrade -e git+https://github.com/pypa/pipenv.git#egg=pipenv
     fi
   - pipenv $PYTHON install
 
