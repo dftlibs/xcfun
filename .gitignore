@@ -1,5 +1,42 @@
-build*/*
+# Compiled Object files
+*.slo
+*.lo
 *.o
-_build/
-build*/
-venv/
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Build directories
+*build*/
+
+# Python stuff
+*.pyc
+.venv
+.direnv
+
+# Autocmake stuff
+cmake/lib/*.pyc
+
+# Emacs backup files
+*~

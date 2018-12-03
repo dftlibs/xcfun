@@ -11,7 +11,6 @@ target_compile_options(xcfun-objlib
   # understand...
   PRIVATE
     "${XCFun_CXX_FLAGS}"
-    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_CXX_FLAGS}>"
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
@@ -52,7 +51,6 @@ target_compile_options(xcfun-c-objlib
   # understand...
   PRIVATE
     "${XCFun_C_FLAGS}"
-    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
   PRIVATE
     "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
