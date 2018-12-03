@@ -24,7 +24,6 @@ modules:
     - source:
       - 'custom/fc_optional.cmake'
       - 'custom/code_coverage.cmake'
-      - 'custom/omp.cmake'
       - 'custom/compilers/CXXFlags.cmake'
       - 'custom/compilers/CFlags.cmake'
       - 'custom/static_library.cmake'

@@ -7,7 +7,6 @@ target_link_libraries(testall
 target_compile_options(testall
   PRIVATE
     "${XCFun_C_FLAGS}"
-    "$<$<BOOL:${OPENMP_FOUND}>:${OpenMP_C_FLAGS}>"
     "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
     "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
     "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_C_FLAGS_COVERAGE}>"

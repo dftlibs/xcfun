@@ -26,7 +26,6 @@ Options:
   --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
   --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: OFF].
   --coverage                             Enable code coverage [default: OFF].
-  --omp                                  Enable OpenMP parallelization [default: False].
   --static                               Create only the static library [default: False].
   --xcmaxorder=<XCFun_XC_MAX_ORDER>      An integer greater than 3 [default: 3].
   --pybindings                           Enable Python interface [default: OFF].
@@ -52,7 +51,6 @@ def gen_cmake_command(options, arguments):
     command.append('-DCMAKE_Fortran_COMPILER={0} -DEXTRA_FCFLAGS="{1}"'.format(arguments['--fc'], arguments['--extra-fc-flags']))
     command.append('-DENABLE_FC_SUPPORT={0}'.format(arguments['--fc-support']))
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
-    command.append('-DENABLE_OPENMP={0}'.format(arguments['--omp']))
     command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DXCFun_XC_MAX_ORDER="{0}"'.format(arguments['--xcmaxorder']))
     command.append('-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings']))
