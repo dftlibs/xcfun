@@ -46,8 +46,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
   list(APPEND XCFun_C_FLAGS
     "${c99_flag}"
     "-m64"
-    "-Qunused-arguments"
-    "-fcolor-diagnostics"
     )
   list(APPEND XCFun_C_FLAGS_DEBUG
     "-Wall"
