@@ -52,8 +52,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     "-fno-rtti"
     "-fno-exceptions"
     "-m64"
-    "-Qunused-arguments"
-    "-fcolor-diagnostics"
     )
   list(APPEND XCFun_CXX_FLAGS_DEBUG
     "-Wall"
