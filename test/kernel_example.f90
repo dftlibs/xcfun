@@ -25,12 +25,12 @@ program xc_example
 
   implicit none
 
-  integer, parameter   :: NR_POINTS = 1
+  integer, parameter   :: num_points = 1
 
   character(1000)      :: text
   integer              :: id, order, ierr, ideriv, ipoint
   integer              :: vector_length
-  integer              :: nr_variables
+  integer              :: num_variables
   real(8)              :: res
 
   real(8), allocatable :: density(:, :, :)
@@ -59,7 +59,7 @@ program xc_example
 !  We have one gridpoint, and four variables, density N and gradient
 !  components NX NY NZ.
   order = 0
-  nr_variables = 4
+  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   if (ierr /= 0) then
     print *, 'xc_eval_setup failed with error ', ierr
@@ -68,25 +68,25 @@ program xc_example
 
   vector_length = 2**order
 !  allocate density and fill in some fantasy values
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0 !        n
     density(1, 2, ipoint) = 2.0d0 !nabla_x n
     density(1, 3, ipoint) = 3.0d0 !nabla_y n
     density(1, 4, ipoint) = 4.0d0 !nabla_z n
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                density(:, 2, ipoint), &
                                density(:, 3, ipoint), &
                                density(:, 4, ipoint)/)
   end do
-  call xc_eval(id, NR_POINTS, input_array, output_array)
+  call xc_eval(id, num_points, input_array, output_array)
   res = output_array(vector_length, 1)
   print *, 'The XC energy density is', res
 
@@ -98,7 +98,7 @@ program xc_example
   !  and contract them with the first order densities
 !  first set up xcfun for first derivatives
   order = 1
-  nr_variables = 4
+  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   if (ierr /= 0) then
     print *, 'xc_eval_setup failed with error ', ierr
@@ -107,9 +107,9 @@ program xc_example
 
   vector_length = 2**order
 !  allocate density and fill in some fantasy values
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0 !        n zeroth order
     density(1, 2, ipoint) = 2.0d0 !nabla_x n zeroth order
     density(1, 3, ipoint) = 3.0d0 !nabla_y n zeroth order
@@ -120,19 +120,19 @@ program xc_example
     density(2, 4, ipoint) = 8.0d0 !nabla_z n first order
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
 !     It is possible to put in other numbers than 1 and 0
 !     this is where perturbed densities go for automatic contraction
 
-    do ipoint = 1, NR_POINTS
+    do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                  density(:, 2, ipoint), &
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
-    call xc_eval(id, NR_POINTS, input_array, output_array)
+    call xc_eval(id, num_points, input_array, output_array)
 
   deallocate (density)
   deallocate (input_array)
@@ -140,7 +140,7 @@ program xc_example
 
 
 !  reference values for self test
-  allocate (res_reference(nr_variables))
+  allocate (res_reference(num_variables))
   res_reference(1) = -0.97182634532897016d0
   res_reference(2) = -8.9803044914016916d-3
   res_reference(3) = -1.3470456737102541d-2
@@ -151,7 +151,7 @@ program xc_example
 !  and do NOT contract them!
 !  first set up xcfun for first derivatives
   order = 1
-  nr_variables = 4
+  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   if (ierr /= 0) then
     print *, 'xc_eval_setup failed with error ', ierr
@@ -160,36 +160,36 @@ program xc_example
 
   vector_length = 2**order
 !  allocate density and fill in some fantasy values
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0 !        n zeroth order
     density(1, 2, ipoint) = 2.0d0 !nabla_x n zeroth order
     density(1, 3, ipoint) = 3.0d0 !nabla_y n zeroth order
     density(1, 4, ipoint) = 4.0d0 !nabla_z n zeroth order
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
 !  here is a tricky part, we need a loop and we need to put
 !  in a '1' where we want the derivative
 !  we loop over all variables we want a derivative with respect to
-  do ideriv = 1, nr_variables
-    do ipoint = 1, NR_POINTS
+  do ideriv = 1, num_variables
+    do ipoint = 1, num_points
       density(2, :, ipoint) = 0.0d0
       density(2, ideriv, ipoint) = 1.0d0
     end do
 !     It is possible to put in other numbers than 1 and 0
 !     this is where perturbed densities go for automatic contraction
 
-    do ipoint = 1, NR_POINTS
+    do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                  density(:, 2, ipoint), &
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
-    call xc_eval(id, NR_POINTS, input_array, output_array)
+    call xc_eval(id, num_points, input_array, output_array)
 
     res = output_array(vector_length, 1)
     print *, 'dE/dx_i for i =', ideriv, 'is', res
@@ -207,7 +207,7 @@ program xc_example
   deallocate (res_reference)
 
 !  reference values for self test
-  allocate (res_reference(nr_variables))
+  allocate (res_reference(num_variables))
   res_reference(1) = -2.0795476275887927d0
   res_reference(2) = 2.1489169824673575d-2
   res_reference(3) = 4.1214059228412030d-2
@@ -217,7 +217,7 @@ program xc_example
 !  now second derivative of the "potential", contracted with ONE perturbed density.
 !  hopefully the strange input/output_array format will start to make sense
   order = 2
-  nr_variables = 4
+  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   if (ierr /= 0) then
     print *, 'xc_eval_setup failed with error ', ierr
@@ -226,9 +226,9 @@ program xc_example
 
   vector_length = 2**order
 !  allocate density and fill in some fantasy values
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0 ! zeroth order
     density(1, 2, ipoint) = 2.0d0 ! zeroth order
     density(1, 3, ipoint) = 3.0d0 ! zeroth order
@@ -239,8 +239,8 @@ program xc_example
     density(2, 4, ipoint) = 8.0d0 ! first order
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
 !  now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
 !  density(1, :, :)  unperturbed values
@@ -248,21 +248,21 @@ program xc_example
 !  density(3, :, :)  ones and zeros
 !  density(4, :, :)  not used in this case
 !  For the second order case, there will be 2^order elements, 1 ground state, 2^order-2 perturbed and one unused.
-  do ideriv = 1, nr_variables
-    do ipoint = 1, NR_POINTS
+  do ideriv = 1, num_variables
+    do ipoint = 1, num_points
       density(3, :, ipoint) = 0.0d0
       density(3, ideriv, ipoint) = 1.0d0
     end do
 !     It is possible to put in other numbers than 1 and 0 in the density2 array
 !     this is where perturbed densities go for automatic contraction
 
-    do ipoint = 1, NR_POINTS
+    do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                  density(:, 2, ipoint), &
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
-    call xc_eval(id, NR_POINTS, input_array, output_array)
+    call xc_eval(id, num_points, input_array, output_array)
 
     res = output_array(vector_length, 1)
     print *, 'd^2 E/dx_i dD_pert for i =', ideriv, 'is', res
@@ -314,9 +314,9 @@ program xc_example
   !  2.) perturbed density a) (first order)
   !  3.) perturbed density b) (first order)
   !  4.) perturbed density ab) (second order)
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0    ! zeroth order
     density(1, 2, ipoint) = 2.0d0    ! zeroth order
     density(1, 3, ipoint) = 3.0d0    ! zeroth order
@@ -335,16 +335,16 @@ program xc_example
     density(4, 4, ipoint) = 0.0d0    ! first order
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                density(:, 2, ipoint), &
                                density(:, 3, ipoint), &
                                density(:, 4, ipoint)/)
   end do
-  call xc_eval(id, NR_POINTS, input_array, output_array)
+  call xc_eval(id, num_points, input_array, output_array)
 
   !  The output array will then contain:
   ! 1.) Product of functional with ground state density
@@ -360,7 +360,7 @@ program xc_example
 
 !  now third derivative of the "potential", contracted with perturbed densities.
   order = 3
-  nr_variables = 4
+  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   if (ierr /= 0) then
     print *, 'xc_eval_setup failed with error ', ierr
@@ -369,9 +369,9 @@ program xc_example
 
   vector_length = 2**order
 !  allocate density and fill in some fantasy values
-  allocate (density(vector_length, nr_variables, NR_POINTS))
+  allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
-  do ipoint = 1, NR_POINTS
+  do ipoint = 1, num_points
     density(1, 1, ipoint) = 1.0d0   ! zeroth order
     density(1, 2, ipoint) = 2.0d0   ! zeroth order
     density(1, 3, ipoint) = 3.0d0   ! zeroth order
@@ -406,17 +406,17 @@ program xc_example
     density(8, 4, ipoint) = 0.0d0   ! third order (depending on (1), (2) and (3))
   end do
 
-  allocate (input_array(nr_variables*vector_length, NR_POINTS))
-  allocate (output_array(vector_length, NR_POINTS))
+  allocate (input_array(num_variables*vector_length, num_points))
+  allocate (output_array(vector_length, num_points))
 
-    do ipoint = 1, NR_POINTS
+    do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                  density(:, 2, ipoint), &
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
 
-    call xc_eval(id, NR_POINTS, input_array, output_array)
+    call xc_eval(id, num_points, input_array, output_array)
 
 
   deallocate (density)
