@@ -31,14 +31,14 @@ program xc_example
   implicit none
 
   ! we consider only one grid point
-  integer, parameter :: num_points = 1
+  integer, parameter :: num_grid_points = 1
 
   ! we will use XC_N_NX_NY_NZ
   ! N: density
   ! NX: x-gradient of the density
   ! NY: y-gradient of the density
   ! NZ: z-gradient of the density
-  integer, parameter :: num_variables = 4
+  integer, parameter :: num_density_variables = 4
 
   character(1000) :: text
   integer :: id, order, ierr, ipoint
@@ -71,9 +71,9 @@ program xc_example
   call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
-  allocate(density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_density_variables, num_grid_points))
   density = 0.0d0
-  do ipoint = 1, num_points
+  do ipoint = 1, num_grid_points
     ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !         n
     density(1, 2, ipoint) = 2.0d0 ! nabla_x n
@@ -82,8 +82,8 @@ program xc_example
   end do
 
   res = derivative(id, &
-                   num_points, &
-                   num_variables, &
+                   num_grid_points, &
+                   num_density_variables, &
                    vector_length, &
                    density)
   deallocate(density)
@@ -103,9 +103,9 @@ program xc_example
   call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
-  allocate(density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_density_variables, num_grid_points))
   density = 0.0d0
-  do ipoint = 1, num_points
+  do ipoint = 1, num_grid_points
     ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !         n zeroth order
     density(1, 2, ipoint) = 2.0d0 ! nabla_x n zeroth order
@@ -118,8 +118,8 @@ program xc_example
   end do
 
   res = derivative(id, &
-                   num_points, &
-                   num_variables, &
+                   num_grid_points, &
+                   num_density_variables, &
                    vector_length, &
                    density)
   deallocate(density)
@@ -136,9 +136,9 @@ program xc_example
   ! the density variable of interest to 1, and set other perturbed
   ! densities to 0
 
-  allocate(density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_density_variables, num_grid_points))
   density = 0.0d0
-  do ipoint = 1, num_points
+  do ipoint = 1, num_grid_points
     ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !         n zeroth order
     density(1, 2, ipoint) = 2.0d0 ! nabla_x n zeroth order
@@ -151,8 +151,8 @@ program xc_example
   end do
 
   res = derivative(id, &
-                   num_points, &
-                   num_variables, &
+                   num_grid_points, &
+                   num_density_variables, &
                    vector_length, &
                    density)
   deallocate(density)
@@ -170,9 +170,9 @@ program xc_example
   call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
-  allocate(density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_density_variables, num_grid_points))
   density = 0.0d0
-  do ipoint = 1, num_points
+  do ipoint = 1, num_grid_points
     ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 ! zeroth order
     density(1, 2, ipoint) = 2.0d0 ! zeroth order
@@ -193,8 +193,8 @@ program xc_example
   end do
 
   res = derivative(id, &
-                   num_points, &
-                   num_variables, &
+                   num_grid_points, &
+                   num_density_variables, &
                    vector_length, &
                    density)
   deallocate(density)
@@ -212,9 +212,9 @@ program xc_example
   call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
-  allocate(density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_density_variables, num_grid_points))
   density = 0.0d0
-  do ipoint = 1, num_points
+  do ipoint = 1, num_grid_points
     ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0   ! zeroth order
     density(1, 2, ipoint) = 2.0d0   ! zeroth order
@@ -251,8 +251,8 @@ program xc_example
   end do
 
   res = derivative(id, &
-                   num_points, &
-                   num_variables, &
+                   num_grid_points, &
+                   num_density_variables, &
                    vector_length, &
                    density)
   deallocate(density)
@@ -272,36 +272,36 @@ program xc_example
 contains
 
   real(8) function derivative(id, &
-                              num_points, &
-                              num_variables, &
+                              num_grid_points, &
+                              num_density_variables, &
                               vector_length, &
                               density)
     ! computes the derivative and takes care of offsetting
 
     integer, intent(in) :: id
-    integer, intent(in) :: num_points
-    integer, intent(in) :: num_variables
+    integer, intent(in) :: num_grid_points
+    integer, intent(in) :: num_density_variables
     integer, intent(in) :: vector_length
-    real(8), intent(in) :: density(vector_length, num_variables, num_points)
+    real(8), intent(in) :: density(vector_length, num_density_variables, num_grid_points)
 
     real(8), allocatable :: input_array(:, :)
     real(8), allocatable :: output_array(:, :)
 
     integer :: ipoint
 
-    allocate(input_array(num_variables*vector_length, num_points))
-    allocate(output_array(vector_length, num_points))
+    allocate(input_array(num_density_variables*vector_length, num_grid_points))
+    allocate(output_array(vector_length, num_grid_points))
 
     ! put the densities into the right places
     ! along the input array
-    do ipoint = 1, num_points
+    do ipoint = 1, num_grid_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                  density(:, 2, ipoint), &
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
 
-    call xc_eval(id, num_points, input_array, output_array)
+    call xc_eval(id, num_grid_points, input_array, output_array)
     derivative = output_array(vector_length, 1)
 
     deallocate(input_array)
