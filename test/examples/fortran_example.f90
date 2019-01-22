@@ -47,8 +47,15 @@ program xc_example
 
   implicit none
 
+  ! we consider only one grid point
   integer, parameter :: num_points = 1
-  integer, parameter :: num_variables = 4  ! we will use XC_N_NX_NY_NZ
+
+  ! we will use XC_N_NX_NY_NZ
+  ! N: density
+  ! NX: x-gradient of the density
+  ! NY: y-gradient of the density
+  ! NZ: z-gradient of the density
+  integer, parameter :: num_variables = 4
 
   character(1000) :: text
   integer :: id, order, ierr, ideriv, ipoint
@@ -75,9 +82,6 @@ program xc_example
   ierr = xc_set(id, 'pbe', 1.0d0)
   call assert(ierr == 0, "functional name not recognized")
 
-  ! First we just compute the energy, i.e. the 0-th order integrand.
-  ! We have one gridpoint, and four variables, density N and gradient
-  ! components NX NY NZ.
   order = 0
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
