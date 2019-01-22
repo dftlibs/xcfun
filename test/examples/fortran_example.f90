@@ -20,7 +20,14 @@ program xc_example
 ! We will compute the kernel for an unpolarized system using total density and the gradient components as the variables. These are
 ! linear in the density matrix, which helps the code using the results from xcfun.
 
-  use xcfun
+  use xcfun, only: XC_CONTRACTED, &
+                   XC_N_NX_NY_NZ, &
+                   xcfun_splash, &
+                   xc_new_functional, &
+                   xc_set, &
+                   xc_eval_setup, &
+                   xc_eval, &
+                   xc_free_functional
 
   implicit none
 
