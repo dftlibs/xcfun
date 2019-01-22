@@ -137,16 +137,16 @@ program xc_example
   deallocate (density)
   deallocate (input_array)
   deallocate (output_array)
-  
-  
+
+
 !  reference values for self test
   allocate (res_reference(nr_variables))
   res_reference(1) = -0.97182634532897016d0
   res_reference(2) = -8.9803044914016916d-3
   res_reference(3) = -1.3470456737102541d-2
-  res_reference(4) = -1.7960608982803383d-2  
-  
-  
+  res_reference(4) = -1.7960608982803383d-2
+
+
 !  now let's compute the first derivatives ('potential')
 !  and do NOT contract them!
 !  first set up xcfun for first derivatives
@@ -212,7 +212,7 @@ program xc_example
   res_reference(2) = 2.1489169824673575d-2
   res_reference(3) = 4.1214059228412030d-2
   res_reference(4) = 6.0938948632150471d-2
-      
+
 
 !  now second derivative of the "potential", contracted with ONE perturbed density.
 !  hopefully the strange input/output_array format will start to make sense
@@ -278,7 +278,7 @@ program xc_example
   deallocate (input_array)
   deallocate (output_array)
   deallocate (res_reference)
-  
+
   !  Notes:
 
 !  The computed second derivatives are now already contracted with the
@@ -302,8 +302,8 @@ program xc_example
 !
 !  This will be exemplified in the following.
 
-  
-  
+
+
   ! Now contract the 2nd derivative completely
   !  allocate density and fill in some fantasy values
   !  Now the shape of zdensity is different from the last example.
@@ -345,7 +345,7 @@ program xc_example
                                density(:, 4, ipoint)/)
   end do
   call xc_eval(id, NR_POINTS, input_array, output_array)
-  
+
   !  The output array will then contain:
   ! 1.) Product of functional with ground state density
   ! 2.) Product of first-order functional derivative with first-order density a)
@@ -356,8 +356,8 @@ program xc_example
   deallocate (density)
   deallocate (input_array)
   deallocate (output_array)
-  
-  
+
+
 !  now third derivative of the "potential", contracted with perturbed densities.
   order = 3
   nr_variables = 4
@@ -415,19 +415,19 @@ program xc_example
                                  density(:, 3, ipoint), &
                                  density(:, 4, ipoint)/)
     end do
-    
+
     call xc_eval(id, NR_POINTS, input_array, output_array)
 
-    
+
   deallocate (density)
   deallocate (input_array)
-  deallocate (output_array) 
+  deallocate (output_array)
 
   !Release the functional
   call xc_free_functional(id)
 
-  
+
   write(*,*)'Kernel test has ended properly!'
-  
+
 
 end program
