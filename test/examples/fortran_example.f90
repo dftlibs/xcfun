@@ -10,7 +10,22 @@
 !
 ! For information on the complete list of contributors to the
 ! XCFun library, see: <https://xcfun.readthedocs.io/>
-!
+
+
+subroutine assert(predicate, error_message)
+
+  implicit none
+
+  logical, intent(in) :: predicate
+  character(*), intent(in) :: error_message
+
+  if (.not. predicate) then
+    print *, 'ERROR:', error_message
+    stop 1
+  endif
+
+end subroutine
+
 
 program xc_example
 
@@ -44,6 +59,7 @@ program xc_example
   real(8), allocatable :: output_array(:, :)
   real(8), allocatable :: res_reference(:)
 
+
   ! print some info and copyright about the library
   ! please always include this info in your code
   call xcfun_splash(text)
@@ -56,10 +72,7 @@ program xc_example
   ! in this example we use PBE
   print *, 'Setting up PBE'
   ierr = xc_set(id, 'pbe', 1.0d0)
-  if (ierr /= 0) then
-    print *, 'Functional name not recognized, quitting.'
-    stop 1
-  endif
+  call assert(ierr == 0, "functional name not recognized")
 
   ! First we just compute the energy, i.e. the 0-th order integrand.
   ! We have one gridpoint, and four variables, density N and gradient
@@ -67,10 +80,7 @@ program xc_example
   order = 0
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  if (ierr /= 0) then
-    print *, 'xc_eval_setup failed with error ', ierr
-    stop 1
-  endif
+  call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
   allocate (density(vector_length, num_variables, num_points))
@@ -106,10 +116,7 @@ program xc_example
   order = 1
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  if (ierr /= 0) then
-    print *, 'xc_eval_setup failed with error ', ierr
-    stop 1
-  endif
+  call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
   allocate (density(vector_length, num_variables, num_points))
@@ -159,10 +166,7 @@ program xc_example
   order = 1
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  if (ierr /= 0) then
-    print *, 'xc_eval_setup failed with error ', ierr
-    stop 1
-  endif
+  call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
   allocate (density(vector_length, num_variables, num_points))
@@ -201,10 +205,8 @@ program xc_example
     print *, 'dE/dx_i for i =', ideriv, 'is', res
 
     ! test against reference numbers
-    if (abs(res - res_reference(ideriv)) > 1.0d-6) then
-      print *, 'error: derivatives do not match reference numbers'
-      stop 1
-    end if
+    call assert((abs(res - res_reference(ideriv)) < 1.0d-6), &
+                "derivatives do not match reference numbers")
   end do
 
   deallocate (density)
@@ -225,10 +227,7 @@ program xc_example
   order = 2
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  if (ierr /= 0) then
-    print *, 'xc_eval_setup failed with error ', ierr
-    stop 1
-  endif
+  call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
   allocate (density(vector_length, num_variables, num_points))
@@ -274,10 +273,8 @@ program xc_example
     print *, 'd^2 E/dx_i dD_pert for i =', ideriv, 'is', res
 
     ! test against reference numbers
-    if (abs(res - res_reference(ideriv)) > 1.0d-6) then
-      print *, 'error: derivatives do not match reference numbers'
-      stop 1
-    end if
+    call assert((abs(res - res_reference(ideriv)) < 1.0d-6), &
+                "derivatives do not match reference numbers")
   end do
 
   deallocate (density)
@@ -365,10 +362,7 @@ program xc_example
   order = 3
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  if (ierr /= 0) then
-    print *, 'xc_eval_setup failed with error ', ierr
-    stop 1
-  endif
+  call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
   !  allocate density and fill in some fantasy values
