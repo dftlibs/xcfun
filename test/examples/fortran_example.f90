@@ -307,6 +307,9 @@ contains
     end do
 
     call xc_eval(id, num_grid_points, input_array, output_array)
+
+    ! The output_array holds a Taylor series expansion
+    ! and we pick here one particular element out of this array.
     derivative = output_array(vector_length, 1)
 
     deallocate(input_array)
