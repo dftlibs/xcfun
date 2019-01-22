@@ -29,11 +29,12 @@ end subroutine
 
 program xc_example
 
-! This example contains calls to f90 interface routines that are needed to "talk to" the xcfun library and demonstrates how to use
-! them.
+! This example contains calls to f90 interface routines that are needed to "talk
+! to" the xcfun library and demonstrates how to use them.
 
-! We will compute the kernel for an unpolarized system using total density and the gradient components as the variables. These are
-! linear in the density matrix, which helps the code using the results from xcfun.
+! We will compute the kernel for an unpolarized system using total density and
+! the gradient components as the variables. These are linear in the density
+! matrix, which helps the code using the results from xcfun.
 
   use xcfun, only: XC_CONTRACTED, &
                    XC_N_NX_NY_NZ, &
