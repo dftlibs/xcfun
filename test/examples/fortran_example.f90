@@ -82,12 +82,15 @@ program xc_example
   ierr = xc_set(id, 'pbe', 1.0d0)
   call assert(ierr == 0, "functional name not recognized")
 
+  !-----------------------------------------------------------------------------
+  ! in the first example we compute the XC energy ("order 0 derivative")
+
   order = 0
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
   vector_length = 2**order
-  allocate (density(vector_length, num_variables, num_points))
+  allocate(density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
     ! we use fantasy values here
@@ -97,22 +100,34 @@ program xc_example
     density(1, 4, ipoint) = 4.0d0 !nabla_z n
   end do
 
-  allocate (input_array(num_variables*vector_length, num_points))
-  allocate (output_array(vector_length, num_points))
-
+  allocate(input_array(num_variables*vector_length, num_points))
   do ipoint = 1, num_points
     input_array(:, ipoint) = (/density(:, 1, ipoint), &
                                density(:, 2, ipoint), &
                                density(:, 3, ipoint), &
                                density(:, 4, ipoint)/)
   end do
+
+  allocate(output_array(vector_length, num_points))
   call xc_eval(id, num_points, input_array, output_array)
   res = output_array(vector_length, 1)
   print *, 'The XC energy density is', res
 
+  ! compare with reference
+  call assert((abs(-0.86494159400066051d0 - res) < 1.0d-6), &
+              "derivatives do not match reference numbers")
+
   deallocate (density)
   deallocate (input_array)
   deallocate (output_array)
+
+
+
+
+
+
+
+
 
   ! now let's compute the first derivatives ('potential')
   ! and contract them with the first order densities
@@ -206,7 +221,7 @@ program xc_example
     res = output_array(vector_length, 1)
     print *, 'dE/dx_i for i =', ideriv, 'is', res
 
-    ! test against reference numbers
+    ! compare with reference
     call assert((abs(res - res_reference(ideriv)) < 1.0d-6), &
                 "derivatives do not match reference numbers")
   end do
@@ -273,7 +288,7 @@ program xc_example
     res = output_array(vector_length, 1)
     print *, 'd^2 E/dx_i dD_pert for i =', ideriv, 'is', res
 
-    ! test against reference numbers
+    ! compare with reference
     call assert((abs(res - res_reference(ideriv)) < 1.0d-6), &
                 "derivatives do not match reference numbers")
   end do
