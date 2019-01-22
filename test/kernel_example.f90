@@ -14,50 +14,49 @@
 
 program xc_example
 
-!  this example contains calls to all f90 interface routines
-!  that are needed to "talk to" the xcfun library
-!  and demonstrates how to use them
-!  We will compute the kernel for an unpolarized system using total density and the
-!  gradient components as the variables. These are linear in the density matrix, which
-!  helps the code using the results from xcfun.
+! This example contains calls to f90 interface routines that are needed to "talk to" the xcfun library and demonstrates how to use
+! them.
+
+! We will compute the kernel for an unpolarized system using total density and the gradient components as the variables. These are
+! linear in the density matrix, which helps the code using the results from xcfun.
 
   use xcfun
 
   implicit none
 
-  integer, parameter   :: num_points = 1
+  integer, parameter :: num_points = 1
 
-  character(1000)      :: text
-  integer              :: id, order, ierr, ideriv, ipoint
-  integer              :: vector_length
-  integer              :: num_variables
-  real(8)              :: res
+  character(1000) :: text
+  integer :: id, order, ierr, ideriv, ipoint
+  integer :: vector_length
+  integer :: num_variables
+  real(8) :: res
 
   real(8), allocatable :: density(:, :, :)
   real(8), allocatable :: input_array(:, :)
   real(8), allocatable :: output_array(:, :)
   real(8), allocatable :: res_reference(:)
 
-!  print some info and copyright about the library
-!  please always include this info in your code
+  ! print some info and copyright about the library
+  ! please always include this info in your code
   call xcfun_splash(text)
   print *, text(1:len_trim(text))
 
-!  create a new functional
-!  we need this for interacting with the library
+  ! create a new functional
+  ! we need this for interacting with the library
   id = xc_new_functional()
 
-!  in this example we use PBE
+  ! in this example we use PBE
   print *, 'Setting up PBE'
   ierr = xc_set(id, 'pbe', 1.0d0)
   if (ierr /= 0) then
     print *, 'Functional name not recognized, quitting.'
-    stop
+    stop 1
   endif
 
-!  First we just compute the energy, i.e. the 0-th order integrand.
-!  We have one gridpoint, and four variables, density N and gradient
-!  components NX NY NZ.
+  ! First we just compute the energy, i.e. the 0-th order integrand.
+  ! We have one gridpoint, and four variables, density N and gradient
+  ! components NX NY NZ.
   order = 0
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
@@ -67,10 +66,10 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some fantasy values
   allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
+    ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !        n
     density(1, 2, ipoint) = 2.0d0 !nabla_x n
     density(1, 3, ipoint) = 3.0d0 !nabla_y n
@@ -94,9 +93,9 @@ program xc_example
   deallocate (input_array)
   deallocate (output_array)
 
-  !  now let's compute the first derivatives ('potential')
-  !  and contract them with the first order densities
-!  first set up xcfun for first derivatives
+  ! now let's compute the first derivatives ('potential')
+  ! and contract them with the first order densities
+  ! first set up xcfun for first derivatives
   order = 1
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
@@ -106,10 +105,10 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some fantasy values
   allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
+    ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !        n zeroth order
     density(1, 2, ipoint) = 2.0d0 !nabla_x n zeroth order
     density(1, 3, ipoint) = 3.0d0 !nabla_y n zeroth order
@@ -139,7 +138,7 @@ program xc_example
   deallocate (output_array)
 
 
-!  reference values for self test
+  ! reference values for self test
   allocate (res_reference(num_variables))
   res_reference(1) = -0.97182634532897016d0
   res_reference(2) = -8.9803044914016916d-3
@@ -147,9 +146,9 @@ program xc_example
   res_reference(4) = -1.7960608982803383d-2
 
 
-!  now let's compute the first derivatives ('potential')
-!  and do NOT contract them!
-!  first set up xcfun for first derivatives
+  ! now let's compute the first derivatives ('potential')
+  ! and do NOT contract them!
+  ! first set up xcfun for first derivatives
   order = 1
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
@@ -159,10 +158,10 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some fantasy values
   allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
+    ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 !        n zeroth order
     density(1, 2, ipoint) = 2.0d0 !nabla_x n zeroth order
     density(1, 3, ipoint) = 3.0d0 !nabla_y n zeroth order
@@ -172,16 +171,16 @@ program xc_example
   allocate (input_array(num_variables*vector_length, num_points))
   allocate (output_array(vector_length, num_points))
 
-!  here is a tricky part, we need a loop and we need to put
-!  in a '1' where we want the derivative
-!  we loop over all variables we want a derivative with respect to
+  ! here is a tricky part, we need a loop and we need to put
+  ! in a '1' where we want the derivative
+  ! we loop over all variables we want a derivative with respect to
   do ideriv = 1, num_variables
     do ipoint = 1, num_points
       density(2, :, ipoint) = 0.0d0
       density(2, ideriv, ipoint) = 1.0d0
     end do
-!     It is possible to put in other numbers than 1 and 0
-!     this is where perturbed densities go for automatic contraction
+    ! It is possible to put in other numbers than 1 and 0
+    ! this is where perturbed densities go for automatic contraction
 
     do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
@@ -194,7 +193,7 @@ program xc_example
     res = output_array(vector_length, 1)
     print *, 'dE/dx_i for i =', ideriv, 'is', res
 
-!     test against reference numbers
+    ! test against reference numbers
     if (abs(res - res_reference(ideriv)) > 1.0d-6) then
       print *, 'error: derivatives do not match reference numbers'
       stop 1
@@ -206,7 +205,7 @@ program xc_example
   deallocate (output_array)
   deallocate (res_reference)
 
-!  reference values for self test
+  ! reference values for self test
   allocate (res_reference(num_variables))
   res_reference(1) = -2.0795476275887927d0
   res_reference(2) = 2.1489169824673575d-2
@@ -214,8 +213,8 @@ program xc_example
   res_reference(4) = 6.0938948632150471d-2
 
 
-!  now second derivative of the "potential", contracted with ONE perturbed density.
-!  hopefully the strange input/output_array format will start to make sense
+  ! now second derivative of the "potential", contracted with ONE perturbed density.
+  ! hopefully the strange input/output_array format will start to make sense
   order = 2
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
@@ -225,10 +224,10 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some fantasy values
   allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
+    ! we use fantasy values here
     density(1, 1, ipoint) = 1.0d0 ! zeroth order
     density(1, 2, ipoint) = 2.0d0 ! zeroth order
     density(1, 3, ipoint) = 3.0d0 ! zeroth order
@@ -242,19 +241,19 @@ program xc_example
   allocate (input_array(num_variables*vector_length, num_points))
   allocate (output_array(vector_length, num_points))
 
-!  now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
-!  density(1, :, :)  unperturbed values
-!  density(2, :, :)  perturbed values
-!  density(3, :, :)  ones and zeros
-!  density(4, :, :)  not used in this case
-!  For the second order case, there will be 2^order elements, 1 ground state, 2^order-2 perturbed and one unused.
+  ! now we have to put in ones and zeroes again to generate derivatives (which then generate matrix elements in ADF)
+  ! density(1, :, :)  unperturbed values
+  ! density(2, :, :)  perturbed values
+  ! density(3, :, :)  ones and zeros
+  ! density(4, :, :)  not used in this case
+  ! For the second order case, there will be 2^order elements, 1 ground state, 2^order-2 perturbed and one unused.
   do ideriv = 1, num_variables
     do ipoint = 1, num_points
       density(3, :, ipoint) = 0.0d0
       density(3, ideriv, ipoint) = 1.0d0
     end do
-!     It is possible to put in other numbers than 1 and 0 in the density2 array
-!     this is where perturbed densities go for automatic contraction
+    ! It is possible to put in other numbers than 1 and 0 in the density2 array
+    ! this is where perturbed densities go for automatic contraction
 
     do ipoint = 1, num_points
       input_array(:, ipoint) = (/density(:, 1, ipoint), &
@@ -267,7 +266,7 @@ program xc_example
     res = output_array(vector_length, 1)
     print *, 'd^2 E/dx_i dD_pert for i =', ideriv, 'is', res
 
-!     test against reference numbers
+    ! test against reference numbers
     if (abs(res - res_reference(ideriv)) > 1.0d-6) then
       print *, 'error: derivatives do not match reference numbers'
       stop 1
@@ -278,8 +277,6 @@ program xc_example
   deallocate (input_array)
   deallocate (output_array)
   deallocate (res_reference)
-
-  !  Notes:
 
 !  The computed second derivatives are now already contracted with the
 !  perturbed density! This works to any order.  In this example we put in ones and
@@ -357,8 +354,7 @@ program xc_example
   deallocate (input_array)
   deallocate (output_array)
 
-
-!  now third derivative of the "potential", contracted with perturbed densities.
+  !  now third derivative of the "potential", contracted with perturbed densities.
   order = 3
   num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
@@ -368,7 +364,7 @@ program xc_example
   endif
 
   vector_length = 2**order
-!  allocate density and fill in some fantasy values
+  !  allocate density and fill in some fantasy values
   allocate (density(vector_length, num_variables, num_points))
   density = 0.0d0
   do ipoint = 1, num_points
@@ -426,8 +422,6 @@ program xc_example
   !Release the functional
   call xc_free_functional(id)
 
-
-  write(*,*)'Kernel test has ended properly!'
-
+  print *, 'Kernel test has ended properly!'
 
 end program
