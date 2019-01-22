@@ -47,11 +47,11 @@ program xc_example
   implicit none
 
   integer, parameter :: num_points = 1
+  integer, parameter :: num_variables = 4  ! we will use XC_N_NX_NY_NZ
 
   character(1000) :: text
   integer :: id, order, ierr, ideriv, ipoint
   integer :: vector_length
-  integer :: num_variables
   real(8) :: res
 
   real(8), allocatable :: density(:, :, :)
@@ -78,7 +78,6 @@ program xc_example
   ! We have one gridpoint, and four variables, density N and gradient
   ! components NX NY NZ.
   order = 0
-  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
@@ -114,7 +113,6 @@ program xc_example
   ! and contract them with the first order densities
   ! first set up xcfun for first derivatives
   order = 1
-  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
@@ -164,7 +162,6 @@ program xc_example
   ! and do NOT contract them!
   ! first set up xcfun for first derivatives
   order = 1
-  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
@@ -225,7 +222,6 @@ program xc_example
   ! now second derivative of the "potential", contracted with ONE perturbed density.
   ! hopefully the strange input/output_array format will start to make sense
   order = 2
-  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
@@ -360,7 +356,6 @@ program xc_example
 
   !  now third derivative of the "potential", contracted with perturbed densities.
   order = 3
-  num_variables = 4
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
