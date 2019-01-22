@@ -67,6 +67,11 @@ program xc_example
   ! in the first example we compute the XC energy ("order 0 derivative")
 
   order = 0
+  ! XC_CONTRACTED here has nothing to do with contracted basis sets
+  ! it means we will evaluated in the XC_CONTRACTED mode and
+  ! internally contract functional derivatives with the density taylor expansion
+  ! in other words: we will not have to explicitly assemble/contract partial
+  ! derivatives outside of XCFun
   ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
   call assert(ierr == 0, "xc_eval_setup failed")
 
