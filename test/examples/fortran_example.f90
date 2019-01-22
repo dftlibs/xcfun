@@ -191,10 +191,10 @@ program xc_example
     density(3, 2, ipoint) = 6.0d0 ! first order
     density(3, 3, ipoint) = 7.0d0 ! first order
     density(3, 4, ipoint) = 8.0d0 ! first order
-    density(4, 1, ipoint) = 0.0d0 ! first order
-    density(4, 2, ipoint) = 0.0d0 ! first order
-    density(4, 3, ipoint) = 0.0d0 ! first order
-    density(4, 4, ipoint) = 0.0d0 ! first order
+    density(4, 1, ipoint) = 0.0d0 ! second order
+    density(4, 2, ipoint) = 0.0d0 ! second order
+    density(4, 3, ipoint) = 0.0d0 ! second order
+    density(4, 4, ipoint) = 0.0d0 ! second order
   end do
 
   res = derivative(id, &
