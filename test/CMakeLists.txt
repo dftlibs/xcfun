@@ -14,22 +14,22 @@ target_compile_options(testall
 add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 
 if(ENABLE_FC_SUPPORT)
-  add_executable(kernel_example
-    kernel_example.f90
+  add_executable(fortran_example
+    examples/fortran_example.f90
     ${PROJECT_SOURCE_DIR}/api/xcfun.F90
     )
-  target_link_libraries(kernel_example
+  target_link_libraries(fortran_example
     XCFun
     )
-  target_compile_options(kernel_example
+  target_compile_options(fortran_example
     PRIVATE
       "$<$<CONFIG:Debug>:${XCFun_Fortran_FLAGS_DEBUG}>"
       "$<$<CONFIG:Release>:${XCFun_Fortran_FLAGS_RELEASE}>"
       "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:${XCFun_64BIT_INTEGERS_FLAGS}>"
       "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_Fortran_FLAGS_COVERAGE}>"
     )
-  set_target_properties(kernel_example PROPERTIES LINKER_LANGUAGE Fortran)
-  add_test(kernel_example ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/kernel_example)
+  set_target_properties(fortran_example PROPERTIES LINKER_LANGUAGE Fortran)
+  add_test(fortran_example ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/fortran_example)
 endif()
 
 if(ENABLE_PYTHON_INTERFACE)
