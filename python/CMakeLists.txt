@@ -9,7 +9,7 @@ set_source_files_properties(xcfun_swig.i
     CPLUSPLUS
       ON
     SWIG_FLAGS
-      "-I${CMAKE_BINARY_DIR}/include;-I${PROJECT_SOURCE_DIR}/api"
+      "-I${PROJECT_BINARY_DIR}/include;-I${PROJECT_SOURCE_DIR}/api"
   )
 set(CMAKE_SWIG_OUTDIR ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR})
 

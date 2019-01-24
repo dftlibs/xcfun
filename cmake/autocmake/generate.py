@@ -188,22 +188,12 @@ def gen_cmakelists(project_name, project_language, min_cmake_version, default_bu
     s.append(gen_cmake_options_wrappers())
 
     if len(modules) > 0:
-        s.append('\n# directories which hold included cmake modules')
-
-    module_paths = [module.path for module in modules]
-    module_paths.append('downloaded')  # this is done to be able to find fetched modules when testing
-    module_paths = list(set(module_paths))
-    module_paths.sort()  # we do this to always get the same order and to minimize diffs
-    for directory in module_paths:
-        rel_cmake_module_path = os.path.join(relative_path, directory)
-        # on windows cmake corrects this so we have to make it wrong again
-        rel_cmake_module_path = rel_cmake_module_path.replace('\\', '/')
-        s.append('list(APPEND CMAKE_MODULE_PATH ${{PROJECT_SOURCE_DIR}}/{0})'.format(rel_cmake_module_path))
-
-    if len(modules) > 0:
         s.append('\n# included cmake modules')
     for module in modules:
-        s.append('include({0})'.format(os.path.splitext(module.name)[0]))
+        s.append('include({0})'.format(os.path.join('${PROJECT_SOURCE_DIR}',
+                                                    relative_path,
+                                                    module.path,
+                                                    module.name)))
 
     return s
 
