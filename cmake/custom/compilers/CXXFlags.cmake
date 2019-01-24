@@ -1,21 +1,15 @@
-include(SetCompilerFlag)
-
 set(XCFun_CXX_FLAGS)
 set(XCFun_CXX_FLAGS_DEBUG)
 set(XCFun_CXX_FLAGS_RELEASE)
 set(XCFun_CXX_FLAGS_COVERAGE)
 
 # C++11
-set_compiler_flag(
-  RESULT cxx11_flag
-  LANGUAGE CXX
-  REQUIRED
-  FLAGS "-std=c++11;-std=c++0x;--c++11;--c++0x"
-  )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_EXTENSIONS FALSE)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_CXX_FLAGS
-    "${cxx11_flag}"
     "-ffloat-store"
     "-fno-rtti"
     "-fno-exceptions"
@@ -48,7 +42,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
   list(APPEND XCFun_CXX_FLAGS
-    "${cxx11_flag}"
     "-fno-rtti"
     "-fno-exceptions"
     "-m64"
@@ -78,7 +71,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
   list(APPEND XCFun_CXX_FLAGS
-    "${cxx11_flag}"
     "-g"
     "-wd981"
     "-wd279"
@@ -101,7 +93,6 @@ endif ()
 if(CMAKE_CXX_COMPILER_ID MATCHES PGI)
   #236 suppress assert warnings and 175 suppress subscript out of range warning /SR
   list(APPEND XCFun_CXX_FLAGS
-    "${cxx11_flag}"
     "-Mpreprocess"
     "--diag_suppress 236"
     "--diag_suppress 175"
