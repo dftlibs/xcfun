@@ -1,21 +1,15 @@
-include(SetCompilerFlag)
-
 set(XCFun_C_FLAGS)
 set(XCFun_C_FLAGS_DEBUG)
 set(XCFun_C_FLAGS_RELEASE)
 set(XCFun_C_FLAGS_COVERAGE)
 
 # C99
-set_compiler_flag(
-  RESULT c99_flag
-  LANGUAGE C
-  REQUIRED
-  FLAGS "-std=c99;-c99;-c9x"
-  )
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
+set(CMAKE_C_EXTENSIONS FALSE)
 
 if(CMAKE_C_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_C_FLAGS
-    "${c99_flag}"
     "-ffloat-store"
     "-m64"
     )
@@ -44,7 +38,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
   list(APPEND XCFun_C_FLAGS
-    "${c99_flag}"
     "-m64"
     )
   list(APPEND XCFun_C_FLAGS_DEBUG
@@ -69,7 +62,6 @@ endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES Intel)
   list(APPEND XCFun_C_FLAGS
-    "${c99_flag}"
     "-g"
     "-wd981"
     "-wd279"
@@ -94,7 +86,6 @@ endif ()
 
 if(CMAKE_C_COMPILER_ID MATCHES PGI)
   list(APPEND XCFun_C_FLAGS
-    "${c99_flag}"
     "-Mpreprocess"
     )
   list(APPEND XCFun_C_FLAGS_DEBUG
