@@ -17,5 +17,6 @@ src/taylor/*.cpp !licensefile
 
 python/init.py licensefile=.githooks/LICENSE-Python
 python/xcfun.py licensefile=.githooks/LICENSE-Python
+
 cmake/update.py !licensefile
 cmake/autocmake/*.py !licensefile
