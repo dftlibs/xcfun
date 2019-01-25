@@ -82,8 +82,7 @@ if(NOT STATIC_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-shared
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-shared
@@ -123,8 +122,7 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-static
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-static
@@ -167,10 +165,10 @@ generate_export_header(XCFun
   DEFINE_NO_DEPRECATED)
 file(
   COPY ${CMAKE_CURRENT_BINARY_DIR}/XCFunExport.h
-  DESTINATION ${PROJECT_BINARY_DIR}/include
+  DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}
   )
 install(
-  FILES ${PROJECT_BINARY_DIR}/include/XCFunExport.h
+  FILES ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/XCFunExport.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
   )
 
