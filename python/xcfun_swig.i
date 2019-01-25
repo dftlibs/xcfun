@@ -2,7 +2,7 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include "xcfun.h"
+#include "XCFun/xcfun.h"
 %}
 
 %include "numpy.i"
