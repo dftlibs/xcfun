@@ -146,10 +146,13 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
 endif()
 
+# The second alias is useful with FetchContent
 if(STATIC_LIBRARY_ONLY)
   add_library(XCFun ALIAS xcfun-static)
+  add_library(XCFun::xcfun ALIAS xcfun-static)
 else()
   add_library(XCFun ALIAS xcfun-shared)
+  add_library(XCFun::xcfun ALIAS xcfun-shared)
 endif()
 
 include(GenerateExportHeader)
