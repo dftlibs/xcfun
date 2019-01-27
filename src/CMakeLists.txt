@@ -1,12 +1,26 @@
-add_library(xcfun-objlib OBJECT "")
+add_library(xcfun OBJECT "")
 
-set_target_properties(xcfun-objlib
+include(GenerateExportHeader)
+generate_export_header(xcfun
+  BASE_NAME "XCFun"
+  EXPORT_MACRO_NAME "XCFun_EXPORT"
+  EXPORT_FILE_NAME "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/XCFunExport.h"
+  DEPRECATED_MACRO_NAME "XCFun_DEPRECATED"
+  NO_EXPORT_MACRO_NAME "XCFun_NO_EXPORT"
+  STATIC_DEFINE "XCFun_STATIC_DEFINE"
+  NO_DEPRECATED_MACRO_NAME "XCFun_NO_DEPRECATED"
+  DEFINE_NO_DEPRECATED
+  )
+install(
+  FILES ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/XCFunExport.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
+  )
+
+set_target_properties(xcfun
   PROPERTIES
     POSITION_INDEPENDENT_CODE 1
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN 1
   )
-target_compile_options(xcfun-objlib
+target_compile_options(xcfun
   # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
   # understand...
   PRIVATE
@@ -16,24 +30,24 @@ target_compile_options(xcfun-objlib
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
     "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_CXX_FLAGS_COVERAGE}>"
   )
-target_compile_definitions(xcfun-objlib
+target_compile_definitions(xcfun
   PUBLIC
     XCFun_EXPORTS
     XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
   )
-target_include_directories(xcfun-objlib
+target_include_directories(xcfun
   PRIVATE
     ${PROJECT_SOURCE_DIR}/api
     ${PROJECT_BINARY_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}
   )
-target_include_directories(xcfun-objlib
+target_include_directories(xcfun
   SYSTEM
   PRIVATE
     ${PROJECT_SOURCE_DIR}/external/upstream/taylor
   )
 
-target_sources(xcfun-objlib
+target_sources(xcfun
   PRIVATE
     xcfun.cpp
     xcint.cpp
@@ -71,7 +85,7 @@ add_subdirectory(functionals)
 
 if(NOT STATIC_LIBRARY_ONLY)
   add_library(xcfun-shared SHARED
-    $<TARGET_OBJECTS:xcfun-objlib>
+    $<TARGET_OBJECTS:xcfun>
     $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-shared
@@ -82,8 +96,7 @@ if(NOT STATIC_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-shared
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-shared
@@ -112,7 +125,7 @@ endif()
 
 if(NOT SHARED_LIBRARY_ONLY)
   add_library(xcfun-static STATIC
-    $<TARGET_OBJECTS:xcfun-objlib>
+    $<TARGET_OBJECTS:xcfun>
     $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-static
@@ -123,8 +136,7 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
   target_include_directories(xcfun-static
     INTERFACE
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/api>
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
   target_link_libraries(xcfun-static
@@ -146,30 +158,14 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
 endif()
 
+# The second alias is useful with FetchContent
 if(STATIC_LIBRARY_ONLY)
   add_library(XCFun ALIAS xcfun-static)
+  add_library(XCFun::xcfun ALIAS xcfun-static)
 else()
   add_library(XCFun ALIAS xcfun-shared)
+  add_library(XCFun::xcfun ALIAS xcfun-shared)
 endif()
-
-include(GenerateExportHeader)
-generate_export_header(XCFun
-  BASE_NAME "XCFun"
-  EXPORT_MACRO_NAME "XCFun_EXPORT"
-  EXPORT_FILE_NAME "XCFunExport.h"
-  DEPRECATED_MACRO_NAME "XCFun_DEPRECATED"
-  NO_EXPORT_MACRO_NAME "XCFun_NO_EXPORT"
-  STATIC_DEFINE "XCFun_STATIC_DEFINE"
-  NO_DEPRECATED_MACRO_NAME "XCFun_NO_DEPRECATED"
-  DEFINE_NO_DEPRECATED)
-file(
-  COPY ${CMAKE_CURRENT_BINARY_DIR}/XCFunExport.h
-  DESTINATION ${PROJECT_BINARY_DIR}/include
-  )
-install(
-  FILES ${PROJECT_BINARY_DIR}/include/XCFunExport.h
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
-  )
 
 # <<<  Export Config  >>>
 include(CMakePackageConfigHelpers)

@@ -1,6 +1,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-target_sources(xcfun-objlib
+target_sources(xcfun
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/aliases.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/apbec.cpp

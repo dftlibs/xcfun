@@ -39,7 +39,7 @@
 #     - "'-DCMAKE_Fortran_COMPILER={0} -DEXTRA_FCFLAGS=\"{1}\"'.format(arguments['--fc'], arguments['--extra-fc-flags'])"
 #     - "'-DENABLE_FC_SUPPORT={0}'.format(arguments['--fc-support'])"
 
-option(ENABLE_FC_SUPPORT "Enable Fortran language support" ON)
+option(ENABLE_FC_SUPPORT "Enable Fortran language support" OFF)
 
 if(ENABLE_FC_SUPPORT)
     enable_language(Fortran)

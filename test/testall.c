@@ -1,4 +1,4 @@
-#include "xcfun.h"
+#include "XCFun/xcfun.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
