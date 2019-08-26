@@ -104,6 +104,11 @@ class Functional(object):
             return value: energy density in 2D-numpy array[0:nr_of_points]
         """
 
+        if not (len(density.shape) == 1):
+            raise XCFunException('Wrong shape of density argument in eval_energy_n '
+                                 '[ %s instead of (nr_points,) ]' % str(density.shape))
+        nr_points = density.size
+
         if xc_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
@@ -112,12 +117,9 @@ class Functional(object):
 
             xc_eval_setup(self._func, XC_N_NX_NY_NZ, XC_PARTIAL_DERIVATIVES, 0)
 
-            if not (len(density.shape) == 1):
-                raise XCFunException('Wrong shape of density argument in eval_potential_n')
-            nr_points = density.size
-
             if not (densgrad.shape == (nr_points, 3)):
-                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_energy_n '
+                                     '[ %s instead of (%i, 3) ]' % (str(densgrad.shape), nr_points))
 
             dens = numpy.zeros((density.size, 4))
             dens[:, 0] = density[:]
@@ -150,6 +152,11 @@ class Functional(object):
             2nd index: 0 - energy density, 1 - total xc potential
         """
 
+        if not (len(density.shape) == 1):
+            raise XCFunException('Wrong shape of density argument in eval_potential_n '
+                                 '[ %s instead of (nr_points,) ]' % str(density.shape))
+        nr_points = density.size
+
         if xc_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
@@ -158,15 +165,13 @@ class Functional(object):
 
             xc_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
 
-            if not (len(density.shape) == 1):
-                raise XCFunException('Wrong shape of density argument in eval_potential_n')
-            nr_points = density.size
-
             if not (densgrad.shape == (nr_points, 3)):
-                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n '
+                                     '[ %s instead of (%i, 3) ]' % (str(densgrad.shape), nr_points))
 
             if not (denshess.shape == (nr_points, 6)):
-                raise XCFunException('Wrong shape of denshess argument in eval_potential_n')
+                raise XCFunException('Wrong shape of denshess argument in eval_potential_n '
+                                     '[ %s instead of (%i, 6) ]' % (str(denshess.shape), nr_points))
 
             dens = numpy.zeros((density.size, 10))
             dens[:, 0] = density[:]
@@ -197,6 +202,15 @@ class Functional(object):
             return value: energy density in 2D-numpy array[0:nr_of_points]
         """
 
+        if not (len(density.shape) == 2):
+            raise XCFunException('Wrong shape of density argument in eval_energy_ab '
+                                 '[ %s instead of (nr_points, 2) ]' % str(density.shape))
+        nr_points = density.shape[0]
+
+        if not (density.shape == (nr_points, 2)):
+            raise XCFunException('Wrong shape of density argument in eval_potential_ab '
+                                 '[ %s instead of (nr_points, 2) ]' % str(density.shape))
+
         if xc_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
@@ -205,15 +219,9 @@ class Functional(object):
 
             xc_eval_setup(self._func, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_PARTIAL_DERIVATIVES, 0)
 
-            if not (len(density.shape) == 2):
-                raise XCFunException('Wrong shape of density argument in eval_potential_ab')
-            nr_points = density.shape[0]
-
-            if not (density.shape == (nr_points, 2)):
-                raise XCFunException('Wrong shape of density argument in eval_potential_n')
-
             if not (densgrad.shape == (nr_points, 3, 2)):
-                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_potential_ab '
+                                     '[ %s instead of (%i, 3, 2) ]' % (str(densgrad.shape), nr_points))
 
             dens = numpy.zeros((density.shape[0], 8))
             dens[:, 0] = density[:, 0]
@@ -251,6 +259,15 @@ class Functional(object):
             2nd index: 0 - energy density, 1 - alpha xc potential, 2 - beta xc potential
         """
 
+        if not (len(density.shape) == 2):
+            raise XCFunException('Wrong shape of density argument in eval_potential_ab '
+                                 '[ %s instead of (nr_points, 2) ]' % str(density.shape))
+        nr_points = density.shape[0]
+
+        if not (density.shape == (nr_points, 2)):
+            raise XCFunException('Wrong shape of density argument in eval_potential_n '
+                                 '[ %s instead of (nr_points, 2) ]' % str(density.shape))
+
         if xc_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
@@ -259,18 +276,13 @@ class Functional(object):
 
             xc_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
 
-            if not (len(density.shape) == 2):
-                raise XCFunException('Wrong shape of density argument in eval_potential_ab')
-            nr_points = density.shape[0]
-
-            if not (density.shape == (nr_points, 2)):
-                raise XCFunException('Wrong shape of density argument in eval_potential_n')
-
             if not (densgrad.shape == (nr_points, 3, 2)):
-                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n')
+                raise XCFunException('Wrong shape of densgrad argument in eval_potential_n '
+                                     '[ %s instead of (%i, 3, 2) ]' % (str(densgrad.shape), nr_points))
 
             if not (denshess.shape == (nr_points, 6, 2)):
-                raise XCFunException('Wrong shape of denshess argument in eval_potential_n')
+                raise XCFunException('Wrong shape of denshess argument in eval_potential_n '
+                                     '[ %s instead of (%i, 6, 2) ]' % (str(denshess.shape), nr_points))
 
             dens = numpy.zeros((density.shape[0], 20))
             dens[:, 0] = density[:, 0]
