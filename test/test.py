@@ -223,9 +223,6 @@ def test_pbe_potential_unrestr_closedshell(pbe_fun, dens, spindens, densgrad, de
 
     out = pbe_fun.eval_potential_ab(rho, rhograd, rhohess)
 
-    print out[:,1]
-    print out[:,2]
-
     refpot_pbe_alpha = numpy.array([-0.62768401, -1.15201996, -1.39499424, -1.56595725, -1.69939803,
                                     -1.80975816, -1.90530719, -1.99151265, -2.07206904, -2.1492557 ])
     refpot_pbe_beta  = numpy.array([-0.64069084, -1.10200908, -1.33808862, -1.51488446, -1.66214897,
