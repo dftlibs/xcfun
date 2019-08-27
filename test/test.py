@@ -33,8 +33,8 @@ def main():
     n_gn_gnn = numpy.zeros((1, 10))
     n_gn_gnn[0, :] = [1.0, 0.2, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
 
-    n = numpy.zeros((1, 1))
-    n[0, :] = [1.0]
+    n = numpy.zeros((1,))
+    n[0] = 1.0
 
     result = fun_xc.eval_potential_n(n)
 
