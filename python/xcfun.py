@@ -113,7 +113,7 @@ class Functional(object):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None):
-                raise XCFunException('Density gradient required for GGA potential')
+                raise XCFunException('Density gradient required for GGA energy')
 
             xc_eval_setup(self._func, XC_N_NX_NY_NZ, XC_PARTIAL_DERIVATIVES, 0)
 
@@ -161,7 +161,7 @@ class Functional(object):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
-                raise XCFunException('Density gradient and Laplacian required for GGA potential')
+                raise XCFunException('Density gradient and Hessian required for GGA potential')
 
             xc_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
 
@@ -208,19 +208,19 @@ class Functional(object):
         nr_points = density.shape[0]
 
         if not (density.shape == (nr_points, 2)):
-            raise XCFunException('Wrong shape of density argument in eval_potential_ab '
+            raise XCFunException('Wrong shape of density argument in eval_energy_ab '
                                  '[ %s instead of (nr_points, 2) ]' % str(density.shape))
 
         if xc_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None):
-                raise XCFunException('Density gradient and Laplacian required for GGA potential')
+                raise XCFunException('Density gradient required for GGA energy')
 
             xc_eval_setup(self._func, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_PARTIAL_DERIVATIVES, 0)
 
             if not (densgrad.shape == (nr_points, 3, 2)):
-                raise XCFunException('Wrong shape of densgrad argument in eval_potential_ab '
+                raise XCFunException('Wrong shape of densgrad argument in eval_energy_ab '
                                      '[ %s instead of (%i, 3, 2) ]' % (str(densgrad.shape), nr_points))
 
             dens = numpy.zeros((density.shape[0], 8))
@@ -272,7 +272,7 @@ class Functional(object):
             raise XCFunException('xc potential not supported for meta-GGAs')
         elif xc_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
-                raise XCFunException('Density gradient and Laplacian required for GGA potential')
+                raise XCFunException('Density gradient and Hessian required for GGA potential')
 
             xc_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
 

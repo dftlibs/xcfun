@@ -35,7 +35,7 @@ endif()
 if(ENABLE_PYTHON_INTERFACE)
   add_test(
     NAME python-interface
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/test/test.py
+    COMMAND ${PYTHON_EXECUTABLE} -m pytest ${PROJECT_SOURCE_DIR}/test/test.py
     )
   set_tests_properties(python-interface
     PROPERTIES
