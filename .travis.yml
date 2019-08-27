@@ -190,7 +190,7 @@ install:
       # https://github.com/pypa/pipenv/issues/3224
       pip install --user --upgrade -e git+https://github.com/pypa/pipenv.git#egg=pipenv
     fi
-  - pipenv $PYTHON install
+  - pipenv $PYTHON install --dev
 
 before_script:
   - source $(pipenv --venv)/bin/activate
