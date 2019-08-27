@@ -15,4 +15,6 @@ numpy = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
 fprettify = "*"
+pathlib2 = "*"
 pytest = "*"
+
