@@ -23,12 +23,6 @@ fortran_compiler_version:
 
 # <<<  Packages Stuff  >>>
 
-blas_impl:
-    - mkl
-ipywidgets:
-    - 7.5
-mkl:
-    - 2019  # 15 Aug 2019
 python:
     - 3.7
     - 3.6
@@ -36,10 +30,6 @@ python:
 
 # <<<  XCFun Stuff  >>>
 
-PY_ABBR:
-    - python3.7m
-    - python3.6m
-    - python2.7
 PYMOD_INSTALL_LIBDIR:
     - '/python3.7/site-packages'
     - '/python3.6/site-packages'

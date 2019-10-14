@@ -63,10 +63,16 @@ install(
     ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/__init__.py
     ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/xcfun.py
     ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/xcfun_swig.py
-    ${PROJECT_SOURCE_DIR}/test/test.py
   DESTINATION
     ${PYMOD_INSTALL_FULLDIR}
   )
+install(
+  FILES
+    ${PROJECT_SOURCE_DIR}/test/test.py
+  DESTINATION
+    ${PYMOD_INSTALL_FULLDIR}/tests/
+  )
+
 install(
   TARGETS
     ${SWIG_MODULE_xcfun_swig_REAL_NAME}
