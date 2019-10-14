@@ -1,0 +1,50 @@
+# Adapted from: https://github.com/psi4/psi4meta/blob/master/conda-recipes/conda_build_config.yaml
+# <<<  Compiler Stuff  >>>
+
+c_compiler:
+    - clang                            # [osx]
+    - gcc                              # [linux]
+cxx_compiler:
+    - clangxx                          # [osx]
+    - gxx                              # [linux]
+fortran_compiler:
+    - gfortran
+target_platform:
+    - osx-64                           # [osx]
+    - linux-64                         # [linux]
+CONDA_BUILD_SYSROOT:
+    - /Users/github/SDKs/MacOSX10.9.sdk  # [osx]
+c_compiler_version:
+    - 7.3.0                            # [linux]
+cxx_compiler_version:
+    - 7.3.0                            # [linux]
+fortran_compiler_version:
+    - 7.3.0                            # [linux]
+
+# <<<  Packages Stuff  >>>
+
+blas_impl:
+    - mkl
+ipywidgets:
+    - 7.5
+mkl:
+    - 2019  # 15 Aug 2019
+python:
+    - 3.7
+    - 3.6
+    - 2.7.16
+
+# <<<  XCFun Stuff  >>>
+
+PY_ABBR:
+    - python3.7m
+    - python3.6m
+    - python2.7
+PYMOD_INSTALL_LIBDIR:
+    - '/python3.7/site-packages'
+    - '/python3.6/site-packages'
+    - '/python2.7/site-packages'
+
+OPTS:
+    - '-msse4.1'                                                                    # [osx]
+    - '-msse2 -axCORE-AVX512,CORE-AVX2,AVX -Wl,--as-needed -static-intel -wd10237'  # [linux]

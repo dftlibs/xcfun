@@ -1,0 +1,115 @@
+{% set version = "2.0.0" %}
+
+package:
+    name: xcfun
+    version: {{ version }}
+
+source:
+    url: https://github.com/dftlibs/xcfun/archive/master.zip
+    #git_url: git@github.com:dftlibs/xcfun.git          # [linux]
+    #git_url: https://github.com/dftlibs/xcfun.git      # [osx]
+    #git_tag: v{{ version }}
+
+build:
+    number: 1                                            # [linux]
+    number: 0                                            # [osx]
+    binary_relocation: true
+    skip: true                                           # [win]
+
+requirements:
+    build:
+        - cmake >=3.5
+        - {{ compiler('cxx') }}
+        - {{ compiler('c') }}
+        - {{ compiler('fortran') }}
+        - swig
+    host:
+        - python {{ python }}
+        - numpy
+
+outputs:
+    - name: xcfun
+      build:
+          run_exports:
+              - {{ pin_subpackage('xcfun', max_pin='x.x') }}
+          ignore_run_exports:
+            - libgfortran-ng
+      requirements:
+          build:
+              - {{ compiler('cxx') }}
+              - {{ compiler('c') }}
+              - {{ compiler('fortran') }}
+              - cmake >=3.5
+              - swig
+          host:
+              - python {{ python }}
+              - numpy
+      files:
+          - include/XCFun
+          - lib/libxcfun*
+          - lib/python*
+          - share/cmake/XCFun
+      test:
+          imports:
+            - xcfun
+          requires:
+            - numpy
+            - pytest
+          commands:
+              # Verify library
+              - test -f $PREFIX/lib/libxcfun$SHLIB_EXT
+              # Inspect linkage
+              - ldd -r -u $PREFIX/lib/libxcfun$SHLIB_EXT              # [linux]
+              - ldd -v $PREFIX/lib/libxcfun$SHLIB_EXT                 # [linux]
+              - otool -L $PREFIX/lib/libxcfun$SHLIB_EXT               # [osx]
+              - conda inspect linkages --show-files --groupby=dependency xcfun
+              - conda inspect objects -p $PREFIX $PKG_NAME           # [osx]
+              - export PYLIB_EXT=`$PYTHON -c 'from numpy import distutils; print(distutils.misc_util.get_shared_lib_extension(is_python_ext=True))'`
+      about:
+          home: https://github.com/dftlibs/xcfun
+          dev_url: https://github.com/dftlibs/xcfun
+          doc_url: http://dftlibs.org/xcfun/
+          doc_source_url: https://github.com/dftlibs/xcfun/blob/master/doc/index.rst
+          license: MPL-2.0
+          license_url: https://opensource.org/licenses/MPL-2.0
+          license_family: MOZILLA
+          summary: "Exchange-Correlation functionals with arbitrary order derivatives."
+
+#    - name: pyxcfun
+#      requirements:
+#          build:
+#              - {{ compiler('cxx') }}
+#              - {{ compiler('c') }}
+#          host:
+#              - swig {{ swig }}
+#              - python {{ python }}
+#          run:
+#              - {{ pin_compatible('python', max_pin='x.x') }}
+#      files:
+#          - lib{{ PYMOD_INSTALL_LIBDIR }}/xcfun*
+#      test:
+#          imports:
+#              - xcfun
+#          requires:
+#              - numpy
+#              - pytest
+#          commands:
+#              - export PYLIB_EXT=`$PYTHON -c 'from numpy import distutils; print(distutils.misc_util.get_shared_lib_extension(is_python_ext=True))'`
+#              # Verify library
+#              - test -f $SP_DIR/xcfun$PYLIB_EXT
+#              # Inspect linkage
+#              - ldd -v $SP_DIR/xcfun$PYLIB_EXT               # [linux]
+#              - otool -L $SP_DIR/xcfun$PYLIB_EXT             # [osx]
+#              - conda inspect linkages --show-files --groupby=dependency pyxcfun
+#              - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
+#              # Actually test
+#              #- $PYTHON -m pytest --pyargs cppe
+#      about:
+#          home: https://github.com/dftlibs/xcfun
+#          dev_url: https://github.com/dftlibs/xcfun
+#          doc_url: http://dftlibs.org/xcfun/
+#          oc_source_url: https://github.com/dftlibs/xcfun/blob/master/doc/index.rst
+#          license: MPL-2.0
+#          license_url: https://opensource.org/licenses/MPL-2.0
+#          license_family: MPL
+#          summary: "Exchange-Correlation functionals with arbitrary order derivatives."
