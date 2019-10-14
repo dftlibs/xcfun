@@ -38,3 +38,9 @@ PYMOD_INSTALL_LIBDIR:
 OPTS:
     - '-msse4.1'                                                                    # [osx]
     - '-msse2 -axCORE-AVX512,CORE-AVX2,AVX -Wl,--as-needed -static-intel -wd10237'  # [linux]
+
+# <<<  Concluding Stuff  >>>
+
+zip_keys:
+    - python
+    - PYMOD_INSTALL_LIBDIR

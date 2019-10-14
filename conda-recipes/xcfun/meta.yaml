@@ -15,6 +15,8 @@ build:
   number: 0                                            # [osx]
   binary_relocation: true
   skip: true                                           # [win]
+  run_exports:
+    - {{ pin_subpackage('xcfun', max_pin='x.x.x') }}
   ignore_run_exports:
     - libgfortran-ng
 
