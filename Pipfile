@@ -9,12 +9,12 @@ name = "pypi"
 
 numpy = "*"
 
-
 [dev-packages]
 
 Sphinx = "*"
 sphinx_rtd_theme = "*"
 fprettify = "*"
-pathlib2 = "*"
+pathlib2 = {version = "*", markers="python_version < '3'"} 
+pyyaml = "*"
 pytest = "*"
-
+yapf = "*"
