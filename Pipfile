@@ -14,7 +14,8 @@ numpy = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
 fprettify = "*"
-pathlib2 = {version = "*", markers="python_version < '3'"} 
+pathlib2 = {version = "*", markers="python_version < '3'"}
 pyyaml = "*"
 pytest = "*"
 yapf = "*"
+pybind11 = "*"

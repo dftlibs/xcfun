@@ -20,7 +20,7 @@
 #include "ctaylor.hpp"
 #include "functionals/list_of_functionals.hpp"
 #include "taylor.hpp"
-#include "xcfun.h"
+#include "XCFun/xcfun.h"
 
 #define XC_MAX_ALIASES 60
 #define MAX_ALIAS_TERMS 10

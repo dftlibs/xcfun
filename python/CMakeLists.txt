@@ -1,3 +1,83 @@
+if(MSVC)
+  set(PYBIND11_CPP_STANDARD "/std:c++${CMAKE_CXX_STANDARD}")
+else()
+  set(PYBIND11_CPP_STANDARD "-std=c++${CMAKE_CXX_STANDARD}")
+endif()
+find_package(pybind11 2.3.0 CONFIG REQUIRED)
+message(STATUS "Using pybind11: ${pybind11_INCLUDE_DIR} (version ${pybind11_VERSION} for Py${PYTHON_VERSION_STRING} and ${PYBIND11_CPP_STANDARD})")
+message(STATUS "Using Python ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}: ${PYTHON_EXECUTABLE}")
+
+# create Python module
+pybind11_add_module(_xcfun MODULE THIN_LTO export_xcfun.cpp)
+
+target_link_libraries(_xcfun
+  PRIVATE
+    XCFun
+  )
+
+target_include_directories(_xcfun
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/external/upstream/taylor
+  )
+
+set_target_properties(_xcfun
+  PROPERTIES
+  PREFIX "${PYTHON_MODULE_PREFIX}"
+  SUFFIX "${PYTHON_MODULE_EXTENSION}"
+  )
+
+# TODO Switch back to following line once SWIG has been axed for good
+#file(RELATIVE_PATH _rel ${CMAKE_INSTALL_PREFIX}/${PYMOD_INSTALL_FULLDIR} ${CMAKE_INSTALL_PREFIX})
+file(RELATIVE_PATH _rel ${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/xcfun ${CMAKE_INSTALL_PREFIX})
+if(APPLE)
+  set(XCFun_RPATH "@loader_path/${_rel}")
+else()
+  set(XCFun_RPATH "\$ORIGIN/${_rel}")
+endif()
+set_target_properties(_xcfun
+  PROPERTIES
+  MACOSX_RPATH ON
+  SKIP_BUILD_RPATH OFF
+  BUILD_WITH_INSTALL_RPATH OFF
+  INSTALL_RPATH "${XCFun_RPATH}${CMAKE_INSTALL_LIBDIR}"
+  INSTALL_RPATH_USE_LINK_PATH ON
+  )
+set_target_properties(_xcfun
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY
+      # TODO Switch back to following line once SWIG has been axed for good
+      #${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}
+      ${PROJECT_BINARY_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/xcfun
+    RESOURCE
+      "${CMAKE_CURRENT_SOURCE_DIR}/__init__.py;${CMAKE_CURRENT_SOURCE_DIR}/xcfun.py;${PROJECT_SOURCE_DIR}/test/test_xcfun.py"
+  )
+
+file(
+  COPY
+    ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/xcfun.py
+  DESTINATION
+    # TODO Switch back to following line once SWIG has been axed for good
+    #${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}
+    ${PROJECT_BINARY_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/xcfun
+  )
+
+install(
+  TARGETS
+    _xcfun
+  LIBRARY
+    # TODO Switch back to following line once SWIG has been axed for good
+    #DESTINATION ${PYMOD_INSTALL_FULLDIR}
+    DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/xcfun
+    COMPONENT lib
+  RESOURCE
+    # TODO Switch back to following line once SWIG has been axed for good
+    #DESTINATION ${PYMOD_INSTALL_FULLDIR}
+    DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/xcfun
+    COMPONENT lib
+  )
+
 find_package(SWIG REQUIRED)
 include(UseSWIG)
 
