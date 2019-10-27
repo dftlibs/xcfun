@@ -7,15 +7,13 @@ name = "pypi"
 
 [packages]
 
-numpy = "*"
-
 [dev-packages]
 
 Sphinx = "*"
-sphinx_rtd_theme = "*"
 fprettify = "*"
+numpy = "*"
 pathlib2 = {version = "*", markers="python_version < '3'"}
-pyyaml = "*"
 pytest = "*"
+pyyaml = "*"
+sphinx_rtd_theme = "*"
 yapf = "*"
-pybind11 = "*"
