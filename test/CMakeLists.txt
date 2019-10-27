@@ -33,14 +33,20 @@ if(ENABLE_FC_SUPPORT)
 endif()
 
 if(ENABLE_PYTHON_INTERFACE)
+  configure_file(
+    test_xcfun.py
+    ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../test_xcfun.py
+    COPYONLY
+    )
   add_test(
     NAME python-interface
-    COMMAND ${PYTHON_EXECUTABLE} -m pytest ${PROJECT_SOURCE_DIR}/test/test_xcfun.py
+    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../test_xcfun.py
     )
-  set_tests_properties(python-interface
-    PROPERTIES
-    ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/lib/python3.7/site-packages:$ENV{PYTHONPATH}
-    #ENVIRONMENT PYTHONPATH=${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/${PYMOD_INSTALL_LIBDIR}:$ENV{PYTHONPATH}
+  install(
+    FILES
+      test_xcfun.py
+    DESTINATION
+      ${PYMOD_INSTALL_FULLDIR}/..
     )
 endif()
 

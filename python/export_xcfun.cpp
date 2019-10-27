@@ -117,26 +117,33 @@ PYBIND11_MODULE(_xcfun, m) {
   m.def(
       "xc_eval",
       [](xc_functional fun,
-         const py::array_t<double> & density) -> py::array_t<double> {
+         py::array_t<double, py::array::c_style | py::array::forcecast> density) {
         auto dens_len = xc_input_length(fun);
         auto output_len = xc_output_length(fun);
 
-        if (density.shape(-1) != dens_len) {
+        auto dens_ndim = density.ndim();
+        if (density.shape(dens_ndim - 1) != dens_len) {
           throw std::invalid_argument("Wrong dimension of density argument");
         }
+        auto nr_points = density.shape(0);
+        auto output = py::array_t<double, py::array::c_style | py::array::forcecast>(
+            {{nr_points, output_len}});
 
-        if (density.ndim() == 1) {
-          auto output = py::array_t<double>({output_len});
+        if (dens_ndim == 1) {
           xc_eval(fun, density.data(), output.mutable_data());
-          return output;
-        } else if (density.ndim() == 2) {
-          auto nr_points = density.shape(0);
-          auto output = py::array_t<double>({{nr_points, output_len}});
-          xc_eval_vec(fun, nr_points, density.data(), 2, output.mutable_data(), 2);
-          return output;
+        } else if (dens_ndim == 2) {
+          auto output_ndim = output.ndim();
+          xc_eval_vec(fun,
+                      nr_points,
+                      density.data(),
+                      density.shape(dens_ndim - 1),
+                      output.mutable_data(),
+                      output.shape(output_ndim - 1));
         } else {
           throw std::invalid_argument("Wrong shape of density argument");
         }
+
+        return output;
       },
       "Evaluate XC functional",
       "fun"_a,
