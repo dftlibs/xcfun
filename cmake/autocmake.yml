@@ -3,7 +3,7 @@
 # adapt the following lines and expand
 
 name: XCFun
-min_cmake_version: 3.5
+min_cmake_version: 3.11
 setup_script: setup
 url_root: https://github.com/coderefinery/autocmake/raw/master/
 default_build_type: Debug
@@ -30,7 +30,6 @@ modules:
   - src:
     - source:
       - 'custom/xcfun.cmake'
-      - '%(url_root)modules/src.cmake'
   - testing:
     - source:
       - 'custom/test.cmake'

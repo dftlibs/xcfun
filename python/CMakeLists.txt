@@ -1,14 +1,3 @@
-if(MSVC)
-  set(PYBIND11_CPP_STANDARD "/std:c++${CMAKE_CXX_STANDARD}")
-else()
-  set(PYBIND11_CPP_STANDARD "-std=c++${CMAKE_CXX_STANDARD}")
-endif()
-# FIXME Remove when we finally become Python 3 only
-set(PYBIND11_PYTHON_VERSION 2.7)
-find_package(pybind11 2.3.0 CONFIG REQUIRED)
-message(STATUS "Using pybind11: ${pybind11_INCLUDE_DIR} (version ${pybind11_VERSION} for Py${PYTHON_VERSION_STRING} and ${PYBIND11_CPP_STANDARD})")
-message(STATUS "Using Python ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}: ${PYTHON_EXECUTABLE}")
-
 # create Python module
 pybind11_add_module(_xcfun MODULE THIN_LTO export_xcfun.cpp)
 
