@@ -11,7 +11,6 @@ matrix:
         apt:
           packages:
             - clang
-            - cmake3
             - gfortran
       env:
         - CXX_COMPILER='clang++'
@@ -27,7 +26,6 @@ matrix:
         apt:
           packages:
             - clang-3.5
-            - cmake3
             - gfortran
       env:
         - CXX_COMPILER='clang++-3.5'
@@ -42,7 +40,6 @@ matrix:
         apt:
           packages:
             - clang-3.8
-            - cmake3
             - gfortran
       env:
         - CXX_COMPILER='clang++-3.8'
@@ -57,14 +54,13 @@ matrix:
       addons: &gcc48
         apt:
           packages:
-            - cmake3
-            - g++
-            - gcc
-            - gfortran
+            - g++-4.8
+            - gcc-4.8
+            - gfortran-4.8
       env:
-        - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'
-        - Fortran_COMPILER='gfortran'
+        - CXX_COMPILER='g++-4.8'
+        - C_COMPILER='gcc-4.8'
+        - Fortran_COMPILER='gfortran-4.8'
         - BUILD_TYPE='Release'
         - PYTHON='--two'
         - COVERAGE=OFF
@@ -77,7 +73,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-5
             - gcc-5
             - gfortran-5
@@ -95,7 +90,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-6
             - gcc-6
             - gfortran-6
@@ -113,7 +107,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-7
             - gcc-7
             - gfortran-7
@@ -168,7 +161,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-7
             - gcc-7
             - gfortran-7
@@ -194,6 +186,7 @@ install:
     fi
   - pipenv $PYTHON install --dev
   - source $(pipenv --venv)/bin/activate
+  - ./.ci/cmake.sh
   - ./.ci/pybind11.sh
 
 before_script:
