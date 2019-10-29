@@ -20,6 +20,7 @@ matrix:
         - BUILD_TYPE='Release'
         - PYTHON='--three'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     - os: linux
       compiler: clang
       addons: &clang35
@@ -67,6 +68,7 @@ matrix:
         - BUILD_TYPE='Release'
         - PYTHON='--two'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     - os: linux
       python: 3.6
       compiler: gcc
@@ -139,6 +141,7 @@ matrix:
         - BUILD_TYPE='Release'
         - PYTHON='--two'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     # 4/ OSX GCC Builds
     - os: osx
       compiler: gcc
@@ -203,10 +206,10 @@ before_script:
      -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
-     -Dpybind11_DIR="$HOME"/Deps/pybind11/share/cmake/pybind11
      -DENABLE_PYTHON_INTERFACE=ON
      -DPYTHON_EXECUTABLE=$(which python)
      -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
+     ${PYBIND11}
 
 script:
   # Build and install
