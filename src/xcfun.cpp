@@ -91,7 +91,7 @@ int xc_output_length(xc_functional fun) {
   }
 }
 
-int xcfun_test(void) {
+int xcfun_test() {
   int nfail = 0, res;
   for (int f = 0; f < XC_NR_FUNCTIONALS; f++) {
     const functional_data * fd = &xcint_funs[f];
@@ -143,9 +143,9 @@ int xcfun_test(void) {
   return nfail;
 }
 
-double xcfun_version(void) { return 1.99; }
+double xcfun_version() { return 1.99; }
 
-const char * xcfun_splash(void) {
+const char * xcfun_splash() {
   return "XCFun DFT library Copyright 2009-2011 Ulf Ekstrom and contributors.\n"
          "See http://dftlibs.org/xcfun/ for more information.\n\n"
          "This is free software; see the source code for copying conditions.\n"
@@ -156,7 +156,7 @@ const char * xcfun_splash(void) {
          "J.Chem.Theor.Comp. 2010, DOI: 10.1021/ct100117s\n";
 }
 
-const char * xcfun_authors(void) {
+const char * xcfun_authors() {
   return "XCFun was written by Ulf Ekstrom, with contributions from\n"
          "Andre S. P. Gomes\n"
          "Radovan Bast\n"
