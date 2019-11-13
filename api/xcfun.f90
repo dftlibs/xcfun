@@ -13,6 +13,9 @@
 !
 
 module xcfun
+
+  use, intrinsic :: iso_c_binding
+
   implicit none
 !
   integer, parameter :: XCFUN_API_VERSION = 2
@@ -132,6 +135,32 @@ module xcfun
   integer, parameter :: XC_D0000011 = 35
   integer, parameter :: XC_D0000002 = 36
 
+
+  interface
+    function xcfun_version() result(version) bind(C)
+      import
+      real(c_double) :: version
+    end function
+
+    function xcfun_splash_ptr() result(text) bind(C, name="xcfun_splash")
+      import
+      type(c_ptr) :: text
+    end function
+
+    function xc_output_length(fun) result(output_length) bind(C)
+      import
+      type(c_ptr), value :: fun
+      integer(c_int) :: output_length
+    end function
+  end interface
+
+  !interface xc_new_functional
+  !   function xc_new_functional()result(fun) bind(C)
+  !     import
+  !     type(c_ptr) :: fun
+  !   end function
+  !end interface
+
 contains
   ! We pass strings as null terminated integer arrays to C, this
   ! should be portable if C and Fortran uses the same character set.
@@ -160,19 +189,29 @@ contains
     enddo
   end subroutine ints2str
 
-  function xcfun_version()
-    real(8) xcfun_version, xcfuve
-    xcfun_version = xcfuve()
-  end function xcfun_version
+    ! Create a new, "empty" functional and return its id
+  function xc_new_functional()
+    integer :: xc_new_functional, xcnewf
+    xc_new_functional = xcnewf(XCFUN_API_VERSION)
+  end function xc_new_functional
 
-  subroutine xcfun_splash(text)
-    character, intent(out) :: text*(*)
-    integer :: ibuf(len(text) + 1)
-    integer le
-    le = len(text)
-    call xcspla(ibuf, le)
-    call ints2str(ibuf, text)
-  end subroutine xcfun_splash
+  function xcfun_splash() result(text)
+    character(kind=c_char, len=5000) :: text
+    character(kind=c_char), pointer, dimension(:) :: msg_array
+    character(kind=c_char, len=5000) :: msg
+    integer(c_int) :: msg_length
+    integer :: i
+
+    call c_f_pointer(xcfun_splash_ptr(), msg_array, [ 5000 ])
+
+    do i = 1, 5000
+       msg(i:i+1) = msg_array(i)
+    end do
+
+    msg_length = len_trim(msg(1:index(msg, c_null_char)))
+
+    text = msg(1:msg_length-1)
+  end function
 
   function xcfun_sizeof_int()
     integer :: i, xcfun_sizeof_int
@@ -182,12 +221,6 @@ contains
       xcfun_sizeof_int = 8
     endif
   end function xcfun_sizeof_int
-
-  ! Create a new, "empty" functional and return its id
-  function xc_new_functional()
-    integer :: xc_new_functional, xcnewf
-    xc_new_functional = xcnewf(XCFUN_API_VERSION)
-  end function xc_new_functional
 
   subroutine xc_free_functional(funid)
     integer funid
@@ -217,27 +250,6 @@ contains
     xc_serialize = xcseri(funid, buflen, buf)
   end function xc_serialize
 
-#ifdef XXX
-  subroutine xc_short_description(param, description)
-    integer, intent(in) :: param
-    character, intent(out) :: description*(*)
-    integer :: idescr(len(description) + 1)
-    integer :: le
-    le = len(description) + 1
-    call xcssho(idescr, le, param)
-    call ints2str(idescr, description)
-  end subroutine
-
-  subroutine xc_long_description(param, description)
-    integer, intent(in) :: param
-    character, intent(out) :: description*(*)
-    integer :: idescr(len(description) + 1)
-    integer :: le
-    le = len(description) + 1
-    call xcslon(idescr, le, param)
-    call ints2str(idescr, description)
-  end subroutine xc_long_description
-#endif
   function xc_eval_setup(funid, vars, mode, order)
     integer :: funid, vars, mode, order, xc_eval_setup, xcevse
     xc_eval_setup = xcevse(funid, vars, mode, order)
@@ -265,34 +277,9 @@ contains
                 results(1, 1), results(1, 2))
   end subroutine xc_eval_star
 
-#if 0
-  function xc_index(funid, exponents)
-    integer, intent(in) :: exponents(*)
-    integer funid, xc_index, xcdind
-!radovan: it's easier to start in fortran with 1
-!         it would be possible to start with 0
-!         but then we would allocate 0:length-1
-!         instead of 1:length
-!         i find 0:length-1 allocations error-prone
-!   xc_index = xcdind(funid,exponents)
-    xc_index = xcdind(funid, exponents) + 1
-  end function xc_index
-#endif
-
-  function xc_output_length(funid, order)
-    integer, intent(in) :: funid, order
-    integer xc_output_length, xcoule
-    xc_output_length = xcoule(funid, order)
-  end function xc_output_length
-#if 0
-  subroutine xc_param_name(setting_nr, name)
-    integer, intent(in) :: setting_nr
-    character, intent(out) :: name*(*)
-    integer :: ibuf(len(name) + 1)
-    integer :: le
-    le = len(name) + 1
-    call xcsnam(ibuf, le, setting_nr)
-    call ints2str(ibuf, name)
-  end subroutine xc_param_name
-#endif
+  !function xc_output_length(funid, order)
+  !  integer, intent(in) :: funid, order
+  !  integer xc_output_length, xcoule
+  !  xc_output_length = xcoule(funid, order)
+  !end function xc_output_length
 end module

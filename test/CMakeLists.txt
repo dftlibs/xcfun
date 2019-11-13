@@ -16,7 +16,7 @@ add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 if(ENABLE_FC_SUPPORT)
   add_executable(fortran_example
     examples/fortran_example.f90
-    ${PROJECT_SOURCE_DIR}/api/xcfun.F90
+    ${PROJECT_SOURCE_DIR}/api/xcfun.f90
     )
   target_link_libraries(fortran_example
     XCFun

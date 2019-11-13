@@ -29,8 +29,6 @@ static xc_functional fortran_functionals[MAX_FORTRAN_FUNCTIONALS] = {0};
 
 void xcint_die(const char * message, int code);
 
-double FSYM(xcfuve) FCSYM(XCFUVE)(void) { return xcfun_version(); }
-
 int FSYM(xcnewf) FCSYM(XCNEWF)(fortran_int_t * api_version) {
   int i;
   for (i = 0; i < MAX_FORTRAN_FUNCTIONALS; i++) {
@@ -98,10 +96,6 @@ static void str2ints(fortran_int_t ints[], fortran_int_t len, const char * s) {
     ints[len - 1] = 0;
   else
     ints[i] = 0;
-}
-
-void FSYM(xcspla) FCSYM(XCSPLA)(fortran_int_t * text, fortran_int_t * len) {
-  str2ints(text, *len, xcfun_splash());
 }
 
 int FSYM(xcsets) FCSYM(XCSETS)(fortran_int_t * fun,

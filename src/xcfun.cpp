@@ -37,6 +37,10 @@ xc_functional xc_new_functional_not_macro(int api_version) {
   return fun;
 }
 
+xc_functional xc_new_functional() {
+  return xc_new_functional_not_macro(XCFUN_API_VERSION);
+}
+
 void xc_free_functional(xc_functional fun) { free(fun); }
 
 // Fill the buf array with information to recreate an exact copy of fun (except the
@@ -476,14 +480,14 @@ void xc_eval(xc_functional_obj * f, const double * input, double * output) {
 	npot = 2;
 
       {
-	typedef ctaylor<ireal_t,1> ttype;      
+	typedef ctaylor<ireal_t,1> ttype;
 	ttype in[XC_MAX_INVARS], out = 0;
 	for (int i=0;i<inlen;i++)
 	  in[i] = input[i];
 	for (int j=0;j<npot;j++)
 	  {
 	    // In all variable sets except the 2nd taylor the second variables has index 1.
-	    if (j == 1 && 
+	    if (j == 1 &&
 		((f->vars == XC_A_B_2ND_TAYLOR) ||
 		 (f->vars == XC_N_S_2ND_TAYLOR)))
 	      in[10].set(VAR0,1);
@@ -785,7 +789,7 @@ int xc_user_eval_setup(xc_functional fun,
     }
 
 
-    /* Bit encoding of information 
+    /* Bit encoding of information
        7   6   5   4   3   2   1   0
     ------------------------------------------------------------------
        0   0                             LDA
@@ -798,7 +802,7 @@ int xc_user_eval_setup(xc_functional fun,
                1   0                     anpha and beta densities
                1   1                     n and s density
     ------------------------------------------------------------------
-                       0                 no laplacian 
+                       0                 no laplacian
                        1                 laplacian required
     ------------------------------------------------------------------
                            0             no kinetic energy

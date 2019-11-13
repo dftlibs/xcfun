@@ -10,7 +10,6 @@
 !
 ! For information on the complete list of contributors to the
 ! XCFun library, see: <https://xcfun.readthedocs.io/>
-program xc_example
 
 ! This example contains calls to f90 interface routines that are needed to "talk
 ! to" the xcfun library and demonstrates how to use them.
@@ -18,6 +17,10 @@ program xc_example
 ! We will compute the kernel for an unpolarized system using total density and
 ! the gradient components as the variables. These are linear in the density
 ! matrix, which helps the code using the results from xcfun.
+
+program xc_example
+
+  use, intrinsic :: iso_c_binding
 
   use xcfun, only: XC_CONTRACTED, &
                    XC_N_NX_NY_NZ, &
@@ -40,7 +43,6 @@ program xc_example
   ! NZ: z-gradient of the density
   integer, parameter :: num_density_variables = 4
 
-  character(1000) :: text
   integer :: id, order, ierr, ipoint
   integer :: vector_length
   real(8) :: res
@@ -50,8 +52,8 @@ program xc_example
 
   ! print some info and copyright about the library
   ! please always include this info in your code
-  call xcfun_splash(text)
-  print *, text(1:len_trim(text))
+  print *, trim(xcfun_splash())
+  !print *, text(1:len_trim(text))
 
   ! create a new functional
   ! we need this for interacting with the library
