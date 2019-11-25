@@ -2,7 +2,7 @@
 # Copyright (c) 2015-2019 by Radovan Bast, Roberto Di Remigio, Jonas Juselius, and contributors.
 
 # set minimum cmake version
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 # project name
 project(XCFun LANGUAGES CXX C)
@@ -61,5 +61,4 @@ include(${PROJECT_SOURCE_DIR}/cmake/custom/compilers/CXXFlags.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/compilers/CFlags.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/static_library.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/xcfun.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_src.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/test.cmake)

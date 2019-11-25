@@ -1,6 +1,6 @@
 language: cpp
 sudo: false
-dist: trusty
+dist: xenial
 
 matrix:
   include:
@@ -11,9 +11,7 @@ matrix:
         apt:
           packages:
             - clang
-            - cmake3
             - gfortran
-            - swig
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
@@ -21,15 +19,14 @@ matrix:
         - BUILD_TYPE='Release'
         - PYTHON='--three'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     - os: linux
       compiler: clang
       addons: &clang35
         apt:
           packages:
             - clang-3.5
-            - cmake3
             - gfortran
-            - swig
       env:
         - CXX_COMPILER='clang++-3.5'
         - C_COMPILER='clang-3.5'
@@ -43,9 +40,7 @@ matrix:
         apt:
           packages:
             - clang-3.8
-            - cmake3
             - gfortran
-            - swig
       env:
         - CXX_COMPILER='clang++-3.8'
         - C_COMPILER='clang-3.8'
@@ -59,18 +54,17 @@ matrix:
       addons: &gcc48
         apt:
           packages:
-            - cmake3
-            - g++
-            - gcc
-            - gfortran
-            - swig
+            - g++-4.8
+            - gcc-4.8
+            - gfortran-4.8
       env:
-        - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'
-        - Fortran_COMPILER='gfortran'
+        - CXX_COMPILER='g++-4.8'
+        - C_COMPILER='gcc-4.8'
+        - Fortran_COMPILER='gfortran-4.8'
         - BUILD_TYPE='Release'
         - PYTHON='--two'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     - os: linux
       python: 3.6
       compiler: gcc
@@ -79,11 +73,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-5
             - gcc-5
             - gfortran-5
-            - swig
       env:
         - CXX_COMPILER='g++-5'
         - C_COMPILER='gcc-5'
@@ -98,11 +90,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-6
             - gcc-6
             - gfortran-6
-            - swig
       env:
         - CXX_COMPILER='g++-6'
         - C_COMPILER='gcc-6'
@@ -117,11 +107,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-7
             - gcc-7
             - gfortran-7
-            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
@@ -132,6 +120,13 @@ matrix:
     # 3/ OSX Clang Builds
     - os: osx
       compiler: clang
+      addons:
+        homebrew:
+          packages:
+            - cmake
+            - python
+            - pipenv
+          update: true
       env:
         - CXX_COMPILER='clang++'
         - C_COMPILER='clang'
@@ -139,9 +134,18 @@ matrix:
         - BUILD_TYPE='Release'
         - PYTHON='--two'
         - COVERAGE=OFF
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     # 4/ OSX GCC Builds
     - os: osx
       compiler: gcc
+      addons:
+        homebrew:
+          packages:
+            - gcc
+            - cmake
+            - python
+            - pipenv
+          update: true
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
@@ -157,12 +161,10 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - cmake3
             - g++-7
             - gcc-7
             - gfortran-7
             - lcov
-            - swig
       env:
         - CXX_COMPILER='g++-7'
         - C_COMPILER='gcc-7'
@@ -175,25 +177,19 @@ before_install:
   - test -n $CC && unset CC
   - test -n $CXX && unset CXX
   - test -n $FC && unset FC
+  - mkdir -p "$HOME"/Deps "$HOME"/Downloads
 
 install:
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - |
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew update &> /dev/null
-      brew cask uninstall --force oclint
-      brew upgrade cmake python
-      brew install gcc pipenv swig
-    elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      # pip install --user pipenv --upgrade
-      # https://github.com/pypa/pipenv/issues/3224
-      pip install --user --upgrade -e git+https://github.com/pypa/pipenv.git#egg=pipenv
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      pip install --user pipenv --upgrade
     fi
   - pipenv $PYTHON install --dev
+  - source $(pipenv --venv)/bin/activate
+  - ./.ci/cmake.sh
+  - ./.ci/pybind11.sh
 
 before_script:
-  - source $(pipenv --venv)/bin/activate
   - python --version
   - cd ${TRAVIS_BUILD_DIR}
   - >
@@ -206,6 +202,7 @@ before_script:
      -DENABLE_PYTHON_INTERFACE=ON
      -DPYTHON_EXECUTABLE=$(which python)
      -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
+     ${PYBIND11}
 
 script:
   # Build and install

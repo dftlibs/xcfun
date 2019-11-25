@@ -40,3 +40,5 @@ cmake/lib/*.pyc
 
 # Emacs backup files
 *~
+/.ccls-cache/
+/.mypy_cache/

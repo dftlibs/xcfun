@@ -52,8 +52,10 @@ if(ENABLE_FC_SUPPORT)
   include(${CMAKE_CURRENT_LIST_DIR}/int64.cmake)
 endif()
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/api)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+
 if(ENABLE_PYTHON_INTERFACE)
+  include(${PROJECT_SOURCE_DIR}/external/upstream/fetch_pybind11.cmake)
   add_subdirectory(python)
 endif()
-
-add_subdirectory(api)
