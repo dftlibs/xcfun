@@ -83,6 +83,7 @@ target_include_directories(xcfun-c-objlib
 
 add_subdirectory(functionals)
 
+list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++" "c++")
 if(NOT STATIC_LIBRARY_ONLY)
   add_library(xcfun-shared SHARED
     $<TARGET_OBJECTS:xcfun>
@@ -110,6 +111,7 @@ if(NOT STATIC_LIBRARY_ONLY)
       MACOSX_RPATH ON
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
+      LINKER_LANGUAGE C
     )
   install(
     TARGETS
@@ -145,8 +147,9 @@ if(NOT SHARED_LIBRARY_ONLY)
     )
   set_target_properties(xcfun-static
     PROPERTIES
-       OUTPUT_NAME "xcfun"
-       EXPORT_NAME "xcfun"
+      OUTPUT_NAME "xcfun"
+      EXPORT_NAME "xcfun"
+      LINKER_LANGUAGE C
     )
   install(
     TARGETS

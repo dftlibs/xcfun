@@ -33,20 +33,30 @@ if(ENABLE_FC_SUPPORT)
 endif()
 
 if(ENABLE_PYTHON_INTERFACE)
-  configure_file(
-    test_xcfun.py
-    ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests/test_xcfun.py
-    COPYONLY
+  list(APPEND _pytest_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
     )
+  file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests)
+  foreach(_file IN LISTS _pytest_files)
+    get_filename_component(__file ${_file} NAME)
+    add_custom_target(symlink_${__file} ALL
+      COMMAND
+        ${CMAKE_COMMAND} -E create_symlink
+        ${_file}
+        ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests/${__file}
+      )
+  endforeach()
 
   add_test(
     NAME python-interface
-    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
+    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests
+    WORKING_DIRECTORY
+      ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/..
     )
 
   install(
     FILES
-      ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
+      "${_pytest_files}"
     DESTINATION
       ${PYMOD_INSTALL_FULLDIR}/tests
     PERMISSIONS
