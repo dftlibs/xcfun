@@ -35,18 +35,26 @@ endif()
 if(ENABLE_PYTHON_INTERFACE)
   configure_file(
     test_xcfun.py
-    ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../test_xcfun.py
+    ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests/test_xcfun.py
     COPYONLY
     )
+
   add_test(
     NAME python-interface
-    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../test_xcfun.py
+    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
     )
+
   install(
     FILES
-      test_xcfun.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
     DESTINATION
-      ${PYMOD_INSTALL_FULLDIR}/..
+      ${PYMOD_INSTALL_FULLDIR}/tests
+    PERMISSIONS
+      OWNER_EXECUTE
+      OWNER_WRITE
+      OWNER_READ
+      GROUP_EXECUTE
+      GROUP_READ
     )
 endif()
 
