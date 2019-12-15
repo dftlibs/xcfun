@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/dftlibs/xcfun.svg?branch=master)](https://travis-ci.org/dftlibs/xcfun)
 [![GitHub license](https://img.shields.io/github/license/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/blob/master/LICENSE.md)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3576419.svg)](https://doi.org/10.5281/zenodo.3576419)
 
 [![GitHub issues](https://img.shields.io/github/issues/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/network)
