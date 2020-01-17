@@ -12,7 +12,6 @@ name = "pypi"
 Sphinx = "*"
 fprettify = "*"
 numpy = "*"
-pathlib2 = {version = "*", markers="python_version < '3'"}
 pytest = "*"
 pyyaml = "*"
 sphinx_rtd_theme = "*"
