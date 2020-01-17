@@ -4,7 +4,7 @@ dist: bionic
 
 matrix:
   include:
-    # 1/ Linux recent Clang Builds
+    # Linux recent Clang Builds
     - os: linux
       compiler: clang
       python: 3.6
@@ -34,7 +34,7 @@ matrix:
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
-    # 2/ Linux recent GCC Builds
+    # Linux recent GCC Builds
     - os: linux
       compiler: gcc
       python: 3.6
@@ -51,7 +51,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
         - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
-    # 3/ OSX Clang Builds
+    # OSX Clang Builds
     - os: osx
       osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
       compiler: clang
@@ -69,25 +69,7 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
         - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
-    # 4/ OSX GCC Builds
-    - os: osx
-      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
-      compiler: gcc
-      language: shell       # 'language: python' is an error on Travis CI macOS
-      addons:
-        homebrew:
-          packages:
-            - gcc
-            - cmake
-            - pipenv
-          update: true
-      env:
-        - CXX_COMPILER='g++'
-        - C_COMPILER='gcc'
-        - Fortran_COMPILER='gfortran'
-        - BUILD_TYPE='Release'
-        - COVERAGE=OFF
-    # 5/ Linux GCC Coverage build
+    # Linux GCC Coverage build
     - os: linux
       python: 3.6
       compiler: gcc
