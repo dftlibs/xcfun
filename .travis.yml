@@ -1,13 +1,14 @@
 language: cpp
 sudo: false
-dist: xenial
+dist: bionic 
 
 matrix:
   include:
-    # 1/ Linux Clang Builds
+    # Linux recent Clang Builds
     - os: linux
       compiler: clang
-      addons: &clang34
+      python: 3.6
+      addons:
         apt:
           packages:
             - clang
@@ -17,114 +18,48 @@ matrix:
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
-        - PYTHON='--three'
         - COVERAGE=OFF
         - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     - os: linux
       compiler: clang
-      addons: &clang35
-        apt:
-          packages:
-            - clang-3.5
-            - gfortran
-      env:
-        - CXX_COMPILER='clang++-3.5'
-        - C_COMPILER='clang-3.5'
-        - Fortran_COMPILER='gfortran'
-        - BUILD_TYPE='Release'
-        - PYTHON='--two'
-        - COVERAGE=OFF
-    - os: linux
-      compiler: clang
-      addons: &clang38
-        apt:
-          packages:
-            - clang-3.8
-            - gfortran
-      env:
-        - CXX_COMPILER='clang++-3.8'
-        - C_COMPILER='clang-3.8'
-        - Fortran_COMPILER='gfortran'
-        - BUILD_TYPE='Release'
-        - PYTHON='--three'
-        - COVERAGE=OFF
-    # 2/ Linux GCC Builds
-    - os: linux
-      compiler: gcc
-      addons: &gcc48
-        apt:
-          packages:
-            - g++-4.8
-            - gcc-4.8
-            - gfortran-4.8
-      env:
-        - CXX_COMPILER='g++-4.8'
-        - C_COMPILER='gcc-4.8'
-        - Fortran_COMPILER='gfortran-4.8'
-        - BUILD_TYPE='Release'
-        - PYTHON='--two'
-        - COVERAGE=OFF
-        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
-    - os: linux
       python: 3.6
-      compiler: gcc
-      addons: &gcc5
+      addons: 
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
-            - g++-5
-            - gcc-5
-            - gfortran-5
+            - clang
+            - gfortran
       env:
-        - CXX_COMPILER='g++-5'
-        - C_COMPILER='gcc-5'
-        - Fortran_COMPILER='gfortran-5'
+        - CXX_COMPILER='clang++'
+        - C_COMPILER='clang'
+        - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
-        - PYTHON='--three'
         - COVERAGE=OFF
+    # Linux recent GCC Builds
     - os: linux
       compiler: gcc
-      addons: &gcc6
+      python: 3.6
+      addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
-            - g++-6
-            - gcc-6
-            - gfortran-6
+            - g++
+            - gcc
+            - gfortran
       env:
-        - CXX_COMPILER='g++-6'
-        - C_COMPILER='gcc-6'
-        - Fortran_COMPILER='gfortran-6'
+        - CXX_COMPILER='g++'
+        - C_COMPILER='gcc'
+        - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
-        - PYTHON='--two'
         - COVERAGE=OFF
-    - os: linux
-      compiler: gcc
-      addons: &gcc7
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - gcc-7
-            - gfortran-7
-      env:
-        - CXX_COMPILER='g++-7'
-        - C_COMPILER='gcc-7'
-        - Fortran_COMPILER='gfortran-7'
-        - BUILD_TYPE='Release'
-        - PYTHON='--three'
-        - COVERAGE=OFF
-    # 3/ OSX Clang Builds
+        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
+    # OSX Clang Builds
     - os: osx
+      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
       compiler: clang
+      language: shell       # 'language: python' is an error on Travis CI macOS
       addons:
         homebrew:
           packages:
             - cmake
-            - python
             - pipenv
           update: true
       env:
@@ -132,45 +67,24 @@ matrix:
         - C_COMPILER='clang'
         - Fortran_COMPILER='gfortran'
         - BUILD_TYPE='Release'
-        - PYTHON='--two'
         - COVERAGE=OFF
         - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
-    # 4/ OSX GCC Builds
-    - os: osx
+    # Linux GCC Coverage build
+    - os: linux
+      python: 3.6
       compiler: gcc
       addons:
-        homebrew:
+        apt:
           packages:
+            - g++
             - gcc
-            - cmake
-            - python
-            - pipenv
-          update: true
+            - gfortran
+            - lcov
       env:
         - CXX_COMPILER='g++'
         - C_COMPILER='gcc'
         - Fortran_COMPILER='gfortran'
-        - BUILD_TYPE='Release'
-        - PYTHON='--three'
-        - COVERAGE=OFF
-    # 5/ Linux GCC7 Coverage build
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - gcc-7
-            - gfortran-7
-            - lcov
-      env:
-        - CXX_COMPILER='g++-7'
-        - C_COMPILER='gcc-7'
-        - Fortran_COMPILER='gfortran-7'
         - BUILD_TYPE='Debug'
-        - PYTHON='--three'
         - COVERAGE=ON
 
 before_install:
@@ -184,7 +98,7 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       pip install --user pipenv --upgrade
     fi
-  - pipenv $PYTHON install --dev
+  - pipenv --three install --dev
   - source $(pipenv --venv)/bin/activate
   - ./.ci/cmake.sh
   - ./.ci/pybind11.sh
