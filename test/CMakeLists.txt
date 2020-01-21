@@ -32,7 +32,7 @@ if(ENABLE_FC_SUPPORT)
   add_test(fortran_example ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/fortran_example)
 endif()
 
-if(ENABLE_PYTHON_INTERFACE)
+if(XCFun_ENABLE_PYTHON_INTERFACE)
   list(APPEND _pytest_files
     ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
     )

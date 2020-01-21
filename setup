@@ -53,7 +53,7 @@ def gen_cmake_command(options, arguments):
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
     command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DXCFun_XC_MAX_ORDER="{0}"'.format(arguments['--xcmaxorder']))
-    command.append('-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings']))
+    command.append('-DXCFun_ENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings']))
     command.append('-DCMAKE_BUILD_TYPE={0}'.format(arguments['--type']))
     command.append('-G"{0}"'.format(arguments['--generator']))
     if arguments['--cmake-options'] != "''":

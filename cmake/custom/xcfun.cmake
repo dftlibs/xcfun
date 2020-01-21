@@ -5,7 +5,7 @@
 # Variables modified::
 #
 #   XCFun_XC_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
-#   ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
+#   XCFun_ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
 #
 # autocmake.yml configuration::
 #
@@ -14,7 +14,7 @@
 #     - "--pybindings Enable Python interface [default: OFF]."
 #   define:
 #     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
-#     - "'-DENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
+#     - "'-DXCFun_ENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
 option_with_default(XCFun_XC_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 3)
 # Make sure user selected a valuer larger than 2
@@ -41,7 +41,7 @@ else()
 endif()
 file(TO_NATIVE_PATH "lib/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
 
-option_with_print(ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
+option_with_print(XCFun_ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FC_SUPPORT)
   enable_language(Fortran)
@@ -55,7 +55,7 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/api)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
-if(ENABLE_PYTHON_INTERFACE)
+if(XCFun_ENABLE_PYTHON_INTERFACE)
   include(${PROJECT_SOURCE_DIR}/external/upstream/fetch_pybind11.cmake)
   add_subdirectory(python)
 endif()
