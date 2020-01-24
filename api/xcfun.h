@@ -41,14 +41,54 @@ typedef enum {
 } xcfun_mode;
 
 // Must be in sync with xcint_vars in xcint.cpp and with the fortran module
-/*! \brief Types of variables to define a functional. */
 // clang-format off
+/*! \brief Types of variables to define a functional.
+ *
+ *  The XC energy density and derivatives can be evaluated using a variety of
+ *  variables and variables combinations. The variables in this `enum` are named as:
+ *
+ *    - `XC_` prefix
+ *    - Tag for density variables.
+ *    - Tag for gradient variables.
+ *    - Tag for Laplacian variables.
+ *    - Tag for kinetic energy density variables.
+ *    - Tag for current density variables.
+ *
+ * XCFun recognizes the following basic variables:
+ *
+ *    - `A`, the spin-up electron number density: \f$n_{\alpha}\f$
+ *    - `B`, the spin-down electron number density: \f$n_{\beta}\f$
+ *    - `GAA`, the square magnitude of the spin-up density gradient: \f$\sigma_{\alpha \alpha} = \nabla n_\alpha.\nabla n_\alpha\f$
+ *    - `GAB`, the dot product of the spin-up and spin-down density gradients: \f$\sigma_{\alpha \beta} = \nabla n_\alpha.\nabla n_\beta\f$
+ *    - `GBB`, the square magnitude of the spin-down density gradient: \f$\sigma_{\beta \beta} = \nabla n_\beta.\nabla n_\beta\f$
+ *    - `LAPA`, the Laplacian of the spin-up density: \f$\nabla^2 n_{\alpha}\f$
+ *    - `LAPB`, the Laplacian of the spin-down density: \f$\nabla^2 n_{\beta}\f$
+ *    - `TAUA`, the spin-up Kohn-Sham kinetic energy density: \f$\tau_\alpha = \frac{1}{2} \sum_i |\psi_{i \alpha}|^2\f$
+ *    - `TAUB`, the spin-down Kohn-Sham kinetic energy density: \f$\tau_\beta = \frac{1}{2} \sum_i |\psi_{i \beta}|^2\f$
+ *    - `JPAA`, the spin-up current density: \f$\mathbf{j}_{\alpha\alpha}\f$
+ *    - `JPBB`, the spin-down current density: \f$\mathbf{j}_{\beta\beta}\f$
+ *
+ *  The following quantities are also recognized:
+ *
+ *    - `N`, the number density: \f$n = n_{\alpha} + n_{\beta}\f$
+ *    - `S`, the spin density: \f$s = n_{\alpha} - n_{\beta}\f$
+ *    - `GNN`, the square magnitude of the density gradient: \f$\sigma_{nn} = \nabla n.\nabla n\f$
+ *    - `GSS`, the dot product of the number and spin density gradients: \f$\sigma_{ns} = \nabla n.\nabla s\f$
+ *    - `GNS`, the square magnitude of the spin density gradient: \f$\sigma_{ss} = \nabla s.\nabla s\f$
+ *    - `LAPN`, the Laplacian of the density: \f$\nabla^2 n\f$
+ *    - `LAPS`, the Laplacian of the spin density: \f$\nabla^2 s\f$
+ *    - `TAUN`, the Kohn-Sham kinetic energy density: \f$\tau_n\f$
+ *    - `TAUS`, the spin Kohn-Sham kinetic energy density: \f$\tau_s\f$
+ *
+ *  XC functionals depending on the gradient of the density can furthermore be
+ *  defined to use the \f$(x, y, z)\f$ components of the gradient explicitly.
+ */
 typedef enum {
   XC_VARS_UNSET = -1, /*!< Not defined */
-  XC_A,               /*!< LDA \f$\rho_{\alpha}\f$ */
-  XC_N,               /*!< LDA \f$\rho\f$ */
-  XC_A_B,             /*!< LDA \f$\rho_{\alpha}\f$ and \f$\rho_{\beta}\f$ */
-  XC_N_S,             /*!< LDA \f$\rho\f$ and \f$\rho_{\alpha} - \rho_{\beta}\f$ (spin polarization) */
+  XC_A,               /*!< LDA with \f$n_{\alpha}\f$ */
+  XC_N,               /*!< LDA with \f$n\f$ */
+  XC_A_B,             /*!< LDA with \f$n_{\alpha}\f$ and \f$n_{\beta}\f$ */
+  XC_N_S,             /*!< LDA with \f$n\f$ and \f$s\f$ */
 
   XC_A_GAA,             /*!< GGA with grad^2 alpha        */
   XC_N_GNN,             /*!< GGA with grad^2 rho          */
