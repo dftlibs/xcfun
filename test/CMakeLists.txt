@@ -1,15 +1,15 @@
 add_executable(testall
-  testall.c
+  testall.cpp
   )
 target_link_libraries(testall
   XCFun
   )
 target_compile_options(testall
   PRIVATE
-    "${XCFun_C_FLAGS}"
-    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
-    "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
-    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_C_FLAGS_COVERAGE}>"
+    "${XCFun_CXX_FLAGS}"
+    "$<$<CONFIG:Debug>:${XCFun_CXX_FLAGS_DEBUG}>"
+    "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
+    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_CXX_FLAGS_COVERAGE}>"
   )
 add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
 
