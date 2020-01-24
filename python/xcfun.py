@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # XCFun, an arbitrary order exchange-correlation library
 # Copyright (C) 2020 Ulf Ekström and contributors.
 #
@@ -11,7 +9,8 @@
 #
 # For information on the complete list of contributors to the
 # XCFun library, see: <https://xcfun.readthedocs.io/>
-#
+
+# -*- coding: utf-8 -*-
 
 import numpy
 
@@ -23,11 +22,11 @@ class XCFunException(Exception):
         Exception.__init__(self, msg)
         self.error_code = code
 
+
 class Functional(object):
     """
     Python class representing an XCFun functional.
     """
-
     def __init__(self, funcdict):
         """
         Initialize the functional.
@@ -96,7 +95,7 @@ class Functional(object):
 
             dens = density.reshape((density.size, 1))
 
-        return xc_eval(self._func, dens)[:,0]
+        return xc_eval(self._func, dens)[:, 0]
 
     def eval_potential_n(self, density, densgrad=None, denshess=None):
         """
@@ -200,7 +199,7 @@ class Functional(object):
 
             dens = density
 
-        return xc_eval(self._func, dens)[:,0]
+        return xc_eval(self._func, dens)[:, 0]
 
     def eval_potential_ab(self, density, densgrad=None, denshess=None):
         """

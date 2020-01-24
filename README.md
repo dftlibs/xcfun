@@ -12,7 +12,7 @@ Copyright [Ulf Ekström] and [contributors] 2009-2018. See
 http://dftlibs.org/xcfun/ for more information.
 The documentation is available at https://xcfun.readthedocs.io
 
-The main interface is in `include/xcfun.h` (or `fortran/xc_fun_module.f90` for
+The main interface is in `api/xcfun.h` (or `api/xcfun.F90` for
 Fortran bindings).
 
 ## License

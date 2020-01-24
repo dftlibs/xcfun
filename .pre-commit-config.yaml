@@ -1,0 +1,29 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.1.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-merge-conflict
+  - repo: https://github.com/pre-commit/mirrors-yapf
+    rev: v0.27.0
+    hooks:
+      - id: yapf
+  - repo: https://github.com/doublify/pre-commit-clang-format.git
+    rev: master
+    hooks:
+      - id: clang-format
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.6
+    hooks:
+      - id: insert-license
+        files: (python|test)/.*\.py$
+        args: ['--license-filepath', '.github/license-header']
+      - id: insert-license
+        files: src/.*\.(h|c)pp$
+        args: ['--license-filepath', '.github/license-header', '--comment-style', '/*| *| */' ]
+      - id: insert-license
+        files: api/.*\.(h|c)$
+        args: ['--license-filepath', '.github/license-header', '--comment-style', '/*| *| */' ]
+      - id: insert-license
+        files: \.(f|F)90$
+        args: ['--license-filepath', '.github/license-header', '--comment-style', '!' ]

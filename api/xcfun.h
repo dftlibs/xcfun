@@ -1,6 +1,6 @@
 /*
  * XCFun, an arbitrary order exchange-correlation library
- * Copyright (C) 2018 Ulf Ekström and contributors.
+ * Copyright (C) 2020 Ulf Ekström and contributors.
  *
  * This file is part of XCFun.
  *
@@ -14,11 +14,9 @@
 
 #pragma once
 
-#ifndef SWIG
+#ifndef XCFun_API
 #include "XCFun/XCFunExport.h"
 #define XCFun_API XCFun_EXPORT
-#else
-#define XCFun_API
 #endif
 
 #define XCFUN_API_VERSION 2
@@ -52,6 +50,7 @@ enum xc_mode {
 /*! \enum xc_vars
  *  \brief functional type
  */
+// clang-format off
 enum xc_vars {
   XC_VARS_UNSET = -1, /*!< Not defined */
   XC_A,               /*! LDA alpha */
@@ -100,6 +99,7 @@ enum xc_vars {
   XC_N_S_2ND_TAYLOR, /*! 2:nd order Taylor rho and spin */
   XC_NR_VARS
 };
+// clang-format on
 
 XCFun_API double xcfun_version();
 XCFun_API const char * xcfun_splash();

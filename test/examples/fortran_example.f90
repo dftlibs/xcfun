@@ -1,6 +1,5 @@
-!
 ! XCFun, an arbitrary order exchange-correlation library
-! Copyright (C) 2018 Ulf Ekström and contributors.
+! Copyright (C) 2020 Ulf Ekström and contributors.
 !
 ! This file is part of XCFun.
 !
