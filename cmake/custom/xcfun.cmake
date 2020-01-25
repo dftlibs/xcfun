@@ -45,8 +45,6 @@ option_with_print(XCFun_ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
 
 if(ENABLE_FC_SUPPORT)
   enable_language(Fortran)
-  include(FortranCInterface)
-  FortranCInterface_VERIFY(CXX)
   set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
   include(${CMAKE_CURRENT_LIST_DIR}/compilers/FortranFlags.cmake)
   include(${CMAKE_CURRENT_LIST_DIR}/int64.cmake)

@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 # project name
-project(XCFun LANGUAGES CXX C)
+project(XCFun LANGUAGES CXX)
 
 # do not rebuild if rules (compiler flags) change
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
@@ -54,11 +54,9 @@ include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_custom_color_messages.c
 include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_default_build_paths.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_safeguards.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_cxx.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/downloaded/autocmake_cc.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/fc_optional.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/code_coverage.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/compilers/CXXFlags.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/custom/compilers/CFlags.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/static_library.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/xcfun.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/custom/test.cmake)

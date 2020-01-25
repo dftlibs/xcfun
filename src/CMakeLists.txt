@@ -81,7 +81,6 @@ if(NOT STATIC_LIBRARY_ONLY)
       MACOSX_RPATH ON
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
-      LINKER_LANGUAGE C
     )
   install(
     TARGETS
@@ -118,7 +117,6 @@ if(NOT SHARED_LIBRARY_ONLY)
     PROPERTIES
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
-      LINKER_LANGUAGE C
     )
   install(
     TARGETS
