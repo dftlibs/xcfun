@@ -36,20 +36,20 @@ class Functional(object):
             lda_func = Functional({'LDA': 1.0})
             blyp_func = Functional({'BeckeX': 1.0, 'LYPC': 1.0})
         """
-        self._func = xc_new_functional()
+        self._func = xcfun_new()
         for name, weight in funcdict.items():
-            ret = xc_set(self._func, name, weight)
+            ret = xcfun_set(self._func, name, weight)
             if not ret == 0:
                 raise XCFunException('unknown functional selected')
 
     def __del__(self):
-        xc_free_functional(self._func)
+        xcfun_delete(self._func)
 
     @property
     def type(self):
-        if xc_is_metagga(self._func):
+        if xcfun_is_metagga(self._func):
             return 2
-        elif xc_is_gga(self._func):
+        elif xcfun_is_gga(self._func):
             return 1
         else:
             return 0
@@ -74,13 +74,13 @@ class Functional(object):
                                  '[ %s instead of (nr_points,) ]' % str(density.shape))
         nr_points = density.size
 
-        if xc_is_metagga(self._func):
+        if xcfun_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
-        elif xc_is_gga(self._func):
+        elif xcfun_is_gga(self._func):
             if (densgrad is None):
                 raise XCFunException('Density gradient required for GGA energy')
 
-            xc_eval_setup(self._func, XC_N_NX_NY_NZ, XC_PARTIAL_DERIVATIVES, 0)
+            xcfun_eval_setup(self._func, XC_N_NX_NY_NZ, XC_PARTIAL_DERIVATIVES, 0)
 
             if not (densgrad.shape == (nr_points, 3)):
                 raise XCFunException('Wrong shape of densgrad argument in eval_energy_n '
@@ -91,11 +91,11 @@ class Functional(object):
             dens[:, 1:4] = densgrad[:, 0:3]
 
         else:
-            xc_eval_setup(self._func, XC_N, XC_PARTIAL_DERIVATIVES, 0)
+            xcfun_eval_setup(self._func, XC_N, XC_PARTIAL_DERIVATIVES, 0)
 
             dens = density.reshape((density.size, 1))
 
-        return xc_eval(self._func, dens)[:, 0]
+        return xcfun_eval(self._func, dens)[:, 0]
 
     def eval_potential_n(self, density, densgrad=None, denshess=None):
         """
@@ -122,13 +122,13 @@ class Functional(object):
                                  '[ %s instead of (nr_points,) ]' % str(density.shape))
         nr_points = density.size
 
-        if xc_is_metagga(self._func):
+        if xcfun_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
-        elif xc_is_gga(self._func):
+        elif xcfun_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
                 raise XCFunException('Density gradient and Hessian required for GGA potential')
 
-            xc_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
+            xcfun_eval_setup(self._func, XC_N_2ND_TAYLOR, XC_POTENTIAL, 1)
 
             if not (densgrad.shape == (nr_points, 3)):
                 raise XCFunException('Wrong shape of densgrad argument in eval_potential_n '
@@ -144,11 +144,11 @@ class Functional(object):
             dens[:, 4:10] = denshess[:, 0:6]
 
         else:
-            xc_eval_setup(self._func, XC_N, XC_POTENTIAL, 1)
+            xcfun_eval_setup(self._func, XC_N, XC_POTENTIAL, 1)
 
             dens = density.reshape((density.size, 1))
 
-        return xc_eval(self._func, dens)
+        return xcfun_eval(self._func, dens)
 
     def eval_energy_ab(self, density, densgrad=None):
         """
@@ -176,13 +176,13 @@ class Functional(object):
             raise XCFunException('Wrong shape of density argument in eval_energy_ab '
                                  '[ %s instead of (nr_points, 2) ]' % str(density.shape))
 
-        if xc_is_metagga(self._func):
+        if xcfun_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
-        elif xc_is_gga(self._func):
+        elif xcfun_is_gga(self._func):
             if (densgrad is None):
                 raise XCFunException('Density gradient required for GGA energy')
 
-            xc_eval_setup(self._func, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_PARTIAL_DERIVATIVES, 0)
+            xcfun_eval_setup(self._func, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_PARTIAL_DERIVATIVES, 0)
 
             if not (densgrad.shape == (nr_points, 3, 2)):
                 raise XCFunException('Wrong shape of densgrad argument in eval_energy_ab '
@@ -195,11 +195,11 @@ class Functional(object):
             dens[:, 5:8] = densgrad[:, 0:3, 1]
 
         else:
-            xc_eval_setup(self._func, XC_A_B, XC_PARTIAL_DERIVATIVES, 0)
+            xcfun_eval_setup(self._func, XC_A_B, XC_PARTIAL_DERIVATIVES, 0)
 
             dens = density
 
-        return xc_eval(self._func, dens)[:, 0]
+        return xcfun_eval(self._func, dens)[:, 0]
 
     def eval_potential_ab(self, density, densgrad=None, denshess=None):
         """
@@ -233,13 +233,13 @@ class Functional(object):
             raise XCFunException('Wrong shape of density argument in eval_potential_n '
                                  '[ %s instead of (nr_points, 2) ]' % str(density.shape))
 
-        if xc_is_metagga(self._func):
+        if xcfun_is_metagga(self._func):
             raise XCFunException('xc potential not supported for meta-GGAs')
-        elif xc_is_gga(self._func):
+        elif xcfun_is_gga(self._func):
             if (densgrad is None) or (denshess is None):
                 raise XCFunException('Density gradient and Hessian required for GGA potential')
 
-            xc_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
+            xcfun_eval_setup(self._func, XC_A_B_2ND_TAYLOR, XC_POTENTIAL, 1)
 
             if not (densgrad.shape == (nr_points, 3, 2)):
                 raise XCFunException('Wrong shape of densgrad argument in eval_potential_n '
@@ -258,8 +258,8 @@ class Functional(object):
             dens[:, 14:20] = denshess[:, 0:6, 1]
 
         else:
-            xc_eval_setup(self._func, XC_A_B, XC_POTENTIAL, 1)
+            xcfun_eval_setup(self._func, XC_A_B, XC_POTENTIAL, 1)
 
             dens = density
 
-        return xc_eval(self._func, dens)
+        return xcfun_eval(self._func, dens)

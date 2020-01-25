@@ -88,7 +88,7 @@ List of existing functions in XCFun
 
 * :c:func:`xc_output_length`
 
-**typedef struct xc_functional_obj * xc_functional**
+**typedef struct XCFunctional * xc_functional**
 
 
 .. c:function:: const char *xc_enumerate_parameters(int n)
@@ -109,7 +109,7 @@ List of existing functions in XCFun
 .. c:function:: const char *xc_describe_long(const char *name)
 
 
-.. c:function:: int xc_eval_setup(xc_functional fun, enum xc_vars vars, enum xc_mode mode, int order)
+.. c:function:: int xc_eval_setup(xc_functional fun, enum xcfun_vars vars, enum xcfun_mode mode, int order)
 
 
 .. c:function:: void xc_eval_vec(xc_functional fun, int nr_points, const double *density, int density_pitch, double *result, int result_pitch)

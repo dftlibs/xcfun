@@ -14,14 +14,21 @@
 
 #pragma once
 
-namespace xcfun {
-constexpr auto PROJECT_VERSION_MAJOR = 2;
-constexpr auto PROJECT_VERSION_MINOR = 0;
-constexpr auto PROJECT_VERSION_PATCH = 0;
-constexpr auto XCFun_VERSION =
-    ((PROJECT_VERSION_MAJOR << 16) | PROJECT_VERSION_MINOR | PROJECT_VERSION_PATCH);
+#include <array>
 
-auto version_as_string() noexcept -> std::string;
+#include "XCFun/xcfun.h"
+#include "functionals/list_of_functionals.hpp"
 
-auto xcfun_get_version() noexcept -> unsigned int;
-} // namespace xcfun
+struct functional_data;
+
+struct XCFunctional {
+  explicit XCFunctional();
+
+  int nr_active_functionals{0};
+  int order{-1};
+  int depends{0}; // XC_DENSITY, gradient etc
+  xcfun_mode mode{XC_MODE_UNSET};
+  xcfun_vars vars{XC_VARS_UNSET};
+  std::array<functional_data *, XC_NR_FUNCTIONALS> active_functionals{nullptr};
+  std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings;
+};

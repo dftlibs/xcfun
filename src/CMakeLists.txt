@@ -33,7 +33,7 @@ target_compile_options(xcfun
 target_compile_definitions(xcfun
   PUBLIC
     XCFun_EXPORTS
-    XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
+    XCFUN_MAX_ORDER=${XCFUN_MAX_ORDER}
   )
 target_include_directories(xcfun
   PRIVATE
@@ -189,6 +189,7 @@ install(
     ${CMAKE_CURRENT_SOURCE_DIR}/functional.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/specmath.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xcint.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/XCFunctional.hpp
   DESTINATION
     ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
   )

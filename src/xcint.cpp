@@ -13,15 +13,10 @@
  */
 
 #include "xcint.hpp"
+
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
-
-#ifndef FORTRAN_INT
-typedef int fortran_int_t;
-#else
-typedef FORTRAN_INT fortran_int_t;
-#endif
+#include <cstring>
 
 functional_data xcint_funs[XC_NR_FUNCTIONALS];
 parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
@@ -41,16 +36,16 @@ int xcint_lookup_parameter(const char * name) {
 }
 
 int xcint_lookup_alias(const char * name) {
-  for (int i = 0; i < XC_MAX_ALIASES and xcint_aliases[i].name; i++)
+  for (int i = 0; i < XC_MAX_ALIASES && xcint_aliases[i].name; i++)
     if (strcasecmp(name, xcint_aliases[i].name) == 0)
       return i;
   return -1;
 }
 
 template <int FUN> void xcint_functional_setup_helper() {
-  if (!(fundat_db<FUN>::symbol[0] == 'X' and fundat_db<FUN>::symbol[1] == 'C' and
+  if (!(fundat_db<FUN>::symbol[0] == 'X' && fundat_db<FUN>::symbol[1] == 'C' &&
         fundat_db<FUN>::symbol[2] == '_'))
-    xcint_die("Functional symbol does not start with XC_", FUN);
+    xcfun::die("Functional symbol does not start with XC_", FUN);
   fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
   fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
   xcint_funs[FUN] = fundat_db<FUN>::d;
@@ -68,9 +63,9 @@ template <int FUN, int SPAN> struct retarded_helper {
 
 template <int FUN> struct retarded_helper<FUN, 1> {
   static void doit() {
-    if (!(fundat_db<FUN>::symbol[0] == 'X' and fundat_db<FUN>::symbol[1] == 'C' and
+    if (!(fundat_db<FUN>::symbol[0] == 'X' && fundat_db<FUN>::symbol[1] == 'C' &&
           fundat_db<FUN>::symbol[2] == '_'))
-      xcint_die("Functional symbol does not start with XC_", FUN);
+      xcfun::die("Functional symbol does not start with XC_", FUN);
     fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
     fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
     xcint_funs[FUN] = fundat_db<FUN>::d;
@@ -78,9 +73,9 @@ template <int FUN> struct retarded_helper<FUN, 1> {
 };
 
 template <int P> void xcint_parameter_setup_helper() {
-  if (!(pardat_db<P>::symbol[0] == 'X' and pardat_db<P>::symbol[1] == 'C' and
+  if (!(pardat_db<P>::symbol[0] == 'X' && pardat_db<P>::symbol[1] == 'C' &&
         pardat_db<P>::symbol[2] == '_'))
-    xcint_die("Symbol does not start with XC_", P);
+    xcfun::die("Symbol does not start with XC_", P);
   pardat_db<P>::d.name = pardat_db<P>::symbol + 3;
   xcint_params[P] = pardat_db<P>::d;
   xcint_parameter_setup_helper<P + 1>();
@@ -146,11 +141,4 @@ void xcint_assure_setup() {
 #endif
     is_setup = true;
   }
-}
-
-void xcint_die(const char * message, int code) {
-  fprintf(stderr, "XCFun fatal error %i: ", code);
-  fprintf(stderr, "%s", message);
-  fprintf(stderr, "\n");
-  exit(-1);
 }

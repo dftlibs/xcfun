@@ -14,22 +14,19 @@
 
 #pragma once
 
-#include "functionals/list_of_functionals.hpp"
-
-#ifndef XC_NO_REGULARIZATION
-#error Implement regularization properly, what about the non-constant terms when setting something to 0?
-#endif
+#include "XCFunctional.hpp"
+#include "config.hpp"
 
 // When regularizing we shouldn't touch the higher order
 // parts of the density, so we need this.
 template <typename T, int N> void regularize(ctaylor<T, N> & x) {
-  if (x < XC_TINY_DENSITY)
-    x.set(0, XC_TINY_DENSITY);
+  if (x < xcfun::XCFUN_TINY_DENSITY)
+    x.set(0, xcfun::XCFUN_TINY_DENSITY);
 }
 
 template <typename T> static void regularize(T & x) {
-  if (x < XC_TINY_DENSITY)
-    x = XC_TINY_DENSITY;
+  if (x < xcfun::XCFUN_TINY_DENSITY)
+    x = xcfun::XCFUN_TINY_DENSITY;
 }
 
 // Variables for expressing functionals, these are redundant because
@@ -38,7 +35,7 @@ template <typename T> static void regularize(T & x) {
 template <typename T> struct densvars {
   // Fills all density variables that can be filled from vars. Length of d
   // depends on vars.
-  densvars(xc_functional_obj * parent, const T * d) {
+  densvars(XCFunctional * parent, const T * d) {
     this->parent = parent;
     switch (parent->vars) {
       case XC_A_GAA:
@@ -210,8 +207,8 @@ template <typename T> struct densvars {
         s = a - b;
         break;
       default:
-        xcint_die("Illegal/Not yet implemented vars value in densvars()",
-                  parent->vars);
+        xcfun::die("Illegal/Not yet implemented vars value in densvars()",
+                   parent->vars);
     }
     zeta = s / n;
     r_s = pow(3.0 / (n * 4.0 * M_PI), 1.0 / 3.0); // (3/4pi)^1/3*n^(-1/3) !check
@@ -220,7 +217,7 @@ template <typename T> struct densvars {
     b_43 = pow(b, 4.0 / 3.0);
   }
 
-  const xc_functional_obj * parent;
+  const XCFunctional * parent;
   double get_param(enum xc_parameter p) const { return parent->settings[p]; }
 
   T a, b, gaa, gab, gbb;

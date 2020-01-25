@@ -14,14 +14,11 @@
 
 #pragma once
 
-#include <array>
 #include <cstdio>
 
-#include "XCFun/xcfun.h"
 #include "config.hpp"
 #include "ctaylor.hpp"
 #include "densvars.hpp"
-#include "functionals/list_of_functionals.hpp"
 #include "taylor.hpp"
 
 #define XC_MAX_ALIASES 60
@@ -48,16 +45,14 @@
 #define XC_KINETIC 8
 #define XC_JP 16
 
-// struct functional_data;
-
 struct functional_data {
   const char * short_description;
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
 #define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
   FOR_EACH(XC_MAX_ORDER, FP, )
-  enum xc_vars test_vars;
-  enum xc_mode test_mode;
+  enum xcfun_vars test_vars;
+  enum xcfun_mode test_mode;
   int test_order;
   double test_threshold;
   double test_in[16]; // Increase dimensions if future tests require it
@@ -96,39 +91,9 @@ extern parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 extern vars_data xcint_vars[XC_NR_VARS];
 extern alias_data * xcint_aliases;
 
-struct xc_functional_obj {
-  explicit xc_functional_obj() {
-    for (int i = 0; i < XC_NR_FUNCTIONALS; ++i)
-      settings[i] = 0;
-    for (int i = XC_NR_FUNCTIONALS; i < XC_NR_PARAMETERS_AND_FUNCTIONALS; ++i)
-      settings[i] = xcint_params[i].default_value;
-  }
-
-  int nr_active_functionals{0};
-  int order{-1};
-  int depends{0}; // XC_DENSITY, gradient etc
-  xc_mode mode{XC_MODE_UNSET};
-  xc_vars vars{XC_VARS_UNSET};
-  std::array<functional_data *, XC_NR_FUNCTIONALS> active_functionals{nullptr};
-  std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings;
-};
-
 void xcint_assure_setup();
 
-extern "C" void xcint_die(const char * message, int code);
-
-#if 0
-static inline int taylorlen(int nvar, int ndeg)
-{
-  int len = 1;
-  for (int k=1;k<=nvar;k++)
-    {
-      len *= ndeg + k;
-      len /= k;
-    }
-  return len;
-}
-#endif
+void xcfun::die(const char * message, int code);
 
 // The lookup functions return -1 if not found
 // TODO: Case insensitive string comparison should be used

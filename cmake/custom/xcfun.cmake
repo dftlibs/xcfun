@@ -4,23 +4,23 @@
 #
 # Variables modified::
 #
-#   XCFun_XC_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
+#   XCFUN_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
 #   XCFun_ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
 #
 # autocmake.yml configuration::
 #
 #   docopt:
-#     - "--xcmaxorder=<XCFun_XC_MAX_ORDER> An integer greater than 3 [default: 3]."
+#     - "--xcmaxorder=<XCFUN_MAX_ORDER> An integer greater than 3 [default: 3]."
 #     - "--pybindings Enable Python interface [default: OFF]."
 #   define:
-#     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
+#     - "'-DXCFUN_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
 #     - "'-DXCFun_ENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
-option_with_default(XCFun_XC_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 3)
+option_with_default(XCFUN_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 3)
 # Make sure user selected a valuer larger than 2
-if(DEFINED XCFun_XC_MAX_ORDER AND XCFun_XC_MAX_ORDER LESS 3)
-  message(STATUS "${XCFun_XC_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 3")
-  set(XCFun_XC_MAX_ORDER 3 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
+if(DEFINED XCFUN_MAX_ORDER AND XCFUN_MAX_ORDER LESS 3)
+  message(STATUS "${XCFUN_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 3")
+  set(XCFUN_MAX_ORDER 3 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
 endif()
 
 set(PROJECT_VERSION 2.0.0)
