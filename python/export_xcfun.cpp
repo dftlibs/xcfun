@@ -79,7 +79,9 @@ PYBIND11_MODULE(_xcfun, m) {
       .export_values();
 
   m.def(
-      "xcfun_version", []() { return xcfun_version(); }, "XCFun version");
+      "xcfun_version",
+      []() { return std::string(xcfun_version()); },
+      "XCFun version");
   m.def("xcfun_splash", &xcfun_splash, "XCFun splash screen");
   m.def("xcfun_test", &xcfun_test, "XCFun testing");
 
