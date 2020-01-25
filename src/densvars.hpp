@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "functionals/list_of_functionals.hpp"
+
 #ifndef XC_NO_REGULARIZATION
 #error Implement regularization properly, what about the non-constant terms when setting something to 0?
 #endif

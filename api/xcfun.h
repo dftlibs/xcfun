@@ -14,10 +14,12 @@
 
 #pragma once
 
-#ifndef XCFun_API
+#include <stdbool.h>
+#include <stddef.h>
+
 #include "XCFun/XCFunExport.h"
+
 #define XCFun_API XCFun_EXPORT
-#endif
 
 #define XCFUN_API_VERSION 2
 
@@ -106,6 +108,47 @@ XCFun_API const char * xcfun_splash();
 XCFun_API int xcfun_test();
 
 typedef struct xc_functional_obj * xc_functional;
+
+typedef xc_functional_obj XCFun;
+
+/*! \brief Whether the library is compatible with the header file
+ *  Checks that the compiled library and header file version match.
+ *  Host should abort when that is not the case.
+ *  \warning This function should be called **before** instantiating
+ *  any XCFun context objects.
+ */
+XCFun_API bool xcfun_is_compatible_library();
+XCFun_API const char * xcfun_enumerate_parameters(int n);
+XCFun_API const char * xcfun_enumerate_aliases(int n);
+XCFun_API const char * xcfun_describe_short(const char * name);
+XCFun_API const char * xcfun_describe_long(const char * name);
+XCFun_API XCFun * xcfun_new();
+XCFun_API void xcfun_delete(XCFun * fun);
+XCFun_API int xcfun_set(XCFun * fun, const char * name, double value);
+XCFun_API int xcfun_get(XCFun * fun, const char * name, double value[]);
+XCFun_API bool xcfun_is_gga(XCFun * fun);
+XCFun_API bool xcfun_is_metagga(XCFun * fun);
+XCFun_API int xcfun_set_fromstring(XCFun * fun, const char * str);
+XCFun_API int xcfun_eval_setup(XCFun * fun, xc_vars vars, xc_mode mode, int order);
+XCFun_API int xcfun_user_eval_setup(XCFun * fun,
+                                    const int order,
+                                    const unsigned int func_type,
+                                    const unsigned int dens_type,
+                                    const unsigned int mode_type,
+                                    const unsigned int laplacian,
+                                    const unsigned int kinetic,
+                                    const unsigned int current,
+                                    const unsigned int explicit_derivatives);
+XCFun_API int xcfun_input_length(XCFun * fun);
+XCFun_API int xcfun_output_length(XCFun * fun);
+XCFun_API void xcfun_eval(XCFun * fun, const double density[], double result[]);
+XCFun_API void xcfun_eval_vec(XCFun * fun,
+                              int nr_points,
+                              const double * density,
+                              int density_pitch,
+                              double * result,
+                              int result_pitch);
+XCFun_API int xcfun_derivative_index(XCFun * fun, const int derivative[]);
 
 XCFun_API xc_functional xc_new_functional_not_macro(int api_version);
 XCFun_API xc_functional xc_new_functional();

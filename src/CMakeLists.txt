@@ -53,41 +53,11 @@ target_sources(xcfun
     xcint.cpp
   )
 
-add_library(xcfun-c-objlib OBJECT fortran.c)
-set_target_properties(xcfun-c-objlib
-  PROPERTIES
-    POSITION_INDEPENDENT_CODE 1
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN 1
-  )
-target_compile_options(xcfun-c-objlib
-  # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
-  # understand...
-  PRIVATE
-    "${XCFun_C_FLAGS}"
-  PRIVATE
-    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
-    "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
-    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_C_FLAGS_COVERAGE}>"
-  )
-target_compile_definitions(xcfun-c-objlib
-  PUBLIC
-    XCFun_EXPORTS
-    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFun_FORTRAN_INT=long long int>"
-  )
-target_include_directories(xcfun-c-objlib
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/api
-    ${PROJECT_BINARY_DIR}/include
-  )
-
 add_subdirectory(functionals)
 
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++" "c++")
 if(NOT STATIC_LIBRARY_ONLY)
   add_library(xcfun-shared SHARED
     $<TARGET_OBJECTS:xcfun>
-    $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-shared
     PUBLIC
@@ -128,7 +98,6 @@ endif()
 if(NOT SHARED_LIBRARY_ONLY)
   add_library(xcfun-static STATIC
     $<TARGET_OBJECTS:xcfun>
-    $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-static
     PUBLIC

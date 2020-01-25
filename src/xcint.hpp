@@ -14,13 +14,15 @@
 
 #pragma once
 
+#include <array>
 #include <cstdio>
 
+#include "XCFun/xcfun.h"
 #include "config.hpp"
 #include "ctaylor.hpp"
+#include "densvars.hpp"
 #include "functionals/list_of_functionals.hpp"
 #include "taylor.hpp"
-#include "XCFun/xcfun.h"
 
 #define XC_MAX_ALIASES 60
 #define MAX_ALIAS_TERMS 10
@@ -46,21 +48,7 @@
 #define XC_KINETIC 8
 #define XC_JP 16
 
-typedef void (*evaluator)(struct xc_functional_obj *, const double *, double *);
-
-struct functional_data;
-
-struct xc_functional_obj {
-  double settings[XC_NR_PARAMETERS_AND_FUNCTIONALS];
-  int nr_active_functionals;
-  const functional_data * active_functionals[XC_NR_FUNCTIONALS];
-  enum xc_mode mode;
-  enum xc_vars vars;
-  int order;
-  int depends; // XC_DENSITY, gradient etc
-};
-
-template <typename T> struct densvars;
+// struct functional_data;
 
 struct functional_data {
   const char * short_description;
@@ -108,11 +96,26 @@ extern parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 extern vars_data xcint_vars[XC_NR_VARS];
 extern alias_data * xcint_aliases;
 
+struct xc_functional_obj {
+  explicit xc_functional_obj() {
+    for (int i = 0; i < XC_NR_FUNCTIONALS; ++i)
+      settings[i] = 0;
+    for (int i = XC_NR_FUNCTIONALS; i < XC_NR_PARAMETERS_AND_FUNCTIONALS; ++i)
+      settings[i] = xcint_params[i].default_value;
+  }
+
+  int nr_active_functionals{0};
+  int order{-1};
+  int depends{0}; // XC_DENSITY, gradient etc
+  xc_mode mode{XC_MODE_UNSET};
+  xc_vars vars{XC_VARS_UNSET};
+  std::array<functional_data *, XC_NR_FUNCTIONALS> active_functionals{nullptr};
+  std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings;
+};
+
 void xcint_assure_setup();
 
-evaluator xcint_get_evaluator(enum xc_mode mode, enum xc_vars vars, int order);
 extern "C" void xcint_die(const char * message, int code);
-int xcint_write_fortran_module();
 
 #if 0
 static inline int taylorlen(int nvar, int ndeg)
@@ -132,8 +135,6 @@ static inline int taylorlen(int nvar, int ndeg)
 int xcint_lookup_functional(const char * name);
 int xcint_lookup_parameter(const char * name);
 int xcint_lookup_alias(const char * name);
-
-#include "densvars.hpp"
 
 // This gets filled in by the functional implementations
 template <int FUN> struct fundat_db {

@@ -24,13 +24,15 @@ program xc_example
   use xcfun, only: XC_CONTRACTED, &
                    XC_N_NX_NY_NZ, &
                    xcfun_splash, &
-                   xc_new_functional, &
-                   xc_set, &
-                   xc_eval_setup, &
-                   xc_eval, &
-                   xc_free_functional
+                   xcfun_new, &
+                   xcfun_set, &
+                   xcfun_eval_setup, &
+                   xcfun_eval, &
+                   xcfun_delete
 
   implicit none
+
+  type(c_ptr) :: fun
 
   ! we consider only one grid point
   integer, parameter :: num_grid_points = 1
@@ -42,7 +44,7 @@ program xc_example
   ! NZ: z-gradient of the density
   integer, parameter :: num_density_variables = 4
 
-  integer :: id, order, ierr, ipoint
+  integer :: order, ierr, ipoint
   integer :: vector_length
   real(8) :: res
 
@@ -56,11 +58,11 @@ program xc_example
 
   ! create a new functional
   ! we need this for interacting with the library
-  id = xc_new_functional()
+  fun = xcfun_new()
 
   ! in this example we use PBE
   print *, 'Setting up PBE'
-  ierr = xc_set(id, 'pbe', 1.0d0)
+  ierr = xcfun_set(fun, 'pbe', 1.0d0)
   call assert(ierr == 0, "functional name not recognized")
 
 
@@ -73,8 +75,8 @@ program xc_example
   ! internally contract functional derivatives with the density taylor expansion
   ! in other words: we will not have to explicitly assemble/contract partial
   ! derivatives outside of XCFun
-  ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  call assert(ierr == 0, "xc_eval_setup failed")
+  ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
+  call assert(ierr == 0, "xcfun_eval_setup failed")
 
   vector_length = 2**order
   allocate(density(vector_length, num_density_variables, num_grid_points))
@@ -87,7 +89,7 @@ program xc_example
     density(1, 4, ipoint) = 4.0d0 ! nabla_z n
   end do
 
-  res = derivative(id, &
+  res = derivative(fun, &
                    num_grid_points, &
                    num_density_variables, &
                    vector_length, &
@@ -105,8 +107,8 @@ program xc_example
   ! and contract them with the first order densities
 
   order = 1
-  ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  call assert(ierr == 0, "xc_eval_setup failed")
+  ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
+  call assert(ierr == 0, "xcfun_eval_setup failed")
 
   vector_length = 2**order
   allocate(density(vector_length, num_density_variables, num_grid_points))
@@ -123,7 +125,7 @@ program xc_example
     density(2, 4, ipoint) = 8.0d0 ! nabla_z n first order
   end do
 
-  res = derivative(id, &
+  res = derivative(fun, &
                    num_grid_points, &
                    num_density_variables, &
                    vector_length, &
@@ -156,7 +158,7 @@ program xc_example
     density(2, 4, ipoint) = 0.0d0
   end do
 
-  res = derivative(id, &
+  res = derivative(fun, &
                    num_grid_points, &
                    num_density_variables, &
                    vector_length, &
@@ -172,8 +174,8 @@ program xc_example
   ! now we try 2nd order
 
   order = 2
-  ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  call assert(ierr == 0, "xc_eval_setup failed")
+  ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
+  call assert(ierr == 0, "xcfun_eval_setup failed")
 
   vector_length = 2**order
   allocate(density(vector_length, num_density_variables, num_grid_points))
@@ -198,7 +200,7 @@ program xc_example
     density(4, 4, ipoint) = 0.0d0 ! second order
   end do
 
-  res = derivative(id, &
+  res = derivative(fun, &
                    num_grid_points, &
                    num_density_variables, &
                    vector_length, &
@@ -214,8 +216,8 @@ program xc_example
   ! now we try 3nd order, contracted with perturbed densities
 
   order = 3
-  ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
-  call assert(ierr == 0, "xc_eval_setup failed")
+  ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order)
+  call assert(ierr == 0, "xcfun_eval_setup failed")
 
   vector_length = 2**order
   allocate(density(vector_length, num_density_variables, num_grid_points))
@@ -256,7 +258,7 @@ program xc_example
     density(8, 4, ipoint) = 0.0d0   ! third order (depending on (1), (2) and (3))
   end do
 
-  res = derivative(id, &
+  res = derivative(fun, &
                    num_grid_points, &
                    num_density_variables, &
                    vector_length, &
@@ -271,20 +273,20 @@ program xc_example
   !-----------------------------------------------------------------------------
   ! we are done and can release the memory
 
-  call xc_free_functional(id)
+  call xcfun_delete(fun)
 
   print *, 'Kernel test has ended properly!'
 
 contains
 
-  real(8) function derivative(id, &
+  real(8) function derivative(fun, &
                               num_grid_points, &
                               num_density_variables, &
                               vector_length, &
                               density)
     ! computes the derivative and takes care of offsetting
 
-    integer, intent(in) :: id
+    type(c_ptr), intent(in), value :: fun
     integer, intent(in) :: num_grid_points
     integer, intent(in) :: num_density_variables
     integer, intent(in) :: vector_length
@@ -307,7 +309,7 @@ contains
                                  density(:, 4, ipoint)/)
     end do
 
-    call xc_eval(id, num_grid_points, input_array, output_array)
+    call xcfun_eval(fun, num_grid_points, input_array, output_array)
 
     ! The output_array holds a Taylor series expansion
     ! and we pick here one particular element out of this array.
