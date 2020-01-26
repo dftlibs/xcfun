@@ -19,7 +19,7 @@ if(ENABLE_CODE_COVERAGE)
     message(WARNING "Code coverage analysis results with an optimized (non-Debug) build may be misleading")
   endif()
 
-  if(NOT CMAKE_C_COMPILER_ID MATCHES GNU)
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES GNU)
     message(FATAL_ERROR "Code coverage analysis only allowed with the GNU compiler collection!")
   endif()
 
