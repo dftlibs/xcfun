@@ -433,7 +433,7 @@ int xcfun_eval_setup(XCFunctional * fun,
   if ((fun->depends & xcint_vars[vars].provides) != fun->depends) {
     return xcfun::XC_EVARS;
   }
-  if ((order < 0 || order > XC_MAX_ORDER) ||
+  if ((order < 0 || order > XCFUN_MAX_ORDER) ||
       (mode == XC_PARTIAL_DERIVATIVES && order > 4))
     return xcfun::XC_EORDER;
   if (mode == XC_POTENTIAL) {
@@ -513,7 +513,7 @@ void xcfun_eval(const XCFunctional * fun, const double input[], double output[])
                  fun->active_functionals[i]->fp0(d);
         output[0] = out.get(CNST);
       } break;
-#if XC_MAX_ORDER >= 1
+#if XCFUN_MAX_ORDER >= 1
       case 1: {
         int inlen = xcint_vars[fun->vars].len;
         {
@@ -557,8 +557,8 @@ void xcfun_eval(const XCFunctional * fun, const double input[], double output[])
         }
       } break;
 #endif
-#if XC_MAX_ORDER >= 2
-#if XC_MAX_ORDER >= 3
+#if XCFUN_MAX_ORDER >= 2
+#if XCFUN_MAX_ORDER >= 3
       // Do the third order derivatives here, then use the second order code. This is
       // getting expensive..
       case 3: {
@@ -634,7 +634,7 @@ void xcfun_eval(const XCFunctional * fun, const double input[], double output[])
     for (int i = 0; i < (1 << fun->order); i++)                                     \
       output[i] = out.get(i);                                                       \
   } else
-    FOR_EACH(XC_MAX_ORDER, DOEVAL, )
+    FOR_EACH(XCFUN_MAX_ORDER, DOEVAL, )
     xcfun::die("bug! Order too high in XC_CONTRACTED", fun->order);
   } else if (fun->mode == XC_POTENTIAL) {
     // TODO: We shouldn't need the second density derivatives internally

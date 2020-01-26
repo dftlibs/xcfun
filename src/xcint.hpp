@@ -25,7 +25,7 @@
 #define MAX_ALIAS_TERMS 10
 #define XC_MAX_INVARS 20
 
-// Macros to iterate up to XC_MAX_ORDER
+// Macros to iterate up to XCFUN_MAX_ORDER
 #define REP0(F, E) F(0, E)
 #define REP1(F, E) REP0(F, E) F(1, E)
 #define REP2(F, E) REP1(F, E) F(2, E)
@@ -50,7 +50,7 @@ struct functional_data {
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
 #define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
-  FOR_EACH(XC_MAX_ORDER, FP, )
+  FOR_EACH(XCFUN_MAX_ORDER, FP, )
   xcfun_vars test_vars;
   xcfun_mode test_mode;
   int test_order;

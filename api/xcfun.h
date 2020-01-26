@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-#ifndef XC_MAX_ORDER
-#define XC_MAX_ORDER 3
+#ifndef XCFUN_MAX_ORDER
+#define XCFUN_MAX_ORDER 3
 #endif
 
 typedef enum {
