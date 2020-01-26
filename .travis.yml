@@ -125,23 +125,9 @@ script:
   # Check that Python bindings are usable from install prefix
   - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
   # Build C example
-  - |
-    (
-      cd examples/C_host
-      cmake -H. -Bbuild -DXCFun_DIR=$HOME/Software/xcfun/share/cmake/XCFun
-      cmake --build build
-      cd build
-      ctest
-    )
+  - bash .ci/example.sh C_host
   # Build Fortran example
-  - |
-    (
-      cd examples/Fortran_host
-      cmake -H. -Bbuild -DXCFun_DIR=$HOME/Software/xcfun/share/cmake/XCFun
-      cmake --build build
-      cd build
-      ctest
-    )
+  - bash .ci/example.sh Fortran_host
 
 after_success:
   - |
