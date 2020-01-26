@@ -11,7 +11,6 @@ set(CMAKE_C_EXTENSIONS FALSE)
 if(CMAKE_C_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_C_FLAGS
     "-ffloat-store"
-    "-m64"
     )
   list(APPEND XCFun_C_FLAGS_DEBUG
     "-Wall"
@@ -37,9 +36,6 @@ if(CMAKE_C_COMPILER_ID MATCHES GNU)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
-  list(APPEND XCFun_C_FLAGS
-    "-m64"
-    )
   list(APPEND XCFun_C_FLAGS_DEBUG
     "-Wall"
     "-O0"

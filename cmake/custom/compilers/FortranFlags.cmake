@@ -7,7 +7,6 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
   list(APPEND XCFun_Fortran_FLAGS
     "-ffloat-store"
     "-fcray-pointer"
-    "-m64"
     "-fimplicit-none"
     "-fautomatic"
     "-fmax-errors=5"
