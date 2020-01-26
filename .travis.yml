@@ -124,6 +124,7 @@ script:
   - ctest --output-on-failure --verbose --parallel 2
   # Check that Python bindings are usable from install prefix
   - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
+  - cd -
   # Build C example
   - bash .ci/example.sh C_host
   # Build Fortran example
