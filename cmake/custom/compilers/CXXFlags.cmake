@@ -13,7 +13,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     "-ffloat-store"
     "-fno-rtti"
     "-fno-exceptions"
-    "-m64"
     )
   list(APPEND XCFun_CXX_FLAGS_DEBUG
     "-Wall"
@@ -44,7 +43,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
   list(APPEND XCFun_CXX_FLAGS
     "-fno-rtti"
     "-fno-exceptions"
-    "-m64"
     )
   list(APPEND XCFun_CXX_FLAGS_DEBUG
     "-Wall"
