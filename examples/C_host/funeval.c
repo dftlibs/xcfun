@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
   nvar = xcfun_input_length(fun);
   while (1) {
     if (!quiet) {
-      printf("XCFun version: %g\n", xcfun_version());
+      printf("XCFun version: %s\n", xcfun_version());
       printf("Mode is %i\n", mode);
       printf("Output length at order %i: %i\n", order, xcfun_output_length(fun));
       printf("Reading input density.. (%i values)\n", nvar);

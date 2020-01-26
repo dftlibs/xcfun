@@ -31,6 +31,8 @@ else()
   endif()
 endif()
 
+enable_testing()
+
 foreach(_src example)
   add_executable(${_src} ${_src}.f90)
   target_sources(${_src}
