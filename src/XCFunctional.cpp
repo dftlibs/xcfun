@@ -12,8 +12,8 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
-#include "XCFun/xcfun.h"
 #include "XCFunctional.hpp"
+#include "XCFun/xcfun.h"
 
 #include <array>
 #include <cstdio>
@@ -24,6 +24,14 @@
 #include "functionals/list_of_functionals.hpp"
 #include "version_info.hpp"
 #include "xcint.hpp"
+
+#ifndef AS_TYPE
+#define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
+#endif
+
+#ifndef AS_CTYPE
+#define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
+#endif
 
 namespace xcfun {
 /*! Invalid order for given mode and vars */
@@ -45,13 +53,6 @@ auto version_as_string() noexcept -> std::string {
 
 auto xcfun_get_version() noexcept -> unsigned int { return XCFun_VERSION; }
 } // namespace xcfun
-
-XCFunctional::XCFunctional() {
-  for (int i = 0; i < XC_NR_FUNCTIONALS; ++i)
-    settings[i] = 0;
-  for (int i = XC_NR_FUNCTIONALS; i < XC_NR_PARAMETERS_AND_FUNCTIONALS; ++i)
-    settings[i] = xcint_params[i].default_value;
-}
 
 const char * xcfun_version() { return xcfun::version_as_string().c_str(); }
 
@@ -348,6 +349,14 @@ const char * xcfun_describe_long(const char * name) {
     return 0;
 }
 
+XCFunctional::XCFunctional() {
+  for (int i = 0; i < XC_NR_FUNCTIONALS; ++i)
+    settings[i] = 0;
+  for (int i = XC_NR_FUNCTIONALS; i < XC_NR_PARAMETERS_AND_FUNCTIONALS; ++i)
+    settings[i] = xcint_params[i].default_value;
+}
+
+namespace xcfun {
 XCFunctional * xcfun_new() {
   xcint_assure_setup();
   return new XCFunctional();
@@ -397,16 +406,7 @@ int xcfun_set(XCFunctional * fun, const char * name, double value) {
   return -1;
 }
 
-/*! @brief get weight of given functional in the current setup
- *
- * param[in] fun the functional object
- * param[in] name functional name to test, aliases not supported
- * param[out] value weight of functional
- *
- * Returns 0 if name is a valid functional, -1 if not.
- * See list_of_functionals.hpp for valid functional names.
- */
-int xcfun_get(XCFunctional * fun, const char * name, double value[]) {
+int xcfun_get(const XCFunctional * fun, const char * name, double value[]) {
   xcint_assure_setup();
   int item;
   if ((item = xcint_lookup_functional(name)) >= 0) {
@@ -419,9 +419,9 @@ int xcfun_get(XCFunctional * fun, const char * name, double value[]) {
   return -1;
 }
 
-bool xcfun_is_gga(XCFunctional * fun) { return (fun->depends & XC_GRADIENT); }
+bool xcfun_is_gga(const XCFunctional * fun) { return (fun->depends & XC_GRADIENT); }
 
-bool xcfun_is_metagga(XCFunctional * fun) {
+bool xcfun_is_metagga(const XCFunctional * fun) {
   return (fun->depends & (XC_LAPLACIAN | XC_KINETIC));
 }
 
@@ -453,21 +453,6 @@ int xcfun_eval_setup(XCFunctional * fun,
   return 0;
 }
 
-/*! @brief host program-friendly setup of the functional
- *
- * param[in,out] fun the functional object
- * param[in] order 0 (functional), 1 (potential), 2 (hessian), ....
- * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
- * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin
- * (N_S,3) param[in] mode_type Parital derivatives (1), Potential (2), Contracted
- * (3) param[in] laplacian (0 not required / 1 required) param[in] kinentic  (0
- * not required / 1 required) param[in] current   (0 not required / 1 required)
- * param[in] explict_derivatives  (0 not required / 1 required)
- *
- * This routine encodes the different options bitwise. Each legitimate
- * combination is then converted to the corresponding enum value.
- *
- */
 int xcfun_user_eval_setup(XCFunctional * fun,
                           const int order,
                           const unsigned int func_type,
@@ -480,12 +465,14 @@ int xcfun_user_eval_setup(XCFunctional * fun,
   xcfun_vars vars = xcfun_which_vars(
       func_type, dens_type, laplacian, kinetic, current, explicit_derivatives);
   xcfun_mode mode = xcfun_which_mode(mode_type);
-  return xcfun_eval_setup(fun, vars, mode, order);
+  return xcfun::xcfun_eval_setup(fun, vars, mode, order);
 }
 
-int xcfun_input_length(XCFunctional * fun) { return xcint_vars[fun->vars].len; }
+int xcfun_input_length(const XCFunctional * fun) {
+  return xcint_vars[fun->vars].len;
+}
 
-int xcfun_output_length(XCFunctional * fun) {
+int xcfun_output_length(const XCFunctional * fun) {
   if (fun->mode == XC_MODE_UNSET)
     xcfun::die("xc_output_length() called before a mode was succesfully set", 0);
   if (fun->vars == XC_VARS_UNSET)
@@ -505,7 +492,7 @@ int xcfun_output_length(XCFunctional * fun) {
   }
 }
 
-void xcfun_eval(XCFunctional * fun, const double input[], double output[]) {
+void xcfun_eval(const XCFunctional * fun, const double input[], double output[]) {
   if (fun->mode == XC_MODE_UNSET)
     xcfun::die("xc_eval() called before a mode was successfully set", 0);
   if (fun->vars == XC_VARS_UNSET)
@@ -810,7 +797,7 @@ void xcfun_eval(XCFunctional * fun, const double input[], double output[]) {
   }
 }
 
-void xcfun_eval_vec(XCFunctional * fun,
+void xcfun_eval_vec(const XCFunctional * fun,
                     int nr_points,
                     const double density[],
                     int density_pitch,
@@ -818,4 +805,100 @@ void xcfun_eval_vec(XCFunctional * fun,
                     int result_pitch) {
   for (int i = 0; i < nr_points; i++)
     xcfun_eval(fun, density + i * density_pitch, result + i * result_pitch);
+}
+} // namespace xcfun
+
+xcfun_t * xcfun_new() { return AS_TYPE(xcfun_t, xcfun::xcfun_new()); }
+
+void xcfun_delete(xcfun_t * fun) { xcfun::xcfun_delete(AS_TYPE(XCFunctional, fun)); }
+
+int xcfun_set(xcfun_t * fun, const char * name, double value) {
+  return xcfun::xcfun_set(AS_TYPE(XCFunctional, fun), name, value);
+}
+
+/*! @brief get weight of given functional in the current setup
+ *
+ * param[in] fun the functional object
+ * param[in] name functional name to test, aliases not supported
+ * param[out] value weight of functional
+ *
+ * Returns 0 if name is a valid functional, -1 if not.
+ * See list_of_functionals.hpp for valid functional names.
+ */
+int xcfun_get(const xcfun_t * fun, const char * name, double value[]) {
+  return xcfun::xcfun_get(AS_CTYPE(XCFunctional, fun), name, value);
+}
+
+bool xcfun_is_gga(const xcfun_t * fun) {
+  return xcfun::xcfun_is_gga(AS_CTYPE(XCFunctional, fun));
+}
+
+bool xcfun_is_metagga(const xcfun_t * fun) {
+  return xcfun::xcfun_is_metagga(AS_CTYPE(XCFunctional, fun));
+}
+
+int xcfun_eval_setup(xcfun_t * fun, xcfun_vars vars, xcfun_mode mode, int order) {
+  return xcfun::xcfun_eval_setup(AS_TYPE(XCFunctional, fun), vars, mode, order);
+}
+
+/*! @brief host program-friendly setup of the functional
+ *
+ * param[in,out] fun the functional object
+ * param[in] order 0 (functional), 1 (potential), 2 (hessian), ....
+ * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
+ * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin
+ * (N_S,3) param[in] mode_type Parital derivatives (1), Potential (2), Contracted
+ * (3) param[in] laplacian (0 not required / 1 required) param[in] kinentic  (0
+ * not required / 1 required) param[in] current   (0 not required / 1 required)
+ * param[in] explict_derivatives  (0 not required / 1 required)
+ *
+ * This routine encodes the different options bitwise. Each legitimate
+ * combination is then converted to the corresponding enum value.
+ *
+ */
+
+int xcfun_user_eval_setup(xcfun_t * fun,
+                          const int order,
+                          const unsigned int func_type,
+                          const unsigned int dens_type,
+                          const unsigned int mode_type,
+                          const unsigned int laplacian,
+                          const unsigned int kinetic,
+                          const unsigned int current,
+                          const unsigned int explicit_derivatives) {
+  return xcfun::xcfun_user_eval_setup(AS_TYPE(XCFunctional, fun),
+                                      order,
+                                      func_type,
+                                      dens_type,
+                                      mode_type,
+                                      laplacian,
+                                      kinetic,
+                                      current,
+                                      explicit_derivatives);
+}
+
+int xcfun_input_length(const xcfun_t * fun) {
+  return xcfun::xcfun_input_length(AS_CTYPE(XCFunctional, fun));
+}
+
+int xcfun_output_length(const xcfun_t * fun) {
+  return xcfun::xcfun_output_length(AS_CTYPE(XCFunctional, fun));
+}
+
+void xcfun_eval(const xcfun_t * fun, const double input[], double output[]) {
+  return xcfun::xcfun_eval(AS_CTYPE(XCFunctional, fun), input, output);
+}
+
+void xcfun_eval_vec(const xcfun_t * fun,
+                    int nr_points,
+                    const double density[],
+                    int density_pitch,
+                    double result[],
+                    int result_pitch) {
+  xcfun::xcfun_eval_vec(AS_CTYPE(XCFunctional, fun),
+                        nr_points,
+                        density,
+                        density_pitch,
+                        result,
+                        result_pitch);
 }

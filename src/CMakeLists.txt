@@ -49,7 +49,7 @@ target_include_directories(xcfun
 
 target_sources(xcfun
   PRIVATE
-    xcfun.cpp
+    XCFunctional.cpp
     xcint.cpp
   )
 

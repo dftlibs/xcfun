@@ -35,7 +35,7 @@ template <typename T> static void regularize(T & x) {
 template <typename T> struct densvars {
   // Fills all density variables that can be filled from vars. Length of d
   // depends on vars.
-  densvars(XCFunctional * parent, const T * d) {
+  densvars(const XCFunctional * parent, const T * d) {
     this->parent = parent;
     switch (parent->vars) {
       case XC_A_GAA:

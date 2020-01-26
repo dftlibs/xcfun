@@ -129,26 +129,34 @@ XCFun_API const char * xcfun_describe_short(const char * name);
 
 XCFun_API const char * xcfun_describe_long(const char * name);
 
-struct XCFunctional;
+/*! \struct xcfun_s
+ *  Forward-declare opaque handle to a XCFunctional
+ */
+struct xcfun_s;
 
-XCFun_API XCFunctional * xcfun_new();
+/*! \typedef xcfun_t
+ *  Workaround to have xcfun_t available to C
+ */
+typedef xcfun_s xcfun_t;
 
-XCFun_API void xcfun_delete(XCFunctional * fun);
+XCFun_API xcfun_t * xcfun_new();
 
-XCFun_API int xcfun_set(XCFunctional * fun, const char * name, double value);
+XCFun_API void xcfun_delete(xcfun_t * fun);
 
-XCFun_API int xcfun_get(XCFunctional * fun, const char * name, double value[]);
+XCFun_API int xcfun_set(xcfun_t * fun, const char * name, double value);
 
-XCFun_API bool xcfun_is_gga(XCFunctional * fun);
+XCFun_API int xcfun_get(const xcfun_t * fun, const char * name, double value[]);
 
-XCFun_API bool xcfun_is_metagga(XCFunctional * fun);
+XCFun_API bool xcfun_is_gga(const xcfun_t * fun);
 
-XCFun_API int xcfun_eval_setup(XCFunctional * fun,
+XCFun_API bool xcfun_is_metagga(const xcfun_t * fun);
+
+XCFun_API int xcfun_eval_setup(xcfun_t * fun,
                                xcfun_vars vars,
                                xcfun_mode mode,
                                int order);
 
-XCFun_API int xcfun_user_eval_setup(XCFunctional * fun,
+XCFun_API int xcfun_user_eval_setup(xcfun_t * fun,
                                     const int order,
                                     const unsigned int func_type,
                                     const unsigned int dens_type,
@@ -158,15 +166,15 @@ XCFun_API int xcfun_user_eval_setup(XCFunctional * fun,
                                     const unsigned int current,
                                     const unsigned int explicit_derivatives);
 
-XCFun_API int xcfun_input_length(XCFunctional * fun);
+XCFun_API int xcfun_input_length(const xcfun_t * fun);
 
-XCFun_API int xcfun_output_length(XCFunctional * fun);
+XCFun_API int xcfun_output_length(const xcfun_t * fun);
 
-XCFun_API void xcfun_eval(XCFunctional * fun,
+XCFun_API void xcfun_eval(const xcfun_t * fun,
                           const double density[],
                           double result[]);
 
-XCFun_API void xcfun_eval_vec(XCFunctional * fun,
+XCFun_API void xcfun_eval_vec(const xcfun_t * fun,
                               int nr_points,
                               const double * density,
                               int density_pitch,

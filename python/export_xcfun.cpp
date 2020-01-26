@@ -16,6 +16,7 @@
 #include <pybind11/pybind11.h>
 
 #include "XCFun/xcfun.h"
+#include "XCFunctional.hpp"
 
 // Not ideal, I think
 #include "xcint.hpp"
@@ -92,29 +93,32 @@ PYBIND11_MODULE(_xcfun, m) {
       []() { return xcfun_new(); },
       "Create a new XC functional",
       py::return_value_policy::reference);
-  m.def("xcfun_delete", &xcfun_delete, "Free XC functional", "fun"_a);
+  m.def("xcfun_delete", &xcfun::xcfun_delete, "Free XC functional", "fun"_a);
   m.def("xcfun_set",
-        &xcfun_set,
+        &xcfun::xcfun_set,
         "Set a parameter in the XC functional",
         "fun"_a,
         "name"_a,
         "value"_a);
   m.def("xcfun_get",
-        &xcfun_get,
+        &xcfun::xcfun_get,
         "Get a parameter in the XC functional",
         "fun"_a,
         "name"_a,
         "value"_a);
-  m.def("xcfun_is_gga", &xcfun_is_gga, "Whether the functional is GGA", "fun"_a);
+  m.def("xcfun_is_gga",
+        &xcfun::xcfun_is_gga,
+        "Whether the functional is GGA",
+        "fun"_a);
   m.def("xcfun_is_metagga",
-        &xcfun_is_metagga,
+        &xcfun::xcfun_is_metagga,
         "Whether the functional ia metaGGA",
         "fun"_a);
 
   m.def(
       "xcfun_eval_setup",
       [](XCFunctional * fun, xcfun_vars vars, xcfun_mode mode, int order) {
-        auto err_code = xcfun_eval_setup(fun, vars, mode, order);
+        auto err_code = xcfun::xcfun_eval_setup(fun, vars, mode, order);
         if (err_code != 0)
           throw std::invalid_argument("Invalid options in xcfun_eval_setup " +
                                       std::to_string(err_code));
@@ -128,8 +132,8 @@ PYBIND11_MODULE(_xcfun, m) {
       "xcfun_eval",
       [](XCFunctional * fun,
          py::array_t<double, py::array::c_style | py::array::forcecast> density) {
-        auto dens_len = xcfun_input_length(fun);
-        auto output_len = xcfun_output_length(fun);
+        auto dens_len = xcfun::xcfun_input_length(fun);
+        auto output_len = xcfun::xcfun_output_length(fun);
 
         auto dens_ndim = density.ndim();
         if (density.shape(dens_ndim - 1) != dens_len) {
@@ -140,15 +144,15 @@ PYBIND11_MODULE(_xcfun, m) {
             {{nr_points, output_len}});
 
         if (dens_ndim == 1) {
-          xcfun_eval(fun, density.data(), output.mutable_data());
+          xcfun::xcfun_eval(fun, density.data(), output.mutable_data());
         } else if (dens_ndim == 2) {
           auto output_ndim = output.ndim();
-          xcfun_eval_vec(fun,
-                         nr_points,
-                         density.data(),
-                         density.shape(dens_ndim - 1),
-                         output.mutable_data(),
-                         output.shape(output_ndim - 1));
+          xcfun::xcfun_eval_vec(fun,
+                                nr_points,
+                                density.data(),
+                                density.shape(dens_ndim - 1),
+                                output.mutable_data(),
+                                output.shape(output_ndim - 1));
         } else {
           throw std::invalid_argument("Wrong shape of density argument");
         }

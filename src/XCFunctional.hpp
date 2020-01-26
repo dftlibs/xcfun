@@ -32,3 +32,34 @@ struct XCFunctional {
   std::array<functional_data *, XC_NR_FUNCTIONALS> active_functionals{nullptr};
   std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings;
 };
+
+namespace xcfun {
+XCFunctional * xcfun_new();
+void xcfun_delete(XCFunctional *);
+int xcfun_set(XCFunctional * fun, const char * name, double value);
+int xcfun_get(const XCFunctional * fun, const char * name, double value[]);
+bool xcfun_is_gga(const XCFunctional * fun);
+bool xcfun_is_metagga(const XCFunctional * fun);
+int xcfun_eval_setup(XCFunctional * fun,
+                     xcfun_vars vars,
+                     xcfun_mode mode,
+                     int order);
+int xcfun_user_eval_setup(XCFunctional * fun,
+                          const int order,
+                          const unsigned int func_type,
+                          const unsigned int dens_type,
+                          const unsigned int mode_type,
+                          const unsigned int laplacian,
+                          const unsigned int kinetic,
+                          const unsigned int current,
+                          const unsigned int explicit_derivatives);
+int xcfun_input_length(const XCFunctional * fun);
+int xcfun_output_length(const XCFunctional * fun);
+void xcfun_eval(const XCFunctional * fun, const double input[], double output[]);
+void xcfun_eval_vec(const XCFunctional * fun,
+                    int nr_points,
+                    const double density[],
+                    int density_pitch,
+                    double result[],
+                    int result_pitch);
+} // namespace xcfun

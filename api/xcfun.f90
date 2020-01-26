@@ -95,6 +95,25 @@ module xcfun
       logical(c_bool) :: is_compatible
     end function
 
+    function xcfun_which_vars(func_type, dens_type, laplacian, kinetic, current, explicit_derivatives) result(vars) &
+         bind(C)
+      import
+      integer(c_int), intent(in), value :: func_type
+      integer(c_int), intent(in), value :: dens_type
+      integer(c_int), intent(in), value :: laplacian
+      integer(c_int), intent(in), value :: kinetic
+      integer(c_int), intent(in), value :: current
+      integer(c_int), intent(in), value :: explicit_derivatives
+      integer(c_int) :: vars
+    end function
+
+    function xcfun_which_mode(mode_type) result(mode) &
+         bind(C)
+      import
+      integer(c_int), intent(in), value :: mode_type
+      integer(c_int) :: mode
+    end function
+
     function xcfun_enumerate_parameters_C(n) result(text) &
       bind(C, name="xcfun_enumerate_parameters")
       import
@@ -123,25 +142,6 @@ module xcfun
       type(c_ptr) :: text
     end function
 
-    function xcfun_which_vars(func_type, dens_type, laplacian, kinetic, current, explicit_derivatives) result(vars) &
-         bind(C)
-      import
-      integer(c_int), intent(in), value :: func_type
-      integer(c_int), intent(in), value :: dens_type
-      integer(c_int), intent(in), value :: laplacian
-      integer(c_int), intent(in), value :: kinetic
-      integer(c_int), intent(in), value :: current
-      integer(c_int), intent(in), value :: explicit_derivatives
-      integer(c_int) :: vars
-    end function
-
-    function xcfun_which_mode(mode_type) result(mode) &
-      bind(C)
-      import
-      integer(c_int), intent(in), value :: mode_type
-      integer(c_int) :: mode
-    end function
-
     function xcfun_new() result(fun) &
       bind(C)
       import
@@ -166,34 +166,23 @@ module xcfun
     function xcfun_get_C(fun, name, val) result(err) &
       bind(C, name="xcfun_get")
       import
-      type(c_ptr), value :: fun
+      type(c_ptr), intent(in), value :: fun
       character(kind=c_char, len=1), intent(in) :: name(*)
       real(c_double), intent(inout) :: val(*)
       integer(c_int) :: err
     end function
 
-    subroutine xcfun_eval_vec_C(fun, nr_points, density, d_pitch, res, r_pitch) &
-         bind(C, name="xcfun_eval_vec")
-      import
-      type(c_ptr), intent(in), value :: fun
-      integer(c_int), intent(in), value :: nr_points
-      real(c_double), intent(in) :: density(*)
-      integer(c_int), intent(in), value :: d_pitch
-      real(c_double), intent(inout) :: res(*)
-      integer(c_int), intent(in), value :: r_pitch
-    end subroutine
-
     function xcfun_is_gga(fun) result(is_gga) &
       bind(C)
       import
-      type(c_ptr), value :: fun
+      type(c_ptr), intent(in), value :: fun
       logical(c_bool) :: is_gga
     end function
 
     function xcfun_is_metagga(fun) result(is_metagga) &
       bind(C)
       import
-      type(c_ptr), value :: fun
+      type(c_ptr), intent(in), value :: fun
       logical(c_bool) :: is_metagga
     end function
 
@@ -210,6 +199,17 @@ module xcfun
       type(c_ptr), intent(in), value :: fun
       integer(c_int) :: length
     end function
+
+    subroutine xcfun_eval_vec_C(fun, nr_points, density, d_pitch, res, r_pitch) &
+         bind(C, name="xcfun_eval_vec")
+      import
+      type(c_ptr), intent(in), value :: fun
+      integer(c_int), intent(in), value :: nr_points
+      real(c_double), intent(in) :: density(*)
+      integer(c_int), intent(in), value :: d_pitch
+      real(c_double), intent(inout) :: res(*)
+      integer(c_int), intent(in), value :: r_pitch
+    end subroutine xcfun_eval_vec_C
   end interface
 
   interface xcfun_eval_setup
