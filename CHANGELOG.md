@@ -8,6 +8,10 @@ modernize the library. See the [migration guide](docs/migration.rst).
 ### Added
 
 - API functions `xcfun_which_vars` and `xcfun_which_mode`.
+- A full example, based on CMake as build system generator, showing how to use
+  the library from a Fortran host.
+- A full example, based on CMake as build system generator, showing how to use
+  the library from a C host.
 
 ### Changed
 
@@ -15,12 +19,15 @@ modernize the library. See the [migration guide](docs/migration.rst).
 - **BREAKING** The Fortran interface has been completely rewritten using
   `iso_c_binding`: the library can now be compiled without the use of neither a
   C nor a Fortran compiler. :confetti_ball:
+- **BREAKING** CMake option `XCFun_XC_MAX_ORDER` renamed to `XCFUN_MAX_ORDER`. New default value of 6.
+- **BREAKING** CMake option `XCFun_ENABLE_PYTHON_INTERFACE` renamed to `XCFUN_PYTHON_INTERFACE`.
 
 ### Deprecated
 
 ### Removed
 
 - **BREAKING** API functions `xc_serialize`, `xc_deserialize`, `xc_set_fromstring`, and `xc_derivative_index`.
+- **BREAKING** The CMake options `ENABLE_FC_SUPPORT` and `ENABLE_64BIT_INTEGERS`.
 
 ### Fixed
 

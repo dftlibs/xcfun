@@ -51,8 +51,8 @@ struct functional_data {
   int depends; // XC_DENSITY | XC_GRADIENT etc
 #define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
   FOR_EACH(XC_MAX_ORDER, FP, )
-  enum xcfun_vars test_vars;
-  enum xcfun_mode test_mode;
+  xcfun_vars test_vars;
+  xcfun_mode test_mode;
   int test_order;
   double test_threshold;
   double test_in[16]; // Increase dimensions if future tests require it

@@ -1,7 +1,22 @@
-#include "xcfun.h"
+/*
+ * XCFun, an arbitrary order exchange-correlation library
+ * Copyright (C) 2020 Ulf Ekström and contributors.
+ *
+ * This file is part of XCFun.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * For information on the complete list of contributors to the
+ * XCFun library, see: <https://xcfun.readthedocs.io/>
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "XCFun/xcfun.h"
 
 // Started with m = {0,0, .. 0} (nvar zeros) this function
 // will increment the exponents in the m array to give the
@@ -36,7 +51,7 @@ static void next_exponents(int nvar, int m[]) {
 }
 
 int main(int argc, char * argv[]) {
-  xc_functional fun = xc_new_functional();
+  xcfun_t * fun = xcfun_new();
   int nvar, mode = XC_A_B;
   int quiet = 0;
   int order = 1;
@@ -93,7 +108,7 @@ int main(int argc, char * argv[]) {
           return EXIT_FAILURE;
         }
         // Set it
-        xc_set(fun, argv[i], w);
+        xcfun_set(fun, argv[i], w);
         i++;
       }
     }
@@ -102,24 +117,24 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  int res = xc_eval_setup(fun, mode, XC_PARTIAL_DERIVATIVES, order);
+  int res = xcfun_eval_setup(fun, mode, XC_PARTIAL_DERIVATIVES, order);
   if (res != 0) {
     fprintf(stderr, "Error in setup, code %i. Quitting.\n", res);
     return EXIT_FAILURE;
   }
-  nvar = xc_input_length(fun);
+  nvar = xcfun_input_length(fun);
   while (1) {
     if (!quiet) {
       printf("XCFun version: %g\n", xcfun_version());
       printf("Mode is %i\n", mode);
-      printf("Output length at order %i: %i\n", order, xc_output_length(fun));
+      printf("Output length at order %i: %i\n", order, xcfun_output_length(fun));
       printf("Reading input density.. (%i values)\n", nvar);
     }
     int i, j;
-    double * inp = malloc(sizeof *inp * xc_input_length(fun));
-    int * m = malloc(sizeof *m * xc_input_length(fun));
-    double * out = malloc(sizeof *out * xc_output_length(fun));
-    for (i = 0; i < xc_input_length(fun); i++)
+    double * inp = malloc(sizeof *inp * xcfun_input_length(fun));
+    int * m = malloc(sizeof *m * xcfun_input_length(fun));
+    double * out = malloc(sizeof *out * xcfun_output_length(fun));
+    for (i = 0; i < xcfun_input_length(fun); i++)
       if (scanf("%lf", &inp[i]) != 1) {
         if (!quiet && !feof(stdin))
           fprintf(stderr, "Error reading density value, quitting.\n");
@@ -127,22 +142,28 @@ int main(int argc, char * argv[]) {
       }
     // Only one point, so pitch is unimportant
     for (i = 0; i < rep_times; i++)
-      xc_eval(fun, inp, out);
+      xcfun_eval(fun, inp, out);
     for (i = 0; i < nvar; i++)
       m[i] = 0;
     if (!quiet) {
       printf("Derivative        Value\n");
-      for (i = 0; i < xc_output_length(fun); i++) {
+      for (i = 0; i < xcfun_output_length(fun); i++) {
         for (j = 0; j < nvar; j++)
           printf("%i ", m[j]);
         printf("  %.15f\n", out[i]);
         next_exponents(nvar, m);
       }
     } else {
-      for (i = 0; i < xc_output_length(fun); i++)
+      for (i = 0; i < xcfun_output_length(fun); i++)
         printf("%.16e ", out[i]);
       printf("\n");
     }
+    free(inp);
+    free(m);
+    free(out);
   }
+
+  xcfun_delete(fun);
+
   return 0;
 }

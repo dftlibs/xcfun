@@ -31,20 +31,20 @@ extern "C" {
 #define XC_MAX_ORDER 3
 #endif
 
-enum xcfun_mode {
+typedef enum {
   XC_MODE_UNSET = 0, // Need to be zero for default initialized structs
   XC_PARTIAL_DERIVATIVES,
   XC_POTENTIAL,
   XC_CONTRACTED,
   XC_NR_MODES
-};
+} xcfun_mode;
 
 // Must be in sync with xcint_vars in xcint.cpp and with the fortran module
 /*! \enum xcfun_vars
  *  \brief functional type
  */
 // clang-format off
-enum xcfun_vars {
+typedef enum {
   XC_VARS_UNSET = -1, /*!< Not defined */
   XC_A,               /*! LDA alpha */
   XC_N,               /*! LDA rho*/
@@ -91,7 +91,7 @@ enum xcfun_vars {
   XC_N_2ND_TAYLOR,   /*! 2:nd order Taylor rho          */
   XC_N_S_2ND_TAYLOR, /*! 2:nd order Taylor rho and spin */
   XC_NR_VARS
-};
+} xcfun_vars;
 // clang-format on
 
 XCFun_API const char * xcfun_version();
@@ -137,7 +137,7 @@ struct xcfun_s;
 /*! \typedef xcfun_t
  *  Workaround to have xcfun_t available to C
  */
-typedef xcfun_s xcfun_t;
+typedef struct xcfun_s xcfun_t;
 
 XCFun_API xcfun_t * xcfun_new();
 

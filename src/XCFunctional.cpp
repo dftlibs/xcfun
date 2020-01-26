@@ -57,7 +57,7 @@ auto xcfun_get_version() noexcept -> unsigned int { return XCFun_VERSION; }
 const char * xcfun_version() { return xcfun::version_as_string().c_str(); }
 
 const char * xcfun_splash() {
-  return "XCFun DFT library Copyright 2009-2011 Ulf Ekstrom and contributors.\n"
+  return "XCFun DFT library Copyright 2009-2020 Ulf Ekstrom and contributors.\n"
          "See http://dftlibs.org/xcfun/ for more information.\n\n"
          "This is free software; see the source code for copying conditions.\n"
          "There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n"

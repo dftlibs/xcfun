@@ -109,11 +109,9 @@ before_script:
   - >
      cmake -Bbuild -H.
      -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
-     -DCMAKE_C_COMPILER=${C_COMPILER}
-     -DCMAKE_Fortran_COMPILER=${Fortran_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
-     -DXCFun_ENABLE_PYTHON_INTERFACE=ON
+     -DXCFUN_PYTHON_INTERFACE=ON
      -DPYTHON_EXECUTABLE=$(which python)
      -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
      ${PYBIND11}
@@ -126,9 +124,24 @@ script:
   - ctest --output-on-failure --verbose --parallel 2
   # Check that Python bindings are usable from install prefix
   - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
-  - cd -
-  # Build C++ example
-  - bash .ci/example.sh CXX_host
+  # Build C example
+  - |
+    (
+      cd examples/C_host
+      cmake -H. -Bbuild -DXCFun_DIR=$HOME/Software/xcfun/share/cmake/XCFun
+      cmake --build build
+      cd build
+      ctest
+    )
+  # Build Fortran example
+  - |
+    (
+      cd examples/Fortran_host
+      cmake -H. -Bbuild -DXCFun_DIR=$HOME/Software/xcfun/share/cmake/XCFun
+      cmake --build build
+      cd build
+      ctest
+    )
 
 after_success:
   - |

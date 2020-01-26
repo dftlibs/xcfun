@@ -22,7 +22,7 @@ repos:
         files: src/.*\.(h|c)pp$
         args: ['--license-filepath', '.github/license-header', '--comment-style', '/*| *| */' ]
       - id: insert-license
-        files: api/.*\.(h|c)$
+        files: \.(h|c)$
         args: ['--license-filepath', '.github/license-header', '--comment-style', '/*| *| */' ]
       - id: insert-license
         files: \.(f|F)90$
