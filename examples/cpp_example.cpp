@@ -12,6 +12,7 @@
  * XCFun library, see: <https://xcfun.readthedocs.io/>
  */
 
+#include <cmath>
 #include <iostream>
 
 #include <XCFun/xcfun.h>
@@ -82,7 +83,7 @@ int main(int, char **) {
     std::cout << "The XC energy density is " << res << std::endl;
 
     // compare with reference
-    auto diff = std::abs(-0.86494159400066051 - res);
+    auto diff = std::fabs(-0.86494159400066051 - res);
     if (diff > 1.0e-6)
       std::cout << "derivatives do not match reference numbers" << std::endl;
   }
@@ -113,7 +114,7 @@ int main(int, char **) {
     auto res = derivative(id, vector_length, density);
 
     // compare with reference
-    auto diff = std::abs(-5.1509916226154067 - res);
+    auto diff = std::fabs(-5.1509916226154067 - res);
     if (diff > 1.0e-6)
       std::cout << "derivatives do not match reference numbers" << std::endl;
   }
@@ -147,7 +148,7 @@ int main(int, char **) {
     auto res = derivative(id, vector_length, density);
 
     // compare with reference
-    auto diff = std::abs(-1.3470456737102541e-2 - res);
+    auto diff = std::fabs(-0.013470456737102541 - res);
     if (diff > 1.0e-6)
       std::cout << "derivatives do not match reference numbers" << std::endl;
   }
@@ -185,7 +186,7 @@ int main(int, char **) {
     auto res = derivative(id, vector_length, density);
 
     // compare with reference
-    auto diff = std::abs(-9.4927931153398468 - res);
+    auto diff = std::fabs(-9.4927931153398468 - res);
     if (diff > 1.0e-6)
       std::cout << "derivatives do not match reference numbers" << std::endl;
   }
@@ -239,7 +240,7 @@ int main(int, char **) {
     auto res = derivative(id, vector_length, density);
 
     // compare with reference
-    auto diff = std::abs(47.091223089835331 - res);
+    auto diff = std::fabs(47.091223089835331 - res);
     if (diff > 1.0e-6)
       std::cout << "derivatives do not match reference numbers" << std::endl;
   }
