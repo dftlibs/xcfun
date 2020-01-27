@@ -33,3 +33,6 @@ modules:
   - testing:
     - source:
       - 'custom/test.cmake'
+  - examples:
+    - source:
+      - 'custom/examples.cmake'
