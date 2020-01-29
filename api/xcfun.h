@@ -131,13 +131,15 @@ XCFun_API const char * xcfun_version();
  *  \return A `char` array with the XCFun splash screen.
  *
  *  Return a multi-line string describing the library. This functions shows the
- *  code attribution and literature citation. It **should** be called when
- *  initializing XCFun in client code, so that your users find the right
- *  citation for the library. The Fortran version is `xcfun_splash(text)`, and
- *  the message is put in the string `text`.
+ *  code attribution and literature citation.
+ *  It should be called when initializing XCFun in client code, so that your
+ *  users find the right citation for the library.
  */
 XCFun_API const char * xcfun_splash();
 
+/*! \brief The XCFun splash screen
+ *  \return A `char` array with the current list of XCFun authors.
+ */
 XCFun_API const char * xcfun_authors();
 
 /*! \brief Test XCFun
@@ -156,6 +158,60 @@ XCFun_API int xcfun_test();
  */
 XCFun_API bool xcfun_is_compatible_library();
 
+// clang-format off
+/*! \brief Obtain correct value of `xcfun_vars` `enum`.
+ *  \param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
+ *  \param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin (N_S,3)
+ *  \param[in] laplacian (0 not required / 1 required)
+ *  \param[in] kinetic  (0 not required / 1 required)
+ *  \param[in] current   (0 not required / 1 required)
+ *  \param[in] explicit_derivatives  (0 not required / 1 required)
+ *  \return XC functional variables to use
+ *
+ *  This routine encodes the different options bitwise. Each legitimate
+ *  combination is then converted to the corresponding enum value.
+ *
+ *  \rst
+ *
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |                                                |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  | 0 | 0 |   |   |   |   |   |   | LDA                                            |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  | 0 | 1 |   |   |   |   |   |   | GGA                                            |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  | 1 | 0 |   |   |   |   |   |   | metaGGA                                        |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  | 1 | 1 |   |   |   |   |   |   | Taylor                                         |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   | 0 | 0 |   |   |   |   | :math:`\rho_{\alpha}`                          |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   | 0 | 1 |   |   |   |   | :math:`\rho`                                   |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   | 1 | 0 |   |   |   |   | :math:`\rho_{\alpha}` and :math:`\rho_{\beta}` |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   | 1 | 1 |   |   |   |   | :math:`\rho` and :math:`s`                     |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   | 0 |   |   |   | no laplacian                                   |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   | 1 |   |   |   | laplacian required                             |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   | 0 |   |   | no kinetic energy density                      |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   | 1 |   |   | kinetic energy density required                |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   |   | 0 |   | no current density required                    |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   |   | 1 |   | current density required                       |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   |   |   | 0 | :math:`\gamma`-type partial derivatives        |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *  |   |   |   |   |   |   |   | 1 | explicit partial derivatives                   |
+ *  +---+---+---+---+---+---+---+---+------------------------------------------------+
+ *
+ *  \endrst
+ */
+// clang-format on
 XCFun_API xcfun_vars xcfun_which_vars(const unsigned int func_type,
                                       const unsigned int dens_type,
                                       const unsigned int laplacian,
@@ -163,6 +219,10 @@ XCFun_API xcfun_vars xcfun_which_vars(const unsigned int func_type,
                                       const unsigned int current,
                                       const unsigned int explicit_derivatives);
 
+/*! \brief Obtain correct value of `xcfun_mode` `enum`.
+ *  \param[in] mode_type Partial derivatives (1), Potential (2), Contracted (3)
+ *  \return The XC functional evaluation mode
+ */
 XCFun_API xcfun_mode xcfun_which_mode(const unsigned int mode_type);
 
 /*! \brief Describe XC functional parameters
@@ -221,11 +281,13 @@ XCFun_API void xcfun_delete(xcfun_t * fun);
  */
 XCFun_API int xcfun_set(xcfun_t * fun, const char * name, double value);
 
-/*! \brief Get a parameter in the XC functional
- *  \param[in, out] fun
- *  \param[in] name
- *  \param[in] value
- *  \return error code (0 means normal exit)
+/*! \brief Get weight of given functional in the current setup
+ *  \param[in] fun the functional object
+ *  \param[in] name functional name to test, aliases not supported
+ *  \param[out] value weight of functional
+ *
+ *  \return `0` if `name` is a valid functional, `-1` if not.
+ *  See `list_of_functionals.hpp` for valid functional names.
  */
 XCFun_API int xcfun_get(const xcfun_t * fun, const char * name, double * value);
 
@@ -253,7 +315,6 @@ XCFun_API int xcfun_eval_setup(xcfun_t * fun,
                                xcfun_mode mode,
                                int order);
 
-// clang-format off
 /*! \brief Host program-friendly set up of the XC functional evaluation variables,
  * mode, and order
  *  \param[in, out] fun XC functional object \param[in] order order of the derivative
@@ -266,51 +327,7 @@ XCFun_API int xcfun_eval_setup(xcfun_t * fun,
  *  \param[in] current   (0 not required / 1 required)
  *  \param[in] explicit_derivatives  (0 not required / 1 required)
  *  \return some combination of `XC_E*` if an error occurs, else 0
- *
- *  This routine encodes the different options bitwise. Each legitimate
- *  combination is then converted to the corresponding enum value.
- *
- *  \rst
- *
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |                                                |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  | 0 | 0 |   |   |   |   |   |   | LDA                                            |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  | 0 | 1 |   |   |   |   |   |   | GGA                                            |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  | 1 | 0 |   |   |   |   |   |   | metaGGA                                        |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  | 1 | 1 |   |   |   |   |   |   | Taylor                                         |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   | 0 | 0 |   |   |   |   | :math:`\rho_{\alpha}`                          |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   | 0 | 1 |   |   |   |   | :math:`\rho`                                   |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   | 1 | 0 |   |   |   |   | :math:`\rho_{\alpha}` and :math:`\rho_{\beta}` |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   | 1 | 1 |   |   |   |   | :math:`\rho` and :math:`s`                     |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   | 0 |   |   |   | no laplacian                                   |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   | 1 |   |   |   | laplacian required                             |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   | 0 |   |   | no kinetic energy density                      |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   | 1 |   |   | kinetic energy density required                |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   |   | 0 |   | no current density required                    |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   |   | 1 |   | current density required                       |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   |   |   | 0 | :math:`\gamma`-type partial derivatives        |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *  |   |   |   |   |   |   |   | 1 | explicit partial derivatives                   |
- *  +---+---+---+---+---+---+---+---+------------------------------------------------+
- *
- *  \endrst
  */
-// clang-format on
 XCFun_API int xcfun_user_eval_setup(xcfun_t * fun,
                                     const int order,
                                     const unsigned int func_type,

@@ -118,15 +118,8 @@ WARN_LOGFILE           =
 INPUT                  = @PROJECT_SOURCE_DIR@/src \
                          @PROJECT_SOURCE_DIR@/api/xcfun.h
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.c \
-                         *.cpp \
-                         *.h \
-                         *.hpp \
-                         *.markdown \
-                         *.md \
-                         *.dox \
-                         *.f90 \
-                         *.F90
+FILE_PATTERNS          = *.h \
+                         *.hpp
 RECURSIVE              = NO
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO

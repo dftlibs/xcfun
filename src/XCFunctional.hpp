@@ -34,6 +34,16 @@ struct XCFunctional {
 };
 
 namespace xcfun {
+/*! Invalid order for given mode and vars */
+constexpr auto XC_EORDER = 1;
+
+/*! Invalid vars for functional type (ie. lda vars for gga) */
+constexpr auto XC_EVARS = 2;
+
+/*! Invalid mode for functional type (ie. potential for mgga) */
+constexpr auto XC_EMODE = 4;
+
+/// \cond DEV
 XCFunctional * xcfun_new();
 void xcfun_delete(XCFunctional *);
 int xcfun_set(XCFunctional * fun, const char * name, double value);
@@ -62,4 +72,5 @@ void xcfun_eval_vec(const XCFunctional * fun,
                     int density_pitch,
                     double result[],
                     int result_pitch);
+/// \endcond
 } // namespace xcfun
