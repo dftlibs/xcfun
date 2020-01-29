@@ -33,7 +33,7 @@ target_compile_options(xcfun
 target_compile_definitions(xcfun
   PUBLIC
     XCFun_EXPORTS
-    XC_MAX_ORDER=${XCFun_XC_MAX_ORDER}
+    XCFUN_MAX_ORDER=${XCFUN_MAX_ORDER}
   )
 target_include_directories(xcfun
   PRIVATE
@@ -49,45 +49,15 @@ target_include_directories(xcfun
 
 target_sources(xcfun
   PRIVATE
-    xcfun.cpp
+    XCFunctional.cpp
     xcint.cpp
-  )
-
-add_library(xcfun-c-objlib OBJECT fortran.c)
-set_target_properties(xcfun-c-objlib
-  PROPERTIES
-    POSITION_INDEPENDENT_CODE 1
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN 1
-  )
-target_compile_options(xcfun-c-objlib
-  # FIXME These should be PUBLIC, but then Fortran inherits flags it doesn't
-  # understand...
-  PRIVATE
-    "${XCFun_C_FLAGS}"
-  PRIVATE
-    "$<$<CONFIG:Debug>:${XCFun_C_FLAGS_DEBUG}>"
-    "$<$<CONFIG:Release>:${XCFun_C_FLAGS_RELEASE}>"
-    "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_C_FLAGS_COVERAGE}>"
-  )
-target_compile_definitions(xcfun-c-objlib
-  PUBLIC
-    XCFun_EXPORTS
-    "$<$<BOOL:${ENABLE_64BIT_INTEGERS}>:XCFun_FORTRAN_INT=long long int>"
-  )
-target_include_directories(xcfun-c-objlib
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/api
-    ${PROJECT_BINARY_DIR}/include
   )
 
 add_subdirectory(functionals)
 
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++" "c++")
 if(NOT STATIC_LIBRARY_ONLY)
   add_library(xcfun-shared SHARED
     $<TARGET_OBJECTS:xcfun>
-    $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-shared
     PUBLIC
@@ -111,7 +81,6 @@ if(NOT STATIC_LIBRARY_ONLY)
       MACOSX_RPATH ON
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
-      LINKER_LANGUAGE C
     )
   install(
     TARGETS
@@ -128,7 +97,6 @@ endif()
 if(NOT SHARED_LIBRARY_ONLY)
   add_library(xcfun-static STATIC
     $<TARGET_OBJECTS:xcfun>
-    $<TARGET_OBJECTS:xcfun-c-objlib>
     )
   target_compile_definitions(xcfun-static
     PUBLIC
@@ -149,7 +117,6 @@ if(NOT SHARED_LIBRARY_ONLY)
     PROPERTIES
       OUTPUT_NAME "xcfun"
       EXPORT_NAME "xcfun"
-      LINKER_LANGUAGE C
     )
   install(
     TARGETS
@@ -220,6 +187,7 @@ install(
     ${CMAKE_CURRENT_SOURCE_DIR}/functional.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/specmath.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xcint.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/XCFunctional.hpp
   DESTINATION
     ${CMAKE_INSTALL_INCLUDEDIR}/XCFun
   )

@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    xcfun_install.rst
+   migration.rst
    api.rst
    functionals.rst
 

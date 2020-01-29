@@ -14,14 +14,6 @@
 
 #pragma once
 
-#ifdef XCFUN_NO_ERF
-void xcint_die(const char * message, int code);
-template <typename T> T erf(T x) {
-  xcint_die("XcFun erf called but XCFUN_NO_ERF was defined", 0);
-  return 0;
-}
-#endif
-
 // Some math-related functions useful in many places
 #include "ctaylor.hpp"
 

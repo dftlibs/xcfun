@@ -12,8 +12,7 @@ Copyright [Ulf Ekström] and [contributors] 2009-2018. See
 http://dftlibs.org/xcfun/ for more information.
 The documentation is available at https://xcfun.readthedocs.io
 
-The main interface is in `include/xcfun.h` (or `fortran/xc_fun_module.f90` for
-Fortran bindings).
+The main interface is in `api/xcfun.h` (or `api/xcfun.f90` for Fortran bindings).
 
 ## License
 
@@ -22,27 +21,14 @@ see [LICENSE.md].
 
 ## Configuration
 
-Check that `XC_MAX_ORDER` is defined to the highest order derivatives you need
+Check that `XCFUN_MAX_ORDER` is defined to the highest order derivatives you need
 (and not higher) in `src/config.h`.
-**Warning**: Using a too large value for `XC_MAX_ORDER` makes compilation slow
+**Warning**: Using a too large value for `XCFUN_MAX_ORDER** makes compilation slow
 and the generated code huge.
 
-## Building a debug/development version
+## Building the library
 
-Edit the Makefile that matches your compiler (Makefile.gcc or Makefile.intel or
-...) to set CXX (C++ compiler) and flags and run
-
-    $ make -f Makefile.gcc
-
-(or using the corresponding Makefile) This will create the library file
-`lib/libxcfun.so`
-
-## Building an optimized version
-
-Edit the Makefile that matches your compiler (Makefile.gcc or Makefile.intel or
-...) and add `-DNDEBUG` to the compiler flags.
-Add optimization compiler options. Make sure your compiler performs inlining
-(-O3 with gcc).
+**TO BE WRITTEN***
 
 [Ulf Ekström]: mailto:uekstrom@gmail.com
 [contributors]: https://github.com/dftlibs/xcfun/blob/master/AUTHORS.md

@@ -18,15 +18,14 @@
 
 #include "config.hpp"
 #include "ctaylor.hpp"
-#include "functionals/list_of_functionals.hpp"
+#include "densvars.hpp"
 #include "taylor.hpp"
-#include "XCFun/xcfun.h"
 
 #define XC_MAX_ALIASES 60
 #define MAX_ALIAS_TERMS 10
 #define XC_MAX_INVARS 20
 
-// Macros to iterate up to XC_MAX_ORDER
+// Macros to iterate up to XCFUN_MAX_ORDER
 #define REP0(F, E) F(0, E)
 #define REP1(F, E) REP0(F, E) F(1, E)
 #define REP2(F, E) REP1(F, E) F(2, E)
@@ -46,30 +45,14 @@
 #define XC_KINETIC 8
 #define XC_JP 16
 
-typedef void (*evaluator)(struct xc_functional_obj *, const double *, double *);
-
-struct functional_data;
-
-struct xc_functional_obj {
-  double settings[XC_NR_PARAMETERS_AND_FUNCTIONALS];
-  int nr_active_functionals;
-  const functional_data * active_functionals[XC_NR_FUNCTIONALS];
-  enum xc_mode mode;
-  enum xc_vars vars;
-  int order;
-  int depends; // XC_DENSITY, gradient etc
-};
-
-template <typename T> struct densvars;
-
 struct functional_data {
   const char * short_description;
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
 #define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
-  FOR_EACH(XC_MAX_ORDER, FP, )
-  enum xc_vars test_vars;
-  enum xc_mode test_mode;
+  FOR_EACH(XCFUN_MAX_ORDER, FP, )
+  xcfun_vars test_vars;
+  xcfun_mode test_mode;
   int test_order;
   double test_threshold;
   double test_in[16]; // Increase dimensions if future tests require it
@@ -110,30 +93,13 @@ extern alias_data * xcint_aliases;
 
 void xcint_assure_setup();
 
-evaluator xcint_get_evaluator(enum xc_mode mode, enum xc_vars vars, int order);
-extern "C" void xcint_die(const char * message, int code);
-int xcint_write_fortran_module();
-
-#if 0
-static inline int taylorlen(int nvar, int ndeg)
-{
-  int len = 1;
-  for (int k=1;k<=nvar;k++)
-    {
-      len *= ndeg + k;
-      len /= k;
-    }
-  return len;
-}
-#endif
+void xcfun::die(const char * message, int code);
 
 // The lookup functions return -1 if not found
 // TODO: Case insensitive string comparison should be used
 int xcint_lookup_functional(const char * name);
 int xcint_lookup_parameter(const char * name);
 int xcint_lookup_alias(const char * name);
-
-#include "densvars.hpp"
 
 // This gets filled in by the functional implementations
 template <int FUN> struct fundat_db {

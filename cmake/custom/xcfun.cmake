@@ -4,23 +4,23 @@
 #
 # Variables modified::
 #
-#   XCFun_XC_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
-#   XCFun_ENABLE_PYTHON_INTERFACE -- Whether to enable the Python interface
+#   XCFUN_MAX_ORDER -- Maximum order of derivatives of the exchange-correlation kernel
+#   XCFUN_PYTHON_INTERFACE -- Whether to enable the Python interface
 #
 # autocmake.yml configuration::
 #
 #   docopt:
-#     - "--xcmaxorder=<XCFun_XC_MAX_ORDER> An integer greater than 3 [default: 3]."
+#     - "--xcmaxorder=<XCFUN_MAX_ORDER> An integer greater than 3 [default: 6]."
 #     - "--pybindings Enable Python interface [default: OFF]."
 #   define:
-#     - "'-DXCFun_XC_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
-#     - "'-DXCFun_ENABLE_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
+#     - "'-DXCFUN_MAX_ORDER=\"{0}\"'.format(arguments['--xcmaxorder'])"
+#     - "'-DXCFUN_PYTHON_INTERFACE={0}'.format(arguments['--pybindings'])"
 
-option_with_default(XCFun_XC_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 3)
-# Make sure user selected a valuer larger than 2
-if(DEFINED XCFun_XC_MAX_ORDER AND XCFun_XC_MAX_ORDER LESS 3)
-  message(STATUS "${XCFun_XC_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 3")
-  set(XCFun_XC_MAX_ORDER 3 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
+option_with_default(XCFUN_MAX_ORDER "Maximum order of derivatives of the exchange-correlation kernel" 6)
+# Make sure user selected a valuer larger than 3
+if(DEFINED XCFUN_MAX_ORDER AND XCFUN_MAX_ORDER LESS 3)
+  message(STATUS "${XCFUN_MAX_ORDER} not a valid value for maximum order of XC kernel derivatives! Resetting to its default value 6")
+  set(XCFUN_MAX_ORDER 6 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
 endif()
 
 set(PROJECT_VERSION 2.0.0)
@@ -32,6 +32,11 @@ set(PROJECT_VERSION_PATCH 0)
 # might resolve to a place not recognized by CMake
 set(CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}")
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/api)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+
+option_with_print(XCFUN_PYTHON_INTERFACE "Enable Python interface" OFF)
+
 if(NOT DEFINED PYMOD_INSTALL_LIBDIR)
   message(STATUS "Setting (unspecified) option PYMOD_INSTALL_LIBDIR: python")
   set(PYMOD_INSTALL_LIBDIR "python" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
@@ -41,21 +46,7 @@ else()
 endif()
 file(TO_NATIVE_PATH "lib/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
 
-option_with_print(XCFun_ENABLE_PYTHON_INTERFACE "Enable Python interface" OFF)
-
-if(ENABLE_FC_SUPPORT)
-  enable_language(Fortran)
-  include(FortranCInterface)
-  FortranCInterface_VERIFY(CXX)
-  set(CMAKE_Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
-  include(${CMAKE_CURRENT_LIST_DIR}/compilers/FortranFlags.cmake)
-  include(${CMAKE_CURRENT_LIST_DIR}/int64.cmake)
-endif()
-
-add_subdirectory(${PROJECT_SOURCE_DIR}/api)
-add_subdirectory(${PROJECT_SOURCE_DIR}/src)
-
-if(XCFun_ENABLE_PYTHON_INTERFACE)
+if(XCFUN_PYTHON_INTERFACE)
   include(${PROJECT_SOURCE_DIR}/external/upstream/fetch_pybind11.cmake)
   add_subdirectory(python)
 endif()

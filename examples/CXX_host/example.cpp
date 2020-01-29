@@ -25,7 +25,6 @@
 // the gradient components as the variables. These are linear in the density
 // matrix, which helps the code using the results from xcfun.
 
-
 // we consider only one grid point
 const int num_grid_points = 1;
 
@@ -37,7 +36,7 @@ const int num_grid_points = 1;
 const int num_density_variables = 4;
 
 // forward declare function
-double derivative(xc_functional &id,
+double derivative(xcfun_t * fun,
                   int vector_length,
                   double density[][num_density_variables][num_grid_points]);
 
@@ -48,13 +47,14 @@ int main(int, char **) {
 
   // create a new functional
   // we need this for interacting with the library
-  auto id = xc_new_functional();
+  auto fun = xcfun_new();
 
   {
     // in this example we use PBE
     std::cout << "Setting up PBE" << std::endl;
-    auto ierr = xc_set(id, "pbe", 1.0);
-    if (ierr) std::cout << "functional name not recognized" << std::endl;
+    auto ierr = xcfun_set(fun, "pbe", 1.0);
+    if (ierr)
+      std::cout << "functional name not recognized" << std::endl;
   }
 
   //----------------------------------------------------------------------------
@@ -66,8 +66,9 @@ int main(int, char **) {
     // contract functional derivatives with the density taylor expansion
     // in other words: we will not have to explicitly assemble/contract partial
     // derivatives outside of XCFun
-    auto ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
-    if (ierr) std::cout << "xc_eval_setup failed" << std::endl;
+    auto ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
+    if (ierr)
+      std::cout << "xcfun_eval_setup failed" << std::endl;
 
     auto vector_length = 1 << order; // bit shift to get power of two: 2**order
     double density[vector_length][num_density_variables][num_grid_points];
@@ -80,7 +81,7 @@ int main(int, char **) {
       density[0][3][i] = 4.0; // nabla_z n
     }
 
-    auto res = derivative(id, vector_length, density);
+    auto res = derivative(fun, vector_length, density);
     std::cout << "The XC energy density is " << res << std::endl;
 
     // compare with reference
@@ -94,8 +95,9 @@ int main(int, char **) {
   // and contract them with the first order densities
   {
     const auto order = 1;
-    auto ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
-    if (ierr) std::cout << "xc_eval_setup failed" << std::endl;
+    auto ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
+    if (ierr)
+      std::cout << "xcfun_eval_setup failed" << std::endl;
 
     auto vector_length = 1 << order; // bit shift to get power of two: 2**order
     double density[vector_length][num_density_variables][num_grid_points];
@@ -112,7 +114,7 @@ int main(int, char **) {
       density[1][3][i] = 8.0; // nabla_z n first order
     }
 
-    auto res = derivative(id, vector_length, density);
+    auto res = derivative(fun, vector_length, density);
 
     // compare with reference
     auto diff = std::abs(-5.1509916226154067 - res);
@@ -128,8 +130,9 @@ int main(int, char **) {
   // densities to 0
   {
     const auto order = 1;
-    auto ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
-    if (ierr) std::cout << "xc_eval_setup failed" << std::endl;
+    auto ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
+    if (ierr)
+      std::cout << "xcfun_eval_setup failed" << std::endl;
 
     const auto vector_length = 1 << order; // bit shift to get 2**order
     double density[vector_length][num_density_variables][num_grid_points];
@@ -146,7 +149,7 @@ int main(int, char **) {
       density[1][3][i] = 0.0;
     }
 
-    auto res = derivative(id, vector_length, density);
+    auto res = derivative(fun, vector_length, density);
 
     // compare with reference
     auto diff = std::abs(-0.013470456737102541 - res);
@@ -158,8 +161,9 @@ int main(int, char **) {
   // now we try 2nd order
   {
     const auto order = 2;
-    auto ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
-    if (ierr) std::cout << "xc_eval_setup failed" << std::endl;
+    auto ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
+    if (ierr)
+      std::cout << "xcfun_eval_setup failed" << std::endl;
 
     const auto vector_length = 1 << order; // bit shift to get 2**order
     double density[vector_length][num_density_variables][num_grid_points];
@@ -184,7 +188,7 @@ int main(int, char **) {
       density[3][3][i] = 0.0; // second order
     }
 
-    auto res = derivative(id, vector_length, density);
+    auto res = derivative(fun, vector_length, density);
 
     // compare with reference
     auto diff = std::abs(-9.4927931153398468 - res);
@@ -196,49 +200,50 @@ int main(int, char **) {
   // now we try 3nd order, contracted with perturbed densities
   {
     const auto order = 3;
-    auto ierr = xc_eval_setup(id, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
-    if (ierr) std::cout << "xc_eval_setup failed" << std::endl;
+    auto ierr = xcfun_eval_setup(fun, XC_N_NX_NY_NZ, XC_CONTRACTED, order);
+    if (ierr)
+      std::cout << "xcfun_eval_setup failed" << std::endl;
 
     auto vector_length = 1 << order; // bit shift to get power of two: 2**order
     double density[vector_length][num_density_variables][num_grid_points];
 
     for (auto i = 0; i < num_grid_points; i++) {
       // we use fantasy values here
-      density[0][0][i] =  1.0; // zeroth order
-      density[0][1][i] =  2.0; // zeroth order
-      density[0][2][i] =  3.0; // zeroth order
-      density[0][3][i] =  4.0; // zeroth order
-      density[1][0][i] =  5.0; // first order (1)
-      density[1][1][i] =  6.0; // first order (1)
-      density[1][2][i] =  7.0; // first order (1)
-      density[1][3][i] =  8.0; // first order (1)
-      density[2][0][i] =  9.0; // first order (2)
+      density[0][0][i] = 1.0;  // zeroth order
+      density[0][1][i] = 2.0;  // zeroth order
+      density[0][2][i] = 3.0;  // zeroth order
+      density[0][3][i] = 4.0;  // zeroth order
+      density[1][0][i] = 5.0;  // first order (1)
+      density[1][1][i] = 6.0;  // first order (1)
+      density[1][2][i] = 7.0;  // first order (1)
+      density[1][3][i] = 8.0;  // first order (1)
+      density[2][0][i] = 9.0;  // first order (2)
       density[2][1][i] = 10.0; // first order (2)
       density[2][2][i] = 11.0; // first order (2)
       density[2][3][i] = 12.0; // first order (2)
-      density[3][0][i] =  5.0; // second order (depending on (1) and (2))
-      density[3][1][i] =  6.0; // second order (depending on (1) and (2))
-      density[3][2][i] =  7.0; // second order (depending on (1) and (2))
-      density[3][3][i] =  8.0; // second order (depending on (1) and (2))
-      density[4][0][i] =  9.0; // first order (3)
+      density[3][0][i] = 5.0;  // second order (depending on (1) and (2))
+      density[3][1][i] = 6.0;  // second order (depending on (1) and (2))
+      density[3][2][i] = 7.0;  // second order (depending on (1) and (2))
+      density[3][3][i] = 8.0;  // second order (depending on (1) and (2))
+      density[4][0][i] = 9.0;  // first order (3)
       density[4][1][i] = 10.0; // first order (3)
       density[4][2][i] = 11.0; // first order (3)
       density[4][3][i] = 12.0; // first order (3)
-      density[5][0][i] =  5.0; // second order (depending on (1) and (3))
-      density[5][1][i] =  6.0; // second order (depending on (1) and (3))
-      density[5][2][i] =  7.0; // second order (depending on (1) and (3))
-      density[5][3][i] =  8.0; // second order (depending on (1) and (3))
-      density[6][0][i] =  9.0; // second order (depending on (2) and (3))
+      density[5][0][i] = 5.0;  // second order (depending on (1) and (3))
+      density[5][1][i] = 6.0;  // second order (depending on (1) and (3))
+      density[5][2][i] = 7.0;  // second order (depending on (1) and (3))
+      density[5][3][i] = 8.0;  // second order (depending on (1) and (3))
+      density[6][0][i] = 9.0;  // second order (depending on (2) and (3))
       density[6][1][i] = 10.0; // second order (depending on (2) and (3))
       density[6][2][i] = 11.0; // second order (depending on (2) and (3))
       density[6][3][i] = 12.0; // second order (depending on (2) and (3))
-      density[7][0][i] =  0.0; // third order (depending on (1), (2) and (3))
-      density[7][1][i] =  0.0; // third order (depending on (1), (2) and (3))
-      density[7][2][i] =  0.0; // third order (depending on (1), (2) and (3))
-      density[7][3][i] =  0.0; // third order (depending on (1), (2) and (3))
+      density[7][0][i] = 0.0;  // third order (depending on (1), (2) and (3))
+      density[7][1][i] = 0.0;  // third order (depending on (1), (2) and (3))
+      density[7][2][i] = 0.0;  // third order (depending on (1), (2) and (3))
+      density[7][3][i] = 0.0;  // third order (depending on (1), (2) and (3))
     }
 
-    auto res = derivative(id, vector_length, density);
+    auto res = derivative(fun, vector_length, density);
 
     // compare with reference
     auto diff = std::abs(47.091223089835331 - res);
@@ -248,13 +253,13 @@ int main(int, char **) {
 
   //----------------------------------------------------------------------------
   // we are done and can release the memory
-  xc_free_functional(id);
+  xcfun_delete(fun);
   std::cout << "Kernel test has ended properly!" << std::endl;
   return EXIT_SUCCESS;
 }
 
 // computes the derivative and takes care of offsetting
-double derivative(xc_functional &id,
+double derivative(xcfun_t * fun,
                   int vector_length,
                   double density[][num_density_variables][num_grid_points]) {
   double inp_array[vector_length * num_density_variables];
@@ -269,11 +274,10 @@ double derivative(xc_functional &id,
         inp_array[n++] = density[k][j][i];
       }
     }
-    xc_eval(id, inp_array, out_array[i]);
+    xcfun_eval(fun, inp_array, out_array[i]);
   }
 
   // The output_array holds a Taylor series expansion
   // and we pick here one particular element out of this array.
   return out_array[0][vector_length - 1];
 }
-

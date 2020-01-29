@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-python .githooks/license_maintainer.py

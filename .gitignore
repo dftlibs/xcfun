@@ -42,3 +42,7 @@ cmake/lib/*.pyc
 *~
 /.ccls-cache/
 /.mypy_cache/
+/Pipfile.lock
+/GPATH
+/GRTAGS
+/GTAGS
