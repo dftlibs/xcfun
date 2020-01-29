@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # XCFun, an arbitrary order exchange-correlation library
 # Copyright (C) 2020 Ulf Ekström and contributors.
 #
@@ -9,8 +11,6 @@
 #
 # For information on the complete list of contributors to the
 # XCFun library, see: <https://xcfun.readthedocs.io/>
-
-# -*- coding: utf-8 -*-
 
 import numpy
 
