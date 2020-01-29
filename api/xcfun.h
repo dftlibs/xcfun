@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-#ifndef XC_MAX_ORDER
-#define XC_MAX_ORDER 3 /*!< Maximum differentiation order for XC kernels */
+#ifndef XCFUN_MAX_ORDER
+#define XCFUN_MAX_ORDER 6 /*!< Maximum differentiation order for XC kernels */
 #endif
 
 /*! \brief Evaluation mode for functional derivatives */
@@ -119,7 +119,7 @@ typedef enum {
   XC_N_2ND_TAYLOR,    /*!< 2nd order Taylor rho          */
   XC_N_S_2ND_TAYLOR,  /*!< 2nd order Taylor rho and spin */
   XC_NR_VARS          /*!< Number of variables */
-};
+} xcfun_vars;
 // clang-format on
 
 /*! \brief The version of XCFun in use

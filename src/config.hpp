@@ -18,7 +18,7 @@
 #include <cstdlib>
 
 namespace xcfun {
-// Used for regularizing input
+/*! Used for regularizing input */
 constexpr auto XCFUN_TINY_DENSITY = 1e-14;
 
 inline void die(const char * message, int code) {
