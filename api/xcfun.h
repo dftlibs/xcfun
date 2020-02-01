@@ -145,7 +145,7 @@ XCFun_API void xcfun_delete(xcfun_t * fun);
 
 XCFun_API int xcfun_set(xcfun_t * fun, const char * name, double value);
 
-XCFun_API int xcfun_get(const xcfun_t * fun, const char * name, double value[]);
+XCFun_API int xcfun_get(const xcfun_t * fun, const char * name, double * value);
 
 XCFun_API bool xcfun_is_gga(const xcfun_t * fun);
 

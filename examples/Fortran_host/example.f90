@@ -26,6 +26,7 @@ program xc_example
                    xcfun_splash, &
                    xcfun_new, &
                    xcfun_set, &
+                   xcfun_get, &
                    xcfun_eval_setup, &
                    xcfun_eval, &
                    xcfun_delete
@@ -46,7 +47,7 @@ program xc_example
 
   integer :: order, ierr, ipoint
   integer :: vector_length
-  real(8) :: res
+  real(8) :: res, weight
 
   real(8), allocatable :: density(:, :, :)
 
@@ -64,6 +65,13 @@ program xc_example
   print *, 'Setting up PBE'
   ierr = xcfun_set(fun, 'pbe', 1.0d0)
   call assert(ierr == 0, "functional name not recognized")
+  ! let's get back the weight of exchange and correlation components
+  ierr = xcfun_get(fun, 'pbex', weight)
+  call assert(ierr == 0, "functional name not recognized")
+  print *, 'PBE exchange weight is ', weight
+  ierr = xcfun_get(fun, 'pbec', weight)
+  call assert(ierr == 0, "functional name not recognized")
+  print *, 'PBE correlation weight is ', weight
 
 
   !-----------------------------------------------------------------------------

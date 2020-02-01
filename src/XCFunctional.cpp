@@ -406,7 +406,7 @@ int xcfun_set(XCFunctional * fun, const char * name, double value) {
   return -1;
 }
 
-int xcfun_get(const XCFunctional * fun, const char * name, double value[]) {
+int xcfun_get(const XCFunctional * fun, const char * name, double * value) {
   xcint_assure_setup();
   int item;
   if ((item = xcint_lookup_functional(name)) >= 0) {
@@ -820,12 +820,12 @@ int xcfun_set(xcfun_t * fun, const char * name, double value) {
  *
  * param[in] fun the functional object
  * param[in] name functional name to test, aliases not supported
- * param[out] value weight of functional
+ * param[in,out] value weight of functional
  *
  * Returns 0 if name is a valid functional, -1 if not.
  * See list_of_functionals.hpp for valid functional names.
  */
-int xcfun_get(const xcfun_t * fun, const char * name, double value[]) {
+int xcfun_get(const xcfun_t * fun, const char * name, double * value) {
   return xcfun::xcfun_get(AS_CTYPE(XCFunctional, fun), name, value);
 }
 

@@ -168,7 +168,7 @@ module xcfun
       import
       type(c_ptr), intent(in), value :: fun
       character(kind=c_char, len=1), intent(in) :: name(*)
-      real(c_double), intent(inout) :: val(*)
+      real(c_double), intent(inout) :: val
       integer(c_int) :: err
     end function
 
@@ -347,7 +347,7 @@ contains
   function xcfun_get(fun, param, val) result(err)
     type(c_ptr), value :: fun
     character(kind=c_char, len=*), intent(in) :: param
-    real(c_double), intent(inout) :: val(*)
+    real(c_double), intent(inout) :: val
     integer(c_int) :: err
 
     err = xcfun_get_C(fun, fstring_to_carray(param), val)
