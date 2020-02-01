@@ -37,7 +37,7 @@ namespace xcfun {
 XCFunctional * xcfun_new();
 void xcfun_delete(XCFunctional *);
 int xcfun_set(XCFunctional * fun, const char * name, double value);
-int xcfun_get(const XCFunctional * fun, const char * name, double value[]);
+int xcfun_get(const XCFunctional * fun, const char * name, double * value);
 bool xcfun_is_gga(const XCFunctional * fun);
 bool xcfun_is_metagga(const XCFunctional * fun);
 int xcfun_eval_setup(XCFunctional * fun,
