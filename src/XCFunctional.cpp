@@ -34,15 +34,6 @@
 #endif
 
 namespace xcfun {
-/*! Invalid order for given mode and vars */
-constexpr auto XC_EORDER = 1;
-
-/*! Invalid vars for functional type (ie. lda vars for gga) */
-constexpr auto XC_EVARS = 2;
-
-/*! Invalid mode for functional type (ie. potential for mgga) */
-constexpr auto XC_EMODE = 4;
-
 auto version_as_string() noexcept -> std::string {
   std::ostringstream stream;
   stream << std::to_string(PROJECT_VERSION_MAJOR) << "."
