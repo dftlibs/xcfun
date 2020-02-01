@@ -3,17 +3,17 @@
 Using XCFun
 ===========
 
-To use the library you should first create one ``xc_functional`` object for each
+To use the library you should first create one ``xcfun_t`` object for each
 functional and each thread you want to use. Each functional object can only be
 used by one thread at a time. After creating these objects using
-:c:func:`xc_new_functional` you should set them up by defining the variables to
+:doxygenfunction:`xcfun_new` you should set them up by defining the variables to
 differentiate with respect to, as well as the parameters of the functional you
-want to use. After having done so you can use :c:func:`xc_eval` to evaluate the
+want to use. After having done so you can use :c:func:`xcfun_eval` to evaluate the
 exchange correlation energy and its derivatives.
 
-Example C program that evaluates BLYP to order 2 using alpha/beta variables::
+Example C program that evaluates BLYP to order 2 using :math:`\alpha` and :math:`\beta` variables::
 
-  #include "xcfun.h"
+  #include "XCFun/xcfun.h"
 
   int main(int argc, char *argv[])
   {
@@ -21,11 +21,12 @@ Example C program that evaluates BLYP to order 2 using alpha/beta variables::
     int nr_points = 1;
     double density[5] = {1,2,3,5,4}; /* na nb ga.ga gb.gb ga.gb */
     double output[21]; /* We have 21 output numbers for derivatives up to order 2 */
-    xc_functional fun = xc_new_functional();
-    xc_set_mode(fun, XC_VARS_AB);
-    xc_set_param(fun, XC_LYPC, 1.0);
-    xc_set_param(fun, XC_BECKEX, 1.0);
-    xc_eval(fun, derivative_order, nr_points, density, output);
+    xcfun_t * fun = xcfun_new();
+    xcfun_set_mode(fun, XC_VARS_AB);
+    xcfun_set_param(fun, XC_LYPC, 1.0);
+    xcfun_set_param(fun, XC_BECKEX, 1.0);
+    xcfun_eval(fun, derivative_order, nr_points, density, output);
+    xcfun_delete(fun);
   }
 
 Please see the complete :ref:`api` documentation.

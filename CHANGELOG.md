@@ -14,11 +14,16 @@ modernize the library. See the [migration guide](docs/migration.rst).
 
 ### Added
 
+- Up-to-date API documentation generated with [Doxygen], [breathe], and [Sphinx].
+- Up-to-date documentation on how to build and develop XCFun.
+- Up-to-date documentation on how to use XCFun in your code.
 - API functions `xcfun_which_vars` and `xcfun_which_mode`.
 - A full example, based on CMake as build system generator, showing how to use
-  the library from a Fortran host.
+  the library from a C++ host. Thanks @stigrj!
 - A full example, based on CMake as build system generator, showing how to use
   the library from a C host.
+- A full example, based on CMake as build system generator, showing how to use
+  the library from a Fortran host.
 
 ### Changed
 
@@ -65,3 +70,6 @@ modernize the library. See the [migration guide](docs/migration.rst).
 
 [GitHub]: https://github.com/dftlibs/xcfun
 [pybind11]: https://pybind11.readthedocs.io
+[Doxygen]: http://doxygen.nl/
+[breathe]: https://breathe.readthedocs.io/en/latest/
+[Sphinx]: https://www.sphinx-doc.org/en/master/
