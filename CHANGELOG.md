@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [Version 2.0.0a4] - 2020-02-02
+
 ### Fixed
 
 - The API function `xcfun_get` accepts a single in-out `double` parameter. It
@@ -10,7 +12,7 @@
 ## [Version 2.0.0a3] - 2020-01-31
 
 We have introduced a number of breaking changes, motivated by the need to
-modernize the library. See the [migration guide](docs/migration.rst).
+modernize the library. See the [migration guide](https://xcfun.readthedocs.io/en/latest/migration.html).
 
 ### Added
 
@@ -63,8 +65,9 @@ modernize the library. See the [migration guide](docs/migration.rst).
 - **BREAKING** The Fortran interface is no longer build with the code, but
   shipped as a separate file to be compiled within your own Fortran code.
 
-[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.0a3...HEAD
-[Version 2.0.0a2]: https://github.com/dftlibs/xcfun/compare/v2.0.0a2...v2.0.0a3
+[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.0a4...HEAD
+[Version 2.0.0a4]: https://github.com/dftlibs/xcfun/compare/v2.0.0a3...v2.0.0a4
+[Version 2.0.0a3]: https://github.com/dftlibs/xcfun/compare/v2.0.0a2...v2.0.0a3
 [Version 2.0.0a2]: https://github.com/dftlibs/xcfun/compare/v2.0.0a1...v2.0.0a2
 [Version 2.0.0a1]: https://github.com/dftlibs/xcfun/releases/tag/v2.0.0a1
 

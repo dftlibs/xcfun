@@ -32,7 +32,7 @@ release = '2.0.0a2'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.mathjax', 'breathe']
+extensions = ['sphinx.ext.mathjax', 'breathe', 'recommonmark']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -110,4 +110,9 @@ def run_doxygen(folder):
 
 
 def setup(app):
+    # symlink CHANGELOG.md
+    confpy = pathlib.Path(__file__)
+    changelog = confpy.parent / "changelog.md"
+    if not changelog.exists():
+        changelog.symlink_to(confpy.parents[1] / "CHANGELOG.md")
     run_doxygen('_build')
