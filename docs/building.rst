@@ -35,6 +35,12 @@ To compile the Python bindings:
 - `pybind11 <https://pybind11.readthedocs.io>`_. This will be automatically
   downloaded if not available.
 
+To compile the documentation:
+
+- `Doxygen <http://doxygen.nl/>`_
+- `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_
+- `Breathe <https://breathe.readthedocs.io>`_
+
 .. _confbuildtest:
 
 Configuring, building, testing
@@ -89,3 +95,17 @@ The script's options mirror exactly the options you can set by directly using CM
 - ``ENABLE_TESTALL``. Whether to compile unit tests. ``ON`` by default. To
   toggle it ``OFF`` when using the ``setup`` script use
   ``--cmake-options="-DENABLE_TESTALL=OFF"``.
+
+.. _building-docs:
+
+Building the documentation
+--------------------------
+
+To build the documentation::
+
+  $ cd docs
+  $ make html
+
+or::
+
+  $ sphinx-build docs _build -t html

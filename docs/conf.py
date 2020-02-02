@@ -95,7 +95,9 @@ def run_doxygen(folder):
         "@PERL_EXECUTABLE@": str(shutil.which("perl")),
         "@DOXYGEN_DOT_PATH@": str(shutil.which("dot")),
     })
-    with pathlib.Path("Doxyfile.in").open("r") as f, pathlib.Path("_build/Doxyfile").open("w") as g:
+    doxy_in = (pathlib.Path(__file__).parent / "Doxyfile.in").resolve()
+    doxy_out = pathlib.Path("_build/Doxyfile").resolve()
+    with doxy_in.open("r") as f, doxy_out.open("w") as g:
         doxy = f.read()
         g.write(subs.xlat(doxy))
 
