@@ -1,6 +1,6 @@
 .. _functionals:
 
-Functionals implemented in XCFun
+Exchange-correlation functionals
 ================================
 
 The following functionals are implemented within XCFun
@@ -56,11 +56,11 @@ The following functionals are implemented within XCFun
 
 
 Implementing a new XC functional
-================================
+--------------------------------
 
 .. warning:: To be written
 
 Introducing new variables
-=========================
+-------------------------
 
 .. warning:: To be written
