@@ -10,7 +10,7 @@ name = "pypi"
 [dev-packages]
 
 Sphinx = "*"
-fprettify = "*"
+breathe = "*"
 numpy = "*"
 pytest = "*"
 pyyaml = "*"

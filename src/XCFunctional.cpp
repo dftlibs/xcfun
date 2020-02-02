@@ -34,15 +34,6 @@
 #endif
 
 namespace xcfun {
-/*! Invalid order for given mode and vars */
-constexpr auto XC_EORDER = 1;
-
-/*! Invalid vars for functional type (ie. lda vars for gga) */
-constexpr auto XC_EVARS = 2;
-
-/*! Invalid mode for functional type (ie. potential for mgga) */
-constexpr auto XC_EMODE = 4;
-
 auto version_as_string() noexcept -> std::string {
   std::ostringstream stream;
   stream << std::to_string(PROJECT_VERSION_MAJOR) << "."
@@ -816,15 +807,6 @@ int xcfun_set(xcfun_t * fun, const char * name, double value) {
   return xcfun::xcfun_set(AS_TYPE(XCFunctional, fun), name, value);
 }
 
-/*! @brief get weight of given functional in the current setup
- *
- * param[in] fun the functional object
- * param[in] name functional name to test, aliases not supported
- * param[in,out] value weight of functional
- *
- * Returns 0 if name is a valid functional, -1 if not.
- * See list_of_functionals.hpp for valid functional names.
- */
 int xcfun_get(const xcfun_t * fun, const char * name, double * value) {
   return xcfun::xcfun_get(AS_CTYPE(XCFunctional, fun), name, value);
 }
@@ -840,22 +822,6 @@ bool xcfun_is_metagga(const xcfun_t * fun) {
 int xcfun_eval_setup(xcfun_t * fun, xcfun_vars vars, xcfun_mode mode, int order) {
   return xcfun::xcfun_eval_setup(AS_TYPE(XCFunctional, fun), vars, mode, order);
 }
-
-/*! @brief host program-friendly setup of the functional
- *
- * param[in,out] fun the functional object
- * param[in] order 0 (functional), 1 (potential), 2 (hessian), ....
- * param[in] func_type LDA (0), GGA (1), metaGGA (2), taylor (3)
- * param[in] dens_type Alpha (A,0), Rho (N,1), Alpha&Beta (A_B,2), Rho&Spin
- * (N_S,3) param[in] mode_type Parital derivatives (1), Potential (2), Contracted
- * (3) param[in] laplacian (0 not required / 1 required) param[in] kinentic  (0
- * not required / 1 required) param[in] current   (0 not required / 1 required)
- * param[in] explict_derivatives  (0 not required / 1 required)
- *
- * This routine encodes the different options bitwise. Each legitimate
- * combination is then converted to the corresponding enum value.
- *
- */
 
 int xcfun_user_eval_setup(xcfun_t * fun,
                           const int order,

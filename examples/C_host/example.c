@@ -24,22 +24,18 @@ int main(void) {
 
   double d_elements[8] = {1, 2.1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6};
 
-  int nout, i;
-
-  double * output;
-
   xcfun_set(fun, "blyp", 0.9);
   xcfun_set(fun, "pbec", 0.1);
 
   xcfun_eval_setup(fun, XC_A_B_AX_AY_AZ_BX_BY_BZ, XC_PARTIAL_DERIVATIVES, 1);
 
-  nout = xcfun_output_length(fun);
+  int nout = xcfun_output_length(fun);
 
-  output = malloc(sizeof(*output) * nout);
+  double * output = malloc(sizeof(double) * nout);
 
   xcfun_eval(fun, d_elements, output);
 
-  for (i = 0; i < nout; i++)
+  for (int i = 0; i < nout; i++)
     printf("%.8e\n", output[i]);
 
   free(output);
