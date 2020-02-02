@@ -250,12 +250,14 @@ XCFun_API const char * xcfun_describe_short(const char * name);
 XCFun_API const char * xcfun_describe_long(const char * name);
 
 /*! \struct xcfun_s
- *  Forward-declare opaque handle to a XCFunctional
+ *  Forward-declare opaque handle to a `XCFunctional` object.
  */
 struct xcfun_s;
 
 /*! \typedef xcfun_t
- *  Workaround to have xcfun_t available to C
+ *  \brief Opaque handle to a `XCFunctional` object.
+ *  \note This type definition is a workaround to have the opaque `xcfun_t`
+ *  `struct` available to C.
  */
 typedef struct xcfun_s xcfun_t;
 

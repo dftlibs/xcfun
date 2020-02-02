@@ -68,6 +68,7 @@ else:
 html_static_path = ['_static']
 
 breathe_projects = {'XCFun': '_build/xml'}
+breathe_default_project = 'XCFun'
 
 
 class Xlator(dict):

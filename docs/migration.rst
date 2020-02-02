@@ -1,109 +1,39 @@
 .. _migration:
 
-*************
-API Migration
-*************
+*******************************************************
+Migrating to the new application programmers' interface
+*******************************************************
 
-This is a short guide to migrating to the new API and build system for XCFun.
-We assume that you have successfully built and tested XCFun and installed it to
-``<install-prefix>``.
+This is a short guide to migrating to the new application programmers' interface
+(API) and build system for XCFun. We assume that you have successfully built and
+tested XCFun and installed it to ``<install-prefix>``.
 The layout of the install tree will be as follows:
 
-.. code::
+.. code-block:: bash
 
-   .
-   ├── include
-   │   └── XCFun
-   │       ├── config.hpp
-   │       ├── densvars.hpp
-   │       ├── functional.hpp
-   │       ├── functionals
-   │       ├── specmath.hpp
-   │       ├── XCFunctional.hpp
-   │       ├── XCFunExport.h
-   │       ├── xcfun.f90
-   │       ├── xcfun.h
-   │       └── xcint.hpp
-   ├── lib
-   │   └── python
-   │       └── xcfun
-   ├── lib64
-   │   ├── libxcfun.a
-   │   ├── libxcfun.so -> libxcfun.so.2
-   │   └── libxcfun.so.2
-   └── share
-       └── cmake
-           └── XCFun
-
-To use the library:
-
-- Link your executable to it. Either using the static, ``libxcfun.a`` or shared,
-  ``libxcfun.so``, version.
-- For C/C++ hosts, include the header file ``xcfun.h`` where appropriate:
-
-.. code::
-
-   #include "XCFun/xcfun.h"
-
-- For Fortran hosts, compile the ``xcfun.f90`` source file together with your
-  sources. This will allow using the Fortran/C interoperability layer with:
-
-.. code::
-
-   use xcfun
-
-CMake as build system for your code
------------------------------------
-
-If you use CMake as your build system, you can use the CMake command in your ``CMakeLists.txt``:
-
-.. code::
-
-   find_package(XCFun CONFIG)
-
-to let CMake search for an XCFun installation. CMake will honor the hint variable:
-
-.. code::
-
-   -DXCFun_DIR=<install-prefix>/share/cmake/XCFun
-
-and set up the target ``XCFun::xcfun`` for you to link your target against.
-For Fortran hosts the ``xcfun.f90`` will have to be compiled too. The following suffices:
-
-.. code::
-
-   target_sources(<your-target-name>
-     PRIVATE
-       ${XCFun_Fortran_SOURCES}
-     )
-
-Complete working examples of using XCFun from CMake-based projects in Fortran or
-C are in the the ``examples`` folder.
-
-Other build systems
--------------------
-
-You will need to set:
-
-- The linker path:
-
-.. code::
-
-   -L<install-prefix>/lib64 -lxcfun
-
-  note that on some systems it might be ``lib`` rather than ``lib64``.
-
-- For C/C++ codes, the include path:
-
-.. code::
-
-   -I<install-prefix>/include
-
-- For Fortran codes, the location of the Fortran/C interoperability source file ``xcfun.f90``:
-
-.. code::
-
-   <install-prefix>/include/XCFun/xcfun.f90
+   <install-prefix>/
+                   ├── include
+                   │   └── XCFun
+                   │       ├── config.hpp
+                   │       ├── densvars.hpp
+                   │       ├── functional.hpp
+                   │       ├── functionals
+                   │       ├── specmath.hpp
+                   │       ├── XCFunctional.hpp
+                   │       ├── XCFunExport.h
+                   │       ├── xcfun.f90
+                   │       ├── xcfun.h
+                   │       └── xcint.hpp
+                   ├── lib
+                   │   └── python
+                   │       └── xcfun
+                   ├── lib64
+                   │   ├── libxcfun.a
+                   │   ├── libxcfun.so -> libxcfun.so.2
+                   │   └── libxcfun.so.2
+                   └── share
+                       └── cmake
+                           └── XCFun
 
 C/C++ host programs
 -------------------

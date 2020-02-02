@@ -21,6 +21,8 @@
 
 struct functional_data;
 
+/*! \brief Exchange-correlation functional
+ */
 struct XCFunctional {
   explicit XCFunctional();
 
