@@ -46,3 +46,5 @@ cmake/lib/*.pyc
 /GPATH
 /GRTAGS
 /GTAGS
+
+docs/changelog.md

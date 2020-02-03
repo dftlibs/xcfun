@@ -39,7 +39,8 @@ To compile the documentation:
 
 - `Doxygen <http://doxygen.nl/>`_
 - `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_
-- `Breathe <https://breathe.readthedocs.io>`_
+- The `Breathe <https://breathe.readthedocs.io>`_ Sphinx extension.
+- The ``recommonmark`` Sphinx extension.
 
 .. _confbuildtest:
 

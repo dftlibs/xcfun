@@ -28,6 +28,7 @@ Contents:
    migration.rst
    api.rst
    functionals.rst
+   changelog.md
 
 Indices and tables
 ==================
