@@ -1,2 +1,3 @@
 breathe
 recommonmark
+sphinx_rtd_theme
