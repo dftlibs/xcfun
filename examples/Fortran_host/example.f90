@@ -24,7 +24,11 @@ program xc_example
 
   use xcfun, only: XC_CONTRACTED, &
                    XC_N_NX_NY_NZ, &
+                   xcfun_test, &
                    xcfun_splash, &
+                   xcfun_is_compatible_library, &
+                   xcfun_which_vars, &
+                   xcfun_which_mode, &
                    xcfun_new, &
                    xcfun_set, &
                    xcfun_get, &
@@ -47,11 +51,18 @@ program xc_example
   integer, parameter :: num_density_variables = 4
 
   integer :: order, ierr, ipoint
-  integer :: vector_length
+  integer :: vector_length, foo
   real(8) :: res, weight
 
   real(8), allocatable :: density(:, :, :)
 
+  ierr = xcfun_test()
+  call assert(ierr == 0, "xcfun_test failed")
+
+  print *, 'Is library version compatible? ', xcfun_is_compatible_library()
+
+  foo = xcfun_which_vars(1, 0, 0, 0, 0, 0)
+  foo = xcfun_which_mode(3)
 
   ! print some info and copyright about the library
   ! please always include this info in your code
