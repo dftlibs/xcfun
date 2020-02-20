@@ -35,6 +35,10 @@ enable_testing()
 
 foreach(_src example)
   add_executable(${_src} ${_src}.f90)
+  target_compile_options(${_src}
+    PUBLIC
+      "-fdefault-integer-8"
+    )
   target_sources(${_src}
     PRIVATE
       ${XCFun_Fortran_SOURCES}
