@@ -6,31 +6,18 @@
 [![GitHub forks](https://img.shields.io/github/forks/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/network)
 [![GitHub stars](https://img.shields.io/github/stars/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/stargazers)
 
-# Arbitrary order Exchange-Correlation functional library
+# Arbitrary order exchange-correlation functional library
 
-Copyright [Ulf Ekström] and [contributors] 2009-2018. See
-http://dftlibs.org/xcfun/ for more information.
-The documentation is available at https://xcfun.readthedocs.io
+Copyright Ulf Ekström and [contributors](AUTHORS.md) 2009-2020.
 
-The main interface is in `api/xcfun.h` (or `api/xcfun.f90` for Fortran bindings).
 
 ## License
 
-XCFun is licensed under version 2.0 of the Mozilla Public License ([MPLv2.0]),
-see [LICENSE.md].
+XCFun is licensed under version 2.0 of the Mozilla Public License
+([MPLv2.0](https://www.mozilla.org/en-US/MPL/2.0/)), see
+[LICENSE.md](LICENSE.md).
 
-## Configuration
 
-Check that `XCFUN_MAX_ORDER` is defined to the highest order derivatives you need
-(and not higher) in `src/config.h`.
-**Warning**: Using a too large value for `XCFUN_MAX_ORDER** makes compilation slow
-and the generated code huge.
+## Documentation
 
-## Building the library
-
-**TO BE WRITTEN***
-
-[Ulf Ekström]: mailto:uekstrom@gmail.com
-[contributors]: https://github.com/dftlibs/xcfun/blob/master/AUTHORS.md
-[MPLv2.0]: https://www.mozilla.org/en-US/MPL/2.0/
-[LICENSE.md]: https://github.com/dftlibs/xcfun/blob/master/LICENSE.md
+The documentation is available at https://xcfun.readthedocs.io.
