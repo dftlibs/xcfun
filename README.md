@@ -21,3 +21,5 @@ XCFun is licensed under version 2.0 of the Mozilla Public License
 ## Documentation
 
 The documentation is available at https://xcfun.readthedocs.io.
+
+XCFun can now be installed in a [Spack](https://spack.io) environment: https://xcfun.readthedocs.io/using.html#installing-using-spack

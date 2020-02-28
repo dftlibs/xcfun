@@ -20,6 +20,18 @@ To use the library, you will need to:
 
    use xcfun
 
+
+Installing using Spack
+----------------------
+
+XCFun can be installed in a `Spack
+<https://www.spack.io/>`_ environment with::
+
+  spack env create myenv
+  spack env activate myenv
+  spack install xcfun
+
+
 .. _integration:
 
 Integration with your build system
