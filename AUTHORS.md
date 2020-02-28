@@ -2,15 +2,18 @@
 
 - Ulf Ekström (@uekstrom)
 - Radovan Bast (@bast)
-- Simen Sommerfelt Reine (@simensr)
+- Roberto Di Remigio (@robertodr)
 - Christoph Jacob (@chjacob-tubs)
+- Simen Sommerfelt Reine (@simensr)
 - Jonas Juselius (@juselius)
 - Elisa Rebolini (@erebolini)
-- Roberto Di Remigio (@robertodr)
-- André Severo Pereira Gomes
+- André Severo Pereira Gomes (@aspgomes)
+- Stig Rune Jensen (@stigrj)
 - Sarah Reimann (@sarahr)
 - Alex Borgoo  (@ajborgoo)
+- Daniel Henrik Friese (@danielhfriese)
+- Luca Frediani (@ilfreddy)
 - Miroslav Ilias (@miroi)
-- @yurivict
+- Yuri Victorovich (@yurivict)
 
-This list was obtained 2018-04-04 by running `git shortlog -sn`
+This list was obtained 2020-02-18 by running `git shortlog -sn`
