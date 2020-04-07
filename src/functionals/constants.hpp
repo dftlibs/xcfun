@@ -27,13 +27,12 @@ constexpr auto PI2 = (M_PI * M_PI);
 #endif
 
 namespace xcfun_constants {
-constexpr parameter c_slater =
-    pow(81 / (32 * M_PI), 1.0 / 3.0); // Typically called C_x
-constexpr parameter CF = 0.3 * pow(3 * PI2, 2.0 / 3.0);
+const parameter c_slater = pow(81 / (32 * M_PI), 1.0 / 3.0); // Typically called C_x
+const parameter CF = 0.3 * pow(3 * PI2, 2.0 / 3.0);
 
 // PBE constants.
-constexpr parameter param_gamma = (1 - log(2.0)) / (PI2);
+const parameter param_gamma = (1 - log(2.0)) / (PI2);
 constexpr parameter param_beta_pbe_paper = 0.066725;
 constexpr parameter param_beta_accurate = 0.06672455060314922;
-constexpr parameter param_beta_gamma = param_beta_accurate / param_gamma;
+const parameter param_beta_gamma = param_beta_accurate / param_gamma;
 } // namespace xcfun_constants
