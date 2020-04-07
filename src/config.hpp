@@ -49,3 +49,5 @@ typedef qd_real ireal_t;
 #define XCFUN_NUM_CONVERT // Must convert real types at i/o
 #define INNER_TO_OUTER(INNER) to_double(INNER)
 #endif
+
+typedef ireal_t parameter;

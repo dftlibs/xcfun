@@ -23,7 +23,7 @@ using namespace pbec_eps;
 
 template <typename num, class T>
 static num revtpssA(const num & eps, const T & u3, const num & beta_tpss) {
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   num beta_gamma = beta_tpss / param_gamma;
   return beta_gamma / expm1(-eps / (param_gamma * u3));
 }
@@ -34,7 +34,7 @@ static num revtpssH(const num & d2,
                     const T & u3,
                     const num & beta_tpss) {
   num d2A = d2 * revtpssA(eps, u3, beta_tpss);
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   num beta_gamma = beta_tpss / param_gamma;
   return param_gamma * u3 *
          log(1 + beta_gamma * d2 * (1 + d2A) / (1 + d2A * (1 + d2A)));
@@ -42,7 +42,7 @@ static num revtpssH(const num & d2,
 
 template <typename num> static num revtpss_beta(const num & dens) {
   num r_s = cbrt(3 / (4 * PI * dens));
-  using xc_constants::param_beta_pbe_paper;
+  using xcfun_constants::param_beta_pbe_paper;
   return param_beta_pbe_paper * (1 + 0.1 * r_s) / (1 + 0.1778 * r_s);
 }
 

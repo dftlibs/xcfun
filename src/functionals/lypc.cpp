@@ -20,7 +20,7 @@ template <typename num> static num lypc(const densvars<num> & d) {
   const parameter B = 0.132;
   const parameter C = 0.2533;
   const parameter Dd = 0.349;
-  using xc_constants::CF;
+  using xcfun_constants::CF;
   num icbrtn = pow(d.n, -1.0 / 3.0);
   num P = 1 / (1 + Dd * icbrtn);
   num omega = exp(-C * icbrtn) * P * pow(d.n, -11.0 / 3.0);

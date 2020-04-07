@@ -47,7 +47,7 @@ template <int FUN> void xcint_functional_setup_helper() {
         fundat_db<FUN>::symbol[2] == '_'))
     xcfun::die("Functional symbol does not start with XC_", FUN);
   fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
-  fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
+  fundat_db<FUN>::d.id = static_cast<xcfun_functional_id>(FUN);
   xcint_funs[FUN] = fundat_db<FUN>::d;
   xcint_functional_setup_helper<FUN + 1>();
 }
@@ -67,7 +67,7 @@ template <int FUN> struct retarded_helper<FUN, 1> {
           fundat_db<FUN>::symbol[2] == '_'))
       xcfun::die("Functional symbol does not start with XC_", FUN);
     fundat_db<FUN>::d.name = fundat_db<FUN>::symbol + 3;
-    fundat_db<FUN>::d.id = (enum xc_functional_id)FUN;
+    fundat_db<FUN>::d.id = static_cast<xcfun_functional_id>(FUN);
     xcint_funs[FUN] = fundat_db<FUN>::d;
   }
 };

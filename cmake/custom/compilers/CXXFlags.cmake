@@ -13,6 +13,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     "-ffloat-store"
     "-fno-rtti"
     "-fno-exceptions"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
     )
   list(APPEND XCFun_CXX_FLAGS_DEBUG
     "-Wall"
@@ -24,7 +26,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     "-Wuninitialized"
     "-Wmissing-declarations"
     "-Wwrite-strings"
-    "-Weffc++"
     "-Wno-sign-compare"
     )
   list(APPEND XCFun_CXX_FLAGS_RELEASE
@@ -43,6 +44,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
   list(APPEND XCFun_CXX_FLAGS
     "-fno-rtti"
     "-fno-exceptions"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
     )
   list(APPEND XCFun_CXX_FLAGS_DEBUG
     "-Wall"
@@ -54,7 +57,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     "-Wuninitialized"
     "-Wmissing-declarations"
     "-Wwrite-strings"
-    "-Weffc++"
     "-Wdocumentation"
     "-Wno-sign-compare"
     )

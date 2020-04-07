@@ -14,7 +14,7 @@
 
 #pragma once
 
-enum xc_functional_id {
+enum xcfun_functional_id {
   XC_SLATERX,
   XC_PW86X,
   XC_VWN3C,

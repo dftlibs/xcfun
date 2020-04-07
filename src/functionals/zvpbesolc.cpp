@@ -22,7 +22,7 @@ template <typename num> static num phi(const densvars<num> & d) {
 }
 
 template <typename num> static num energy(const densvars<num> & d) {
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   const parameter beta = 0.046;
   const parameter alpha = 1.8;
   //  const parameter omega = 4.5; // not needed if you use the fit

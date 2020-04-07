@@ -22,7 +22,7 @@ template <typename num> static num phi(const densvars<num> & d) {
 }
 
 template <typename num> static num pbeloc_eps(const densvars<num> & d) {
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   const parameter beta0 = 0.0375;
   const parameter aa = 0.08;
   num u = phi(d);
@@ -41,7 +41,7 @@ template <typename num> static num pbeloc_eps(const densvars<num> & d) {
 }
 
 template <typename num> static num pbeloc_eps_pola(const num & a, const num & gaa) {
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   const parameter beta0 = 0.0375;
   const parameter aa = 0.08;
   num u = pow(2.0, -1.0 / 3.0); // phi for fully polarized systems

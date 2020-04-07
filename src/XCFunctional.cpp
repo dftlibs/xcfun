@@ -80,9 +80,9 @@ int xcfun_test() {
                fun, fd->test_vars, fd->test_mode, fd->test_order)) == 0) {
         int n = xcfun_output_length(fun);
         auto out = new double[n];
-        if (!fd->test_in)
+        if (fd->test_in.empty())
           xcfun::die("Functional has no test input!", f);
-        xcfun_eval(fun, fd->test_in, out);
+        xcfun_eval(fun, fd->test_in.data(), out);
         int nerr = 0;
         for (auto i = 0; i < n; ++i)
           if (std::abs(out[i] - fd->test_out[i]) >

@@ -32,7 +32,7 @@ struct XCFunctional {
   xcfun_mode mode{XC_MODE_UNSET};
   xcfun_vars vars{XC_VARS_UNSET};
   std::array<functional_data *, XC_NR_FUNCTIONALS> active_functionals{{nullptr}};
-  std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings;
+  std::array<double, XC_NR_PARAMETERS_AND_FUNCTIONALS> settings{{0.0}};
 };
 
 namespace xcfun {

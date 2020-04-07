@@ -14,11 +14,12 @@
 
 #pragma once
 
+#include <cstdio>
+
 #include "pw92eps.hpp"
 #include "pw9xx.hpp"
-#include <stdio.h>
 
-// common functions for MO5 and M06 family of (hybrid) meta-gga functionals
+// common functions for M05 and M06 family of (hybrid) meta-gga functionals
 
 namespace m0xy_metagga_xc_internal {
 
@@ -61,7 +62,7 @@ const parameter scalefactorTFconst = 3.17480210393640;
 // which was used as benchmark here for energy and first derivatives.
 
 template <typename num> static num zet(const num & rho, const num & tau) {
-  using xc_constants::CF;
+  using xcfun_constants::CF;
 
   return 2 * tau / pow(rho, 5.0 / 3.0) - CF * scalefactorTFconst;
 }
@@ -140,7 +141,7 @@ template <typename num>
 static num Dsigma(const num & na, const num & gaa, const num & taua)
 //  static num Dsigma(const num &chi2, const num &zet)
 {
-  //    using xc_constants::CF;
+  //    using xcfun_constants::CF;
 
   //    return (1.0 - 0.25*chi2/(zet + CF*scalefactorTFconst));
   // Idiotic to subtract the constant (inside zet) and then add it back again
@@ -233,7 +234,7 @@ static num m05_c_anti(const parameter param_c[5],
 template <typename num>
 static num m05_c_para(const parameter param_c[5],
                       const num & chi2,
-                      const num & zet,
+                      const num & /* zet */,
                       const num & Dsigma) {
   // this is an "universal" constant for all M05/M06 functionals
   const parameter gamma_c_parallel = 0.06;

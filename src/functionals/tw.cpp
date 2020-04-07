@@ -18,8 +18,6 @@
 //  von Weizsacker kinetic energy functional
 
 template <typename num> static num tw(const densvars<num> & d) {
-  using xc_constants::CF;
-
   return 1. / 8. * pow(d.gaa + d.gbb, 2.0) / d.n;
 }
 

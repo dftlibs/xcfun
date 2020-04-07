@@ -64,7 +64,7 @@ template <typename num> static num prefactor(const num & rho) {
 
 // prefactor for the pw91k functional
 template <typename num> static num pw91k_prefactor(const num & rho) {
-  using xc_constants::CF;
+  using xcfun_constants::CF;
 
   return CF * pow(2.0, 2.0 / 3.0) * pow(rho, 5.0 / 3.0);
 }
