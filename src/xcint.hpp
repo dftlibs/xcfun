@@ -14,7 +14,9 @@
 
 #pragma once
 
+#include <array>
 #include <cstdio>
+#include <functional>
 
 #include "config.hpp"
 #include "ctaylor.hpp"
@@ -49,20 +51,18 @@ struct functional_data {
   const char * short_description;
   const char * long_description;
   int depends; // XC_DENSITY | XC_GRADIENT etc
-#define FP(N, E) ctaylor<ireal_t, N> (*fp##N)(const densvars<ctaylor<ireal_t, N>> &);
+#define FP(N, E)                                                                    \
+  std::function<ctaylor<ireal_t, N>(const densvars<ctaylor<ireal_t, N>> &)> fp##N;
   FOR_EACH(XCFUN_MAX_ORDER, FP, )
   xcfun_vars test_vars;
   xcfun_mode test_mode;
   int test_order;
   double test_threshold;
-  double test_in[16]; // Increase dimensions if future tests require it
-  double test_out[128];
-
-  enum xc_functional_id id;
+  std::array<double, 16> test_in; // Increase dimensions if future tests require it
+  std::array<double, 128> test_out;
+  xcfun_functional_id id;
   const char * name; // Set up automatically from the symbol
 };
-
-typedef ireal_t parameter;
 
 struct parameter_data {
   const char * description;

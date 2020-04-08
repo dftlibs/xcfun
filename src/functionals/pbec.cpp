@@ -18,16 +18,16 @@
 #include "vwn.hpp"
 
 template <typename num> static num A(const num & eps, const num & u3) {
-  using xc_constants::param_beta_gamma;
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_beta_gamma;
+  using xcfun_constants::param_gamma;
   return param_beta_gamma / expm1(-eps / (param_gamma * u3));
 }
 
 template <typename num>
 static num H(const num & d2, const num & eps, const num & u3) {
   num d2A = d2 * A(eps, u3);
-  using xc_constants::param_beta_gamma;
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_beta_gamma;
+  using xcfun_constants::param_gamma;
   return param_gamma * u3 *
          log(1 + param_beta_gamma * d2 * (1 + d2A) / (1 + d2A * (1 + d2A)));
 }

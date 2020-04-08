@@ -24,8 +24,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     "-Wuninitialized"
     "-Wmissing-declarations"
     "-Wwrite-strings"
-    "-Weffc++"
     "-Wno-sign-compare"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
     )
   list(APPEND XCFun_CXX_FLAGS_RELEASE
     "-O3"
@@ -54,9 +55,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     "-Wuninitialized"
     "-Wmissing-declarations"
     "-Wwrite-strings"
-    "-Weffc++"
-    "-Wdocumentation"
     "-Wno-sign-compare"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
+    "-Wno-undefined-var-template"
     )
   list(APPEND XCFun_CXX_FLAGS_RELEASE
     "-O3"
@@ -64,6 +66,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     "-funroll-loops"
     "-ftree-vectorize"
     "-Wno-unused"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
+    "-Wno-undefined-var-template"
     )
 endif()
 

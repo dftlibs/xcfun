@@ -217,21 +217,29 @@ template <typename T> struct densvars {
     b_43 = pow(b, 4.0 / 3.0);
   }
 
-  const XCFunctional * parent;
+  const XCFunctional * parent{nullptr};
   double get_param(enum xc_parameter p) const { return parent->settings[p]; }
 
-  T a, b, gaa, gab, gbb;
-  /* na+nb, na-nb, (grad n)^2, (grad n).(grad s), (grad s)^2 */
-  T n, s, gnn, gns, gss;
-
-  T tau, taua, taub; // Kinetic energy densities.
-
-  T lapa, lapb; // Density Laplacians
-
-  T zeta;       // s/n
-  T r_s;        // (3/4pi)^1/3*n^(-1/3)
-  T n_m13;      // pow(n,-1.0/3.0)
-  T a_43, b_43; // pow(a,4.0/3.0), pow(b,4.0/3.0)
-
-  T jpaa, jpbb; // square of the alpha and beta paramagnetic current vectors.
+  T a{static_cast<T>(0)};
+  T b{static_cast<T>(0)};
+  T gaa{static_cast<T>(0)};
+  T gab{static_cast<T>(0)};
+  T gbb{static_cast<T>(0)};
+  T n{static_cast<T>(0)};     /// na+nb
+  T s{static_cast<T>(0)};     /// na - nb
+  T gnn{static_cast<T>(0)};   /// (grad n) ^ 2
+  T gns{static_cast<T>(0)};   /// (grad n).(grad s)
+  T gss{static_cast<T>(0)};   /// (grad s) ^ 2
+  T tau{static_cast<T>(0)};   /// Kinetic energy density.
+  T taua{static_cast<T>(0)};  /// Alpha kinetic energy density.
+  T taub{static_cast<T>(0)};  /// Beta kinetic energy density.
+  T lapa{static_cast<T>(0)};  /// Alpha Laplacian density.
+  T lapb{static_cast<T>(0)};  /// Beta Laplacian density.
+  T zeta{static_cast<T>(0)};  /// s/n
+  T r_s{static_cast<T>(0)};   /// (3/4pi)^1/3*n^(-1/3)
+  T n_m13{static_cast<T>(0)}; /// pow(n,-1.0/3.0)
+  T a_43{static_cast<T>(0)};
+  T b_43{static_cast<T>(0)}; /// pow(a,4.0/3.0), pow(b,4.0/3.0)
+  T jpaa{static_cast<T>(0)}; /// square of the alpha paramagnetic current vector.
+  T jpbb{static_cast<T>(0)}; /// square of the beta paramagnetic current vector.
 };

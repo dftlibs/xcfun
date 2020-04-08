@@ -22,7 +22,7 @@ template <typename num> static num phi(const densvars<num> & d) {
 }
 
 template <typename num> static num energy(const densvars<num> & d) {
-  using xc_constants::param_gamma;
+  using xcfun_constants::param_gamma;
   const parameter beta = 0.052;
   num bg = beta / param_gamma;
   num eps = pw92eps::pw92eps(d);

@@ -17,5 +17,5 @@
 #include "constants.hpp"
 
 template <typename num> static num slaterx(const densvars<num> & d) {
-  return (-xc_constants::c_slater) * (d.a_43 + d.b_43);
+  return (-xcfun_constants::c_slater) * (d.a_43 + d.b_43);
 }
