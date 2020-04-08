@@ -66,6 +66,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     "-funroll-loops"
     "-ftree-vectorize"
     "-Wno-unused"
+    "-Wno-implicit-fallthrough"
+    "-Wno-missing-field-initializers"
+    "-Wno-undefined-var-template"
     )
 endif()
 
