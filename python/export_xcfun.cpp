@@ -79,20 +79,22 @@ PYBIND11_MODULE(_xcfun, m) {
       .value("XC_NR_VARS", xcfun_vars::XC_NR_VARS)
       .export_values();
 
-  m.def(
-      "xcfun_version",
-      []() { return std::string(xcfun_version()); },
-      "XCFun version");
-  m.def("xcfun_splash", &xcfun_splash, "XCFun splash screen");
+  m.def("xcfun_version",
+        &xcfun_version,
+        "XCFun version",
+        py::return_value_policy::copy);
+  m.def("xcfun_splash",
+        &xcfun_splash,
+        "XCFun splash screen",
+        py::return_value_policy::copy);
   m.def("xcfun_test", &xcfun_test, "XCFun testing");
 
   py::class_<XCFunctional>(m, "xc_functional");
 
-  m.def(
-      "xcfun_new",
-      []() { return xcfun_new(); },
-      "Create a new XC functional",
-      py::return_value_policy::reference);
+  m.def("xcfun_new",
+        &xcfun::xcfun_new,
+        "Create a new XC functional",
+        py::return_value_policy::reference);
   m.def("xcfun_delete", &xcfun::xcfun_delete, "Free XC functional", "fun"_a);
   m.def("xcfun_set",
         &xcfun::xcfun_set,
@@ -115,52 +117,51 @@ PYBIND11_MODULE(_xcfun, m) {
         "Whether the functional ia metaGGA",
         "fun"_a);
 
-  m.def(
-      "xcfun_eval_setup",
-      [](XCFunctional * fun, xcfun_vars vars, xcfun_mode mode, int order) {
-        auto err_code = xcfun::xcfun_eval_setup(fun, vars, mode, order);
-        if (err_code != 0)
-          throw std::invalid_argument("Invalid options in xcfun_eval_setup " +
-                                      std::to_string(err_code));
-      },
-      "Set up XC functional evaluation",
-      "fun"_a,
-      "vars"_a,
-      "mode"_a,
-      "order"_a);
-  m.def(
-      "xcfun_eval",
-      [](XCFunctional * fun,
-         py::array_t<double, py::array::c_style | py::array::forcecast> density) {
-        auto dens_len = xcfun::xcfun_input_length(fun);
-        auto output_len = xcfun::xcfun_output_length(fun);
+  m.def("xcfun_eval_setup",
+        [](XCFunctional * fun, xcfun_vars vars, xcfun_mode mode, int order) {
+          auto err_code = xcfun::xcfun_eval_setup(fun, vars, mode, order);
+          if (err_code != 0)
+            throw std::invalid_argument("Invalid options in xcfun_eval_setup " +
+                                        std::to_string(err_code));
+        },
+        "Set up XC functional evaluation",
+        "fun"_a,
+        "vars"_a,
+        "mode"_a,
+        "order"_a);
+  m.def("xcfun_eval",
+        [](XCFunctional * fun,
+           py::array_t<double, py::array::c_style | py::array::forcecast> density) {
+          auto dens_len = xcfun::xcfun_input_length(fun);
+          auto output_len = xcfun::xcfun_output_length(fun);
 
-        auto dens_ndim = density.ndim();
-        if (density.shape(dens_ndim - 1) != dens_len) {
-          throw std::invalid_argument("Wrong dimension of density argument");
-        }
-        auto nr_points = density.shape(0);
-        auto output = py::array_t<double, py::array::c_style | py::array::forcecast>(
-            {{nr_points, output_len}});
+          auto dens_ndim = density.ndim();
+          if (density.shape(dens_ndim - 1) != dens_len) {
+            throw std::invalid_argument("Wrong dimension of density argument");
+          }
+          auto nr_points = density.shape(0);
+          auto output =
+              py::array_t<double, py::array::c_style | py::array::forcecast>(
+                  {{nr_points, output_len}});
 
-        if (dens_ndim == 1) {
-          xcfun::xcfun_eval(fun, density.data(), output.mutable_data());
-        } else if (dens_ndim == 2) {
-          auto output_ndim = output.ndim();
-          xcfun::xcfun_eval_vec(fun,
-                                nr_points,
-                                density.data(),
-                                density.shape(dens_ndim - 1),
-                                output.mutable_data(),
-                                output.shape(output_ndim - 1));
-        } else {
-          throw std::invalid_argument("Wrong shape of density argument");
-        }
+          if (dens_ndim == 1) {
+            xcfun::xcfun_eval(fun, density.data(), output.mutable_data());
+          } else if (dens_ndim == 2) {
+            auto output_ndim = output.ndim();
+            xcfun::xcfun_eval_vec(fun,
+                                  nr_points,
+                                  density.data(),
+                                  density.shape(dens_ndim - 1),
+                                  output.mutable_data(),
+                                  output.shape(output_ndim - 1));
+          } else {
+            throw std::invalid_argument("Wrong shape of density argument");
+          }
 
-        return output;
-      },
-      "Evaluate XC functional",
-      "fun"_a,
-      "density"_a);
+          return output;
+        },
+        "Evaluate XC functional",
+        "fun"_a,
+        "density"_a);
 }
 } // namespace xcfun
