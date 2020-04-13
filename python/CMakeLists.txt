@@ -1,15 +1,17 @@
-# create Python module
-pybind11_add_module(_xcfun MODULE THIN_LTO export_xcfun.cpp)
-
-target_link_libraries(_xcfun
-  PRIVATE
-    XCFun
+pybind11_add_module(_xcfun MODULE THIN_LTO
+  export_xcfun.cpp
   )
 
 target_include_directories(_xcfun
   PRIVATE
+    ${PROJECT_BINARY_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/external/upstream/taylor
+  )
+
+target_link_libraries(_xcfun
+  PRIVATE
+    xcfun
   )
 
 file(RELATIVE_PATH _rel ${CMAKE_INSTALL_PREFIX}/${PYMOD_INSTALL_FULLDIR} ${CMAKE_INSTALL_PREFIX})

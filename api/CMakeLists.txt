@@ -4,13 +4,6 @@ configure_file(
   COPYONLY
   )
 
-install(
-  FILES
-    ${CMAKE_CURRENT_LIST_DIR}/xcfun.h
-  DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-  )
-
 if(NOT DEFINED XCFun_Fortran_SOURCES)
   list(APPEND XCFun_Fortran_SOURCES
     ${PROJECT_SOURCE_DIR}/api/xcfun.f90
@@ -24,9 +17,8 @@ configure_file(
   COPYONLY
   )
 
-install(
-  FILES
-    ${CMAKE_CURRENT_LIST_DIR}/xcfun.f90
-  DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+set_property(GLOBAL APPEND
+  PROPERTY public_headers_property
+    ${CMAKE_CURRENT_LIST_DIR}/xcfun.h
+    ${XCFun_Fortran_SOURCES}
   )
