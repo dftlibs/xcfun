@@ -51,24 +51,6 @@ matrix:
         - BUILD_TYPE='Release'
         - COVERAGE=OFF
         - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
-    # OSX Clang Builds
-    - os: osx
-      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
-      compiler: clang
-      language: shell       # 'language: python' is an error on Travis CI macOS
-      addons:
-        homebrew:
-          packages:
-            - cmake
-            - pipenv
-          update: true
-      env:
-        - CXX_COMPILER='clang++'
-        - C_COMPILER='clang'
-        - Fortran_COMPILER='gfortran'
-        - BUILD_TYPE='Release'
-        - COVERAGE=OFF
-        - PYBIND11='-Dpybind11_DIR=$HOME/Deps/pybind11/share/cmake/pybind11'
     # Linux GCC Coverage build
     - os: linux
       python: 3.6
@@ -111,8 +93,9 @@ before_script:
      -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
      -DENABLE_CODE_COVERAGE=${COVERAGE}
-     -DXCFUN_PYTHON_INTERFACE=ON
+     -DXCFUN_PYTHON_INTERFACE=$([ "$COVERAGE" == "ON" ] && echo "OFF" || echo "ON")
      -DPYTHON_EXECUTABLE=$(which python)
+     -DBUILD_SHARED_LIBS=OFF
      -DCMAKE_INSTALL_PREFIX=$HOME/Software/xcfun
      ${PYBIND11}
 
@@ -123,14 +106,17 @@ script:
   # Test
   - ctest --output-on-failure --verbose --parallel 2
   # Check that Python bindings are usable from install prefix
-  - env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
-  - cd -
-  # Build C++ example
-  - bash .ci/example.sh CXX_host
-  # Build C example
-  - bash .ci/example.sh C_host
-  # Build Fortran example
-  - bash .ci/example.sh Fortran_host
+  - |
+    if [[ "$COVERAGE" = "OFF" ]]; then
+      env PYTHONPATH=$HOME/Software/xcfun/lib/python:$PYTHONPATH python -c 'import xcfun; print(xcfun.xcfun_splash())'
+      cd -
+      # Build C++ example
+      bash .ci/example.sh CXX_host
+      # Build C example
+      bash .ci/example.sh C_host
+      # Build Fortran example
+      bash .ci/example.sh Fortran_host
+    fi
 
 after_success:
   - |
