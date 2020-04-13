@@ -2,6 +2,41 @@
 
 ## [Unreleased]
 
+### Added
+
+- The library can now be _natively_ compiled on Linux, macOS, and Windows.
+
+### Changed
+
+- **BREAKING** The build system will only produce a shared (default) or static
+  library. Compilation of the static library can be requested by setting
+  `BUILD_SHARED_LIBS` to `OFF`.
+- macOS CI testing was moved to Azure Pipelines.
+- The dependency on pybind11 was bumped to v2.5.0
+
+### Fixed
+
+- We corrected a number of wrinkles in the handling of symbol visibility in the
+  shared library.
+
+## [Version 2.0.0a7] - 2020-04-10
+
+### Fixed
+
+- Address warnings from compilers. Fix #90.
+
+## [Version 2.0.0a6] - 2020-02-23
+
+### Fixed
+
+- Compilation with GCC 5.4.0.
+
+## [Version 2.0.0a5] - 2020-02-20
+
+### Fixed
+
+- Handling of 64-bit integers in the Fortran interface.
+
 ## [Version 2.0.0a4] - 2020-02-02
 
 ### Fixed
@@ -65,7 +100,10 @@ modernize the library. See the [migration guide](https://xcfun.readthedocs.io/en
 - **BREAKING** The Fortran interface is no longer build with the code, but
   shipped as a separate file to be compiled within your own Fortran code.
 
-[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.0a4...HEAD
+[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.0a7...HEAD
+[Version 2.0.0a7]: https://github.com/dftlibs/xcfun/compare/v2.0.0a6...v2.0.0a7
+[Version 2.0.0a6]: https://github.com/dftlibs/xcfun/compare/v2.0.0a5...v2.0.0a6
+[Version 2.0.0a5]: https://github.com/dftlibs/xcfun/compare/v2.0.0a4...v2.0.0a5
 [Version 2.0.0a4]: https://github.com/dftlibs/xcfun/compare/v2.0.0a3...v2.0.0a4
 [Version 2.0.0a3]: https://github.com/dftlibs/xcfun/compare/v2.0.0a2...v2.0.0a3
 [Version 2.0.0a2]: https://github.com/dftlibs/xcfun/compare/v2.0.0a1...v2.0.0a2

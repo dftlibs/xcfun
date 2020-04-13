@@ -11,28 +11,30 @@ target_compile_options(testall
     "$<$<CONFIG:Release>:${XCFun_CXX_FLAGS_RELEASE}>"
     "$<$<BOOL:${ENABLE_CODE_COVERAGE}>:${XCFun_CXX_FLAGS_COVERAGE}>"
   )
-add_test(testall ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testall)
+add_test(
+  NAME testall
+  COMMAND $<TARGET_FILE:testall>
+  )
 
 if(XCFUN_PYTHON_INTERFACE)
   list(APPEND _pytest_files
     ${CMAKE_CURRENT_SOURCE_DIR}/test_xcfun.py
     )
-  file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests)
+  file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../tests)
   foreach(_file IN LISTS _pytest_files)
     get_filename_component(__file ${_file} NAME)
     add_custom_target(symlink_${__file} ALL
       COMMAND
         ${CMAKE_COMMAND} -E create_symlink
         ${_file}
-        ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests/${__file}
+        ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../tests/${__file}
       )
   endforeach()
 
   add_test(
     NAME python-interface
-    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/tests
-    WORKING_DIRECTORY
-      ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/..
+    COMMAND ${PYTHON_EXECUTABLE} -m pytest -x -rws -vv ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../tests
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:_xcfun>/..
     )
 
   install(

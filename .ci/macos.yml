@@ -1,0 +1,67 @@
+steps:
+  - script: |
+      brew install ninja
+      brew reinstall gcc
+    displayName: "Brew install dependencies"
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: "Using Python version: $(python.version)"
+
+  - script: |
+      python -m pip install --upgrade pip pytest numpy
+    displayName: 'Pip install Python dependencies'
+
+  - task: CMake@1
+    inputs:
+      workingDirectory: 'build'
+      cmakeArgs: '-GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON ..'
+
+  # Build
+  - script: |
+      cmake --build build --target install -- -v -d stats
+    displayName: "Build XCFun"
+
+  # Test (ctest)
+  - script: |
+      ctest --output-on-failure --verbose
+    displayName: "Test XCFun with CTest"
+
+  # Test Python module can be imported
+  - script: |
+      env PYTHONPATH=./Software/xcfun/lib/python:$PYTHONPATH python -c "import xcfun; print(xcfun.xcfun_splash())"
+    displayName: "Test XCFun Python module"
+
+  # Test we can build the C++ example
+  - task: CMake@1
+    inputs:
+      workingDirectory: 'build_CXX_host'
+      cmakeArgs: '-GNinja -DXCFun_DIR=../../Software/xcfun/share/cmake/XCFun ../examples/CXX_host'
+
+  - script: |
+      cmake --build build_CXX_host -- -v -d stats
+      cmake --build build_CXX_host --target test
+    displayName: "Build and test C++ host example"
+
+  # Test we can build the C example
+  - task: CMake@1
+    inputs:
+      workingDirectory: 'build_C_host'
+      cmakeArgs: '-GNinja -DXCFun_DIR=../../Software/xcfun/share/cmake/XCFun ../examples/C_host'
+
+  - script: |
+      cmake --build build_C_host -- -v -d stats
+      cmake --build build_C_host --target test
+    displayName: "Build and test C host example"
+
+  # Test we can build the Fortran example
+  - task: CMake@1
+    inputs:
+      workingDirectory: 'build_Fortran_host'
+      cmakeArgs: '-GNinja -DXCFun_DIR=../../Software/xcfun/share/cmake/XCFun ../examples/Fortran_host'
+
+  - script: |
+      cmake --build build_Fortran_host -- -v -d stats
+      cmake --build build_Fortran_host --target test
+    displayName: "Build and test Fortran host example"
