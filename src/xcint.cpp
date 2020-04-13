@@ -18,6 +18,13 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _MSC_VER
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#else
+#include <strings.h>
+#endif
+
 functional_data xcint_funs[XC_NR_FUNCTIONALS];
 parameter_data xcint_params[XC_NR_PARAMETERS_AND_FUNCTIONALS];
 

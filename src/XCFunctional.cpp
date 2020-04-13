@@ -45,7 +45,10 @@ auto version_as_string() noexcept -> std::string {
 auto xcfun_get_version() noexcept -> unsigned int { return XCFun_VERSION; }
 } // namespace xcfun
 
-const char * xcfun_version() { return xcfun::version_as_string().c_str(); }
+const char * xcfun_version() {
+  static auto retval = xcfun::version_as_string();
+  return retval.c_str();
+}
 
 const char * xcfun_splash() {
   return "XCFun DFT library Copyright 2009-2020 Ulf Ekstrom and contributors.\n"
@@ -298,46 +301,50 @@ xcfun_mode xcfun_which_mode(const unsigned int mode_type) {
 
 const char * xcfun_enumerate_parameters(int param) {
   xcint_assure_setup();
-  if (param >= 0 && param < XC_NR_FUNCTIONALS)
+  if (param >= 0 && param < XC_NR_FUNCTIONALS) {
     return xcint_funs[param].name;
-  else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS)
+  } else if (param < XC_NR_PARAMETERS_AND_FUNCTIONALS) {
     return xcint_params[param].name;
-  else
+  } else {
     return 0;
+  }
 }
 
 // Like xcfun_enumerate_parameters, but over aliases
 const char * xcfun_enumerate_aliases(int n) {
-  if (n >= 0 and n < XC_MAX_ALIASES)
+  if (n >= 0 && n < XC_MAX_ALIASES) {
     return xcint_aliases[n].name;
-  else
+  } else {
     return 0;
+  }
 }
 
 const char * xcfun_describe_short(const char * name) {
   xcint_assure_setup();
   int k;
-  if ((k = xcint_lookup_functional(name)) >= 0)
+  if ((k = xcint_lookup_functional(name)) >= 0) {
     return xcint_funs[k].short_description;
-  else if ((k = xcint_lookup_parameter(name)) >= 0)
+  } else if ((k = xcint_lookup_parameter(name)) >= 0) {
     return xcint_params[k].description;
-  else if ((k = xcint_lookup_alias(name)) >= 0)
+  } else if ((k = xcint_lookup_alias(name)) >= 0) {
     return xcint_aliases[k].description;
-  else
+  } else {
     return 0;
+  }
 }
 
 const char * xcfun_describe_long(const char * name) {
   xcint_assure_setup();
   int k;
-  if ((k = xcint_lookup_functional(name)) >= 0)
+  if ((k = xcint_lookup_functional(name)) >= 0) {
     return xcint_funs[k].long_description;
-  else if ((k = xcint_lookup_parameter(name)) >= 0)
+  } else if ((k = xcint_lookup_parameter(name)) >= 0) {
     return xcint_params[k].description;
-  else if ((k = xcint_lookup_alias(name)) >= 0)
+  } else if ((k = xcint_lookup_alias(name)) >= 0) {
     return xcint_aliases[k].description;
-  else
+  } else {
     return 0;
+  }
 }
 
 XCFunctional::XCFunctional() {
