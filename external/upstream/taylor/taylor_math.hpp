@@ -1,6 +1,8 @@
 // By Ulf Ekstrom March-June 2009.
 // Elementary functions. For inclusion in taylor.h only!
 
+#pragma once
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
