@@ -91,8 +91,8 @@ The script's options mirror exactly the options you can set by directly using CM
 - ``--xcmaxorder`` / ``XCFUN_MAX_ORDER``. Maximum derivative order, defaults to 6.
 - ``--pybindings`` / ``XCFUN_PYTHON_INTERFACE``. Enable compilation of Python
   bindings, defaults to ``OFF``.
-- ``--static`` / ``STATIC_LIBRARY_ONLY``. Compile only the static library,
-  defaults to ``OFF`` and both the shared and the static libraries are built.
+- ``--static`` / ``BUILD_SHARED_LIBS``. Compile only the static library,
+  defaults to ``OFF``, building the shared library only.
 - ``ENABLE_TESTALL``. Whether to compile unit tests. ``ON`` by default. To
   toggle it ``OFF`` when using the ``setup`` script use
   ``--cmake-options="-DENABLE_TESTALL=OFF"``.
