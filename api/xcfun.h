@@ -19,7 +19,7 @@
 
 #include "XCFun/XCFunExport.h"
 
-#define XCFun_API XCFun_EXPORT
+#define XCFun_API XCFUN_EXPORT
 
 #define XCFUN_API_VERSION 2 /*!< Version of the XCFun API */
 
