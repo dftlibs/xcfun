@@ -1,5 +1,4 @@
-#ifndef TAYLOR_H
-#define TAYLOR_H
+#pragma once
 
 #include "polymul.hpp"
 #include <cmath>
@@ -350,6 +349,4 @@ void print_taylor(FILE * dst, const taylor<num, Nvar, Ndeg> & t) {
     fprintf(dst, ", %.10e", t[i]);
   fprintf(dst, "}");
 }
-#endif
-
 #endif

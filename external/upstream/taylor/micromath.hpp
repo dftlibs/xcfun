@@ -1,3 +1,5 @@
+#pragma once
+
 /*
   Math functions for the truly unbelivably bad Visual C++,
   which does not define many common math functions but instead

@@ -23,8 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef POLYMUL_H
-#define POLYMUL_H
+#pragma once
 
 #include <cassert>
 
@@ -1454,4 +1453,3 @@ static inline void taylorcompose(polynomial<numtype, Nvar, Ndeg> & dst,
 }
 
 } // End namespace polymul
-#endif

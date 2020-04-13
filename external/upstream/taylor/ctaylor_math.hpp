@@ -1,3 +1,5 @@
+#pragma once
+
 // For inclusion in ctaylor.h only!
 #include "tmath.hpp"
 
