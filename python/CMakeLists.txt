@@ -37,11 +37,12 @@ set_target_properties(_xcfun
   )
 
 foreach(_f __init__.py xcfun.py)
-  add_custom_target(symlink_${_f} ALL
-    COMMAND
-      ${CMAKE_COMMAND} -E create_symlink
+  file(
+    CREATE_LINK
       ${CMAKE_CURRENT_SOURCE_DIR}/${_f}
       ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/${_f}
+    COPY_ON_ERROR
+    SYMBOLIC
     )
 endforeach()
 
