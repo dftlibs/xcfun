@@ -69,6 +69,10 @@ matrix:
         - BUILD_TYPE='Debug'
         - COVERAGE=ON
 
+env:
+  global:
+    - CMAKE_VERSION="3.11.4"
+
 before_install:
   - test -n $CC && unset CC
   - test -n $CXX && unset CXX
@@ -83,6 +87,7 @@ install:
   - pipenv --three install --dev
   - source $(pipenv --venv)/bin/activate
   - ./.ci/cmake.sh
+  - export PATH=$HOME/Deps/cmake/$CMAKE_VERSION/bin${PATH:+:$PATH}
   - ./.ci/pybind11.sh
 
 before_script:

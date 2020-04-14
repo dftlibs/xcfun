@@ -48,6 +48,7 @@ else()
   set(PYMOD_INSTALL_LIBDIR "${PYMOD_INSTALL_LIBDIR}" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
 endif()
 file(TO_NATIVE_PATH "lib/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR})
 
 if(XCFUN_PYTHON_INTERFACE)
   include(${PROJECT_SOURCE_DIR}/external/upstream/fetch_pybind11.cmake)

@@ -22,9 +22,10 @@ target_compile_options(xcfun
 target_compile_definitions(xcfun
   PRIVATE
     XCFUN_MAX_ORDER=${XCFUN_MAX_ORDER}
-    $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>
   INTERFACE
     $<INSTALL_INTERFACE:USING_XCFun>
+  PUBLIC
+    $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>
   )
 
 target_include_directories(xcfun
