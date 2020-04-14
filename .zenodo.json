@@ -1,0 +1,69 @@
+{
+  "creators": [
+    {
+      "name": "Ekstr\u00f6m, Ulf"
+    }
+  ],
+  "contributors": [
+    {
+      "type": "Other",
+      "name": "Bast, Radovan"
+    },
+    {
+      "type": "Other",
+      "name": "Di Remigio, Roberto"
+    },
+    {
+      "type": "Other",
+      "name": "Jacob, Christoph"
+    },
+    {
+      "type": "Other",
+      "name": "Reine, Simen"
+    },
+    {
+      "type": "Other",
+      "name": "Jus\u00e9lius, Jonas"
+    },
+    {
+      "type": "Other",
+      "name": "Rebolini, Elisa"
+    },
+    {
+      "type": "Other",
+      "name": "Gomes, Andre Severo Pereira"
+    },
+    {
+      "type": "Other",
+      "name": "Jensen, Stig Rune"
+    },
+    {
+      "type": "Other",
+      "name": "Reimann, Sarah"
+    },
+    {
+      "type": "Other",
+      "name": "Borgoo, Alex"
+    },
+    {
+      "type": "Other",
+      "name": "Friese, Daniel H."
+    },
+    {
+      "type": "Other",
+      "name": "Frediani, Luca"
+    },
+    {
+      "type": "Other",
+      "name": "Ilia\u0161, Miroslav"
+    },
+    {
+      "type": "Other",
+      "name": "Victorovich, Yuri"
+    }
+  ],
+  "license": {
+    "id": "MPL-2.0"
+  },
+  "title": "XCFun: A library of exchange-correlation functionals with arbitrary-order derivatives"
+}
