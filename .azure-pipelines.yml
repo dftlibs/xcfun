@@ -14,18 +14,3 @@ jobs:
     maxParallel: 2
   steps:
   - template: ./.ci/macos.yml
-
-- job: 'Windows_64'
-  pool:
-    vmImage: 'windows-latest'
-  strategy:
-    matrix:
-      Python38:
-        python.version: '3.8'
-      Python37:
-        python.version: '3.7'
-      Python36:
-        python.version: '3.6'
-    maxParallel: 2
-  steps:
-  - template: ./.ci/windows.yml

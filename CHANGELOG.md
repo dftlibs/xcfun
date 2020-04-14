@@ -2,10 +2,6 @@
 
 ## [Unreleased]
 
-### Added
-
-- The library can now be _natively_ compiled on Linux, macOS, and Windows.
-
 ### Changed
 
 - **BREAKING** The build system will only produce a shared (default) or static
