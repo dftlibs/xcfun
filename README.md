@@ -7,7 +7,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/network)
 [![GitHub stars](https://img.shields.io/github/stars/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/stargazers)
 
-# Arbitrary order exchange-correlation functional library
+# XCFun: A library of exchange-correlation functionals with arbitrary-order derivatives
 
 Copyright Ulf Ekström and [contributors](.zenodo.json) 2009-2020.
 
