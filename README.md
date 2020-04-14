@@ -9,7 +9,7 @@
 
 # Arbitrary order exchange-correlation functional library
 
-Copyright Ulf Ekström and [contributors](AUTHORS.md) 2009-2020.
+Copyright Ulf Ekström and [contributors](.zenodo.json) 2009-2020.
 
 
 ## License
