@@ -16,14 +16,13 @@ else()
   FetchContent_Declare(xcfun_sources
     QUIET
     URL
-      https://github.com/dftlibs/xcfun/archive/v2.0.0a2.tar.gz
+      https://github.com/dftlibs/xcfun/archive/v2.0.0.tar.gz
     )
 
   FetchContent_GetProperties(xcfun_sources)
 
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/external)
   set(ENABLE_TESTALL FALSE CACHE BOOL "")
-  set(XCFUN_PYTHON_INTERFACE FALSE)
+  set(XCFUN_PYTHON_INTERFACE FALSE CACHE BOOL "")
 
   if(NOT xcfun_sources_POPULATED)
     FetchContent_Populate(xcfun_sources)
