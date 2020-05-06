@@ -1,5 +1,13 @@
 # Change Log
 
+## [Version 2.0.1] - 2020-05-06
+
+### Fixed
+
+- We removed the `DEBUG_POSTFIX` property from the properties on the `xcfun`
+  target. This was leading to build failures when using the library through
+  CMake `FetchContent` with mixed release/debug mode.
+
 ## [Version 2.0.0] - 2020-04-14
 
 ### Changed
@@ -96,7 +104,8 @@ modernize the library. See the [migration guide](https://xcfun.readthedocs.io/en
 - **BREAKING** The Fortran interface is no longer build with the code, but
   shipped as a separate file to be compiled within your own Fortran code.
 
-[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.0.1...HEAD
+[Version 2.0.1]: https://github.com/dftlibs/xcfun/compare/v2.0.0...v2.0.1
 [Version 2.0.0]: https://github.com/dftlibs/xcfun/compare/v2.0.0a7...v2.0.0
 [Version 2.0.0a7]: https://github.com/dftlibs/xcfun/compare/v2.0.0a6...v2.0.0a7
 [Version 2.0.0a6]: https://github.com/dftlibs/xcfun/compare/v2.0.0a5...v2.0.0a6
