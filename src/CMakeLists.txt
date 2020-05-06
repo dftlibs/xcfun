@@ -73,7 +73,6 @@ set_target_properties(xcfun
     SOVERSION ${PROJECT_VERSION_MAJOR}
     MACOSX_RPATH ON
     OUTPUT_NAME "xcfun"
-    DEBUG_POSTFIX "_d"
     PUBLIC_HEADER "${public_headers}"
   )
 
