@@ -1,5 +1,13 @@
 # Change Log
 
+## [Version 2.0.2] - unreleased
+
+### Fixed
+
+- VWN3 functional has been fixed for the spin-polarized case. It previously gave wrong results
+  when alpha and beta densities differed. Thanks to Zhenyu Zhu for reporting the problem
+  and also suggesting the solution.
+
 ## [Version 2.0.1] - 2020-05-06
 
 ### Fixed
