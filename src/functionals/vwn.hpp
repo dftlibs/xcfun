@@ -84,7 +84,6 @@ template <typename num> static num vwn3_eps(const densvars<num> & d) {
   num s = sqrt(d.r_s);
   // Constant is (2^1/3-1)^-1/2
   num g = 1.92366105093154 * (ufunc(d.zeta, 4.0 / 3.0) - 2);
-  num zeta4 = pow(d.zeta, 4);
   // FIXME: 1 - zeta^4 has a cancellation free form (ask maxima)
   num dd = g * (vwn_f(s, ferro) - vwn_f(s, para));
   return (vwn_f(s, para) + dd);
