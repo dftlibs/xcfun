@@ -16,7 +16,7 @@ else()
   FetchContent_Declare(xcfun_sources
     QUIET
     URL
-      https://github.com/dftlibs/xcfun/archive/v2.0.0.tar.gz
+      https://github.com/dftlibs/xcfun/archive/v2.0.1.tar.gz
     )
 
   FetchContent_GetProperties(xcfun_sources)
