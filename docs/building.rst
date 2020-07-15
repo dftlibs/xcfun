@@ -114,4 +114,5 @@ or::
 Bumping versions
 ----------------
 
-To bump a version you should edit the ``cmake/custom/xcfun.cmake`` and ``src/version_info.hpp`` files.
+To bump a version you should edit the ``cmake/custom/xcfun.cmake``,
+``src/version_info.hpp``, and ``docs/conf.py`` files.
