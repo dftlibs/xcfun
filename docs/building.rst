@@ -110,3 +110,8 @@ To build the documentation::
 or::
 
   $ sphinx-build docs _build -t html
+
+Bumping versions
+----------------
+
+To bump a version you should edit the ``cmake/custom/xcfun.cmake`` and ``src/version_info.hpp`` files.
