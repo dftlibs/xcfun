@@ -25,7 +25,7 @@ copyright = '2020, Ulf Ekström and contributors'
 author = 'Ulf Ekström and contributors'
 
 # The full version, including alpha/beta/rc tags
-release = '2.0.0a2'
+release = '2.0.2'
 
 # -- General configuration ---------------------------------------------------
 
