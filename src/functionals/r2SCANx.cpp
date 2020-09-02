@@ -19,7 +19,7 @@ FUNCTIONAL(XC_R2SCANX) = {
   "r2SCAN exchange functional",
   "r2SCAN exchange functional.\n"
   "Restored-Regularised SCAN functional\n"
-  "J Furness, in preparation"
+  "J Furness, in preparation (arXiv:2008.03374)"
   "Implemented by James Furness\n",
   XC_DENSITY | XC_GRADIENT | XC_KINETIC,
   ENERGY_FUNCTION(r2SCANX)

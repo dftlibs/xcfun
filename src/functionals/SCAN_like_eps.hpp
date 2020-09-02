@@ -6,7 +6,10 @@
  *
  *  Implemented by James Furness, 
  *
- *  Manuscript In Preparation
+ *  Manuscript accepted for publication at JCPL
+ *  
+ *  pre-print: arXiv:2008.03374
+ *
 */
 
 namespace SCAN_eps
