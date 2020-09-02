@@ -130,6 +130,11 @@ static struct alias_data aliases_array[XC_MAX_ALIASES] = {
     {"tw",
      "von Weizsacker correction to be put in effective potential.",
      {{"tw", 1.0}}},
+    {"scan", "Strongly Constrained and Appropriately Normed", {{"scanx", 1.0}, {"scanc", 1.0}}},
+    {"rscan", "regularised Strongly Constrained and Appropriately Normed", {{"rscanx", 1.0}, {"rscanc", 1.0}}},
+    {"rppscan", "regularised-improved Strongly Constrained and Appropriately Normed", {{"rppscanx", 1.0}, {"rppscanc", 1.0}}},
+    {"r2scan", "regularised-restored Strongly Constrained and Appropriately Normed", {{"r2scanx", 1.0}, {"r2scanc", 1.0}}},
+    {"r4scan", "4th order regularised-restored Strongly Constrained and Appropriately Normed", {{"r4scanx", 1.0}, {"r4scanc", 1.0}}}
 };
 
 struct alias_data * xcint_aliases = aliases_array;
