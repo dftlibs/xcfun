@@ -1,8 +1,8 @@
 steps:
-  - script: |
-      choco install ninja --yes
-      ninja --version
-    displayName: "Install Ninja"
+#  - script: |
+#      choco install ninja --yes
+#      ninja --version
+#    displayName: "Install Ninja"
 
   - task: UsePythonVersion@0
     inputs:
@@ -16,7 +16,6 @@ steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H. -Bbuild ^
-            -G Ninja ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_INSTALL_PREFIX=./Software/xcfun ^
@@ -28,8 +27,7 @@ steps:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake --build build ^
             --config Release ^
-            --target install ^
-            -- -v -d stats
+            --target install
     displayName: "Build XCFun"
 
   - script: |
