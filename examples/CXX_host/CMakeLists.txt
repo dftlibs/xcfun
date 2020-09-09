@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(XCFun CONFIG QUIET)
+find_package(XCFun CONFIG)
 if(TARGET XCFun::xcfun)
   get_property(_loc TARGET XCFun::xcfun PROPERTY LOCATION)
   message(STATUS "Found XCFun: ${_loc} (found version ${XCFun_VERSION})")

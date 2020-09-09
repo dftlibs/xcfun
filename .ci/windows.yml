@@ -1,9 +1,4 @@
 steps:
-#  - script: |
-#      choco install ninja --yes
-#      ninja --version
-#    displayName: "Install Ninja"
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(python.version)'
@@ -14,7 +9,6 @@ steps:
     displayName: 'Pip install Python dependencies'
 
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H. -Bbuild ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
@@ -24,14 +18,12 @@ steps:
     displayName: "Configure XCFun"
 
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake --build build ^
             --config Release ^
             --target install
     displayName: "Build XCFun"
 
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cd build
       ctest --output-on-failure ^
             -C Release ^
@@ -47,31 +39,26 @@ steps:
 
   # Test we can build the C++ example
   - script: |
-      #call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-      ls .\Software\xcfun\CMake
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun\CMake ^
+            -DXCFun_DIR=.\Software\xcfun ^
             -DCMAKE_CXX_COMPILER=cl.exe
     displayName: "Configure C++ host examples"
 
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake --build build_CXX_host
     displayName: "Build C++ host example"
 
   # Test we can build the C example
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H.\examples\C_host -Bbuild_C_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun\CMake ^
+            -DXCFun_DIR=.\Software\xcfun ^
             -DCMAKE_C_COMPILER=cl.exe
     displayName: "Configure C host examples"
 
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake --build build_C_host
     displayName: "Build C host example"
