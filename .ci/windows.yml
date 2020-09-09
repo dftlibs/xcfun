@@ -31,18 +31,12 @@ steps:
             --verbose
     displayName: "Test XCFun with CTest"
 
-#  - script: |
-#      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-#      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
-#      python -c "import xcfun; print(xcfun.xcfun_splash())"
-#    displayName: "Test XCFun Python module"
-
   # Test we can build the C++ example
   - script: |
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun ^
+            -DXCFun_DIR=.\Software\xcfun\CMake\XCFun ^
             -DCMAKE_CXX_COMPILER=cl.exe
     displayName: "Configure C++ host examples"
 
@@ -55,10 +49,15 @@ steps:
       cmake -H.\examples\C_host -Bbuild_C_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun ^
+            -DXCFun_DIR=.\Software\xcfun\CMake\XCFun ^
             -DCMAKE_C_COMPILER=cl.exe
     displayName: "Configure C host examples"
 
   - script: |
       cmake --build build_C_host
     displayName: "Build C host example"
+
+  - script: |
+      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
+      python -c "import xcfun; print(xcfun.xcfun_splash())"
+    displayName: "Test XCFun Python module"
