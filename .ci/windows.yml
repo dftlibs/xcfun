@@ -41,6 +41,7 @@ steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
+      ls .\Software\xcfun\lib\python
       python -c "import xcfun; print(xcfun.xcfun_splash())"
     displayName: "Test XCFun Python module"
 
