@@ -49,7 +49,6 @@ steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
-            -G Ninja ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DXCFun_DIR=.\Software\xcfun\CMake ^
@@ -66,7 +65,6 @@ steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H.\examples\C_host -Bbuild_C_host ^
-            -G Ninja ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DXCFun_DIR=.\Software\xcfun\CMake ^
