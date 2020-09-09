@@ -17,6 +17,7 @@ steps:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H. -Bbuild ^
             -G Ninja ^
+            -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_INSTALL_PREFIX=./Software/xcfun ^
             -DCMAKE_CXX_COMPILER=cl.exe ^
@@ -26,6 +27,7 @@ steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake --build build ^
+            --config Release ^
             --target install ^
             -- -v -d stats
     displayName: "Build XCFun"
@@ -38,18 +40,18 @@ steps:
             --verbose
     displayName: "Test XCFun with CTest"
 
-  - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
-      set PATH=.\Software\xcfun\lib\python\xcfun;%PATH%
-      python -c "import xcfun; print(xcfun.xcfun_splash())"
-    displayName: "Test XCFun Python module"
+#  - script: |
+#      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+#      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
+#      python -c "import xcfun; print(xcfun.xcfun_splash())"
+#    displayName: "Test XCFun Python module"
 
   # Test we can build the C++ example
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -G Ninja ^
+            -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DXCFun_DIR=.\Software\xcfun\CMake ^
             -DCMAKE_CXX_COMPILER=cl.exe
@@ -66,6 +68,7 @@ steps:
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
       cmake -H.\examples\C_host -Bbuild_C_host ^
             -G Ninja ^
+            -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DXCFun_DIR=.\Software\xcfun\CMake ^
             -DCMAKE_C_COMPILER=cl.exe
