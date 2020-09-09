@@ -57,8 +57,7 @@ steps:
 
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-      cmake --build build_CXX_host ^
-            -- -v -d stats
+      cmake --build build_CXX_host
     displayName: "Build C++ host example"
 
   # Test we can build the C example
@@ -73,6 +72,5 @@ steps:
 
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
-      cmake --build build_C_host ^
-            -- -v -d stats
+      cmake --build build_C_host
     displayName: "Build C host example"
