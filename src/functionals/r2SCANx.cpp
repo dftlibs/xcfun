@@ -19,10 +19,16 @@ FUNCTIONAL(XC_R2SCANX) = {
   "r2SCAN exchange functional",
   "r2SCAN exchange functional.\n"
   "Restored-Regularised SCAN functional\n"
-  "J Furness, in preparation (arXiv:2008.03374)"
+  "J Furness, A Kaplan, J Ning, J Perdew, & J Sun; J. Chem. Phys. Lett.; Accepted (DOI: 10.1021/acs.jpclett.0c02405)"
   "Implemented by James Furness\n",
   XC_DENSITY | XC_GRADIENT | XC_KINETIC,
   ENERGY_FUNCTION(r2SCANX)
   XC_A_B_GAA_GAB_GBB_TAUA_TAUB,
   XC_PARTIAL_DERIVATIVES,
+  1,
+  1e-11,
+  {0.217, 0.0632, 0.191, 0.0535, 0.015, 0.267, 0.0328},
+  {-1.62076202284e-01, -8.60008389872e-01, -5.57023311096e-01, 
+      -3.79265043692e-02, 0.00000000000e+00, -1.04606093722e-01,
+      5.89149529531e-02, 5.50319523444e-02}
 };
