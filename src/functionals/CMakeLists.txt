@@ -51,6 +51,16 @@ target_sources(xcfun
     ${CMAKE_CURRENT_SOURCE_DIR}/revtpssc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/revtpssx.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/rpbex.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/rSCANc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/rSCANx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/r2SCANc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/r2SCANx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/r4SCANc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/r4SCANx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/rppSCANc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/rppSCANx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SCANc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SCANx.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/slaterx.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/spbec.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tfk.cpp
@@ -80,6 +90,7 @@ list(APPEND functionals_headers
     revtpssc_eps.hpp
     revtpssx_eps.hpp
     slater.hpp
+    SCAN_like_eps.hpp
     tpssc_eps.hpp
     tpssx_eps.hpp
     vwn.hpp
