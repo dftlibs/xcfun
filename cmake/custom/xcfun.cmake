@@ -23,10 +23,10 @@ if(DEFINED XCFUN_MAX_ORDER AND XCFUN_MAX_ORDER LESS 3)
   set(XCFUN_MAX_ORDER 6 CACHE STRING "Maximum order of derivatives of the exchange-correlation kernel" FORCE)
 endif()
 
-set(PROJECT_VERSION 2.0.2)
+set(PROJECT_VERSION 2.1.0)
 set(PROJECT_VERSION_MAJOR 2)
-set(PROJECT_VERSION_MINOR 0)
-set(PROJECT_VERSION_PATCH 2)
+set(PROJECT_VERSION_MINOR 1)
+set(PROJECT_VERSION_PATCH 0)
 
 set(CMAKECONFIG_INSTALL_DIR share/cmake/${PROJECT_NAME} CACHE PATH "Installation directory for CMake files")
 
