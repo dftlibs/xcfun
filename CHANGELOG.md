@@ -1,12 +1,15 @@
 # Change Log
 
-### Added
+## [Version 2.1.0] - 2020-09-18
 
+- Many new functionals in the SCAN family have been added. Thanks to James
+  Furness for the contribution.
+  See [PR #140](https://github.com/dftlibs/xcfun/pull/140)
 - The library can now be _natively_ compiled on Linux, macOS, and Windows.
 
 ### Changed
 
-- **BREAKING** CMake >= 3.14 is required to configure the code. 
+- **BREAKING** CMake >= 3.14 is required to configure the code.
 
 ## [Version 2.0.2] - 2020-07-15
 
