@@ -36,8 +36,7 @@ steps:
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_ROOT=$(Agent.BuildDirectory)\Software/xcfun/share/cmake/XCFun ^
-            -DXCFun_DIR=$(Agent.BuildDirectory)\Software/xcfun/share/cmake/XCFun ^
+            -DXCFun_DIR=$(Agent.BuildDirectory)\Software\xcfun\share\cmake\XCFun ^
             -DCMAKE_CXX_COMPILER=cl.exe
     displayName: "Configure C++ host examples"
 
@@ -50,8 +49,7 @@ steps:
       cmake -H.\examples\C_host -Bbuild_C_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_ROOT=$(Agent.BuildDirectory)\Software/xcfun/share/cmake/XCFun ^
-            -DXCFun_DIR=$(Agent.BuildDirectory)\Software/xcfun/share/cmake/XCFun ^
+            -DXCFun_DIR=$(Agent.BuildDirectory)\Software\xcfun\share\cmake\XCFun ^
             -DCMAKE_C_COMPILER=cl.exe
     displayName: "Configure C host examples"
 
