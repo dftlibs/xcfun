@@ -58,6 +58,7 @@ steps:
     displayName: "Build C host example"
 
   - script: |
+      set PATH=$(Agent.BuildDirectory)\install\bin;%PATH%
       set PYTHONPATH=$(Agent.BuildDirectory)\Software\xcfun\lib\python;%PYTHONPATH%
       python -c "import xcfun; print(xcfun.xcfun_splash())"
     displayName: "Test XCFun Python module"
