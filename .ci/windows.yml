@@ -57,8 +57,8 @@ steps:
       cmake --build build_C_host
     displayName: "Build C host example"
 
-  - script: |
-      set PYTHONPATH=$(Agent.BuildDirectory)\Software\xcfun\lib\python;%PYTHONPATH%
-      ls $(Agent.BuildDirectory)\Software\xcfun\lib\python\xcfun
-      python -c "import xcfun; print(xcfun.xcfun_splash())"
-    displayName: "Test XCFun Python module"
+#  - script: |
+#      set PYTHONPATH=$(Agent.BuildDirectory)\Software\xcfun\lib\python;%PYTHONPATH%
+#      ls $(Agent.BuildDirectory)\Software\xcfun\lib\python\xcfun
+#      python -c "import xcfun; print(xcfun.xcfun_splash())"
+#    displayName: "Test XCFun Python module"

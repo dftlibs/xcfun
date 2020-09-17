@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.14)
 
 project(CXX_host LANGUAGES CXX)
 
@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(XCFun CONFIG)
+find_package(XCFun CONFIG QUIET)
 if(TARGET XCFun::xcfun)
   get_property(_loc TARGET XCFun::xcfun PROPERTY LOCATION)
   message(STATUS "Found XCFun: ${_loc} (found version ${XCFun_VERSION})")

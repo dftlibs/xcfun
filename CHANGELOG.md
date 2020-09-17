@@ -1,5 +1,13 @@
 # Change Log
 
+### Added
+
+- The library can now be _natively_ compiled on Linux, macOS, and Windows.
+
+### Changed
+
+- **BREAKING** CMake >= 3.14 is required to configure the code. 
+
 ## [Version 2.0.2] - 2020-07-15
 
 ### Fixed
@@ -20,13 +28,8 @@
 
 ## [Version 2.0.0] - 2020-04-14
 
-### Added
-
-- The library can now be _natively_ compiled on Linux, macOS, and Windows.
-
 ### Changed
 
-- **BREAKING** CMake >= 3.14 is required to configure the code. 
 - **BREAKING** The build system will only produce a shared (default) or static
   library. Compilation of the static library can be requested by setting
   `BUILD_SHARED_LIBS` to `OFF`.
