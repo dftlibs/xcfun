@@ -59,6 +59,6 @@ steps:
     displayName: "Build C host example"
 
   - script: |
-      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
+      set PYTHONHOME=.\Software\xcfun\lib\python;%PYTHONHOME%
       python -c "import xcfun; print(xcfun.xcfun_splash())"
     displayName: "Test XCFun Python module"
