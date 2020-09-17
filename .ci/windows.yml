@@ -35,9 +35,8 @@ steps:
   - script: |
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -A x64 ^
-            --trace ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun\share\cmake\XCFun ^
+            -DXCFun_DIR=./Software/xcfun/share/cmake/XCFun ^
             -DCMAKE_CXX_COMPILER=cl.exe
     displayName: "Configure C++ host examples"
 
@@ -50,7 +49,8 @@ steps:
       cmake -H.\examples\C_host -Bbuild_C_host ^
             -A x64 ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DXCFun_DIR=.\Software\xcfun\share\cmake\XCFun ^
+            -DXCFun_ROOT=./Software/xcfun ^
+            -DXCFun_DIR=./Software/xcfun/share/cmake/XCFun ^
             -DCMAKE_C_COMPILER=cl.exe
     displayName: "Configure C host examples"
 
@@ -59,7 +59,6 @@ steps:
     displayName: "Build C host example"
 
   - script: |
-      set PYTHONHOME=%PYTHONHOME%;.\Software\xcfun\lib\python
-      set PYTHONPATH=.\Software\xcfun\lib\python;%PYTHONPATH%
+      set PYTHONPATH=./Software/xcfun/lib/python;%PYTHONPATH%
       python -c "import xcfun; print(xcfun.xcfun_splash())"
     displayName: "Test XCFun Python module"
