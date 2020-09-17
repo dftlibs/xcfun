@@ -59,7 +59,6 @@ steps:
 
   - script: |
       set PYTHONPATH=$(Agent.BuildDirectory)\Software\xcfun\lib\python;%PYTHONPATH%
-      ls $(Agent.BuildDirectory)\Software\xcfun\lib\python
+      ls $(Agent.BuildDirectory)\Software\xcfun\lib\python\xcfun
       python -c "import xcfun; print(xcfun.xcfun_splash())"
     displayName: "Test XCFun Python module"
-    workingDirectory: $(Agent.BuildDirectory)\Software\xcfun\lib\python
