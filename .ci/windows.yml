@@ -35,6 +35,7 @@ steps:
   - script: |
       cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
             -A x64 ^
+            --debug-output ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DXCFun_DIR=.\Software\xcfun\CMake ^
             -DCMAKE_CXX_COMPILER=cl.exe
