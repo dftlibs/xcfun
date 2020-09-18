@@ -1,20 +1,35 @@
+/*
+ * XCFun, an arbitrary order exchange-correlation library
+ * Copyright (C) 2020 Ulf Ekström and contributors.
+ *
+ * This file is part of XCFun.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * For information on the complete list of contributors to the
+ * XCFun library, see: <https://xcfun.readthedocs.io/>
+ */
+
 #include "config.hpp"
 #include "constants.hpp"
 #include "functional.hpp"
 #include "pw92eps.hpp"
-/*  Common code for SCAN and SCAN-like functionals"
+
+/*! Common code for SCAN and SCAN-like functionals
  *
  *  Implemented by James Furness,
  *
- *  SCAN    - J. Sun, A. Ruzsinszky, and J. P. Perdew, Phys. Rev. Lett. 115, 036402 (2015)
- *  rSCAN   - A. P. Bartok and J. R. Yates, J. Chem. Phys. 150, 161101 (2019)
- *  r2SCAN  - J Furness, A Kaplan, J Ning, J Perdew, & J Sun; J. Chem. Phys. Lett.; Accepted (DOI: 10.1021/acs.jpclett.0c02405) 
- *  
- *  The r++SCAN (aka "rppSCAN") and r4SCAN functionals are relatives of r2SCAN. They are not recommended for general use.
+ *  SCAN    - J. Sun, A. Ruzsinszky, and J. P. Perdew, Phys. Rev. Lett. 115, 036402
+ * (2015) rSCAN   - A. P. Bartok and J. R. Yates, J. Chem. Phys. 150, 161101 (2019)
+ *  r2SCAN  - J Furness, A Kaplan, J Ning, J Perdew, & J Sun; J. Chem. Phys. Lett.;
+ * Accepted (DOI: 10.1021/acs.jpclett.0c02405)
+ *
+ *  The r++SCAN (aka "rppSCAN") and r4SCAN functionals are relatives of r2SCAN. They
+ * are not recommended for general use.
  *
  *  r++SCAN, r4SCAN - J Furness, A Kaplan, J Ning, J Perdew, & J Sun; in preparation.
- *  
- *
  */
 
 namespace SCAN_eps {
@@ -185,7 +200,7 @@ static num SCAN_X_Fx(const num s,
     num yfac = MU * p + wfac + pow2(vfac);
 
     h1x = 1.0 + K1 - K1 / (1.0 + yfac / K1);
-  } else if (IDELFX == 1 or IDELFX == 2) {
+  } else if (IDELFX == 1 || IDELFX == 2) {
     // 2nd order GE corrections for rSCAN interpolation
     for (int i = 1; i < 8; i++) {
       del_f2 += i * IE_PARAMS[i];

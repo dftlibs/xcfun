@@ -1,5 +1,13 @@
 # Change Log
 
+### Added
+
+- The library can now be _natively_ compiled on Linux, macOS, and Windows.
+
+### Changed
+
+- **BREAKING** CMake >= 3.14 is required to configure the code. 
+
 ## [Version 2.0.2] - 2020-07-15
 
 ### Fixed

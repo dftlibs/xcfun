@@ -1,0 +1,64 @@
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: "Using Python version: $(python.version)"
+
+  - script: |
+      python -m pip install --upgrade pip pytest numpy
+    displayName: 'Pip install Python dependencies'
+
+  - script: |
+      cmake -H. -Bbuild ^
+            -A x64 ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_INSTALL_PREFIX=$(Agent.BuildDirectory)\Software\xcfun ^
+            -DCMAKE_CXX_COMPILER=cl.exe ^
+            -DXCFUN_PYTHON_INTERFACE=ON
+    displayName: "Configure XCFun"
+
+  - script: |
+      cmake --build build ^
+            --config Release ^
+            --target install
+    displayName: "Build XCFun"
+
+  - script: |
+      cd build
+      ctest --output-on-failure ^
+            -C Release ^
+            -E python-interface ^
+            --verbose
+    displayName: "Test XCFun with CTest"
+
+  # Test we can build the C++ example
+  - script: |
+      cmake -H.\examples\CXX_host -Bbuild_CXX_host ^
+            -A x64 ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DXCFun_DIR=$(Agent.BuildDirectory)\Software\xcfun\share\cmake\XCFun ^
+            -DCMAKE_CXX_COMPILER=cl.exe
+    displayName: "Configure C++ host examples"
+
+  - script: |
+      cmake --build build_CXX_host
+    displayName: "Build C++ host example"
+
+  # Test we can build the C example
+  - script: |
+      cmake -H.\examples\C_host -Bbuild_C_host ^
+            -A x64 ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DXCFun_DIR=$(Agent.BuildDirectory)\Software\xcfun\share\cmake\XCFun ^
+            -DCMAKE_C_COMPILER=cl.exe
+    displayName: "Configure C host examples"
+
+  - script: |
+      cmake --build build_C_host
+    displayName: "Build C host example"
+
+#  - script: |
+#      set PYTHONPATH=$(Agent.BuildDirectory)\Software\xcfun\lib\python;%PYTHONPATH%
+#      ls $(Agent.BuildDirectory)\Software\xcfun\lib\python\xcfun
+#      python -c "import xcfun; print(xcfun.xcfun_splash())"
+#    displayName: "Test XCFun Python module"

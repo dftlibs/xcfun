@@ -1,4 +1,4 @@
-pybind11_add_module(_xcfun MODULE THIN_LTO
+pybind11_add_module(_xcfun THIN_LTO
   export_xcfun.cpp
   )
 
@@ -23,8 +23,6 @@ endif()
 
 set_target_properties(_xcfun
   PROPERTIES
-    PREFIX "${PYTHON_MODULE_PREFIX}"
-    SUFFIX "${PYTHON_MODULE_EXTENSION}"
     MACOSX_RPATH ON
     SKIP_BUILD_RPATH OFF
     BUILD_WITH_INSTALL_RPATH OFF
@@ -37,11 +35,12 @@ set_target_properties(_xcfun
   )
 
 foreach(_f __init__.py xcfun.py)
-  add_custom_target(symlink_${_f} ALL
-    COMMAND
-      ${CMAKE_COMMAND} -E create_symlink
+  file(
+    CREATE_LINK
       ${CMAKE_CURRENT_SOURCE_DIR}/${_f}
       ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/${_f}
+    COPY_ON_ERROR
+    SYMBOLIC
     )
 endforeach()
 

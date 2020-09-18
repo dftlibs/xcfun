@@ -28,12 +28,7 @@ set(PROJECT_VERSION_MAJOR 2)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 2)
 
-if(WIN32 AND NOT CYGWIN)
-  set(DEF_INSTALL_CMAKEDIR CMake)
-else()
-  set(DEF_INSTALL_CMAKEDIR share/cmake/${PROJECT_NAME})
-endif()
-set(CMAKECONFIG_INSTALL_DIR ${DEF_INSTALL_CMAKEDIR} CACHE PATH "Installation directory for CMake files")
+set(CMAKECONFIG_INSTALL_DIR share/cmake/${PROJECT_NAME} CACHE PATH "Installation directory for CMake files")
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/api)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)

@@ -21,11 +21,12 @@ if(XCFUN_PYTHON_INTERFACE)
     test_xcfun.py
     )
   foreach(_file IN LISTS _pytest_files)
-    add_custom_target(symlink_${_file} ALL
-      COMMAND
-        ${CMAKE_COMMAND} -E create_symlink
+    file(
+      CREATE_LINK
         ${CMAKE_CURRENT_SOURCE_DIR}/${_file}
         ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR}/../${_file}
+      COPY_ON_ERROR
+      SYMBOLIC
       )
   endforeach()
 
