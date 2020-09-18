@@ -1,12 +1,16 @@
 # Change Log
 
-### Added
+## [Version 2.1.0] - 2020-09-18
 
+- Many new functionals in the SCAN family have been added. Thanks to James
+  Furness for the contribution.
+  See [PR #140](https://github.com/dftlibs/xcfun/pull/140)
+- The library is now available both as a Spack and a Conda package.
 - The library can now be _natively_ compiled on Linux, macOS, and Windows.
 
 ### Changed
 
-- **BREAKING** CMake >= 3.14 is required to configure the code. 
+- **BREAKING** CMake >= 3.14 is required to configure the code.
 
 ## [Version 2.0.2] - 2020-07-15
 
@@ -122,6 +126,7 @@ modernize the library. See the [migration guide](https://xcfun.readthedocs.io/en
 - **BREAKING** The Fortran interface is no longer build with the code, but
   shipped as a separate file to be compiled within your own Fortran code.
 
+[Version 2.1.0]: https://github.com/dftlibs/xcfun/compare/v2.0.2...v2.1.0
 [Version 2.0.2]: https://github.com/dftlibs/xcfun/compare/v2.0.1...v2.0.2
 [Version 2.0.1]: https://github.com/dftlibs/xcfun/compare/v2.0.0...v2.0.1
 [Version 2.0.0]: https://github.com/dftlibs/xcfun/compare/v2.0.0a7...v2.0.0

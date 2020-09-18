@@ -32,6 +32,18 @@ XCFun can be installed in a `Spack
   spack install xcfun
 
 
+Installing using Conda
+----------------------
+
+XCFun can be installed in a `Conda
+<https://docs.conda.io/>`_ environment with::
+
+  conda create -n myenv xcfun -c conda-forge
+  conda activate myenv
+
+The package is built with derivatives up to 8th order and includes the Python bindings.
+
+
 .. _integration:
 
 Integration with your build system
