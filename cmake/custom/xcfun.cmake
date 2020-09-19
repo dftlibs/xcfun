@@ -28,24 +28,28 @@ set(PROJECT_VERSION_MAJOR 2)
 set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 0)
 
-set(CMAKECONFIG_INSTALL_DIR share/cmake/${PROJECT_NAME} CACHE PATH "Installation directory for CMake files")
-
 add_subdirectory(${PROJECT_SOURCE_DIR}/api)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 option_with_print(XCFUN_PYTHON_INTERFACE "Enable Python interface" OFF)
 
-if(NOT DEFINED PYMOD_INSTALL_LIBDIR)
-  message(STATUS "Setting (unspecified) option PYMOD_INSTALL_LIBDIR: python")
-  set(PYMOD_INSTALL_LIBDIR "python" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
-else()
-  message(STATUS "Setting option PYMOD_INSTALL_LIBDIR: ${PYMOD_INSTALL_LIBDIR}")
-  set(PYMOD_INSTALL_LIBDIR "${PYMOD_INSTALL_LIBDIR}" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
-endif()
-file(TO_NATIVE_PATH "lib/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR})
-
 if(XCFUN_PYTHON_INTERFACE)
+  if(NOT DEFINED PYMOD_INSTALL_LIBDIR)
+    message(STATUS "Setting (unspecified) option PYMOD_INSTALL_LIBDIR: python")
+    set(PYMOD_INSTALL_LIBDIR "python" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
+  else()
+    message(STATUS "Setting option PYMOD_INSTALL_LIBDIR: ${PYMOD_INSTALL_LIBDIR}")
+    set(PYMOD_INSTALL_LIBDIR "${PYMOD_INSTALL_LIBDIR}" CACHE STRING "Location within CMAKE_INSTALL_LIBDIR to which Python modules are installed" FORCE)
+  endif()
+  # install Python module under CMAKE_INSTALL_LIBDIR
+  # if that is "lib64", the use just "lib"
+  set(_lib "${CMAKE_INSTALL_LIBDIR}")
+  if(CMAKE_INSTALL_LIBDIR STREQUAL "lib64")
+    set(_lib "lib")
+  endif()
+  file(TO_NATIVE_PATH "${_lib}/${PYMOD_INSTALL_LIBDIR}/xcfun" PYMOD_INSTALL_FULLDIR)
+  file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${PYMOD_INSTALL_FULLDIR})
+
   include(${PROJECT_SOURCE_DIR}/external/upstream/fetch_pybind11.cmake)
   add_subdirectory(python)
 endif()
