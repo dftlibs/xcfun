@@ -31,7 +31,7 @@ target_compile_definitions(xcfun
 target_include_directories(xcfun
   PRIVATE
     ${PROJECT_SOURCE_DIR}/api
-    ${PROJECT_BINARY_DIR}/include
+    ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
   INTERFACE
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
