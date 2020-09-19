@@ -28,8 +28,6 @@ set(PROJECT_VERSION_MAJOR 2)
 set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 0)
 
-set(CMAKECONFIG_INSTALL_DIR share/cmake/${PROJECT_NAME} CACHE PATH "Installation directory for CMake files")
-
 add_subdirectory(${PROJECT_SOURCE_DIR}/api)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 

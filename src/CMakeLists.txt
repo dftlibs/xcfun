@@ -98,25 +98,30 @@ install(
 # <<<  Export Config  >>>
 include(CMakePackageConfigHelpers)
 
+if(NOT DEFINED DEF_INSTALL_CMAKEDIR)
+  set(DEF_INSTALL_CMAKEDIR share/cmake/${PROJECT_NAME})
+endif()
+set(INSTALL_CMAKEDIR ${DEF_INSTALL_CMAKEDIR} CACHE PATH "Installation directory for CMake files")
+
 write_basic_package_version_file(
-  ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfigVersion.cmake
+  ${PROJECT_BINARY_DIR}/${INSTALL_CMAKEDIR}/XCFunConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion
   )
 
 configure_package_config_file(
   ${PROJECT_SOURCE_DIR}/cmake/XCFunConfig.cmake.in
-  ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
+  ${PROJECT_BINARY_DIR}/${INSTALL_CMAKEDIR}/XCFunConfig.cmake
   INSTALL_DESTINATION
-    ${CMAKECONFIG_INSTALL_DIR}
+    ${INSTALL_CMAKEDIR}
   )
 
 install(
   FILES
-    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfig.cmake
-    ${PROJECT_BINARY_DIR}/${CMAKECONFIG_INSTALL_DIR}/XCFunConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/${INSTALL_CMAKEDIR}/XCFunConfig.cmake
+    ${PROJECT_BINARY_DIR}/${INSTALL_CMAKEDIR}/XCFunConfigVersion.cmake
   DESTINATION
-    ${CMAKECONFIG_INSTALL_DIR}
+    ${INSTALL_CMAKEDIR}
   )
 
 install(
@@ -125,7 +130,7 @@ install(
   NAMESPACE
     "XCFun::"
   DESTINATION
-    ${CMAKECONFIG_INSTALL_DIR}
+    ${INSTALL_CMAKEDIR}
   )
 
 # The alias is useful with FetchContent
