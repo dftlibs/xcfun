@@ -1,0 +1,55 @@
+name: Compute code coverage for XCFun
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+          auto-update-conda: true
+          auto-activate-base: false
+          activate-environment: xcfun-codecov
+          environment-file: .github/xcfun-codecov.yml
+          channel-priority: true
+          python-version: 3.6
+
+    - name: Configure
+      shell: bash -l {0}
+      run: |
+        cmake -H. -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=OFF -DENABLE_CODE_COVERAGE=ON
+    
+    - name: Build
+      shell: bash -l {0}
+      run: |
+        cmake --build build --config $BUILD_TYPE --target install -- -v -d stats
+    
+    - name: Test XCFun and generate coverage report
+      shell: bash -l {0}
+      run: |
+        cd build
+        ctest -C $BUILD_TYPE --output-on-failure --verbose
+        lcov --version
+        lcov --directory . --capture --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info
+        lcov --remove coverage.info 'external/*' --output-file coverage.info
+        lcov --remove coverage.info 'test/*' --output-file coverage.info
+        lcov --list coverage.info
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1

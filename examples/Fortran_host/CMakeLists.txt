@@ -9,25 +9,15 @@ if(TARGET XCFun::xcfun)
 else()
   message(STATUS "Suitable XCFun could not be located. Fetching and building!")
   include(FetchContent)
-  FetchContent_Declare(xcfun_sources
+  FetchContent_Declare(xcfun
     QUIET
     URL
       https://github.com/dftlibs/xcfun/archive/v2.1.0.tar.gz
     )
 
-  FetchContent_GetProperties(xcfun_sources)
-
   set(ENABLE_TESTALL FALSE CACHE BOOL "")
   set(XCFUN_PYTHON_INTERFACE FALSE CACHE BOOL "")
-
-  if(NOT xcfun_sources_POPULATED)
-    FetchContent_Populate(xcfun_sources)
-
-    add_subdirectory(
-      ${xcfun_sources_SOURCE_DIR}
-      ${xcfun_sources_BINARY_DIR}
-      )
-  endif()
+  FetchContent_MakeAvailable(xcfun)
 endif()
 
 enable_testing()

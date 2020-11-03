@@ -1,0 +1,88 @@
+name: Build and test XCFun
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  release:
+    types:
+      - created
+        
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cache conda
+      uses: actions/cache@v1
+      env:
+        CACHE_NUMBER: 0  # Increase this value to reset cache if .github/xcfun-gha.yml has not changed
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ matrix.os }}-${{ matrix.python-version }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('.github/xcfun-gha.yml') }}
+
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+          auto-update-conda: true
+          auto-activate-base: false
+          activate-environment: xcfun-gha
+          environment-file: .github/xcfun-gha.yml
+          channel-priority: true
+          python-version: ${{ matrix.python-version }}
+          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+      
+    - name: Configure
+      shell: bash -l {0}
+      run: |
+        cmake -H. -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
+    
+    - name: Build
+      shell: bash -l {0}
+      run: |
+        cmake --build build --config $BUILD_TYPE --target install -- -v -d stats
+    
+    - name: Test XCFun
+      shell: bash -l {0}
+      run: |
+        cd build
+        ctest -C $BUILD_TYPE --output-on-failure --verbose
+        
+    - name: Test we can import the Python module
+      shell: bash -l {0}
+      run: |
+        env PYTHONPATH=$GITHUB_WORKSPACE/Software/xcfun/lib/python:$PYTHONPATH python -c "import xcfun; print(xcfun.xcfun_splash())"
+    
+    - name: Test the C++ example
+      shell: bash -l {0}
+      run: |
+        cmake -H./examples/CXX_host -Bbuild_CXX_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake --build build_CXX_host -- -v -d stats
+        cmake --build build_CXX_host --target test
+        
+    - name: Test the C example
+      shell: bash -l {0}
+      run: |
+        cmake -H./examples/C_host -Bbuild_C_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake --build build_C_host -- -v -d stats
+        cmake --build build_C_host --target test
+        
+    - name: Test the Fortran example
+      shell: bash -l {0}
+      run: |
+        cmake -H./examples/Fortran_host -Bbuild_Fortran_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake --build build_Fortran_host -- -v -d stats
+        cmake --build build_Fortran_host --target test  

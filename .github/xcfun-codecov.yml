@@ -1,0 +1,8 @@
+name: xcfun-codecov
+channels:
+  - conda-forge
+dependencies:
+  - cmake
+  - cxx-compiler
+  - lcov
+  - ninja
