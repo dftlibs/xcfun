@@ -1,6 +1,4 @@
-sphinx
-sphinx_rtd_theme
-fprettify
+cmake
 numpy
-pathlib2
+pybind11
 pytest
