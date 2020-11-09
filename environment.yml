@@ -1,9 +1,8 @@
 name: xcfun
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - cmake
   - numpy
   - pytest
-  - swig
+  - pybind11

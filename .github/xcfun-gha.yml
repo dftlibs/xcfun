@@ -1,0 +1,12 @@
+name: xcfun-gha
+channels:
+  - conda-forge
+dependencies:
+  - cmake
+  - c-compiler
+  - cxx-compiler
+  - fortran-compiler
+  - ninja
+  - numpy
+  - pybind11
+  - pytest

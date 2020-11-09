@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+- Move Linux and macOS CI to GitHub actions.
+
 ## [Version 2.1.0] - 2020-09-18
 
 - Many new functionals in the SCAN family have been added. Thanks to James
