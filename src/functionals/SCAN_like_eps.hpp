@@ -115,19 +115,22 @@ static num get_SCAN_Fx(const num d_n,
     printf("ERROR: Unknown IALPHA %d\n", IALPHA);
   }
 
-  num s = 0.0;
+  num p = 0.0;
   if (abs(d_g) > 1.0e-16) {
-    s = sqrt(d_g) /
-        (2.0 * pow(3.0 * PI2, 1.0 / 3.0) * pow(d_n, 4.0 / 3.0)); // Eq. (4)
-  };
+    p = d_g /
+        (4.0 * pow(3.0 * PI2, 2.0 / 3.0) * pow(d_n, 8.0 / 3.0));
+  } else {
+    p = 1e-16/
+        (4.0 * pow(3.0 * PI2, 2.0 / 3.0) * pow(d_n, 8.0 / 3.0));
+  }
 
-  num Fx = SCAN_X_Fx(s, alpha, ETA, IINTERP, IDELFX);
+  num Fx = SCAN_X_Fx(p, alpha, ETA, IINTERP, IDELFX);
 
   return Fx;
 }
 
 template <class num>
-static num SCAN_X_Fx(const num s,
+static num SCAN_X_Fx(const num p,
                      const num alpha,
                      const parameter ETA,
                      const int IINTERP,
@@ -188,7 +191,6 @@ static num SCAN_X_Fx(const num s,
   num h0x = 1.0 + K0;
 
   // Slowly varying enhancement
-  num p = s * s;
   num del_f2 = 0.0;
   num C2 = 0.0;
   num h1x = 0.0;
