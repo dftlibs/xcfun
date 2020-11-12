@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dftlibs/xcfun.svg?branch=master)](https://travis-ci.org/dftlibs/xcfun)
+![Build and test XCFun](https://github.com/dftlibs/xcfun/workflows/Build%20and%20test%20XCFun/badge.svg)
 [![Build Status](https://dev.azure.com/dftlibs/xcfun/_apis/build/status/dftlibs.xcfun?branchName=master)](https://dev.azure.com/dftlibs/xcfun/_build/latest?definitionId=10&branchName=master)
 [![GitHub license](https://img.shields.io/github/license/dftlibs/xcfun.svg?style=flat-square)](https://github.com/dftlibs/xcfun/blob/master/LICENSE.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3576419.svg)](https://doi.org/10.5281/zenodo.3576419)
