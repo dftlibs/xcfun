@@ -1,8 +1,15 @@
 # Change Log
 
-## [Unreleased]
+## [Version 2.1.1] - 2020-11-12
 
-- Move Linux and macOS CI to GitHub actions.
+### Changed
+
+- Linux and macOS continuous integration testing is run on GitHub actions. See [PR #145](https://github.com/dftlibs/xcfun/pull/145)
+
+### Fixed
+
+- We polished the installation of header files, CMake target export files, and Python module. These are especially relevant for Conda packaging XCFun. See [PR #143](https://github.com/dftlibs/xcfun/pull/143)
+- A numerical issue with SCAN functionals and small density gradients was fixed by James Furness (@JFurness1). See [issue #144](https://github.com/dftlibs/xcfun/issues/144) reported by Xing Zhang (@fishjojo) and subsequent [PR #146](https://github.com/dftlibs/xcfun/pull/146) for the fix.
 
 ## [Version 2.1.0] - 2020-09-18
 
@@ -130,6 +137,8 @@ modernize the library. See the [migration guide](https://xcfun.readthedocs.io/en
 - **BREAKING** The Fortran interface is no longer build with the code, but
   shipped as a separate file to be compiled within your own Fortran code.
 
+[Unreleased]: https://github.com/dftlibs/xcfun/compare/v2.1.1...HEAD
+[Version 2.1.1]: https://github.com/dftlibs/xcfun/compare/v2.1.0...v2.1.1
 [Version 2.1.0]: https://github.com/dftlibs/xcfun/compare/v2.0.2...v2.1.0
 [Version 2.0.2]: https://github.com/dftlibs/xcfun/compare/v2.0.1...v2.0.2
 [Version 2.0.1]: https://github.com/dftlibs/xcfun/compare/v2.0.0...v2.0.1

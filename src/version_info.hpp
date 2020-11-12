@@ -17,7 +17,7 @@
 namespace xcfun {
 constexpr auto PROJECT_VERSION_MAJOR = 2;
 constexpr auto PROJECT_VERSION_MINOR = 1;
-constexpr auto PROJECT_VERSION_PATCH = 0;
+constexpr auto PROJECT_VERSION_PATCH = 1;
 constexpr auto XCFun_VERSION =
     ((PROJECT_VERSION_MAJOR << 16) | PROJECT_VERSION_MINOR | PROJECT_VERSION_PATCH);
 
