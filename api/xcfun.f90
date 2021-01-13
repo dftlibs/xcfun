@@ -478,8 +478,8 @@ contains
     integer(c_int) :: r_pitch
 
     n = int(nr_points)
-    d_pitch = int(size(density) - 1, kind=c_int)
-    r_pitch = int(size(res) - 1, kind=c_int)
+    d_pitch = int(size(density(:,1)), kind=c_int)
+    r_pitch = int(size(res(:,1)), kind=c_int)
     call xcfun_eval_vec_C(fun, n, density, d_pitch, res, r_pitch)
   end subroutine
 end module
