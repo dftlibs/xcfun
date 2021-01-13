@@ -34,7 +34,11 @@ program xc_example
                    xcfun_get, &
                    xcfun_eval_setup, &
                    xcfun_eval, &
-                   xcfun_delete
+                   xcfun_delete, &
+                   XC_A_B_GAA_GAB_GBB, &
+                   XC_PARTIAL_DERIVATIVES, &
+                   xcfun_output_length, &
+                   xcfun_eval_vec
 
   implicit none
 
@@ -51,10 +55,17 @@ program xc_example
   integer, parameter :: num_density_variables = 4
 
   integer :: order, ierr, ipoint
-  integer :: vector_length, foo
+  integer :: vector_length, foo, i, len, nval
   real(8) :: res, weight
+  integer, parameter :: npt=5
 
-  real(8), allocatable :: density(:, :, :)
+  real(8), allocatable :: density(:, :, :)  
+  real(8), allocatable :: dens(:,:), pots(:,:)
+  real(8) :: diff(npt),dev1,dev2
+  real(8), parameter :: vrho_ref(npt)=(/-0.41114303d+00,-0.54041968d+00, &
+       & -0.63521105d+00,-0.70819636d+00,-0.76829536d+00/)
+  real(8), parameter :: vsig_ref(npt)=(/-0.10299851d+00,-0.59386172d-01, &
+       & -0.38032091d-01,-0.26939729d-01,-0.20408009d-01/)
 
   ierr = xcfun_test()
   call assert(ierr == 0, "xcfun_test failed")
@@ -289,12 +300,60 @@ program xc_example
   call assert((abs(47.091223089835331d0 - res) < 1.0d-6), &
               "derivatives do not match reference numbers")
 
-
   !-----------------------------------------------------------------------------
   ! we are done and can release the memory
 
   call xcfun_delete(fun)
 
+
+  !-----------------------------------------------------------------------------
+  ! compute derivatives for a batch of grid points
+  
+  ! use just pbex for this example
+  write(*,*)
+  print *, 'Setting up PBEx'
+  fun=xcfun_new()
+  ierr=xcfun_set(fun,'pbex',1d0)
+  call assert(ierr==0,"xcfun_set failed")
+  
+  ! 1st derivatives
+  order=1
+  ierr=xcfun_eval_setup(fun,XC_A_B_GAA_GAB_GBB,XC_PARTIAL_DERIVATIVES, &
+       & order)
+  call assert(ierr==0,"xcfun_eval_setup failed")
+
+  ! allocate input/output arrays
+  nval=5
+  len=xcfun_output_length(fun)
+  allocate(dens(nval,npt),pots(len,npt))
+
+  ! set density values (some arbitrary values)
+  do i=1,npt
+     dens(1:2,i)=0.1d0*dble(i) !rho (a,b)
+     dens(3:5,i)=0.1d0*dble(i) !sigm (a aa,ab,bb)
+  enddo
+  dens(1:2,:)=dens(1:2,:)*0.5d0  !restricted->unrestricted
+  dens(3:5,:)=dens(3:5,:)*0.25d0
+
+  ! compute derivatives
+  pots=0d0
+  call xcfun_eval_vec(fun,npt,dens,pots)
+  write(*,'(/,1x,a)') 'density values and derivatives for a set of grid points:'
+  do i=1,npt
+     write(*,'(i3,5f11.6,2x,99f11.6)') i,dens(1:5,i),pots(1:len,i)
+  enddo
+  diff=pots(2,:)-vrho_ref(:)
+  dev1=dot_product(diff,diff)
+  diff=pots(4,:)-vsig_ref(:)
+  dev2=dot_product(diff,diff)
+  
+  call assert((dev1 < 1.0d-8),"vrho derivatives do not match reference numbers")
+  call assert((dev2 < 1.0d-8),"vsig derivatives do not match reference numbers")
+  
+  deallocate(dens,pots)
+  call xcfun_delete(fun)
+  write(*,*)
+  
   print *, 'Kernel test has ended properly!'
 
 contains
