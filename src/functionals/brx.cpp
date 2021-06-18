@@ -54,13 +54,15 @@ void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
   taylor<T, 1, Ndeg> f, d;
   t = 0;
   t[0] = BR(z0);
-  t[1] = 1;
-  f = BR_z(t);
-  t[1] = 1 / f[1];
-  // Linear method, for quadratic see i.e. Brent & Kung ~197x
-  for (int i = 2; i <= Ndeg; i++) {
+  if(Ndeg >= 1) {
+    t[1] = 1;
     f = BR_z(t);
-    t[i] = -f[i] * t[1];
+    t[1] = 1 / f[1];
+    // Linear method, for quadratic see i.e. Brent & Kung ~197x
+    for (int i = 2; i <= Ndeg; i++) {
+      f = BR_z(t);
+      t[i] = -f[i] * t[1];
+    }
   }
 }
 
