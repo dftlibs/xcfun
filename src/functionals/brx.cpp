@@ -50,11 +50,15 @@ static double BR(double z) {
 // Obtain the Taylor expansion of x(y), which is the
 // inverse of BR_y. Use linear method for simplicity.
 template <typename T, int Ndeg>
-void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
-  taylor<T, 1, Ndeg> f, d;
+taylor <T, 1, Ndeg> BR_taylor(const T & z0) {
+  static_assert(Ndeg >= 3);
+
+  taylor<T, 1, Ndeg> t;
   t = 0;
   t[0] = BR(z0);
   t[1] = 1;
+
+  taylor<T, 1, Ndeg> f;
   f = BR_z(t);
   t[1] = 1 / f[1];
   // Linear method, for quadratic see i.e. Brent & Kung ~197x
@@ -62,6 +66,8 @@ void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
     f = BR_z(t);
     t[i] = -f[i] * t[1];
   }
+
+  return t;
 }
 
 /* This is a fully differentiable solver for Eq.(21) in
@@ -70,8 +76,9 @@ void BR_taylor(const T & z0, taylor<T, 1, Ndeg> & t) {
  */
 template <typename T, int Nvar>
 static ctaylor<T, Nvar> BR(const ctaylor<T, Nvar> & t) {
-  taylor<T, 1, Nvar> tmp;
-  BR_taylor(t.c[0], tmp);
+  // temporary has dimension 3 at least. See: https://github.com/dftlibs/xcfun/issues/151
+  // in C++14 and later can use std::max(Nvar, 3) for the second template argument
+  auto tmp = BR_taylor<T, (Nvar >= 3) ? Nvar : 3>(t.c[0]);
 
   ctaylor<T, Nvar> res = tmp[0];
   for (int i = 1; i <= Nvar; i++)
