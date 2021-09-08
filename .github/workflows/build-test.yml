@@ -50,10 +50,10 @@ jobs:
       run: |
         if [ "${{ matrix.os }}" != "windows-latest" ]; then
            echo "CONF_OPTS=-GNinja" >> $GITHUB_ENV
-           echo "BUILD_OPTS=\"-v -d stats\"" >> $GITHUB_ENV
+           echo "BUILD_OPTS="-v -d stats"" >> $GITHUB_ENV
         else
            echo "CONF_OPTS=-Ax64" >> $GITHUB_ENV
-           echo "BUILD_OPTS=\"-verbosity:normal\"" >> $GITHUB_ENV
+           echo "BUILD_OPTS="-verbosity:normal"" >> $GITHUB_ENV
         fi
    
     - name: Configure
