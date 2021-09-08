@@ -141,7 +141,7 @@ PYBIND11_MODULE(_xcfun, m) {
           }
           auto nr_points = density.shape(0);
           auto output =
-              py::array_t<double, py::array::c_style | py::array::forcecast>({nr_points, output_len}, nullptr);
+              py::array_t<double, py::array::c_style | py::array::forcecast>({{nr_points, output_len}}, nullptr);
 
           if (dens_ndim == 1) {
             xcfun::xcfun_eval(fun, density.data(), output.mutable_data());
