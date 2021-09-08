@@ -50,8 +50,10 @@ jobs:
       run: |
         if [ "${{ matrix.os }}" != "windows-latest" ]; then
            echo "CONF_OPTS=-GNinja" >> $GITHUB_ENV
+           echo "BUILD_OPTS=\"-v -d stats\"" >> $GITHUB_ENV
         else
            echo "CONF_OPTS=-Ax64" >> $GITHUB_ENV
+           echo "BUILD_OPTS=\"-verbosity:normal\"" >> $GITHUB_ENV
         fi
    
     - name: Configure
@@ -64,7 +66,7 @@ jobs:
     - name: Build
       shell: bash -l {0}
       run: |
-        cmake --build build --config $BUILD_TYPE --target install -- -v -d stats
+        cmake --build build --config $BUILD_TYPE --target install -- "$BUILD_OPTS"
     
     - name: Test XCFun
       shell: bash -l {0}
@@ -81,14 +83,14 @@ jobs:
       shell: bash -l {0}
       run: |
         cmake -H./examples/CXX_host -Bbuild_CXX_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_CXX_host -- -v -d stats
+        cmake --build build_CXX_host -- "$BUILD_OPTS"
         cmake --build build_CXX_host --target test
         
     - name: Test the C example
       shell: bash -l {0}
       run: |
         cmake -H./examples/C_host -Bbuild_C_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_C_host -- -v -d stats
+        cmake --build build_C_host -- "$BUILD_OPTS"
         cmake --build build_C_host --target test
         
     - name: Test the Fortran example
@@ -96,5 +98,5 @@ jobs:
       shell: bash -l {0}
       run: |
         cmake -H./examples/Fortran_host -Bbuild_Fortran_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_Fortran_host -- -v -d stats
+        cmake --build build_Fortran_host -- "$BUILD_OPTS"
         cmake --build build_Fortran_host --target test  
