@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
@@ -37,23 +37,36 @@ jobs:
 
     - uses: conda-incubator/setup-miniconda@v2
       with:
-          auto-update-conda: true
-          auto-activate-base: false
-          activate-environment: xcfun-gha
-          environment-file: .github/xcfun-gha.yml
-          channel-priority: true
-          python-version: ${{ matrix.python-version }}
-          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
-      
-    - name: Configure
+        auto-update-conda: true
+        auto-activate-base: false
+        activate-environment: xcfun-gha
+        environment-file: .github/xcfun-gha.yml
+        channel-priority: true
+        python-version: ${{ matrix.python-version }}
+        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+   
+    - name: Select CMake CLI options
       shell: bash -l {0}
       run: |
-        cmake -H. -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
+        if [ "${{ matrix.os }}" != "windows-latest" ]; then
+           echo "CONF_OPTS=-GNinja" >> $GITHUB_ENV
+           echo "BUILD_OPTS=-v" >> $GITHUB_ENV
+        else
+           echo "CONF_OPTS=-Ax64" >> $GITHUB_ENV
+           echo "BUILD_OPTS=-verbosity:normal" >> $GITHUB_ENV
+        fi
+   
+    - name: Configure
+      shell: bash -l {0}
+      env:
+        CXXFLAGS: ""  # clean up CXXFLAGS from the conda environment
+      run: |
+        cmake -H. -Bbuild "$CONF_OPTS" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
     
     - name: Build
       shell: bash -l {0}
       run: |
-        cmake --build build --config $BUILD_TYPE --target install -- -v -d stats
+        cmake --build build --config $BUILD_TYPE --target install -- "$BUILD_OPTS"
     
     - name: Test XCFun
       shell: bash -l {0}
@@ -69,20 +82,21 @@ jobs:
     - name: Test the C++ example
       shell: bash -l {0}
       run: |
-        cmake -H./examples/CXX_host -Bbuild_CXX_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_CXX_host -- -v -d stats
+        cmake -H./examples/CXX_host -Bbuild_CXX_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake --build build_CXX_host -- "$BUILD_OPTS"
         cmake --build build_CXX_host --target test
         
     - name: Test the C example
       shell: bash -l {0}
       run: |
-        cmake -H./examples/C_host -Bbuild_C_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_C_host -- -v -d stats
+        cmake -H./examples/C_host -Bbuild_C_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake --build build_C_host -- "$BUILD_OPTS"
         cmake --build build_C_host --target test
         
     - name: Test the Fortran example
+      if: "!contains(matrix.os, 'windows')"
       shell: bash -l {0}
       run: |
         cmake -H./examples/Fortran_host -Bbuild_Fortran_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
-        cmake --build build_Fortran_host -- -v -d stats
+        cmake --build build_Fortran_host -- "$BUILD_OPTS"
         cmake --build build_Fortran_host --target test  
