@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
@@ -37,16 +37,18 @@ jobs:
 
     - uses: conda-incubator/setup-miniconda@v2
       with:
-          auto-update-conda: true
-          auto-activate-base: false
-          activate-environment: xcfun-gha
-          environment-file: .github/xcfun-gha.yml
-          channel-priority: true
-          python-version: ${{ matrix.python-version }}
-          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+        auto-update-conda: true
+        auto-activate-base: false
+        activate-environment: xcfun-gha
+        environment-file: .github/xcfun-gha.yml
+        channel-priority: true
+        python-version: ${{ matrix.python-version }}
+        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
       
     - name: Configure
       shell: bash -l {0}
+      env:
+        CXXFLAGS: ""  # clean up CXXFLAGS from the conda environment
       run: |
         cmake -H. -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
     
@@ -81,6 +83,7 @@ jobs:
         cmake --build build_C_host --target test
         
     - name: Test the Fortran example
+      if: "!contains(matrix.os, 'windows')"
       shell: bash -l {0}
       run: |
         cmake -H./examples/Fortran_host -Bbuild_Fortran_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
