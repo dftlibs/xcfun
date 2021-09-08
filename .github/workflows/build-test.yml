@@ -44,13 +44,22 @@ jobs:
         channel-priority: true
         python-version: ${{ matrix.python-version }}
         use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
-      
+   
+    - name: Select CMake CLI options
+      shell: bash -l {0}
+      run: |
+        if [ "${{ matrix.os }}" != "windows-latest" ]; then
+           echo "CONF_OPTS=-GNinja" >> $GITHUB_ENV
+        else
+           echo "CONF_OPTS=-Ax64" >> $GITHUB_ENV
+        fi
+   
     - name: Configure
       shell: bash -l {0}
       env:
         CXXFLAGS: ""  # clean up CXXFLAGS from the conda environment
       run: |
-        cmake -H. -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
+        cmake -H. -Bbuild "$CONF_OPTS" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/Software/xcfun -DXCFUN_PYTHON_INTERFACE=ON
     
     - name: Build
       shell: bash -l {0}
@@ -71,14 +80,14 @@ jobs:
     - name: Test the C++ example
       shell: bash -l {0}
       run: |
-        cmake -H./examples/CXX_host -Bbuild_CXX_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake -H./examples/CXX_host -Bbuild_CXX_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
         cmake --build build_CXX_host -- -v -d stats
         cmake --build build_CXX_host --target test
         
     - name: Test the C example
       shell: bash -l {0}
       run: |
-        cmake -H./examples/C_host -Bbuild_C_host -GNinja -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
+        cmake -H./examples/C_host -Bbuild_C_host "$CONF_OPTS" -DXCFun_DIR=$GITHUB_WORKSPACE/Software/xcfun/share/cmake/XCFun
         cmake --build build_C_host -- -v -d stats
         cmake --build build_C_host --target test
         
