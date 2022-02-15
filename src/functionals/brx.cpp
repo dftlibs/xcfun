@@ -51,7 +51,7 @@ static double BR(double z) {
 // inverse of BR_y. Use linear method for simplicity.
 template <typename T, int Ndeg>
 taylor <T, 1, Ndeg> BR_taylor(const T & z0) {
-  static_assert(Ndeg >= 3);
+  static_assert(Ndeg >= 3, "Polynomial degree must be at least 3!");
 
   taylor<T, 1, Ndeg> t;
   t = 0;
