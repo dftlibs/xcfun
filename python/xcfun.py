@@ -56,7 +56,7 @@ class Functional(object):
 
     def eval_energy_n(self, density, densgrad=None):
         """
-        Evaluate the xc potential (spin-compensated case).
+        Evaluate the xc energy (spin-compensated case).
 
         input:
             density: 1D-numpy.array[0:nr_of_points],
@@ -75,7 +75,7 @@ class Functional(object):
         nr_points = density.size
 
         if xcfun_is_metagga(self._func):
-            raise XCFunException('xc potential not supported for meta-GGAs')
+            raise XCFunException('xc energy not supported for meta-GGAs')
         elif xcfun_is_gga(self._func):
             if (densgrad is None):
                 raise XCFunException('Density gradient required for GGA energy')
@@ -152,7 +152,7 @@ class Functional(object):
 
     def eval_energy_ab(self, density, densgrad=None):
         """
-        Evaluate the xc potential (spin-resolved case).
+        Evaluate the xc energy (spin-resolved case).
 
         input:
             density: 1D-numpy.array[0:nr_of_points,0:2],
@@ -177,7 +177,7 @@ class Functional(object):
                                  '[ %s instead of (nr_points, 2) ]' % str(density.shape))
 
         if xcfun_is_metagga(self._func):
-            raise XCFunException('xc potential not supported for meta-GGAs')
+            raise XCFunException('xc energy not supported for meta-GGAs')
         elif xcfun_is_gga(self._func):
             if (densgrad is None):
                 raise XCFunException('Density gradient required for GGA energy')
