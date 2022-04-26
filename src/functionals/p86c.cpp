@@ -53,8 +53,8 @@ template <typename num> static num p86c_corr(const densvars<num> & d) {
 
 FUNCTIONAL(XC_P86C) = {
     "P86C GGA correlation",
-    "J.P. Density-functional approximation for the correlation energy\n"
-    "of the inhomogeneous electron , Phys. Rev. B, 33(12):8822gasPerdew,\n"
+    "J. P. Perdew, Density-functional approximation for the correlation energy\n"
+    "of the inhomogeneous electron, Phys. Rev. B 33, 8822 (1986).\n"
     "Implemented by Ulf Ekstrom.\n"
     "Reference data from ftp://ftp.dl.ac.uk/qcg/dft_library/data_pt_c_p86.html",
     XC_DENSITY | XC_GRADIENT,
