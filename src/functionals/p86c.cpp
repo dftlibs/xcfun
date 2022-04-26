@@ -15,6 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 #include "pz81c.hpp"
+#include <cfloat>
 
 template <typename num> static num Cg(const num & r) {
   parameter Cx = 0.001667;
@@ -26,7 +27,7 @@ template <typename num> static num Cg(const num & r) {
 template <typename num> static num Pg(const densvars<num> & d) {
   parameter Fg = 0.11;
   parameter Cinf = 0.004235;
-  parameter fudge = 1e-12; // Avoid instability at d.gnn = 0
+  parameter fudge = DBL_EPSILON; // Avoid instability at d.gnn = 0
 #ifndef INEXACT_PI
   parameter pi_expr = pow(9 * M_PI, 1.0 / 6.0);
 #else
