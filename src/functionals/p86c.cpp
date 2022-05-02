@@ -15,6 +15,7 @@
 #include "constants.hpp"
 #include "functional.hpp"
 #include "pz81c.hpp"
+#include <cfloat>
 
 template <typename num> static num Cg(const num & r) {
   parameter Cx = 0.001667;
@@ -26,7 +27,7 @@ template <typename num> static num Cg(const num & r) {
 template <typename num> static num Pg(const densvars<num> & d) {
   parameter Fg = 0.11;
   parameter Cinf = 0.004235;
-  parameter fudge = 1e-12; // Avoid instability at d.gnn = 0
+  parameter fudge = DBL_EPSILON; // Avoid instability at d.gnn = 0
 #ifndef INEXACT_PI
   parameter pi_expr = pow(9 * M_PI, 1.0 / 6.0);
 #else
@@ -52,8 +53,8 @@ template <typename num> static num p86c_corr(const densvars<num> & d) {
 
 FUNCTIONAL(XC_P86C) = {
     "P86C GGA correlation",
-    "J.P. Density-functional approximation for the correlation energy\n"
-    "of the inhomogeneous electron , Phys. Rev. B, 33(12):8822gasPerdew,\n"
+    "J. P. Perdew, Density-functional approximation for the correlation energy\n"
+    "of the inhomogeneous electron, Phys. Rev. B 33, 8822 (1986).\n"
     "Implemented by Ulf Ekstrom.\n"
     "Reference data from ftp://ftp.dl.ac.uk/qcg/dft_library/data_pt_c_p86.html",
     XC_DENSITY | XC_GRADIENT,
