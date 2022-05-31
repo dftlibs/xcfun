@@ -35,7 +35,7 @@ inline void die(const char * message, int code) {
 // Use #define XCFUN_REF_PW92C to use inaccurate constants in
 // PW92C. This matches the reference implementation.
 
-// Use inaccurate mu value in pbe exchange.
+// Use accurate mu value in pbe exchange.
 // #define XCFUN_REF_PBEX_MU
 
 // This is the internal scalar type of the library, can be
