@@ -34,6 +34,9 @@ To compile the Python bindings:
 - Python 3.6+ and its development libraries and headers.
 - `pybind11 <https://pybind11.readthedocs.io>`_. This will be automatically
   downloaded if not available.
+  
+To test the Python bindings:
+- `pytest`
 
 To compile the documentation:
 
