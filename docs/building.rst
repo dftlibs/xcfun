@@ -34,6 +34,7 @@ To compile the Python bindings:
 - Python 3.6+ and its development libraries and headers.
 - `pybind11 <https://pybind11.readthedocs.io>`_. This will be automatically
   downloaded if not available.
+- Other dependencies listed in the `requirements.txt` or `environment.yml` files.
 
 To compile the documentation:
 
